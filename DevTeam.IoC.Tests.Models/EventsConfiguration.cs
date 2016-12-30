@@ -1,0 +1,74 @@
+﻿namespace DevTeam.IoC.Tests.Models
+{
+    using System;
+    using System.Collections.Generic;
+    using Contracts;
+
+    public class EventsConfiguration: IConfiguration
+    {
+        private readonly bool _trace;
+
+        public EventsConfiguration(bool trace)
+        {
+            _trace = trace;
+        }
+
+        public IEnumerable<IConfiguration> GetDependencies(IResolver resolver)
+        {
+            yield return resolver.Configuration(Wellknown.Configurations.All);
+            yield return new PlatformConfiguration(_trace);
+        }
+
+        public IEnumerable<IDisposable> Apply(IResolver resolver)
+        {
+            var childContainer = resolver.CreateChild("child");
+
+            yield return childContainer
+                .Register()
+                .Scope(Wellknown.Scopes.Global)
+                .Lifetime(Wellknown.Lifetimes.PerResolveLifetime)
+                .Lifetime(Wellknown.Lifetimes.Controlled)
+                .Contract<IEventRegistry>()
+                .AsAutowiring<EventRegistry>();
+
+            yield return childContainer
+                .Register()
+                .Scope(Wellknown.Scopes.Internal)
+                .Lifetime(Wellknown.Lifetimes.PerResolveLifetime)
+                .Lifetime(Wellknown.Lifetimes.Controlled)
+                .Contract<IEventBroker>()
+                .AsAutowiring<EventBroker>();
+
+            yield return childContainer
+                .Register()
+                .Scope(Wellknown.Scopes.Internal)
+                .Contract(typeof(IEvent<>))
+                .KeyComparer(Wellknown.KeyComparers.AnyState)
+                .AsAutowiring(typeof(Event<>));
+
+            yield return childContainer
+                .Register()
+                .Scope(Wellknown.Scopes.Internal)
+                .Contract<long>()
+                .Tag("IdGenerator")
+                .AsFactoryMethod(IdGenerator.GenerateId);
+
+            yield return childContainer
+                .Register()
+                .Scope(Wellknown.Scopes.Internal)
+                .Lifetime(Wellknown.Lifetimes.PerResolveLifetime)
+                .Lifetime(Wellknown.Lifetimes.Controlled)
+                .Contract<IEventSource<DateTimeOffset>>()
+                .AsAutowiring<TimerSource>();
+
+            yield return childContainer
+                .Register()
+                .Scope(Wellknown.Scopes.Internal)
+                .Lifetime(Wellknown.Lifetimes.PerResolveLifetime)
+                .Contract(typeof(IEventListener<>))
+                .AsAutowiring(typeof(ConsoleListener<>));
+
+            yield return childContainer;
+        }
+    }
+}

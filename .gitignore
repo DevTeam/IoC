@@ -1,0 +1,6 @@
+packages
+**/obj/
+**/bin/
+**/project.lock.json
+**/*.TMP
+**/*.DotSettings.user

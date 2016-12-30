@@ -1,0 +1,86 @@
+﻿[
+    { "reference": "DevTeam.IoC.Configurations.Json" },
+    { "reference": "DevTeam.IoC.Tests.Models" },
+
+    { "using": "System" },
+    { "using": "DevTeam.IoC.Configurations.Json" },
+    { "using": "DevTeam.IoC.Tests.Models" },
+
+    {
+        "GetDependecies": [
+            { "Wellknown": "All" },
+            {
+                "TypeName": "JsonConfiguration",
+                "Reference": "PlatformConfiguration.json"
+            }
+        ]
+    },
+
+    {
+        "Apply": [
+            {
+                "CreateChild": [
+                    {
+                        "Register": [
+                            { "Scope": "Global" },
+                            { "Lifetime": "PerResolveLifetime" },
+                            { "Lifetime": "Controlled" },
+                            { "Contract": [ "IEventRegistry" ] }
+                        ],
+                        "AsAutowiring": "EventRegistry"
+                    },
+
+                    {
+                        "Register": [
+                            { "Scope": "Internal" },
+                            { "Lifetime": "PerResolveLifetime" },
+                            { "Lifetime": "Controlled" },
+                            { "Contract": [ "IEventBroker" ] }
+                        ],
+                        "AsAutowiring": "EventBroker"
+                    },
+
+                    {
+                        "Register": [
+                            { "Scope": "Internal" },
+                            { "Lifetime": "PerResolveLifetime" },
+                            { "Lifetime": "Controlled" },
+                            { "Contract": [ "IEvent<>" ] },
+                            { "KeyComparer": "AnyState" }
+                        ],
+                        "AsAutowiring": "Event<>"
+                    },
+
+                    {
+                        "Register": [
+                            { "Scope": "Internal" },
+                            { "Contract": [ "long" ] },
+                            { "Tag": "IdGenerator" }
+                        ],
+                        "AsFactoryMethod": "IdGenerator.GenerateId"
+                    },
+
+                    {
+                        "Register": [
+                            { "Scope": "Internal" },
+                            { "Lifetime": "PerResolveLifetime" },
+                            { "Lifetime": "Controlled" },
+                            { "Contract": [ "IEventSource<DateTimeOffset>" ] }
+                        ],
+                        "AsAutowiring": "TimerSource"
+                    },
+
+                    {
+                        "Register": [
+                            { "Scope": "Internal" },
+                            { "Lifetime": "PerResolveLifetime" },
+                            { "Lifetime": "Controlled" },
+                            { "Contract": [ "IEventListener<>" ] }
+                        ],
+                        "AsAutowiring": "ConsoleListener<>"
+                    }
+                ]
+            }
+        ]
+    }
+]

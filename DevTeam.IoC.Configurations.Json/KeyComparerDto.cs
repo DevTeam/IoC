@@ -1,0 +1,12 @@
+﻿namespace DevTeam.IoC.Configurations.Json
+{
+    using Contracts;
+    using Contracts.Dto;
+    using Newtonsoft.Json;
+
+    internal class KeyComparerDto : IKeyComparerDto
+    {
+        [JsonProperty("KeyComparer", Required = Required.Always)]
+        public Wellknown.KeyComparers KeyComparer { get; set; }
+    }
+}

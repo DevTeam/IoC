@@ -1,0 +1,48 @@
+﻿[
+    { "reference": "DevTeam.IoC.Tests.Models" },
+    
+    { "using": "DevTeam.IoC.Tests.Models" },
+
+    {
+        "GetDependecies": [
+            { "Wellknown": "All" }
+        ]
+    },
+
+    {
+        "Apply": [
+            {
+                "Register": [
+                    { "Lifetime": "Singleton" },
+                    { "Contract": [ "ITrace" ] }
+                ],
+                "AsAutowiring": "Trace"
+            },
+
+            {
+                "Register": [
+                    { "Lifetime": "Singleton" },
+                    { "Contract": [ "IConsole" ] }
+                ],
+                "AsAutowiring": "Console"
+            },
+
+            {
+                "Register": [
+                    { "Lifetime": "Singleton" },
+                    { "Contract": [ "ITimer" ] },
+                    { "Contract": [ "ITimerManager" ] }
+                ],
+                "AsAutowiring": "Timer"
+            },
+
+            {
+                "Register": [
+                    { "State": "0", "TypeName": "string"},
+                    { "Contract": [ "ILog" ] }
+                ],
+                "AsAutowiring": "Log"
+            }
+        ]
+    }
+]
