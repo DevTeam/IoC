@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<metadata>
+		<id>DevTeam.IoC.Configurations.Json</id>
+		<title>DevTeam IoC Json configuration.</title>
+		<language>en-us</language>
+		<version>$version$</version>
+		<authors>NikolayP</authors>
+		<owners>NikolayP</owners>
+		<licenseUrl>https://github.com/DevTeam/IoC/blob/master/LICENSE</licenseUrl>
+		<projectUrl>https://github.com/DevTeam/IoC/</projectUrl>
+		<iconUrl>https://avatars0.githubusercontent.com/u/12184234?v=3&amp;s=200</iconUrl>
+		<!--requireLicenseAcceptance>false</requireLicenseAcceptance-->
+		<description>Provides IoC implementation.</description>
+		<tags>.NETStandard NETCore Core Portable DevTeam Pattern IoC Container DI dependencyinjection Inversion Control State Bind Factory</tags>
+		<dependencies>
+			<dependency id="DevTeam.IoC.Contracts" version="[$version$]" />
+		</dependencies>
+	</metadata>
+	<files>
+  		<file src="bin\Release\DevTeam.IoC.Configurations.Json.dll" target="lib\portable-net45+win8+wp8+wpa81+MonoAndroid10+xamarinios10+MonoTouch10+Xamarin.iOS+monoandroid+monotouch+netstandard1.0+netcoreapp" />
+	</files>
+</package>

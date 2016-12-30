@@ -4,3 +4,4 @@ packages
 **/project.lock.json
 **/*.TMP
 **/*.DotSettings.user
+**/*.csproj.user
