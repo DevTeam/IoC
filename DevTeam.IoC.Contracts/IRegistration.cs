@@ -8,9 +8,7 @@
 
         IDisposable AsFactoryMethod<TImplementation>(Func<IResolverContext, TImplementation> factoryMethod);
 
-        IDisposable AsAutowiring(Func<IResolverContext, Type> implementationTypeSelector);
-
-        IDisposable AsAutowiring(Type implementationType);
+        IDisposable AsAutowiring(Type implementationType, IMetadataProvider metadataProvider = null);
 
         IDisposable AsAutowiring<TImplementation>();
 

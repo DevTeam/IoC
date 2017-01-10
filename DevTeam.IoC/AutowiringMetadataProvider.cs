@@ -6,48 +6,30 @@
     using System.Reflection;
     using Contracts;
 
-    internal class AutowiringFactory: IResolverFactory
+    internal class AutowiringMetadataProvider : IMetadataProvider
     {
-        private readonly ParamInfo[] _params;
-        private readonly IInstanceFactory _instanceFactory;
+        public static readonly IMetadataProvider Shared = new AutowiringMetadataProvider();
 
-        public AutowiringFactory(Type implementationType, IInstanceFactoryProvider instanceFactoryProvider)
+        private AutowiringMetadataProvider()
         {
-            if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
-            if (instanceFactoryProvider == null) throw new ArgumentNullException(nameof(instanceFactoryProvider));
-
-            Exception error;
-            ConstructorInfo constructor;
-            if (!TryGetConstructor(implementationType, out constructor, out error))
-            {
-                throw error;
-            }
-
-            var ctorParams = constructor.GetParameters();
-            _params = new ParamInfo[ctorParams.Length];
-            var stateIndex = 0;
-            for (var paramIndex = 0; paramIndex < ctorParams.Length; paramIndex++)
-            {
-                var paramInfo = new ParamInfo(ctorParams[paramIndex], stateIndex);
-                if (!paramInfo.IsDependency)
-                {
-                    stateIndex++;
-                }
-
-                _params[paramIndex] = paramInfo;
-            }
-
-            _instanceFactory = instanceFactoryProvider.GetFactory(constructor);
         }
 
-        public object Create(IResolverContext resolverContext)
+        public Type ResolveImplementationType(IResolverContext resolverContext, Type type)
         {
             if (resolverContext == null) throw new ArgumentNullException(nameof(resolverContext));
-            return _instanceFactory.Create(_params.Select(param => param.Resolve(resolverContext)).ToArray());
+            if (type == null) throw new ArgumentNullException(nameof(type));
+            var contractKey = resolverContext.Key.ContractKeys.First();
+            if (contractKey != null && contractKey.GenericTypeArguments.Length > 0 && type.GetTypeInfo().GenericTypeParameters.Length == contractKey.GenericTypeArguments.Length)
+            {
+                return type.MakeGenericType(contractKey.GenericTypeArguments);
+            }
+
+            return type;
         }
 
-        private static bool TryGetConstructor(Type implementationType, out ConstructorInfo constructor, out Exception error)
+        public bool TrySelectConstructor(Type implementationType, out ConstructorInfo constructor, out Exception error)
         {
+            if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
             var implementationTypeInfo = implementationType.GetTypeInfo();
             var ctors = implementationTypeInfo.DeclaredConstructors.Where(i => i.IsPublic).ToArray();
             if (ctors.Length == 1)
@@ -84,13 +66,29 @@
             return false;
         }
 
-        internal class ParamInfo
+        public IArgumentMetadata[] GetConstructorArguments(ConstructorInfo constructor)
         {
-            private readonly IKey[] _keys;
-            private readonly StateKey _stateKey;
-            private readonly object[] _state;
+            if (constructor == null) throw new ArgumentNullException(nameof(constructor));
+            var ctorParams = constructor.GetParameters();
+            var arguments = new IArgumentMetadata[ctorParams.Length];
+            var stateIndex = 0;
+            for (var paramIndex = 0; paramIndex < ctorParams.Length; paramIndex++)
+            {
+                var paramInfo = new ArgumentMetadata(ctorParams[paramIndex], stateIndex);
+                if (!paramInfo.IsDependency)
+                {
+                    stateIndex++;
+                }
 
-            public ParamInfo(ParameterInfo info, int stateIndex)
+                arguments[paramIndex] = paramInfo;
+            }
+
+            return arguments;
+        }
+
+        internal class ArgumentMetadata : IArgumentMetadata
+        {
+            public ArgumentMetadata(ParameterInfo info, int stateIndex)
             {
                 var contractAttributes = info.GetCustomAttributes<ContractAttribute>().ToArray();
                 IEnumerable<IContractKey> contractKeys;
@@ -105,31 +103,27 @@
 
                 var tagKeys = info.GetCustomAttributes<TagAttribute>().SelectMany(i => i.Tags).Select(i => (IKey)new TagKey(i));
                 var stateAttributes = info.GetCustomAttributes<StateAttribute>().OrderBy(i => i.Index).ToArray();
-                _state = stateAttributes.Select(i => i.Value).ToArray();
+                State = stateAttributes.Select(i => i.Value).ToArray();
                 var stateKeys = stateAttributes.Select(i => (IKey)new StateKey(i.Index, i.StateType));
 
-                _keys = contractKeys.Concat(tagKeys).Concat(stateKeys).ToArray();
-                if (_keys.Any())
+                Keys = contractKeys.Concat(tagKeys).Concat(stateKeys).ToArray();
+                if (Keys.Any())
                 {
                     IsDependency = true;
                 }
                 else
                 {
-                    _stateKey = new StateKey(stateIndex, info.ParameterType);
+                    StateKey = new StateKey(stateIndex, info.ParameterType);
                 }
             }
 
             public bool IsDependency { get; }
 
-            public object Resolve(IResolverContext resolverContext)
-            {
-                if (IsDependency)
-                {
-                    return resolverContext.RegistryContext.Container.Resolve().Key(_keys).Instance(_state);
-                }
+            public IKey[] Keys { get; }
 
-                return resolverContext.StateProvider.GetState(resolverContext, _stateKey);
-            }
+            public IStateKey StateKey { get; }
+
+            public object[] State { get; }
         }
     }
 }

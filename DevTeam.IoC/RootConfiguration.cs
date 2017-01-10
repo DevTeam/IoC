@@ -57,14 +57,14 @@
                         IResolverFactory factory;
                         if (!factoryCache.TryGet(implementationType, out factory))
                         {
-                            factory = new AutowiringFactory(implementationType, ExpressionInstanceFactoryProvider);
+                            factory = new MetadataFactory(implementationType, ExpressionInstanceFactoryProvider);
                             factoryCache.Set(implementationType, factory);
                         }
 
                         return factory;
                     }
 
-                    return new AutowiringFactory(implementationType, ExpressionInstanceFactoryProvider);
+                    return new MetadataFactory(implementationType, ExpressionInstanceFactoryProvider);
                 });
 
             yield return

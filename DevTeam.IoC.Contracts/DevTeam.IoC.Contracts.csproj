@@ -62,6 +62,7 @@
     <Compile Include="Dto\IUsingDto.cs" />
     <Compile Include="Dto\IConfigurationTypeDto.cs" />
     <Compile Include="Dto\IWellknownConfigurationDto.cs" />
+    <Compile Include="IArgumentMetadata.cs" />
     <Compile Include="ICache.cs" />
     <Compile Include="ICompositeKey.cs" />
     <Compile Include="IConfiguration.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="IContractKey.cs" />
     <Compile Include="IKeyComparer.cs" />
     <Compile Include="ILifetimeContext.cs" />
+    <Compile Include="IMetadataProvider.cs" />
     <Compile Include="IProvider`5.cs" />
     <Compile Include="IProvider`4.cs" />
     <Compile Include="IProvider`3.cs" />

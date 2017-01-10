@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
     using Contracts;
 
     internal class Registration : Token<IRegistration>, IRegistration
@@ -83,44 +82,29 @@
             return AsFactoryMethodInternal(factoryMethod);
         }
 
-        public IDisposable AsAutowiring(Func<IResolverContext, Type> implementationTypeSelector)
+        public IDisposable AsAutowiring(Type implementationType, IMetadataProvider metadataProvider = null)
         {
-            if (implementationTypeSelector == null) throw new ArgumentNullException(nameof(implementationTypeSelector));
+            if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
+            if (metadataProvider == null) throw new ArgumentNullException(nameof(metadataProvider));
             return AsFactoryMethod(ctx =>
             {
-                var implementationType = implementationTypeSelector(ctx);
-
+                var resolvedType = metadataProvider.ResolveImplementationType(ctx, implementationType);
                 ICache<Type, IResolverFactory> factoryCache;
                 IResolverFactory factory;
                 if (ctx.Container.TryResolve(out factoryCache))
                 {
-                    if (!factoryCache.TryGet(implementationType, out factory))
+                    if (!factoryCache.TryGet(resolvedType, out factory))
                     {
-                        factory = new AutowiringFactory(implementationType, _instanceFactoryProvider.Value);
-                        factoryCache.Set(implementationType, factory);
+                        factory = new MetadataFactory(resolvedType, _instanceFactoryProvider.Value, metadataProvider);
+                        factoryCache.Set(resolvedType, factory);
                     }
                 }
                 else
                 {
-                    factory = new AutowiringFactory(implementationType, _instanceFactoryProvider.Value);
+                    factory = new MetadataFactory(resolvedType, _instanceFactoryProvider.Value, metadataProvider);
                 }
 
                 return factory.Create(ctx);
-            });
-        }
-
-        public IDisposable AsAutowiring(Type implementationType)
-        {
-            if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
-            return AsAutowiring(ctx =>
-            {
-                var contractKey = ctx.Key.ContractKeys.First();
-                if (contractKey != null && contractKey.GenericTypeArguments.Length > 0 && implementationType.GetTypeInfo().GenericTypeParameters.Length == contractKey.GenericTypeArguments.Length)
-                {
-                    return implementationType.MakeGenericType(contractKey.GenericTypeArguments);
-                }
-
-                return implementationType;
             });
         }
 

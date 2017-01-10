@@ -39,11 +39,12 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutowiringMetadataProvider.cs" />
     <Compile Include="Cache.cs" />
     <Compile Include="CacheConfiguration.cs" />
     <Compile Include="ConfigurationDescriptionDto.cs" />
     <Compile Include="ConfigurationDtoAdapter.cs" />
-    <Compile Include="AutowiringFactory.cs" />
+    <Compile Include="MetadataFactory.cs" />
     <Compile Include="Configuring.cs" />
     <Compile Include="Disposable.cs" />
     <Compile Include="DtoConfiguration.cs" />
