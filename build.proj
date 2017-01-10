@@ -2,7 +2,7 @@
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
 		<Version Condition=" '$(Version)' == '' ">1.0.0-beta</Version>
-		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+		<Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
 		<PackagesDirectory>packages</PackagesDirectory>	
 	</PropertyGroup>
 

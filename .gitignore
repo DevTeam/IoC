@@ -5,3 +5,4 @@ packages
 **/*.TMP
 **/*.DotSettings.user
 **/*.csproj.user
+*.suo

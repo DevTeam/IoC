@@ -13,6 +13,10 @@
 		<!--requireLicenseAcceptance>false</requireLicenseAcceptance-->
 		<description>Provides IoC contracts.</description>
 		<tags>.NETStandard NETCore Core Portable DevTeam Pattern IoC Container DI dependencyinjection Inversion Control State Bind Factory</tags>
+		<dependencies>
+			<dependency id="Microsoft.NETCore.Portable.Compatibility" version="1.0.1" />
+			<dependency id="NETStandard.Library" version="1.6.1" />
+		</dependencies>
 	</metadata>
 	<files>
   		<file src="bin\Release\DevTeam.IoC.Contracts.dll" target="lib\portable-net45+win8+wp8+wpa81+MonoAndroid10+xamarinios10+MonoTouch10+Xamarin.iOS+monoandroid+monotouch+netstandard1.0+netcoreapp" />
