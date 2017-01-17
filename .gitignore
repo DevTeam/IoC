@@ -6,3 +6,4 @@ packages
 **/*.DotSettings.user
 **/*.csproj.user
 *.suo
+.vs/

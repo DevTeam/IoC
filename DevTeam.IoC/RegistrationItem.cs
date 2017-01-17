@@ -6,7 +6,7 @@
 
     using Contracts;
 
-    internal struct RegistrationItem : IDisposable
+    internal class RegistrationItem : IDisposable
     {
         private readonly IEnumerable<IDisposable> _resources;
 
