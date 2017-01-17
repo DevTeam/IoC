@@ -85,7 +85,7 @@
         public IDisposable AsAutowiring(Type implementationType, IMetadataProvider metadataProvider = null)
         {
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
-            if (metadataProvider == null) throw new ArgumentNullException(nameof(metadataProvider));
+            metadataProvider = metadataProvider ?? AutowiringMetadataProvider.Shared;
             return AsFactoryMethod(ctx =>
             {
                 var resolvedType = metadataProvider.ResolveImplementationType(ctx, implementationType);
