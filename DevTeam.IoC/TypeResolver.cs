@@ -7,6 +7,7 @@
     using System.Text;
     using System.Text.RegularExpressions;
     using Contracts;
+    using static System.String;
 
     internal class TypeResolver : ITypeResolver
     {
@@ -28,7 +29,7 @@
             {"decimal", typeof(decimal)}
         };
 
-        private static readonly Regex GenericTypeRegex = new Regex(@"(.+)<(.*)>", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+        private static readonly Regex GenericTypeRegex = new Regex(@"(.+)<(.*?)>", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.Singleline);
         private readonly List<string> _usings = new List<string>();
         private readonly List<Assembly> _references = new List<Assembly>();
 
@@ -127,7 +128,14 @@
 
         private static bool TryGetInternalType(Assembly reference, string fullTypeName, out Type type)
         {
-            type = reference.DefinedTypes.Where(i => i.FullName == fullTypeName).Select(i => i.AsType()).SingleOrDefault();
+            var assemblyQualifiedName = $"{fullTypeName}, {reference.GetName()}";
+            type = Type.GetType(assemblyQualifiedName);
+            if (type != null)
+            {
+                return true;
+            }
+
+            type = reference.DefinedTypes.Where(i => i.AssemblyQualifiedName == assemblyQualifiedName).Select(i => i.AsType()).SingleOrDefault();
             return type != null;
         }
 
@@ -149,7 +157,7 @@
                     }
 
                     cnt++;
-                    if (String.IsNullOrWhiteSpace(genericTypeArg))
+                    if (IsNullOrWhiteSpace(genericTypeArg))
                     {
                         continue;
                     }
@@ -161,12 +169,14 @@
                         return false;
                     }
 
-                    genericTypeCanonicalArgsSb.Append(genericType.FullName);
+                    genericTypeCanonicalArgsSb.Append('[');
+                    genericTypeCanonicalArgsSb.Append(genericType.AssemblyQualifiedName);
+                    genericTypeCanonicalArgsSb.Append(']');
                     typesArePresented = true;
                 }
 
                 genericTypeCanonicalArgsSb.Append(']');
-                var genericTypeCanonicalArgsStr = definedType && typesArePresented ? genericTypeCanonicalArgsSb.ToString() : String.Empty;
+                var genericTypeCanonicalArgsStr = definedType && typesArePresented ? genericTypeCanonicalArgsSb.ToString() : Empty;
                 canonicalTypeName = $"{genericTypeMatch.Groups[1].Value}`{cnt}{genericTypeCanonicalArgsStr}";
                 return true;
             }

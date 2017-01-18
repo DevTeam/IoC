@@ -2,7 +2,6 @@
 {
     using System;
     using Contracts;
-    using Moq;
     using NUnit.Framework;
     using Shouldly;
 
@@ -21,6 +20,7 @@
         [TestCase("DevTeam.IoC.Contracts", "DevTeam.IoC.Contracts", "IResolver<,,>", true, typeof(IResolver<,,>))]
         [TestCase("DevTeam.IoC.Contracts", "", "DevTeam.IoC.Contracts.IResolver<,,>", true, typeof(IResolver<,,>))]
         [TestCase("DevTeam.IoC.Contracts", "DevTeam.IoC.Contracts", "IResolver<string>", true, typeof(IResolver<string>))]
+        [TestCase("DevTeam.IoC.Contracts", "DevTeam.IoC.Contracts", "IResolver<IResolver<string>>", true, typeof(IResolver<IResolver<string>>))]
         public void ShouldTryResolveType(
             string references,
             string usings,
