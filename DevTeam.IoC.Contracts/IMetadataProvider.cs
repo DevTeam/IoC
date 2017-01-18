@@ -9,6 +9,6 @@
 
         bool TrySelectConstructor(Type implementationType, out ConstructorInfo constructor, out Exception error);
 
-        IParameterMetadata[] GetConstructorArguments(ConstructorInfo constructor);
+        IParameterMetadata[] GetConstructorParameters(ConstructorInfo constructor);
     }
 }

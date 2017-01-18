@@ -66,7 +66,7 @@
             return false;
         }
 
-        public IParameterMetadata[] GetConstructorArguments(ConstructorInfo constructor)
+        public IParameterMetadata[] GetConstructorParameters(ConstructorInfo constructor)
         {
             if (constructor == null) throw new ArgumentNullException(nameof(constructor));
             var ctorParams = constructor.GetParameters();

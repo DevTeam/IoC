@@ -428,7 +428,7 @@
                 return constructor != null;
             }
 
-            public IParameterMetadata[] GetConstructorArguments(ConstructorInfo constructor)
+            public IParameterMetadata[] GetConstructorParameters(ConstructorInfo constructor)
             {
                 return _constructorArguments;
             }

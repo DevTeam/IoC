@@ -23,7 +23,7 @@
                 throw error;
             }
 
-            _parameters = metadataProvider.GetConstructorArguments(constructor);
+            _parameters = metadataProvider.GetConstructorParameters(constructor);
             _instanceFactory = instanceFactoryProvider.GetFactory(constructor);
         }
 
