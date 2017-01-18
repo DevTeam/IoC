@@ -4,7 +4,7 @@
     using Contracts.Dto;
     using Newtonsoft.Json;
 
-    internal class ConstructorArgumentDto : IConstructorArgumentDto
+    internal class ParameterDto : IParameterDto
     {
         [JsonProperty("Type", Required = Required.Always)]
         public string TypeName { get; set; }

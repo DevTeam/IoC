@@ -4,6 +4,6 @@
 
     public interface IBindingDto
     {
-        IEnumerable<IConstructorArgumentDto> ConstructorParameters { get; }
+        IEnumerable<IParameterDto> ConstructorParameters { get; }
     }
 }

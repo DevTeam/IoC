@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    public interface IConstructorArgumentDto
+    public interface IParameterDto
     {
         string TypeName { get; }
 

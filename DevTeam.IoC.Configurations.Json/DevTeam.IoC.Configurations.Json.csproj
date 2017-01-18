@@ -43,7 +43,7 @@
     <Compile Include="BindingDto.cs" />
     <Compile Include="ConfigurationDto.cs" />
     <Compile Include="ConfigurationReferenceDto.cs" />
-    <Compile Include="ConstructorArgumentDto.cs" />
+    <Compile Include="ParameterDto.cs" />
     <Compile Include="ContractDto.cs" />
     <Compile Include="CreateChildDto.cs" />
     <Compile Include="GetDependeciesDto.cs" />
