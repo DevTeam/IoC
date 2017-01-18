@@ -11,12 +11,15 @@
         public ITagDto TargetTag { get; set; }
 
         [JsonProperty("Register", Required = Required.Always)]
-        public IEnumerable<IRegisterStatementDto> Statements { get; set; }
+        public IEnumerable<IKeyDto> Keys { get; set; }
 
         [JsonProperty("AsAutowiring", Required = Required.Default)]
         public string AutowiringTypeName { get; set; }
 
         [JsonProperty("AsFactoryMethod", Required = Required.Default)]
         public string FactoryMethodName { get; set; }
+
+        [JsonProperty("AsBinding", Required = Required.Default)]
+        public IBindingDto Binding { get; set; }
     }
 }

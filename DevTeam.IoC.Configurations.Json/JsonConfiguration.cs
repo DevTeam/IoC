@@ -19,7 +19,7 @@
                 new JsonEnumConverter<Wellknown.Scopes>(),
                 new JsonEnumConverter<Wellknown.KeyComparers>(),
                 new JsonDerivedTypeConverter<IApplyStatementDto>(typeof(RegisterDto), typeof(CreateChildDto)),
-                new JsonDerivedTypeConverter<IRegisterStatementDto>(typeof(TagDto), typeof(ContractDto), typeof(ScopeDto), typeof(LifetimeDto), typeof(KeyComparerDto), typeof(StateDto))
+                new JsonDerivedTypeConverter<IKeyDto>(typeof(TagDto), typeof(ContractDto), typeof(ScopeDto), typeof(LifetimeDto), typeof(KeyComparerDto), typeof(StateDto))
             }
         };
 

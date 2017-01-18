@@ -6,10 +6,12 @@
     {
         ITagDto TargetTag { get; }
 
-        IEnumerable<IRegisterStatementDto> Statements { get; }
+        IEnumerable<IKeyDto> Keys { get; }
 
         string AutowiringTypeName { get; }
 
         string FactoryMethodName { get; }
+
+        IBindingDto Binding { get; }
     }
 }

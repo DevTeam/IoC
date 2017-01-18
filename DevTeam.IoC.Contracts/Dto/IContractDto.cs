@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    public interface IContractDto : IRegisterStatementDto
+    public interface IContractDto : IKeyDto
     {
         IEnumerable<string> Contract { get; }
     }

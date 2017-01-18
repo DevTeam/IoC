@@ -66,15 +66,15 @@
             return false;
         }
 
-        public IArgumentMetadata[] GetConstructorArguments(ConstructorInfo constructor)
+        public IParameterMetadata[] GetConstructorArguments(ConstructorInfo constructor)
         {
             if (constructor == null) throw new ArgumentNullException(nameof(constructor));
             var ctorParams = constructor.GetParameters();
-            var arguments = new IArgumentMetadata[ctorParams.Length];
+            var arguments = new IParameterMetadata[ctorParams.Length];
             var stateIndex = 0;
             for (var paramIndex = 0; paramIndex < ctorParams.Length; paramIndex++)
             {
-                var paramInfo = new ArgumentMetadata(ctorParams[paramIndex], stateIndex);
+                var paramInfo = new ParameterMetadata(ctorParams[paramIndex], stateIndex);
                 if (!paramInfo.IsDependency)
                 {
                     stateIndex++;
@@ -86,9 +86,9 @@
             return arguments;
         }
 
-        internal class ArgumentMetadata : IArgumentMetadata
+        internal class ParameterMetadata : IParameterMetadata
         {
-            public ArgumentMetadata(ParameterInfo info, int stateIndex)
+            public ParameterMetadata(ParameterInfo info, int stateIndex)
             {
                 var contractAttributes = info.GetCustomAttributes<ContractAttribute>().ToArray();
                 IEnumerable<IContractKey> contractKeys;

@@ -1,6 +1,6 @@
 ﻿namespace DevTeam.IoC.Contracts
 {
-    public interface IArgumentMetadata
+    public interface IParameterMetadata
     {
         bool IsDependency { get; }
 

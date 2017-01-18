@@ -8,7 +8,7 @@
     internal class MetadataFactory: IResolverFactory
     {
         private readonly IInstanceFactory _instanceFactory;
-        private readonly IArgumentMetadata[] _arguments;
+        private readonly IParameterMetadata[] _parameters;
 
         public MetadataFactory(Type implementationType, IInstanceFactoryProvider instanceFactoryProvider, IMetadataProvider metadataProvider = null)
         {
@@ -23,24 +23,24 @@
                 throw error;
             }
 
-            _arguments = metadataProvider.GetConstructorArguments(constructor);
+            _parameters = metadataProvider.GetConstructorArguments(constructor);
             _instanceFactory = instanceFactoryProvider.GetFactory(constructor);
         }
 
         public object Create(IResolverContext resolverContext)
         {
             if (resolverContext == null) throw new ArgumentNullException(nameof(resolverContext));
-            return _instanceFactory.Create(_arguments.Select(param => ResolveParameter(resolverContext, param)).ToArray());
+            return _instanceFactory.Create(_parameters.Select(param => ResolveParameter(resolverContext, param)).ToArray());
         }
 
-        private static object ResolveParameter(IResolverContext resolverContext, IArgumentMetadata argumentMetadata)
+        private static object ResolveParameter(IResolverContext resolverContext, IParameterMetadata parameterMetadata)
         {
-            if (argumentMetadata.IsDependency)
+            if (parameterMetadata.IsDependency)
             {
-                return resolverContext.RegistryContext.Container.Resolve().Key(argumentMetadata.Keys).Instance(argumentMetadata.State);
+                return resolverContext.RegistryContext.Container.Resolve().Key(parameterMetadata.Keys).Instance(parameterMetadata.State);
             }
 
-            return resolverContext.StateProvider.GetState(resolverContext, argumentMetadata.StateKey);
+            return resolverContext.StateProvider.GetState(resolverContext, parameterMetadata.StateKey);
         }
     }
 }

@@ -2,7 +2,7 @@
 {
     using Contracts;
 
-    public interface ILifetimeDto : IRegisterStatementDto
+    public interface ILifetimeDto : IKeyDto
     {
         Wellknown.Lifetimes Lifetime { get; }
     }

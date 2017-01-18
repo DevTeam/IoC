@@ -10,12 +10,16 @@
     internal class ConfigurationDtoAdapter : IConfiguration
     {
         private readonly IConfigurationDto _configurationDto;
+        private readonly IKeyFactory _keyFactory;
 
         public ConfigurationDtoAdapter(
-            IConfigurationDto configurationDto)
+            IConfigurationDto configurationDto,
+            [Contract] IKeyFactory keyFactory)
         {
             if (configurationDto == null) throw new ArgumentNullException(nameof(configurationDto));
+            if (keyFactory == null) throw new ArgumentNullException(nameof(keyFactory));
             _configurationDto = configurationDto;
+            _keyFactory = keyFactory;
         }
 
         public IEnumerable<IConfiguration> GetDependencies(IResolver resolver)
@@ -79,7 +83,7 @@
                             var reference = referenceDescriptionResolver.ResolveReference(configurationReferenceDto.Reference);
                             var configurationDescriptionDto = childContainer.Resolve().State<string>(0).Instance<IConfigurationDescriptionDto>(reference);
                             var сonfigurationDto = childContainer.Resolve().Tag(configurationType).State<IConfigurationDescriptionDto>(0).Instance<IConfigurationDto>(configurationDescriptionDto);
-                            yield return new ConfigurationDtoAdapter(сonfigurationDto);
+                            yield return new ConfigurationDtoAdapter(сonfigurationDto, _keyFactory);
                             continue;
                         }
                     }
@@ -121,7 +125,7 @@
             yield break;
         }
 
-        private static void HandleApplyStatementDto(IResolver resolver, ITypeResolver typeResolver, IApplyStatementDto applyDtoStatement)
+        private void HandleApplyStatementDto(IResolver resolver, ITypeResolver typeResolver, IApplyStatementDto applyDtoStatement)
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
@@ -147,15 +151,15 @@
             }
         }
 
-        private static void HandleRegisterDto(IResolver resolver, ITypeResolver typeResolver, IRegisterDto registerDto)
+        private void HandleRegisterDto(IResolver resolver, ITypeResolver typeResolver, IRegisterDto registerDto)
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
             if (registerDto == null) throw new ArgumentNullException(nameof(registerDto));
             var registration = resolver.Register();
-            foreach (var registerStatementDto in registerDto.Statements)
+            foreach (var keyDto in registerDto.Keys)
             {
-                var contractDto = registerStatementDto as IContractDto;
+                var contractDto = keyDto as IContractDto;
                 if (contractDto != null)
                 {
                     var contractTypes = new List<Type>();
@@ -174,7 +178,7 @@
                     continue;
                 }
 
-                var stateDto = registerStatementDto as IStateDto;
+                var stateDto = keyDto as IStateDto;
                 if (stateDto != null)
                 {
                     Type stateType;
@@ -187,7 +191,7 @@
                     continue;
                 }
 
-                var tagDto = registerStatementDto as ITagDto;
+                var tagDto = keyDto as ITagDto;
                 if (tagDto != null)
                 {
                     object tag;
@@ -200,21 +204,21 @@
                     continue;
                 }
 
-                var lifetimeDto = registerStatementDto as ILifetimeDto;
+                var lifetimeDto = keyDto as ILifetimeDto;
                 if (lifetimeDto != null)
                 {
                     registration.Lifetime(lifetimeDto.Lifetime);
                     continue;
                 }
 
-                var scopeDto = registerStatementDto as IScopeDto;
+                var scopeDto = keyDto as IScopeDto;
                 if (scopeDto != null)
                 {
                     registration.Scope(scopeDto.Scope);
                     continue;
                 }
 
-                var keyComparerDto = registerStatementDto as IKeyComparerDto;
+                var keyComparerDto = keyDto as IKeyComparerDto;
                 if (keyComparerDto != null)
                 {
                     registration.KeyComparer(keyComparerDto.KeyComparer);
@@ -230,7 +234,42 @@
                     throw new Exception($"Invalid autowiring type {registerDto.AutowiringTypeName}");
                 }
 
-                registration.AsAutowiring(autowiringType);
+                IMetadataProvider metadataProvider = null;
+                if (registerDto.Binding != null)
+                {
+                    var constructorParameters = new List<ConstructorParameter>();
+                    var bindingCtorParams = registerDto.Binding.ConstructorParameters.ToArray();
+                    int stateIndex = 0;
+                    foreach (var ctorParam in bindingCtorParams)
+                    {
+                        Type type;
+                        if (!typeResolver.TryResolveType(ctorParam.TypeName, out type))
+                        {
+                            throw new Exception($"Invalid constructor parameter type {ctorParam.TypeName}");
+                        }
+
+                        var keys = new List<IKey>();
+                        if (ctorParam.Keys != null)
+                        {
+                            foreach (var keyDto in ctorParam.Keys)
+                            {
+                                keys.Add(CreateKey(keyDto, typeResolver));
+                            }
+                        }
+
+                        var isDependency = keys.Count > 0;
+                        constructorParameters.Add(new ConstructorParameter(type, keys.ToArray(), isDependency, stateIndex));
+
+                        if (isDependency)
+                        {
+                            stateIndex++;
+                        }
+                    }
+
+                    metadataProvider = new MetadataProvider(constructorParameters);
+                }
+
+                registration.AsAutowiring(autowiringType, metadataProvider);
                 return;
             }
 
@@ -250,8 +289,7 @@
                     throw new Exception($"Invalid factory method type {factoryMethodName}");
                 }
 
-                var factoryMethod = factoryMethodType.GetRuntimeMethod(factoryMethodName,
-                    new[] {typeof(IResolverContext)});
+                var factoryMethod = factoryMethodType.GetRuntimeMethod(factoryMethodName, new[] {typeof(IResolverContext)});
                 if (factoryMethod == null)
                 {
                     throw new Exception($"Factory method {registerDto.FactoryMethodName} was not found");
@@ -259,6 +297,54 @@
 
                 registration.AsFactoryMethod(ctx => factoryMethod.Invoke(null, new object[] {ctx}));
             }
+        }
+
+        private IKey CreateKey(IKeyDto keyDto, ITypeResolver typeResolver)
+        {
+            var contractDto = keyDto as IContractDto;
+            if (contractDto != null)
+            {
+                var contractKeys = new List<IContractKey>();
+                foreach (var typeName in contractDto.Contract)
+                {
+                    Type contractType;
+                    if (!typeResolver.TryResolveType(typeName, out contractType))
+                    {
+                        throw new Exception($"Invalid contract type {typeName}");
+                    }
+
+                    _keyFactory.CreateContractKey(contractType, true);
+                }
+
+
+                return _keyFactory.CreateCompositeKey(contractKeys.ToArray(), new ITagKey[0], new IStateKey[0]);
+            }
+
+            var stateDto = keyDto as IStateDto;
+            if (stateDto != null)
+            {
+                Type stateType;
+                if (!typeResolver.TryResolveType(stateDto.TypeName, out stateType))
+                {
+                    throw new Exception($"Invalid state type {stateDto.TypeName}");
+                }
+
+                return _keyFactory.CreateStateKey(stateDto.Index, stateType);
+            }
+
+            var tagDto = keyDto as ITagDto;
+            if (tagDto != null)
+            {
+                object tag;
+                if (!TryGetTagValue(typeResolver, tagDto, out tag))
+                {
+                    throw new Exception($"Invalid tag {tagDto.Value}");
+                }
+
+                return _keyFactory.CreateTagKey(tag);
+            }
+
+            throw new Exception($"Invalid typ of key {keyDto.GetType()}");
         }
 
         private static bool TryGetTagValue(ITypeResolver typeResolver, ITagDto tagDto, out object tagValue)
@@ -288,6 +374,82 @@
 
             value = Convert.ChangeType(valueText, type);
             return true;
+        }
+
+        private class ConstructorParameter: IParameterMetadata
+        {
+            public ConstructorParameter(Type type, IKey[] keys, bool isDependency, int stateIndex)
+            {
+                if (type == null) throw new ArgumentNullException(nameof(type));
+                if (keys == null) throw new ArgumentNullException(nameof(keys));
+                Type = type;
+                Keys = keys;
+                IsDependency = isDependency;
+                if (!isDependency)
+                {
+                    StateKey = new StateKey(stateIndex, type);
+                }
+            }
+
+            public Type Type { get; }
+
+            public bool IsDependency { get; }
+
+            public object[] State { get; }
+
+            public IStateKey StateKey { get; }
+
+            public IKey[] Keys { get; }
+
+        }
+
+        private class MetadataProvider : IMetadataProvider
+        {
+            private readonly ICollection<ConstructorParameter> _bindingCtorParams;
+            private readonly IParameterMetadata[] _constructorArguments;
+
+            public MetadataProvider(ICollection<ConstructorParameter> bindingCtorParams)
+            {
+                if (bindingCtorParams == null) throw new ArgumentNullException(nameof(bindingCtorParams));
+                _bindingCtorParams = bindingCtorParams;
+                _constructorArguments = bindingCtorParams.Cast<IParameterMetadata>().ToArray();
+            }
+
+            public Type ResolveImplementationType(IResolverContext resolverContext, Type type)
+            {
+                return AutowiringMetadataProvider.Shared.ResolveImplementationType(resolverContext, type);
+            }
+
+            public bool TrySelectConstructor(Type implementationType, out ConstructorInfo constructor, out Exception error)
+            {
+                var typeInfo = implementationType.GetTypeInfo();
+                constructor = typeInfo.DeclaredConstructors.Where(MatchConstructor).FirstOrDefault();
+                error = default(Exception);
+                return constructor != null;
+            }
+
+            public IParameterMetadata[] GetConstructorArguments(ConstructorInfo constructor)
+            {
+                return _constructorArguments;
+            }
+
+            private bool MatchConstructor(ConstructorInfo ctor)
+            {
+                var ctorParams = ctor.GetParameters();
+                if (ctorParams.Length != _bindingCtorParams.Count)
+                {
+                    return false;
+                }
+
+                return ctorParams
+                    .Zip(_bindingCtorParams, (ctorParam, bindingParam) => new {ctorParam, bindingParam})
+                    .Any(i => !MatchParameter(i.ctorParam, i.bindingParam));
+            }
+
+            private static bool MatchParameter(ParameterInfo ctorParam, ConstructorParameter bindingCtorParam)
+            {
+                return ctorParam.ParameterType == bindingCtorParam.Type;
+            }
         }
     }
 }
