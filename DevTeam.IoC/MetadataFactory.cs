@@ -7,6 +7,7 @@
 
     internal class MetadataFactory: IResolverFactory
     {
+        private static readonly object[] EmptyState = new object[0];
         private readonly IInstanceFactory _instanceFactory;
         private readonly IParameterMetadata[] _parameters;
 
@@ -37,7 +38,7 @@
         {
             if (parameterMetadata.IsDependency)
             {
-                return resolverContext.RegistryContext.Container.Resolve().Key(parameterMetadata.Keys).Instance(parameterMetadata.State);
+                return resolverContext.RegistryContext.Container.Resolve().Key(parameterMetadata.Keys).Instance(parameterMetadata.State ?? EmptyState);
             }
 
             return resolverContext.StateProvider.GetState(resolverContext, parameterMetadata.StateKey);

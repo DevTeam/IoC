@@ -169,7 +169,7 @@
             return false;
         }
 
-        private ICompositeKey CreateCompositeKey()
+        internal ICompositeKey CreateCompositeKey()
         {
             if (_compositeKey == null)
             {

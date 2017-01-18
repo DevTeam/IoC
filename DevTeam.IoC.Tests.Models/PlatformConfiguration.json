@@ -1,7 +1,9 @@
 ﻿[
     { "reference": "DevTeam.IoC.Tests.Models" },
-    
+    { "reference": "DevTeam.IoC.Contracts" },
+
     { "using": "DevTeam.IoC.Tests.Models" },
+    { "using": "DevTeam.IoC.Contracts" },
 
     {
         "GetDependecies": [
@@ -24,7 +26,18 @@
                     { "Lifetime": "Singleton" },
                     { "Contract": [ "IConsole" ] }
                 ],
-                "AsAutowiring": "Console"
+                "AsAutowiring": "Console",
+                "Binding": {
+                    "Constructor": [
+                        {
+                            
+                            "Type": "IProvider<ITrace>",
+                            "Dependency": [
+                                { "Contract": [ "IProvider<ITrace>" ] }
+                            ]
+                        }
+                    ]
+                }
             },
 
             {

@@ -6,7 +6,7 @@
 
     internal class BindingDto : IBindingDto
     {
-        [JsonProperty("Constructor", Required = Required.Default)]
+        [JsonProperty("Constructor", Required = Required.Always)]
         public IEnumerable<IParameterDto> ConstructorParameters { get; set; }
     }
 }

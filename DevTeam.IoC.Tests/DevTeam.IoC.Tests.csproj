@@ -81,6 +81,7 @@
     <Compile Include="ISimpleService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestExtensions.cs" />
+    <Compile Include="TypeResolverTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DevTeam.IoC.Configurations.Json\DevTeam.IoC.Configurations.Json.csproj">
