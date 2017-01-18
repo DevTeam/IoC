@@ -103,7 +103,7 @@
     <Compile Include="IResolverContext.cs" />
     <Compile Include="IScope.cs" />
     <Compile Include="IStateKey.cs" />
-    <Compile Include="ITagKeyDto.cs" />
+    <Compile Include="Dto\ITagKeyDto.cs" />
     <Compile Include="IToken.cs" />
     <Compile Include="ITypeResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
