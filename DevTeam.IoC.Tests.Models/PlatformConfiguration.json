@@ -29,10 +29,9 @@
                 "AsAutowiring": "Console",
                 "Constructor": [
                     {
-                            
                         "Type": "IProvider<ITrace>",
                         "Dependency": [
-                            { "Contract": [ "IProvider<ITrace>" ] }
+                            { "Contract": [ ] }
                         ]
                     }
                 ]
@@ -52,7 +51,18 @@
                     { "State": "0", "TypeName": "string"},
                     { "Contract": [ "ILog" ] }
                 ],
-                "AsAutowiring": "Log"
+                "AsAutowiring": "Log",
+                "Constructor": [
+                    {
+                        "Type": "IConsole",
+                        "Dependency": [
+                            { "Contract": [ ] }
+                        ]
+                    },
+                    {
+                        "Type": "string"
+                    }
+                ]
             }
         ]
     }

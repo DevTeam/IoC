@@ -265,6 +265,11 @@
                                         contractTypes.Add(contractType);
                                     }
 
+                                    if (contractTypes.Count == 0)
+                                    {
+                                        contractTypes.Add(type);
+                                    }
+
                                     resolving.Contract(contractTypes.ToArray());
                                 }
 
