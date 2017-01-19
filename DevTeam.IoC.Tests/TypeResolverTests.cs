@@ -2,6 +2,7 @@
 {
     using System;
     using Contracts;
+    using Models;
     using NUnit.Framework;
     using Shouldly;
 
@@ -17,10 +18,13 @@
         [TestCase("DevTeam.IoC.Contracts", "", "DevTeam.IoC.Contracts.IResolver", true, typeof(IResolver))]
         [TestCase("DevTeam.IoC.Contracts", "DevTeam.IoC.Contracts", "IResolver<>", true, typeof(IResolver<>))]
         [TestCase("DevTeam.IoC.Contracts", "", "DevTeam.IoC.Contracts.IResolver<>", true, typeof(IResolver<>))]
-        [TestCase("DevTeam.IoC.Contracts", "DevTeam.IoC.Contracts", "IResolver<,,>", true, typeof(IResolver<,,>))]
+        [TestCase("DevTeam.IoC.Contracts", "DevTeam.IoC.Contracts", "IResolver<int,string>", true, typeof(IResolver<int, string>))]
+        [TestCase("DevTeam.IoC.Contracts", "DevTeam.IoC.Contracts", "IResolver<,>", true, typeof(IResolver<,>))]
         [TestCase("DevTeam.IoC.Contracts", "", "DevTeam.IoC.Contracts.IResolver<,,>", true, typeof(IResolver<,,>))]
         [TestCase("DevTeam.IoC.Contracts", "DevTeam.IoC.Contracts", "IResolver<string>", true, typeof(IResolver<string>))]
         [TestCase("DevTeam.IoC.Contracts", "DevTeam.IoC.Contracts", "IResolver<IResolver<string>>", true, typeof(IResolver<IResolver<string>>))]
+        [TestCase("DevTeam.IoC.Contracts", "DevTeam.IoC.Contracts", "IResolver<IResolver<string, int, float>, double, IResolver<IResolver<IResolver<string, int, float>>>>", true, typeof(IResolver<IResolver<string, int, float>, double, IResolver<IResolver<IResolver<string, int, float>>>>))]
+        [TestCase("DevTeam.IoC.Tests.Models", "DevTeam.IoC.Tests.Models", "ITimer", true, typeof(ITimer))]
         public void ShouldTryResolveType(
             string references,
             string usings,

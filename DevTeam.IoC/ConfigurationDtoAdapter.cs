@@ -487,7 +487,7 @@
 
                 return ctorParams
                     .Zip(_bindingCtorParams, (ctorParam, bindingParam) => new { ctorParam, bindingParam })
-                    .Any(i => !MatchParameter(i.ctorParam, i.bindingParam));
+                    .Any(i => MatchParameter(i.ctorParam, i.bindingParam));
             }
 
             private static bool MatchParameter(ParameterInfo ctorParam, ConstructorParameter bindingCtorParam)
