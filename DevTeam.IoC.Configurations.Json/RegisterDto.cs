@@ -16,8 +16,8 @@
         [JsonProperty("AsAutowiring", Required = Required.Default)]
         public string AutowiringTypeName { get; set; }
 
-        [JsonProperty("Binding", Required = Required.Default)]
-        public IBindingDto Binding { get; set; }
+        [JsonProperty("Constructor", Required = Required.Default)]
+        public IEnumerable<IParameterDto> ConstructorParameters { get; set; }
 
         [JsonProperty("AsFactoryMethod", Required = Required.Default)]
         public string FactoryMethodName { get; set; }

@@ -10,7 +10,6 @@
     internal class ConfigurationDtoAdapter : IConfiguration
     {
         private readonly IConfigurationDto _configurationDto;
-        private readonly IKeyFactory _keyFactory;
 
         public ConfigurationDtoAdapter(
             IConfigurationDto configurationDto)
@@ -232,10 +231,10 @@
                 }
 
                 IMetadataProvider metadataProvider = null;
-                if (registerDto.Binding != null)
+                if (registerDto.ConstructorParameters != null)
                 {
                     var constructorParameters = new List<ConstructorParameter>();
-                    var bindingCtorParams = registerDto.Binding.ConstructorParameters.ToArray();
+                    var bindingCtorParams = registerDto.ConstructorParameters.ToArray();
                     int stateIndex = 0;
                     foreach (var ctorParam in bindingCtorParams)
                     {

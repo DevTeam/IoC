@@ -40,7 +40,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplyDto.cs" />
-    <Compile Include="BindingDto.cs" />
     <Compile Include="ConfigurationDto.cs" />
     <Compile Include="ConfigurationReferenceDto.cs" />
     <Compile Include="ParameterDto.cs" />

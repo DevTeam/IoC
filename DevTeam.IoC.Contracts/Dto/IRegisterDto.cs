@@ -12,6 +12,6 @@
 
         string FactoryMethodName { get; }
 
-        IBindingDto Binding { get; }
+        IEnumerable<IParameterDto> ConstructorParameters { get; }
     }
 }

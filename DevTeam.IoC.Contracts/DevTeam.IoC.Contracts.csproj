@@ -44,7 +44,6 @@
     <Compile Include="ContractAttribute.cs" />
     <Compile Include="Dto\IApplyDto.cs" />
     <Compile Include="Dto\IApplyStatementDto.cs" />
-    <Compile Include="Dto\IBindingDto.cs" />
     <Compile Include="Dto\IConfigurationDto.cs" />
     <Compile Include="Dto\IConfigurationReferenceDto.cs" />
     <Compile Include="Dto\IConfigurationStatementDto.cs" />

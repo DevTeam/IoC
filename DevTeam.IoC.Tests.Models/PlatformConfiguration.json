@@ -27,17 +27,15 @@
                     { "Contract": [ "IConsole" ] }
                 ],
                 "AsAutowiring": "Console",
-                "Binding": {
-                    "Constructor": [
-                        {
+                "Constructor": [
+                    {
                             
-                            "Type": "IProvider<ITrace>",
-                            "Dependency": [
-                                { "Contract": [ "IProvider<ITrace>" ] }
-                            ]
-                        }
-                    ]
-                }
+                        "Type": "IProvider<ITrace>",
+                        "Dependency": [
+                            { "Contract": [ "IProvider<ITrace>" ] }
+                        ]
+                    }
+                ]
             },
 
             {
