@@ -62,6 +62,7 @@
     <Compile Include="Dto\ITagDto.cs" />
     <Compile Include="Dto\IUsingDto.cs" />
     <Compile Include="Dto\IConfigurationTypeDto.cs" />
+    <Compile Include="Dto\IValueDto.cs" />
     <Compile Include="Dto\IWellknownConfigurationDto.cs" />
     <Compile Include="IParameterMetadata.cs" />
     <Compile Include="ICache.cs" />

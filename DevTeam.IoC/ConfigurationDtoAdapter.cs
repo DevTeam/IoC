@@ -244,6 +244,7 @@
                             throw new Exception($"Invalid constructor parameter type {ctorParam.TypeName}");
                         }
 
+                        var values = new List<object>();
                         IKey key = null;
                         if (ctorParam.Keys != null)
                         {
@@ -272,6 +273,10 @@
 
                                     resolving.Contract(contractTypes.ToArray());
                                 }
+                                else
+                                {
+                                    resolving.Contract(type);
+                                }
 
                                 var stateDto = keyDto as IStateDto;
                                 if (stateDto != null)
@@ -280,6 +285,17 @@
                                     if (!typeResolver.TryResolveType(stateDto.TypeName, out stateType))
                                     {
                                         throw new Exception($"Invalid state type {stateDto.TypeName}");
+                                    }
+
+                                    if (stateDto.Value != null)
+                                    {
+                                        object value;
+                                        if (!TryGetValue(typeResolver, stateDto.Value, out value))
+                                        {
+                                            throw new Exception($"Invalid tag {stateDto.Value.Data}");
+                                        }
+
+                                        values.Add(value);
                                     }
 
                                     resolving.State(stateDto.Index, stateType);
@@ -302,7 +318,7 @@
                         }
 
                         var isDependency = key != null;
-                        constructorParameters.Add(new ConstructorParameter(type, new []{ key }, isDependency, stateIndex));
+                        constructorParameters.Add(new ConstructorParameter(type, new []{ key }, isDependency, stateIndex, values.ToArray()));
 
                         if (!isDependency)
                         {
@@ -343,58 +359,6 @@
             }
         }
 
-        //private IKey CreateKey(IResolver resolver, ITypeResolver typeResolver, IKeyDto keyDto)
-        //{
-        //    var resolving = new Resolving(resolver.Resolve().Instance<IFluent>(), resolver);
-
-        //    var contractDto = keyDto as IContractDto;
-        //    if (contractDto != null)
-        //    {
-        //        var contractTypes = new List<Type>();
-        //        foreach (var typeName in contractDto.Contract)
-        //        {
-        //            Type contractType;
-        //            if (!typeResolver.TryResolveType(typeName, out contractType))
-        //            {
-        //                throw new Exception($"Invalid contract type {typeName}");
-        //            }
-
-        //            contractTypes.Add(contractType);
-        //        }
-
-        //        resolving.Contract()
-
-
-        //        return _keyFactory.CreateCompositeKey(contractKeys.ToArray(), new ITagKey[0], new IStateKey[0]);
-        //    }
-
-        //    var stateDto = keyDto as IStateDto;
-        //    if (stateDto != null)
-        //    {
-        //        Type stateType;
-        //        if (!typeResolver.TryResolveType(stateDto.TypeName, out stateType))
-        //        {
-        //            throw new Exception($"Invalid state type {stateDto.TypeName}");
-        //        }
-
-        //        return _keyFactory.CreateStateKey(stateDto.Index, stateType);
-        //    }
-
-        //    var tagDto = keyDto as ITagDto;
-        //    if (tagDto != null)
-        //    {
-        //        object tag;
-        //        if (!TryGetTagValue(typeResolver, tagDto, out tag))
-        //        {
-        //            throw new Exception($"Invalid tag {tagDto.Value}");
-        //        }
-
-        //        return _keyFactory.CreateTagKey(tag);
-        //    }
-
-        //    throw new Exception($"Invalid typ of key {keyDto.GetType()}");
-        //}
-
         private static bool TryGetTagValue(ITypeResolver typeResolver, ITagDto tagDto, out object tagValue)
         {
             if (tagDto == null)
@@ -412,6 +376,23 @@
             return TryGetValue(type, tagDto.Value, out tagValue);
         }
 
+        private static bool TryGetValue(ITypeResolver typeResolver, IValueDto valueDto, out object tagValue)
+        {
+            if (valueDto == null)
+            {
+                tagValue = default(object);
+                return false;
+            }
+
+            Type type;
+            if (!typeResolver.TryResolveType(valueDto.TypeName, out type))
+            {
+                type = typeof(string);
+            }
+
+            return TryGetValue(type, valueDto.Data, out tagValue);
+        }
+
         private static bool TryGetValue(Type type, string valueText, out object value)
         {
             if (type.GetTypeInfo().IsEnum)
@@ -426,13 +407,14 @@
 
         private class ConstructorParameter : IParameterMetadata
         {
-            public ConstructorParameter(Type type, IKey[] keys, bool isDependency, int stateIndex)
+            public ConstructorParameter(Type type, IKey[] keys, bool isDependency, int stateIndex, object[] state)
             {
                 if (type == null) throw new ArgumentNullException(nameof(type));
                 if (keys == null) throw new ArgumentNullException(nameof(keys));
                 Type = type;
                 Keys = keys;
                 IsDependency = isDependency;
+                State = state;
                 if (!isDependency)
                 {
                     StateKey = new StateKey(stateIndex, type);

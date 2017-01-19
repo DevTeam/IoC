@@ -5,5 +5,7 @@
         int Index { get; }
 
         string TypeName { get; }
+
+        IValueDto Value { get; }
     }
 }

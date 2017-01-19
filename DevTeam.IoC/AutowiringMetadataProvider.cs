@@ -103,7 +103,7 @@
 
                 var tagKeys = info.GetCustomAttributes<TagAttribute>().SelectMany(i => i.Tags).Select(i => (IKey)new TagKey(i));
                 var stateAttributes = info.GetCustomAttributes<StateAttribute>().OrderBy(i => i.Index).ToArray();
-                State = stateAttributes.Select(i => i.Value).ToArray();
+                State = stateAttributes.OrderBy(i => i.Index).Select(i => i.Value).ToArray();
                 var stateKeys = stateAttributes.Select(i => (IKey)new StateKey(i.Index, i.StateType));
 
                 Keys = contractKeys.Concat(tagKeys).Concat(stateKeys).ToArray();

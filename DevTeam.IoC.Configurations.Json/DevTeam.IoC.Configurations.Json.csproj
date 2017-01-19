@@ -59,6 +59,7 @@
     <Compile Include="ReferenceDto.cs" />
     <Compile Include="ConfigurationTypeDto.cs" />
     <Compile Include="UsingDto.cs" />
+    <Compile Include="ValueDto.cs" />
     <Compile Include="WellknownConfigurationDto.cs" />
   </ItemGroup>
   <ItemGroup>

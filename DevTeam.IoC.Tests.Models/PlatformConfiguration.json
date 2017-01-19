@@ -43,7 +43,15 @@
                     { "Contract": [ "ITimer" ] },
                     { "Contract": [ "ITimerManager" ] }
                 ],
-                "AsAutowiring": "Timer"
+                "AsAutowiring": "Timer",
+                "Constructor": [
+                    {
+                        "Type": "ILog",
+                        "Dependency": [
+                            { "State": "0", "TypeName": "string", "Value": { "Type": "string", "Data": "Abc"}}
+                        ]
+                    }
+                ]
             },
 
             {

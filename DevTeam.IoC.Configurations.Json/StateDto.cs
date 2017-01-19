@@ -10,5 +10,8 @@
 
         [JsonProperty("TypeName", Required = Required.Always)]
         public string TypeName { get; set; }
+
+        [JsonProperty("Value", Required = Required.Default)]
+        public IValueDto Value { get; set; }
     }
 }
