@@ -7,3 +7,4 @@ packages
 **/*.csproj.user
 *.suo
 .vs/
+*.user

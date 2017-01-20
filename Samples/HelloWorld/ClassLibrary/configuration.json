@@ -1,0 +1,38 @@
+﻿[
+    { "reference": "ClassLibrary" },
+
+    { "using": "ClassLibrary" },
+
+    {
+        "GetDependecies": [
+            { "Wellknown": "All" }
+        ]
+    },
+
+    {
+        "Apply": [
+            {
+                "Register": [
+                    { "Lifetime": "Singleton" },
+                    { "Contract": [ "IConsole" ] }
+                ],
+                "AsAutowiring": "Console"
+            },
+
+            {
+                "Register": [
+                    { "Contract": [ "IHelloWorld" ] }
+                ],
+                "AsAutowiring": "HelloWorld",
+                "Constructor": [
+                    {
+                        "Type": "IConsole",
+                        "Dependency": [
+                            { "Contract": [] }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]
