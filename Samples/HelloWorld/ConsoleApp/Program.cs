@@ -12,7 +12,7 @@
     {
         public static void Main(string[] args)
         {
-            using (var container = new Container("root"))
+            using (var container = new Container())
             using (container.Configure().DependsOn<JsonConfiguration>(ReadConfiguration<IHelloWorld>("ClassLibrary.configuration.json")).Apply())
             {
                 var helloWorld = container.Resolve().Instance<IHelloWorld>();

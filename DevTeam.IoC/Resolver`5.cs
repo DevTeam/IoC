@@ -3,7 +3,7 @@
     using System;
     using Contracts;
 
-    internal class Resolver<TState1, TState2, TState3, TState4, TContract> : Resolver<TContract>, IResolver<TState1, TState2, TState3, TState4, TContract>, IProvider<TState1, TState2, TState3, TState4, TContract>
+    internal class Resolver<TState1, TState2, TState3, TState4, TContract> : Resolver<TContract>, IResolver<TState1, TState2, TState3, TState4, TContract>, IProvider<TState1, TState2, TState3, TState4, TContract>, IFuncProvider
     {
         private readonly IResolving _resolving;
 
@@ -30,6 +30,11 @@
 
             instance = default(TContract);
             return false;
+        }
+
+        public override object GetFunc()
+        {
+            return new Func<TState1, TState2, TState3, TState4, TContract>(Resolve);
         }
     }
 }

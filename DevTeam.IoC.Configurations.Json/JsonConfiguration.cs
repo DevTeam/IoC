@@ -27,7 +27,7 @@
 
         public IEnumerable<IConfiguration> GetDependencies(IResolver resolver)
         {
-            yield break;
+            yield return resolver.Configuration(Wellknown.Configurations.Dto);
         }
 
         public IEnumerable<IDisposable> Apply(IResolver resolver)

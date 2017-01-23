@@ -1,6 +1,7 @@
 ﻿namespace DevTeam.IoC
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using Contracts;
@@ -51,6 +52,16 @@
             return DependsOn(typeof(TConfiguration), description);
         }
 
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public IEnumerator<IConfiguration> GetEnumerator()
+        {
+            return _configurations.SelectMany(i => i).GetEnumerator();
+        }
+
         public IDisposable Apply()
         {
             return new CompositeDisposable(_configurations.Select(Apply));
@@ -58,15 +69,32 @@
 
         private IDisposable Apply(IEnumerable<IConfiguration> configuration)
         {
-            var configs = ExpandConfigurations(_resolver, configuration).Distinct().ToArray();
-            return new CompositeDisposable(configs.Where(config => _appliedConfigurations.Add(config)).Select(config => config.Apply(_resolver)).SelectMany(disposable => disposable));
+            return new CompositeDisposable(ApplyConfigurations(configuration));
         }
 
-        private IEnumerable<IConfiguration> ExpandConfigurations(IResolver resolver, IEnumerable<IConfiguration> configurations)
+        private IEnumerable<IDisposable> ApplyConfigurations(IEnumerable<IConfiguration> configurations)
         {
             if (configurations == null) throw new ArgumentNullException(nameof(configurations));
-            var enumerable = configurations as IConfiguration[] ?? configurations.ToArray();
-            return enumerable.Select(dependency => ExpandConfigurations(resolver, dependency.GetDependencies(resolver))).SelectMany(i => i).Concat(enumerable);
+            using (var enumerator = (configurations as IConfiguration[] ?? configurations).GetEnumerator())
+            {
+                while (enumerator.MoveNext())
+                {
+                    if (!_appliedConfigurations.Add(enumerator.Current))
+                    {
+                        continue;
+                    }
+
+                    foreach (var disposable in ApplyConfigurations(enumerator.Current.GetDependencies(_resolver)))
+                    {
+                        yield return disposable;
+                    }
+
+                    foreach (var disposable in enumerator.Current.Apply(_resolver))
+                    {
+                        yield return disposable;
+                    }
+                }
+            }
         }
 
         private class ConfigurationFromDto: IConfiguration

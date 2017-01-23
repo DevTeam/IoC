@@ -6,7 +6,7 @@
 
     using Contracts;
 
-    internal class Resolver<TContract>: IResolver<TContract>, IProvider<TContract>
+    internal class Resolver<TContract>: IResolver<TContract>, IProvider<TContract>, IFuncProvider
     {
         private readonly IResolving _resolving;
 
@@ -16,16 +16,9 @@
             _resolving = context.Container.Resolve().Key(ExcludeContractKeys(context.Key)).Contract<TContract>();
         }
 
-        public TContract Resolve(IStateProvider stateProvider)
+        public TContract Resolve()
         {
-            if (stateProvider == null) throw new ArgumentNullException(nameof(stateProvider));
-            return (TContract)_resolving.Instance(stateProvider);
-        }
-
-        public TContract Resolve(params object[] state)
-        {
-            if (state == null) throw new ArgumentNullException(nameof(state));
-            return (TContract)_resolving.Instance(CreateStateProvider(state));
+            return (TContract)_resolving.Instance();
         }
 
         public bool TryGet(out TContract instance, IStateProvider stateProvider)
@@ -52,6 +45,11 @@
 
             instance = default(TContract);
             return false;
+        }
+
+        public virtual object GetFunc()
+        {
+            return new Func<TContract>(Resolve);
         }
 
         protected IResolving CreateResolving()

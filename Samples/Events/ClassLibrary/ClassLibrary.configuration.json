@@ -1,0 +1,64 @@
+﻿[
+    { "reference": "Contracts" },
+    { "reference": "ClassLibrary" },
+
+    { "using": "System" },
+    { "using": "System.Collections.Generic" },
+    { "using": "Contracts" },
+    { "using": "ClassLibrary" },
+
+    {
+        "GetDependecies": [
+            { "Wellknown": "All" }
+        ]
+    },
+
+    {
+        "Apply": [
+            {
+                "Register": [
+                    { "Contract": [ "IEventConsumer<DateTimeOffset>" ] }
+                ],
+                "AsAutowiring": "Сhronometer",
+                "Constructor": [
+                    {
+                        "Type": "IConsole",
+                        "Dependency": [
+                            { "Contract": [] }
+                        ]
+                    }
+                ]
+            },
+
+            {
+                "Register": [
+                    { "Contract": [ "IEventProducer<DateTimeOffset>" ] }
+                ],
+                "AsAutowiring": "Timer"
+            },
+
+            {
+                "Register": [
+                    { "Lifetime": "Singleton" },
+                    { "Lifetime": "Controlled" },
+                    { "Contract": [ "IEventBroker" ] }
+                ],
+                "AsAutowiring": "EventBroker<DateTimeOffset>",
+                "Constructor": [
+                    {
+                        "Type": "IEnumerable<IEventProducer<DateTimeOffset>>",
+                        "Dependency": [
+                            { "Contract": [] }
+                        ]
+                    },
+                    {
+                        "Type": "IEnumerable<IEventConsumer<DateTimeOffset>>",
+                        "Dependency": [
+                            { "Contract": [] }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]

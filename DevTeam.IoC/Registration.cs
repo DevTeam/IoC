@@ -154,12 +154,10 @@
         {
             CeateCompositeKeys();
             IDisposable registration;
-            var context = Registry.CreateContext(_compositeKeys,
-                new MethodFactory<TImplementation>(factoryMethod), Extensions);
+            var context = Registry.CreateContext(_compositeKeys, new MethodFactory<TImplementation>(factoryMethod), Extensions);
             if (!Registry.TryRegister(context, out registration))
             {
-                throw new InvalidOperationException(
-                    $"Can't register {string.Join(Environment.NewLine, context.Keys)}.{Environment.NewLine}{Environment.NewLine}{Registry}");
+                throw new InvalidOperationException($"Can't register {string.Join(Environment.NewLine, context.Keys)}.{Environment.NewLine}{Environment.NewLine}{Registry}");
             }
 
             return registration;

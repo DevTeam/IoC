@@ -1,8 +1,9 @@
 ﻿namespace DevTeam.IoC.Contracts
 {
     using System;
+    using System.Collections.Generic;
 
-    public interface IConfiguring
+    public interface IConfiguring : IEnumerable<IConfiguration>
     {
         IConfiguring DependsOn(params IConfiguration[] configurations);
 

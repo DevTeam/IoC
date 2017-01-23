@@ -43,7 +43,7 @@
                 // When
                 using (container.Register().Contract<ISimpleService>().Tag("abc").State<string>(0).State<int>(1).AsAutowiring<StateClass>())
                 {
-                    var resolver = container.Resolve().Tag("abc").State<string>(0).State<int>(1).Instance<IResolver<ISimpleService>>();
+                    var resolver = container.Resolve().Tag("abc").Instance<IResolver<string, int, ISimpleService>>();
                     var actualObj = resolver.Resolve("text", 33) as StateClass;
 
                     // Then
