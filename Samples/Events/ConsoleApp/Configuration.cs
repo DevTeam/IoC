@@ -11,13 +11,16 @@
     {
         public IEnumerable<IConfiguration> GetDependencies(IResolver resolver)
         {
-            yield break;
+            yield return resolver.Configuration(Wellknown.Configurations.Lifetimes);
+            foreach (var config in resolver.Configure().DependsOn<JsonConfiguration>(ReadConfiguration("ClassLibrary.configuration.json")))
+            {
+                yield return config;
+            }
         }
 
         public IEnumerable<IDisposable> Apply(IResolver resolver)
         {
-            yield return resolver.Register().Contract<IConsole>().AsAutowiring<Console>();
-            yield return resolver.Configure().DependsOn<JsonConfiguration>(ReadConfiguration("ClassLibrary.configuration.json")).Apply();
+            yield return resolver.Register().Lifetime(Wellknown.Lifetimes.Singleton).Contract<IConsole>().AsAutowiring<Console>();
         }
 
         private string ReadConfiguration(string jsonFileName)
