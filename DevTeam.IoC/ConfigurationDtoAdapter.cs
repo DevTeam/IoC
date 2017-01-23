@@ -12,7 +12,7 @@
         private readonly IConfigurationDto _configurationDto;
 
         public ConfigurationDtoAdapter(
-            IConfigurationDto configurationDto)
+            [State()] IConfigurationDto configurationDto)
         {
             if (configurationDto == null) throw new ArgumentNullException(nameof(configurationDto));
             _configurationDto = configurationDto;

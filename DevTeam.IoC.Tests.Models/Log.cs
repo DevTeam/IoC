@@ -8,7 +8,7 @@
         private readonly IConsole _console;
         private readonly string _name;
 
-        public Log([Contract] IConsole console, string name)
+        public Log(IConsole console, [State] string name)
         {
             if (console == null) throw new ArgumentNullException(nameof(console));
             _console = console;

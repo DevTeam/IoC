@@ -90,7 +90,7 @@
 
         private class StateClass: ISimpleService
         {
-            public StateClass(string arg1, int arg2)
+            public StateClass([State] string arg1, [State] int arg2)
             {
                 Arg1 = arg1;
                 Arg2 = arg2;

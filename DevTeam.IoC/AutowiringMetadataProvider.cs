@@ -91,29 +91,28 @@
             public ParameterMetadata(ParameterInfo info, int stateIndex)
             {
                 var contractAttributes = info.GetCustomAttributes<ContractAttribute>().ToArray();
-                IEnumerable<IContractKey> contractKeys;
-                if (contractAttributes.Length > 0)
-                {
-                    contractKeys = contractAttributes.SelectMany(i => i.ContractTypes).Select(type => (IContractKey)new ContractKey(type, true)).DefaultIfEmpty(new ContractKey(info.ParameterType, true));
-                }
-                else
-                {
-                    contractKeys = Enumerable.Empty<IContractKey>();
-                }
-
-                var tagKeys = info.GetCustomAttributes<TagAttribute>().SelectMany(i => i.Tags).Select(i => (IKey)new TagKey(i));
                 var stateAttributes = info.GetCustomAttributes<StateAttribute>().OrderBy(i => i.Index).ToArray();
-                State = stateAttributes.OrderBy(i => i.Index).Select(i => i.Value).ToArray();
-                var stateKeys = stateAttributes.Select(i => (IKey)new StateKey(i.Index, i.StateType));
-
-                Keys = contractKeys.Concat(tagKeys).Concat(stateKeys).ToArray();
-                if (Keys.Any())
-                {
-                    IsDependency = true;
-                }
-                else
+                if (stateAttributes.Length == 1 && contractAttributes.Length == 0 && !stateAttributes[0].IsDependency)
                 {
                     StateKey = new StateKey(stateIndex, info.ParameterType);
+                }
+                else
+                {
+                    IsDependency = true;
+                    IEnumerable<IContractKey> contractKeys;
+                    if (contractAttributes.Length > 0)
+                    {
+                        contractKeys = contractAttributes.SelectMany(i => i.ContractTypes).Select(type => (IContractKey)new ContractKey(type, true)).DefaultIfEmpty(new ContractKey(info.ParameterType, true));
+                    }
+                    else
+                    {
+                        contractKeys = Enumerable.Repeat((IContractKey)new ContractKey(info.ParameterType, true), 1);
+                    }
+
+                    var tagKeys = info.GetCustomAttributes<TagAttribute>().SelectMany(i => i.Tags).Select(i => (IKey)new TagKey(i));
+                    State = stateAttributes.OrderBy(i => i.Index).Select(i => i.Value).ToArray();
+                    var stateKeys = stateAttributes.Select(i => (IKey)new StateKey(i.Index, i.StateType));
+                    Keys = contractKeys.Concat(tagKeys).Concat(stateKeys).ToArray();
                 }
             }
 

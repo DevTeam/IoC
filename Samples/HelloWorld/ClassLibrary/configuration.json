@@ -23,15 +23,7 @@
                 "Register": [
                     { "Contract": [ "IHelloWorld" ] }
                 ],
-                "AsAutowiring": "HelloWorld",
-                "Constructor": [
-                    {
-                        "Type": "IConsole",
-                        "Dependency": [
-                            { "Contract": [] }
-                        ]
-                    }
-                ]
+                "AsAutowiring": "HelloWorld"
             }
         ]
     }

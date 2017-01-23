@@ -123,7 +123,7 @@
 
         private class StateClass
         {
-            public StateClass(string arg1, int arg2)
+            public StateClass([State] string arg1, [State] int arg2)
             {
                 Arg1 = arg1;
                 Arg2 = arg2;
@@ -137,9 +137,9 @@
         private class DependencyClass
         {
             public DependencyClass(
-                string arg1,
+                [State] string arg1,
                 [Contract(typeof(StateClass))] [Tag("xxx")] [State(0, typeof(string))] [State(1, typeof(int))] StateClass stateClass,
-                int arg2)
+                [State] int arg2)
             {
                 Arg1 = arg1;
                 StateClass = stateClass;
@@ -156,9 +156,9 @@
         private class DependencyWithVauesClass
         {
             public DependencyWithVauesClass(
-                string arg1,
+                [State] string arg1,
                 [Contract(typeof(StateClass))] [Tag("xyz")] [State(1, typeof(int), Value = 5)] [State(0, typeof(string), Value = "fgh")] StateClass stateClass,
-                int arg2)
+                [State] int arg2)
             {
                 Arg1 = arg1;
                 StateClass = stateClass;

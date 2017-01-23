@@ -12,9 +12,9 @@
         private readonly List<IEventListener<DateTimeOffset>> _listeners = new List<IEventListener<DateTimeOffset>>();
 
         public TimerSource(
-            [Contract] ITimer timer,
-            [State(0, typeof(string), Value = nameof(TimerSource))] [Contract] ILog log,
-            [Contract] IResolver<DateTimeOffset, IEvent<DateTimeOffset>> eventResolver)
+            ITimer timer,
+            [State(0, typeof(string), Value = nameof(TimerSource))] ILog log,
+            IResolver<DateTimeOffset, IEvent<DateTimeOffset>> eventResolver)
         {
             if (timer == null) throw new ArgumentNullException(nameof(timer));
             if (log == null) throw new ArgumentNullException(nameof(log));

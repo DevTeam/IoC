@@ -4,7 +4,7 @@
 
     internal class Event<T> : IEvent<T>
     {
-        public Event(T data, [Contract] [Tag("IdGenerator")] long id)
+        public Event([State] T data, [Tag("IdGenerator")] long id)
         {
             Data = data;
             Id = id;

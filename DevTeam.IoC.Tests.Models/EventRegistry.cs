@@ -14,9 +14,9 @@
         private readonly ILog _log;
 
         public EventRegistry(
-            [Contract] Task<IResolver> resolver,
-            [Contract] Task<IEventBroker> eventBroker,
-            [State(0, typeof(string))] [Contract] Task<IResolver<string, ILog>> logResolver)
+            Task<IResolver> resolver,
+            Task<IEventBroker> eventBroker,
+            [State(0, typeof(string))] Task<IResolver<string, ILog>> logResolver)
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             if (eventBroker == null) throw new ArgumentNullException(nameof(eventBroker));

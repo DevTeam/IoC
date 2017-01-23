@@ -9,7 +9,15 @@
         {
             Index = index;
             StateType = stateType;
+            IsDependency = true;
         }
+
+        public StateAttribute()
+        {
+            StateType = typeof(object);
+        }
+
+        public bool IsDependency { get; private set; }
 
         public int Index { get; }
 

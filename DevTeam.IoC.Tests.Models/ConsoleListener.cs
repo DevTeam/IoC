@@ -9,7 +9,7 @@
         private readonly ILog _log;
 
         public ConsoleListener(
-            [Contract] IConsole console,
+            IConsole console,
             [State(0, typeof(string), Value = nameof(ConsoleListener<TEvent>))] [Contract] ILog log)
         {
             if (console == null) throw new ArgumentNullException(nameof(console));

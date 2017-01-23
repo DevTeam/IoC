@@ -8,7 +8,7 @@
         private readonly bool _isTraceEnabled;
         private readonly ITrace _trace;
 
-        public Console([Contract] IProvider<ITrace> traceProvider)
+        public Console(IProvider<ITrace> traceProvider)
         {
             if (traceProvider == null) throw new ArgumentNullException(nameof(traceProvider));
             _isTraceEnabled = traceProvider.TryGet(out _trace);

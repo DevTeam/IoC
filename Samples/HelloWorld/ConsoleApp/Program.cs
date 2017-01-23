@@ -17,6 +17,7 @@
             {
                 var helloWorld = container.Resolve().Instance<IHelloWorld>();
                 helloWorld.SayHello();
+                Console.ReadLine();
             }
         }
 

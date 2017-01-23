@@ -20,51 +20,21 @@
                     { "Lifetime": "Singleton" },
                     { "Contract": [ "ILogger" ] }
                 ],
-                "AsAutowiring": "Logger",
-                "Constructor": [
-                    {
-                        "Type": "IConsole",
-                        "Dependency": [
-                            { "Contract": [] }
-                        ]
-                    }
-                ]
+                "AsAutowiring": "Logger"
             },
 
             {
                 "Register": [
                     { "Contract": [ "IEventConsumer<DateTimeOffset>" ] }
                 ],
-                "AsAutowiring": "Chronometer",
-                "Constructor": [
-                    {
-                        "Type": "IConsole",
-                        "Dependency": [
-                            { "Contract": [] }
-                        ]
-                    },
-                    {
-                        "Type": "ILogger",
-                        "Dependency": [
-                            { "Contract": [] }
-                        ]
-                    }
-                ]
+                "AsAutowiring": "Chronometer"
             },
 
             {
                 "Register": [
                     { "Contract": [ "IEventProducer<DateTimeOffset>" ] }
                 ],
-                "AsAutowiring": "Timer",
-                "Constructor": [
-                    {
-                        "Type": "ILogger",
-                        "Dependency": [
-                            { "Contract": [] }
-                        ]
-                    }
-                ]
+                "AsAutowiring": "Timer"
             },
 
             {
@@ -73,27 +43,7 @@
                     { "Lifetime": "Controlled" },
                     { "Contract": [ "IEventBroker" ] }
                 ],
-                "AsAutowiring": "EventBroker<DateTimeOffset>",
-                "Constructor": [
-                    {
-                        "Type": "ILogger",
-                        "Dependency": [
-                            { "Contract": [] }
-                        ]
-                    },
-                    {
-                        "Type": "IEnumerable<IEventProducer<DateTimeOffset>>",
-                        "Dependency": [
-                            { "Contract": [] }
-                        ]
-                    },
-                    {
-                        "Type": "IEnumerable<IEventConsumer<DateTimeOffset>>",
-                        "Dependency": [
-                            { "Contract": [] }
-                        ]
-                    }
-                ]
+                "AsAutowiring": "EventBroker<DateTimeOffset>"
             }
         ]
     }

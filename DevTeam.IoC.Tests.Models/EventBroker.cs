@@ -13,7 +13,7 @@
         private readonly Dictionary<Type, List<IDisposable>> _subscriptions = new Dictionary<Type, List<IDisposable>>();
 
         public EventBroker(
-            [State(0, typeof(string), Value = nameof(EventBroker))] [Contract] ILog log)
+            [State(0, typeof(string), Value = nameof(EventBroker))] ILog log)
         {
             if (log == null) throw new ArgumentNullException(nameof(log));
             log.Method("Ctor()");
