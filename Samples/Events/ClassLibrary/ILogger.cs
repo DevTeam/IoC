@@ -1,7 +1,9 @@
 ﻿namespace ClassLibrary
 {
-    internal interface ILogger
+    internal interface ILogger<T>
     {
-        void LogInfo<T>(IName<T> name, string info);
+        string InstanceName { get; }
+
+        void LogInfo(string info);
     }
 }

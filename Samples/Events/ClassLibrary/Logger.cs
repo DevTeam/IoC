@@ -3,19 +3,26 @@
     using System;
     using Contracts;
 
-    internal class Logger: ILogger
+    internal class Logger<T>: ILogger<T>
     {
+        private readonly IName<T> _name;
         private readonly IConsole _console;
 
-        public Logger(IConsole console)
+        public Logger(
+            IName<T> name,
+            IConsole console)
         {
+            if (name == null) throw new ArgumentNullException(nameof(name));
             if (console == null) throw new ArgumentNullException(nameof(console));
+            _name = name;
             _console = console;
         }
 
-        public void LogInfo<T>(IName<T> name, string info)
+        public string InstanceName => _name.Short;
+
+        public void LogInfo(string info)
         {
-            _console.WriteLine($"LOG {name.Short}: {info}", Color.Log);
+            _console.WriteLine($"LOG {InstanceName}: {info}", Color.Log);
         }
     }
 }

@@ -8,34 +8,30 @@
 
     internal class Timer: IEventProducer<DateTimeOffset>
     {
-        private readonly IName<Timer> _name;
-        private readonly ILogger _logger;
+        private readonly ILogger<Timer> _logger;
         private readonly TimeSpan _period;
         private readonly List<IObserver<DateTimeOffset>> _observers = new List<IObserver<DateTimeOffset>>();
 
         public Timer(
-            IName<Timer> name,
-            ILogger logger,
+            ILogger<Timer> logger,
             TimeSpan period)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
             if (logger == null) throw new ArgumentNullException(nameof(logger));
-            _name = name;
             _logger = logger;
             _period = period;
-            _logger.LogInfo(_name, "created");
+            _logger.LogInfo("created");
         }
 
         public IDisposable Subscribe(IObserver<DateTimeOffset> observer)
         {
-            _logger.LogInfo(_name, $"Subscribe to {observer}");
+            _logger.LogInfo($"Subscribe to {observer}");
             _observers.Add(observer);
             var cancellationTokenSource = new CancellationTokenSource();
             var task = Run(observer, cancellationTokenSource.Token);
             return new Subscription(() =>
             {
                 _observers.Remove(observer);
-                _logger.LogInfo(_name, $"Unsubscribe from {observer}");
+                _logger.LogInfo($"Unsubscribe from {observer}");
 
                 cancellationTokenSource.Cancel();
                 try
@@ -52,7 +48,7 @@
 
         public override string ToString()
         {
-            return _name.Short;
+            return _logger.InstanceName;
         }
 
         private async Task Run(IObserver<DateTimeOffset> observer, CancellationToken cancellationToken)

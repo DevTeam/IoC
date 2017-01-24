@@ -24,10 +24,9 @@
 
             {
                 "Register": [
-                    { "Lifetime": "Singleton" },
-                    { "Contract": [ "ILogger" ] }
+                    { "Contract": [ "ILogger<>" ] }
                 ],
-                "AsAutowiring": "Logger"
+                "AsAutowiring": "Logger<>"
             },
 
             {
@@ -44,10 +43,7 @@
                 "AsAutowiring": "Timer",
                 "Constructor": [
                     {
-                        "Type": "IName<Timer>"
-                    },
-                    {
-                        "Type": "ILogger"
+                        "Type": "ILogger<Timer>"
                     },
                     {
                         "Type": "TimeSpan",

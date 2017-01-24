@@ -5,21 +5,19 @@
 
     internal class Chronometer: IEventConsumer<DateTimeOffset>
     {
-        private readonly IName<Chronometer> _name;
         private readonly IConsole _console;
+        private readonly ILogger<Chronometer> _logger;
         private int _tickCount;
 
         public Chronometer(
-            IName<Chronometer> name,
             IConsole console,
-            ILogger logger)
+            ILogger<Chronometer> logger)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
             if (console == null) throw new ArgumentNullException(nameof(console));
             if (logger == null) throw new ArgumentNullException(nameof(logger));
-            _name = name;
             _console = console;
-            logger.LogInfo(name, "created");
+            _logger = logger;
+            logger.LogInfo("created");
         }
 
         public void OnCompleted()
@@ -40,7 +38,7 @@
 
         public override string ToString()
         {
-            return _name.Short;
+            return _logger.InstanceName;
         }
     }
 }
