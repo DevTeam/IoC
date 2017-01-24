@@ -17,6 +17,7 @@
             {
                 var helloWorld = container.Resolve().Instance<IHelloWorld>();
                 helloWorld.SayHello();
+                Console.WriteLine("Press any key to exit");
                 Console.ReadLine();
             }
         }

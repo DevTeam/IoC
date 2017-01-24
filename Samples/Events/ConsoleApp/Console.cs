@@ -5,10 +5,29 @@
 
     internal class Console: IConsole
     {
-        public void WriteLine(string line)
+        public void WriteLine(string line, Color color)
         {
             if (line == null) throw new ArgumentNullException(nameof(line));
-            System.Console.WriteLine(line);
+            var prevForegroundColor = System.Console.ForegroundColor;
+            try
+            {
+                switch (color)
+                {
+                    case Color.Log:
+                        System.Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        break;
+
+                    case Color.Error:
+                        System.Console.ForegroundColor = ConsoleColor.Red;
+                        break;
+                }
+                
+                System.Console.WriteLine(line);
+            }
+            finally
+            {
+                System.Console.ForegroundColor = prevForegroundColor;
+            }
         }
     }
 }

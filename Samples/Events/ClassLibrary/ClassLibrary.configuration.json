@@ -17,6 +17,13 @@
         "Apply": [
             {
                 "Register": [
+                    { "Contract": [ "IName<>" ] }
+                ],
+                "AsAutowiring": "Name<>"
+            },
+
+            {
+                "Register": [
                     { "Lifetime": "Singleton" },
                     { "Contract": [ "ILogger" ] }
                 ],
@@ -36,6 +43,9 @@
                 ],
                 "AsAutowiring": "Timer",
                 "Constructor": [
+                    {
+                        "Type": "IName<Timer>"
+                    },
                     {
                         "Type": "ILogger"
                     },

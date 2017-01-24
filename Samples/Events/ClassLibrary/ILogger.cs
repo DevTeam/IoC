@@ -2,6 +2,6 @@
 {
     internal interface ILogger
     {
-        void LogInfo(object source, string info);
+        void LogInfo<T>(IName<T> name, string info);
     }
 }

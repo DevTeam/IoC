@@ -14,6 +14,9 @@
                 container.Resolve().Instance<IEventBroker>();
                 System.Console.ReadLine();
             }
+
+            System.Console.WriteLine("Press any key to exit");
+            System.Console.ReadLine();
         }
     }
 }

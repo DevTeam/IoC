@@ -13,9 +13,9 @@
             _console = console;
         }
 
-        public void LogInfo(object source, string info)
+        public void LogInfo<T>(IName<T> name, string info)
         {
-            _console.WriteLine($"LOG {source}: {info}");
+            _console.WriteLine($"LOG {name.Short}: {info}", Color.Log);
         }
     }
 }

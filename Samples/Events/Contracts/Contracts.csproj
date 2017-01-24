@@ -39,6 +39,7 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Color.cs" />
     <Compile Include="IConsole.cs" />
     <Compile Include="IEventBroker.cs" />
     <Compile Include="IEventConsumer.cs" />
