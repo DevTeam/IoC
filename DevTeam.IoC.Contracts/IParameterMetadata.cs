@@ -8,6 +8,8 @@
 
         object[] State { get; }
 
+        object Value { get; }
+
         IStateKey StateKey { get; }
     }
 }

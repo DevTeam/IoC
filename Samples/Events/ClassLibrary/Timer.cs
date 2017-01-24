@@ -9,12 +9,14 @@
     internal class Timer: IEventProducer<DateTimeOffset>
     {
         private readonly ILogger _logger;
+        private readonly TimeSpan _period;
         private readonly List<IObserver<DateTimeOffset>> _observers = new List<IObserver<DateTimeOffset>>();
 
-        public Timer(ILogger logger)
+        public Timer(ILogger logger, TimeSpan period)
         {
             if (logger == null) throw new ArgumentNullException(nameof(logger));
             _logger = logger;
+            _period = period;
             _logger.LogInfo(this, "created");
         }
 
@@ -47,9 +49,9 @@
             return $"{nameof(Timer)}-{GetHashCode()}";
         }
 
-        private static async Task Run(IObserver<DateTimeOffset> observer, CancellationToken cancellationToken)
+        private async Task Run(IObserver<DateTimeOffset> observer, CancellationToken cancellationToken)
         {
-            await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken).ContinueWith((task, state) =>
+            await Task.Delay(_period, cancellationToken).ContinueWith((task, state) =>
                 {
                     try
                     {

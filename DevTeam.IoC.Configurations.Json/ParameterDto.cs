@@ -11,5 +11,8 @@
 
         [JsonProperty("Dependency", Required = Required.Default)]
         public IEnumerable<IKeyDto> Keys { get; set; }
+
+        [JsonProperty("Value", Required = Required.Default)]
+        public string Value { get; set; }
     }
 }

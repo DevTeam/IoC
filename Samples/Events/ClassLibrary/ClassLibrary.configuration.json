@@ -34,7 +34,16 @@
                 "Register": [
                     { "Contract": [ "IEventProducer<DateTimeOffset>" ] }
                 ],
-                "AsAutowiring": "Timer"
+                "AsAutowiring": "Timer",
+                "Constructor": [
+                    {
+                        "Type": "ILogger"
+                    },
+                    {
+                        "Type": "TimeSpan",
+                        "Value": "00:00:01"
+                    }
+                ]
             },
 
             {

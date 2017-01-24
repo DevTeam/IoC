@@ -7,5 +7,7 @@
         string TypeName { get; }
 
         IEnumerable<IKeyDto> Keys { get; }
+
+        string Value { get; }
     }
 }

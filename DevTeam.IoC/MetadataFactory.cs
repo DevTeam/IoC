@@ -41,6 +41,11 @@
                 return resolverContext.RegistryContext.Container.Resolve().Key(parameterMetadata.Keys).Instance(parameterMetadata.State ?? EmptyState);
             }
 
+            if(parameterMetadata.Value != null)
+            {
+                return parameterMetadata.Value;
+            }
+
             return resolverContext.StateProvider.GetState(resolverContext, parameterMetadata.StateKey);
         }
     }

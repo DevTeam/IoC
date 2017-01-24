@@ -6,7 +6,6 @@
     internal class Chronometer: IEventConsumer<DateTimeOffset>
     {
         private readonly IConsole _console;
-        private readonly ILogger _logger;
 
         public Chronometer(
             IConsole console,
@@ -15,8 +14,7 @@
             if (console == null) throw new ArgumentNullException(nameof(console));
             if (logger == null) throw new ArgumentNullException(nameof(logger));
             _console = console;
-            _logger = logger;
-            _logger.LogInfo(this, "created");
+            logger.LogInfo(this, "created");
         }
 
         public void OnCompleted()

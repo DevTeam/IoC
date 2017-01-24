@@ -90,6 +90,7 @@
         {
             public ParameterMetadata(ParameterInfo info, int stateIndex)
             {
+                Value = null;
                 var contractAttributes = info.GetCustomAttributes<ContractAttribute>().ToArray();
                 var stateAttributes = info.GetCustomAttributes<StateAttribute>().OrderBy(i => i.Index).ToArray();
                 if (stateAttributes.Length == 1 && contractAttributes.Length == 0 && !stateAttributes[0].IsDependency)
@@ -123,6 +124,8 @@
             public IStateKey StateKey { get; }
 
             public object[] State { get; }
+
+            public object Value { get; }
         }
     }
 }

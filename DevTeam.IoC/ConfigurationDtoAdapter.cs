@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Reflection;
     using Contracts;
@@ -235,7 +236,7 @@
                 {
                     var constructorParameters = new List<ConstructorParameter>();
                     var bindingCtorParams = registerDto.ConstructorParameters.ToArray();
-                    int stateIndex = 0;
+                    var stateIndex = 0;
                     foreach (var ctorParam in bindingCtorParams)
                     {
                         Type type;
@@ -244,82 +245,95 @@
                             throw new Exception($"Invalid constructor parameter type {ctorParam.TypeName}");
                         }
 
-                        var values = new List<object>();
                         IKey key = null;
-                        if (ctorParam.Keys != null)
+                        object value = null;
+                        var state = new List<object>();
+                        if (ctorParam.Value != null)
                         {
-                            var resolving = new Resolving(resolver.Resolve().Instance<IFluent>(), resolver);
-                            foreach (var keyDto in ctorParam.Keys)
+                            if (!TryGetValue(type, ctorParam.Value, out value))
                             {
-                                var contractDto = keyDto as IContractDto;
-                                if (contractDto != null)
-                                {
-                                    var contractTypes = new List<Type>();
-                                    foreach (var typeName in contractDto.Contract)
-                                    {
-                                        Type contractType;
-                                        if (!typeResolver.TryResolveType(typeName, out contractType))
-                                        {
-                                            throw new Exception($"Invalid contract type {typeName}");
-                                        }
-
-                                        contractTypes.Add(contractType);
-                                    }
-
-                                    if (contractTypes.Count == 0)
-                                    {
-                                        contractTypes.Add(type);
-                                    }
-
-                                    resolving.Contract(contractTypes.ToArray());
-                                }
-                                else
-                                {
-                                    resolving.Contract(type);
-                                }
-
-                                var stateDto = keyDto as IStateDto;
-                                if (stateDto != null)
-                                {
-                                    Type stateType;
-                                    if (!typeResolver.TryResolveType(stateDto.TypeName, out stateType))
-                                    {
-                                        throw new Exception($"Invalid state type {stateDto.TypeName}");
-                                    }
-
-                                    if (stateDto.Value != null)
-                                    {
-                                        object value;
-                                        if (!TryGetValue(typeResolver, stateDto.Value, out value))
-                                        {
-                                            throw new Exception($"Invalid tag {stateDto.Value.Data}");
-                                        }
-
-                                        values.Add(value);
-                                    }
-
-                                    resolving.State(stateDto.Index, stateType);
-                                }
-
-                                var tagDto = keyDto as ITagDto;
-                                if (tagDto != null)
-                                {
-                                    object tag;
-                                    if (!TryGetTagValue(typeResolver, tagDto, out tag))
-                                    {
-                                        throw new Exception($"Invalid tag {tagDto.Value}");
-                                    }
-
-                                    resolving.Tag(tag);
-                                }
+                                throw new Exception($"Invalid value \"{ctorParam.Value}\" of type {type.Name}");
                             }
+                        }
+                        else
+                        {
+                            if (ctorParam.Keys != null)
+                            {
+                                var resolving = new Resolving(resolver.Resolve().Instance<IFluent>(), resolver);
+                                foreach (var keyDto in ctorParam.Keys)
+                                {
+                                    var contractDto = keyDto as IContractDto;
+                                    if (contractDto != null)
+                                    {
+                                        var contractTypes = new List<Type>();
+                                        foreach (var typeName in contractDto.Contract)
+                                        {
+                                            Type contractType;
+                                            if (!typeResolver.TryResolveType(typeName, out contractType))
+                                            {
+                                                throw new Exception($"Invalid contract type {typeName}");
+                                            }
 
-                            key = resolving.CreateCompositeKey();
+                                            contractTypes.Add(contractType);
+                                        }
+
+                                        if (contractTypes.Count == 0)
+                                        {
+                                            contractTypes.Add(type);
+                                        }
+
+                                        resolving.Contract(contractTypes.ToArray());
+                                    }
+                                    else
+                                    {
+                                        resolving.Contract(type);
+                                    }
+
+                                    var stateDto = keyDto as IStateDto;
+                                    if (stateDto != null)
+                                    {
+                                        Type stateType;
+                                        if (!typeResolver.TryResolveType(stateDto.TypeName, out stateType))
+                                        {
+                                            throw new Exception($"Invalid state type {stateDto.TypeName}");
+                                        }
+
+                                        if (stateDto.Value != null)
+                                        {
+                                            if (!TryGetValue(typeResolver, stateDto.Value, out value))
+                                            {
+                                                throw new Exception($"Invalid tag {stateDto.Value.Data}");
+                                            }
+
+                                            state.Add(value);
+                                        }
+
+                                        resolving.State(stateDto.Index, stateType);
+                                    }
+
+                                    var tagDto = keyDto as ITagDto;
+                                    if (tagDto != null)
+                                    {
+                                        object tag;
+                                        if (!TryGetTagValue(typeResolver, tagDto, out tag))
+                                        {
+                                            throw new Exception($"Invalid tag {tagDto.Value}");
+                                        }
+
+                                        resolving.Tag(tag);
+                                    }
+                                }
+
+                                key = resolving.CreateCompositeKey();
+                            }
+                            else
+                            {
+                                key = new ContractKey(type, true);
+                            }
                         }
 
                         var isDependency = key != null;
-                        constructorParameters.Add(new ConstructorParameter(type, new []{ key }, isDependency, stateIndex, values.ToArray()));
-
+                        constructorParameters.Add(new ConstructorParameter(type, new []{ key }, isDependency, stateIndex, state.ToArray(), value));
                         if (!isDependency)
                         {
                             stateIndex++;
@@ -401,13 +415,20 @@
                 return true;
             }
 
+            switch (type.Name)
+            {
+                case nameof(TimeSpan):
+                    value = TimeSpan.Parse(valueText, CultureInfo.InvariantCulture);
+                    return true;
+            }
+
             value = Convert.ChangeType(valueText, type);
             return true;
         }
 
         private class ConstructorParameter : IParameterMetadata
         {
-            public ConstructorParameter(Type type, IKey[] keys, bool isDependency, int stateIndex, object[] state)
+            public ConstructorParameter(Type type, IKey[] keys, bool isDependency, int stateIndex, object[] state, object value)
             {
                 if (type == null) throw new ArgumentNullException(nameof(type));
                 if (keys == null) throw new ArgumentNullException(nameof(keys));
@@ -415,6 +436,7 @@
                 Keys = keys;
                 IsDependency = isDependency;
                 State = state;
+                Value = value;
                 if (!isDependency)
                 {
                     StateKey = new StateKey(stateIndex, type);
@@ -426,6 +448,8 @@
             public bool IsDependency { get; }
 
             public object[] State { get; }
+
+            public object Value { get; private set; }
 
             public IStateKey StateKey { get; }
 
