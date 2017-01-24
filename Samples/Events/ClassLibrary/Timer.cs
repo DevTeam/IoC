@@ -6,23 +6,27 @@
     using System.Threading.Tasks;
     using Contracts;
 
-    internal class Timer: IEventProducer<DateTimeOffset>
+    internal class Timer: IEventProducer<Event<DateTimeOffset>>
     {
         private readonly ILogger<Timer> _logger;
+        private readonly Func<DateTimeOffset, Event<DateTimeOffset>> _eventsFactory;
         private readonly TimeSpan _period;
-        private readonly List<IObserver<DateTimeOffset>> _observers = new List<IObserver<DateTimeOffset>>();
+        private readonly List<IObserver<Event<DateTimeOffset>>> _observers = new List<IObserver<Event<DateTimeOffset>>>();
 
         public Timer(
             ILogger<Timer> logger,
+            Func<DateTimeOffset, Event<DateTimeOffset>> eventsFactory,
             TimeSpan period)
         {
             if (logger == null) throw new ArgumentNullException(nameof(logger));
+            if (eventsFactory == null) throw new ArgumentNullException(nameof(eventsFactory));
             _logger = logger;
+            _eventsFactory = eventsFactory;
             _period = period;
             _logger.LogInfo("created");
         }
 
-        public IDisposable Subscribe(IObserver<DateTimeOffset> observer)
+        public IDisposable Subscribe(IObserver<Event<DateTimeOffset>> observer)
         {
             _logger.LogInfo($"Subscribe to {observer}");
             _observers.Add(observer);
@@ -51,13 +55,13 @@
             return _logger.InstanceName;
         }
 
-        private async Task Run(IObserver<DateTimeOffset> observer, CancellationToken cancellationToken)
+        private async Task Run(IObserver<Event<DateTimeOffset>> observer, CancellationToken cancellationToken)
         {
             await Task.Delay(_period, cancellationToken).ContinueWith((task, state) =>
                 {
                     try
                     {
-                        observer.OnNext(DateTimeOffset.Now);
+                        observer.OnNext(_eventsFactory(DateTimeOffset.Now));
                         Run(observer, cancellationToken).Wait(cancellationToken);
                     }
                     catch (OperationCanceledException)

@@ -5,7 +5,7 @@
 
     internal class StateDto: IStateDto
     {
-        [JsonProperty("State", Required = Required.Always)]
+        [JsonProperty("Index", Required = Required.Default)]
         public int Index { get; set; }
 
         [JsonProperty("TypeName", Required = Required.Always)]

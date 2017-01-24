@@ -246,6 +246,7 @@
                         }
 
                         IKey key = null;
+                        IStateKey stateKey = null;
                         object value = null;
                         var state = new List<object>();
                         if (ctorParam.Value != null)
@@ -256,11 +257,35 @@
                             }
                         }
                         else
+                        if (ctorParam.State != null)
                         {
-                            if (ctorParam.Keys != null)
+                            if (ctorParam.State != null)
+                            {
+                                Type stateType;
+                                if (!typeResolver.TryResolveType(ctorParam.State.TypeName, out stateType))
+                                {
+                                    throw new Exception($"Invalid state type {ctorParam.State.TypeName}");
+                                }
+
+                                if (ctorParam.State.Value != null)
+                                {
+                                    if (!TryGetValue(typeResolver, ctorParam.State.Value, out value))
+                                    {
+                                        throw new Exception($"Invalid state {ctorParam.State.Value.Data}");
+                                    }
+
+                                    state.Add(value);
+                                }
+
+                                stateKey = new StateKey(ctorParam.State.Index, stateType);
+                            }
+                        }
+                        else
+                        {
+                            if (ctorParam.Dependency != null)
                             {
                                 var resolving = new Resolving(resolver.Resolve().Instance<IFluent>(), resolver);
-                                foreach (var keyDto in ctorParam.Keys)
+                                foreach (var keyDto in ctorParam.Dependency)
                                 {
                                     var contractDto = keyDto as IContractDto;
                                     if (contractDto != null)
@@ -302,7 +327,7 @@
                                         {
                                             if (!TryGetValue(typeResolver, stateDto.Value, out value))
                                             {
-                                                throw new Exception($"Invalid tag {stateDto.Value.Data}");
+                                                throw new Exception($"Invalid state {stateDto.Value.Data}");
                                             }
 
                                             state.Add(value);
@@ -332,9 +357,9 @@
                             }
                         }
 
-                        var isDependency = key != null;
-                        constructorParameters.Add(new ConstructorParameter(type, new []{ key }, isDependency, stateIndex, state.ToArray(), value));
-                        if (!isDependency)
+                        var param = new ConstructorParameter(type, stateKey == null ? new[] { key } : null, stateIndex, state.ToArray(), value, stateKey);
+                        constructorParameters.Add(param);
+                        if (!param.IsDependency)
                         {
                             stateIndex++;
                         }
@@ -428,19 +453,14 @@
 
         private class ConstructorParameter : IParameterMetadata
         {
-            public ConstructorParameter(Type type, IKey[] keys, bool isDependency, int stateIndex, object[] state, object value)
+            public ConstructorParameter(Type type, IKey[] keys, int stateIndex, object[] state, object value, IStateKey stateKey)
             {
-                if (type == null) throw new ArgumentNullException(nameof(type));
-                if (keys == null) throw new ArgumentNullException(nameof(keys));
                 Type = type;
                 Keys = keys;
-                IsDependency = isDependency;
                 State = state;
                 Value = value;
-                if (!isDependency)
-                {
-                    StateKey = new StateKey(stateIndex, type);
-                }
+                StateKey = stateKey;
+                IsDependency = keys != null && value == null;
             }
 
             public Type Type { get; }
@@ -449,12 +469,11 @@
 
             public object[] State { get; }
 
-            public object Value { get; private set; }
+            public object Value { get; }
 
             public IStateKey StateKey { get; }
 
             public IKey[] Keys { get; }
-
         }
 
         private class MetadataProvider : IMetadataProvider

@@ -6,8 +6,10 @@
     {
         string TypeName { get; }
 
-        IEnumerable<IKeyDto> Keys { get; }
-
         string Value { get; }
+
+        IStateDto State { get; }
+
+        IEnumerable<IKeyDto> Dependency { get; }
     }
 }

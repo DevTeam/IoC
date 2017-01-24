@@ -22,6 +22,7 @@
                 new JsonDerivedTypeConverter<IKeyDto>(typeof(TagDto), typeof(ContractDto), typeof(ScopeDto), typeof(LifetimeDto), typeof(KeyComparerDto), typeof(StateDto)),
                 new JsonDerivedTypeConverter<IParameterDto>(typeof(ParameterDto)),
                 new JsonDerivedTypeConverter<IValueDto>(typeof(ValueDto)),
+                new JsonDerivedTypeConverter<IStateDto>(typeof(StateDto)),
             }
         };
 
