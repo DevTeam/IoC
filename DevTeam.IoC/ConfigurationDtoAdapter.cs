@@ -325,12 +325,13 @@
 
                                         if (stateDto.Value != null)
                                         {
-                                            if (!TryGetValue(typeResolver, stateDto.Value, out value))
+                                            object stetItem;
+                                            if (!TryGetValue(typeResolver, stateDto.Value, out stetItem))
                                             {
                                                 throw new Exception($"Invalid state {stateDto.Value.Data}");
                                             }
 
-                                            state.Add(value);
+                                            state.Add(stetItem);
                                         }
 
                                         resolving.State(stateDto.Index, stateType);

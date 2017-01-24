@@ -48,7 +48,7 @@
                     {
                         "Type": "ILog",
                         "Dependency": [
-                            { "Index": "0", "TypeName": "string", "Value": { "Type": "string", "Data": "Abc"} }
+                            { "Index": "0", "Type": "string", "Value": { "Type": "string", "Data": "Abc"} }
                         ]
                     }
                 ]
@@ -56,7 +56,7 @@
 
             {
                 "Register": [
-                    { "Index": "0", "TypeName": "string"},
+                    { "Index": "0", "Type": "string"},
                     { "Contract": [ "ILog" ] }
                 ],
                 "AsAutowiring": "Log",
@@ -68,7 +68,8 @@
                         ]
                     },
                     {
-                        "Type": "string"
+                        "Type": "string",
+                        "State": { "Type": "string" }
                     }
                 ]
             }

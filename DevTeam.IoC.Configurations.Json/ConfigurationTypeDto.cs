@@ -5,7 +5,7 @@
 
     internal class ConfigurationTypeDto: IConfigurationTypeDto
     {
-        [JsonProperty("TypeName", Required = Required.Always)]
+        [JsonProperty("Type", Required = Required.Always)]
         public string ConfigurationTypeName { get; set; }
     }
 }

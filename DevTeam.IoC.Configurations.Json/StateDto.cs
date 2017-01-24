@@ -8,7 +8,7 @@
         [JsonProperty("Index", Required = Required.Default)]
         public int Index { get; set; }
 
-        [JsonProperty("TypeName", Required = Required.Always)]
+        [JsonProperty("Type", Required = Required.Always)]
         public string TypeName { get; set; }
 
         [JsonProperty("Value", Required = Required.Default)]

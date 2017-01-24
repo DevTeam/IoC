@@ -31,7 +31,7 @@
 
             {
                 "Register": [
-                    { "TypeName": "DateTimeOffset" },
+                    { "Type": "DateTimeOffset"},
                     { "Contract": [ "Event<DateTimeOffset>" ] }
                 ],
                 "AsAutowiring": "Event<DateTimeOffset>",
@@ -41,7 +41,7 @@
                     },
                     {
                         "Type": "DateTimeOffset",
-                        "State": { "TypeName": "DateTimeOffset" }
+                        "State": { "Type": "DateTimeOffset" }
                     }
                 ]
             },

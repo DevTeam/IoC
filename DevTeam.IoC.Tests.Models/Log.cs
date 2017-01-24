@@ -8,9 +8,12 @@
         private readonly IConsole _console;
         private readonly string _name;
 
-        public Log(IConsole console, [State] string name)
+        public Log(
+            IConsole console,
+            [State] string name)
         {
             if (console == null) throw new ArgumentNullException(nameof(console));
+            if (name == null) throw new ArgumentNullException(nameof(name));
             _console = console;
             _name = name;
         }

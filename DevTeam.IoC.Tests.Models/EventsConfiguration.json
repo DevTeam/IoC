@@ -10,7 +10,7 @@
         "GetDependecies": [
             { "Wellknown": "All" },
             {
-                "TypeName": "JsonConfiguration",
+                "Type": "JsonConfiguration",
                 "Reference": "PlatformConfiguration.json"
             }
         ]

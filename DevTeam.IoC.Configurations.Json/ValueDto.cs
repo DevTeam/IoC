@@ -8,7 +8,7 @@
         [JsonProperty("Data", Required = Required.Always)]
         public string Data { get; set; }
 
-        [JsonProperty("TypeName", Required = Required.Default, DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty("Type", Required = Required.Default, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string TypeName { get; set; }
     }
 }
