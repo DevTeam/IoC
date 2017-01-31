@@ -39,51 +39,43 @@
                     continue;
                 }
 
-                var getDependeciesDto = configurationStatement as IGetDependeciesDto;
-                if (getDependeciesDto != null)
+                var wellknownConfigurationDto = configurationStatement as IWellknownConfigurationDto;
+                if (wellknownConfigurationDto != null)
                 {
-                    foreach (var dependencyDto in getDependeciesDto.Dependecies)
+                    yield return resolver.Configuration(wellknownConfigurationDto.Configuration);
+                    continue;
+                }
+
+                var configurationTypeDto = configurationStatement as IConfigurationTypeDto;
+                if (configurationTypeDto != null)
+                {
+                    Type configurationType;
+                    if (!typeResolver.TryResolveType(configurationTypeDto.ConfigurationTypeName, out configurationType) || !typeof(IConfiguration).GetTypeInfo().IsAssignableFrom(configurationType.GetTypeInfo()))
                     {
-                        var wellknownConfigurationDto = dependencyDto as IWellknownConfigurationDto;
-                        if (wellknownConfigurationDto != null)
-                        {
-                            yield return resolver.Configuration(wellknownConfigurationDto.Configuration);
-                            continue;
-                        }
-
-                        var configurationTypeDto = dependencyDto as IConfigurationTypeDto;
-                        if (configurationTypeDto != null)
-                        {
-                            Type configurationType;
-                            if (!typeResolver.TryResolveType(configurationTypeDto.ConfigurationTypeName, out configurationType) || !typeof(IConfiguration).GetTypeInfo().IsAssignableFrom(configurationType.GetTypeInfo()))
-                            {
-                                throw new Exception($"Invalid configuration type {configurationType}");
-                            }
-
-                            var childContainer = resolver.CreateChild();
-                            childContainer.Register().Contract<IConfiguration>().AsAutowiring(configurationType);
-                            yield return childContainer.Resolve().Instance<IConfiguration>();
-                            continue;
-                        }
-
-                        var configurationReferenceDto = dependencyDto as IConfigurationReferenceDto;
-                        if (configurationReferenceDto != null)
-                        {
-                            Type configurationType;
-                            if (!typeResolver.TryResolveType(configurationReferenceDto.ConfigurationTypeName, out configurationType) || !typeof(IConfiguration).GetTypeInfo().IsAssignableFrom(configurationType.GetTypeInfo()))
-                            {
-                                throw new Exception($"Invalid configuration type {configurationType}");
-                            }
-
-                            var childContainer = resolver.CreateChild();
-                            var referenceDescriptionResolver = childContainer.Resolve().Instance<IReferenceDescriptionResolver>();
-                            var reference = referenceDescriptionResolver.ResolveReference(configurationReferenceDto.Reference);
-                            var configurationDescriptionDto = childContainer.Resolve().State<string>(0).Instance<IConfigurationDescriptionDto>(reference);
-                            var сonfigurationDto = childContainer.Resolve().Tag(configurationType).State<IConfigurationDescriptionDto>(0).Instance<IConfigurationDto>(configurationDescriptionDto);
-                            yield return new ConfigurationDtoAdapter(сonfigurationDto);
-                            continue;
-                        }
+                        throw new Exception($"Invalid configuration type {configurationType}");
                     }
+
+                    var childContainer = resolver.CreateChild();
+                    childContainer.Register().Contract<IConfiguration>().AsAutowiring(configurationType);
+                    yield return childContainer.Resolve().Instance<IConfiguration>();
+                    continue;
+                }
+
+                var configurationReferenceDto = configurationStatement as IConfigurationReferenceDto;
+                if (configurationReferenceDto != null)
+                {
+                    Type configurationType;
+                    if (!typeResolver.TryResolveType(configurationReferenceDto.ConfigurationTypeName, out configurationType) || !typeof(IConfiguration).GetTypeInfo().IsAssignableFrom(configurationType.GetTypeInfo()))
+                    {
+                        throw new Exception($"Invalid configuration type {configurationType}");
+                    }
+
+                    var childContainer = resolver.CreateChild();
+                    var referenceDescriptionResolver = childContainer.Resolve().Instance<IReferenceDescriptionResolver>();
+                    var reference = referenceDescriptionResolver.ResolveReference(configurationReferenceDto.Reference);
+                    var configurationDescriptionDto = childContainer.Resolve().State<string>(0).Instance<IConfigurationDescriptionDto>(reference);
+                    var сonfigurationDto = childContainer.Resolve().Tag(configurationType).State<IConfigurationDescriptionDto>(0).Instance<IConfigurationDto>(configurationDescriptionDto);
+                    yield return new ConfigurationDtoAdapter(сonfigurationDto);
                     continue;
                 }
             }
@@ -91,9 +83,13 @@
 
         public IEnumerable<IDisposable> Apply(IResolver resolver)
         {
+            return Apply(resolver, resolver.Resolve().Instance<ITypeResolver>(), _configurationDto);
+        }
+
+        private IEnumerable<IDisposable> Apply(IResolver resolver, ITypeResolver typeResolver, IEnumerable<IConfigurationStatementDto> configurationStatemens)
+        {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            var typeResolver = resolver.Resolve().Instance<ITypeResolver>();
-            foreach (var configurationStatement in _configurationDto)
+            foreach (var configurationStatement in configurationStatemens)
             {
                 var referenceDto = configurationStatement as IReferenceDto;
                 if (referenceDto != null)
@@ -109,43 +105,25 @@
                     continue;
                 }
 
-                var applyDto = configurationStatement as IApplyDto;
-                if (applyDto != null)
+                var createChildDto = configurationStatement as ICreateChildDto;
+                if (createChildDto != null)
                 {
-                    foreach (var applyDtoStatement in applyDto.Statements)
+                    foreach(var registration in Apply(resolver.CreateChild(), typeResolver, createChildDto.Statements))
                     {
-                        HandleApplyStatementDto(resolver, typeResolver, applyDtoStatement);
+                        yield return registration;
                     }
+                    continue;
+                }
+
+                var registerDto = configurationStatement as IRegisterDto;
+                if (registerDto != null)
+                {
+                    HandleRegisterDto(resolver, typeResolver, registerDto);
+                    continue;
                 }
             }
 
             yield break;
-        }
-
-        private void HandleApplyStatementDto(IResolver resolver, ITypeResolver typeResolver, IApplyStatementDto applyDtoStatement)
-        {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
-            if (applyDtoStatement == null) throw new ArgumentNullException(nameof(applyDtoStatement));
-            {
-                var createChildDto = applyDtoStatement as ICreateChildDto;
-                if (createChildDto != null)
-                {
-                    var childContainer = resolver.CreateChild();
-                    foreach (var applyStatementDto in createChildDto.Statements)
-                    {
-                        HandleApplyStatementDto(childContainer, typeResolver, applyStatementDto);
-                    }
-
-                    return;
-                }
-
-                var registerDto = applyDtoStatement as IRegisterDto;
-                if (registerDto != null)
-                {
-                    HandleRegisterDto(resolver, typeResolver, registerDto);
-                }
-            }
         }
 
         private void HandleRegisterDto(IResolver resolver, ITypeResolver typeResolver, IRegisterDto registerDto)

@@ -2,8 +2,8 @@
 {
     using System.Collections.Generic;
 
-    public interface ICreateChildDto : IApplyStatementDto
+    public interface ICreateChildDto : IConfigurationStatementDto
     {
-        IEnumerable<IApplyStatementDto> Statements { get; }
+        IEnumerable<IConfigurationStatementDto> Statements { get; }
     }
 }

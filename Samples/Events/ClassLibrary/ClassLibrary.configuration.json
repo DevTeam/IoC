@@ -7,79 +7,71 @@
     { "using": "Contracts" },
     { "using": "ClassLibrary" },
 
+    { "Wellknown": "All" },
+
     {
-        "GetDependecies": [
-            { "Wellknown": "All" }
+        "Register": [
+            { "Contract": [ "IName<>" ] }
+        ],
+        "AsAutowiring": "Name<>"
+    },
+
+    {
+        "Register": [
+            { "Contract": [ "ILogger<>" ] }
+        ],
+        "AsAutowiring": "Logger<>"
+    },
+
+    {
+        "Register": [
+            { "Type": "DateTimeOffset" },
+            { "Contract": [ "Event<DateTimeOffset>" ] }
+        ],
+        "AsAutowiring": "Event<DateTimeOffset>",
+        "Constructor": [
+            {
+                "Type": "ILogger<Event<DateTimeOffset>>"
+            },
+            {
+                "Type": "DateTimeOffset",
+                "State": { "Type": "DateTimeOffset" }
+            }
         ]
     },
 
     {
-        "Apply": [
-            {
-                "Register": [
-                    { "Contract": [ "IName<>" ] }
-                ],
-                "AsAutowiring": "Name<>"
-            },
+        "Register": [
+            { "Contract": [ "IEventConsumer<Event<DateTimeOffset>>" ] }
+        ],
+        "AsAutowiring": "Chronometer"
+    },
 
+    {
+        "Register": [
+            { "Contract": [ "IEventProducer<Event<DateTimeOffset>>" ] }
+        ],
+        "AsAutowiring": "Timer",
+        "Constructor": [
             {
-                "Register": [
-                    { "Contract": [ "ILogger<>" ] }
-                ],
-                "AsAutowiring": "Logger<>"
+                "Type": "ILogger<Timer>"
             },
-
             {
-                "Register": [
-                    { "Type": "DateTimeOffset"},
-                    { "Contract": [ "Event<DateTimeOffset>" ] }
-                ],
-                "AsAutowiring": "Event<DateTimeOffset>",
-                "Constructor": [
-                    {
-                        "Type": "ILogger<Event<DateTimeOffset>>"
-                    },
-                    {
-                        "Type": "DateTimeOffset",
-                        "State": { "Type": "DateTimeOffset" }
-                    }
-                ]
+                "Type": "Func<DateTimeOffset, Event<DateTimeOffset>>"
             },
-
             {
-                "Register": [
-                    { "Contract": [ "IEventConsumer<Event<DateTimeOffset>>" ] }
-                ],
-                "AsAutowiring": "Chronometer"
-            },
-
-            {
-                "Register": [
-                    { "Contract": [ "IEventProducer<Event<DateTimeOffset>>" ] }
-                ],
-                "AsAutowiring": "Timer",
-                "Constructor": [
-                    {
-                        "Type": "ILogger<Timer>"
-                    },
-                    {
-                        "Type": "Func<DateTimeOffset, Event<DateTimeOffset>>"
-                    },
-                    {
-                        "Type": "TimeSpan",
-                        "Value": "00:00:01"
-                    }
-                ]
-            },
-
-            {
-                "Register": [
-                    { "Lifetime": "Singleton" },
-                    { "Lifetime": "AutoDisposing" },
-                    { "Contract": [ "IEventBroker" ] }
-                ],
-                "AsAutowiring": "EventBroker<Event<DateTimeOffset>>"
+                "Type": "TimeSpan",
+                "Value": "00:00:01"
             }
         ]
+    },
+
+    {
+        "Register": [
+            { "Lifetime": "Singleton" },
+            { "Lifetime": "AutoDisposing" },
+            { "Contract": [ "IEventBroker" ] }
+        ],
+        "AsAutowiring": "EventBroker<Event<DateTimeOffset>>"
     }
 ]

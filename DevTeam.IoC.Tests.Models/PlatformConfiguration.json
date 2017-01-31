@@ -5,73 +5,75 @@
     { "using": "DevTeam.IoC.Tests.Models" },
     { "using": "DevTeam.IoC.Contracts" },
 
+    { "Wellknown": "All" },
+
     {
-        "GetDependecies": [
-            { "Wellknown": "All" }
+        "Register": [
+            { "Lifetime": "Singleton" },
+            { "Contract": [ "ITrace" ] }
+        ],
+        "AsAutowiring": "Trace"
+    },
+
+    {
+        "Register": [
+            { "Lifetime": "Singleton" },
+            { "Contract": [ "IConsole" ] }
+        ],
+        "AsAutowiring": "Console",
+        "Constructor": [
+            {
+                "Type": "IProvider<ITrace>",
+                "Dependency": [
+                    { "Contract": [] }
+                ]
+            }
         ]
     },
 
     {
-        "Apply": [
+        "Register": [
+            { "Lifetime": "Singleton" },
+            { "Contract": [ "ITimer" ] },
+            { "Contract": [ "ITimerManager" ] }
+        ],
+        "AsAutowiring": "Timer",
+        "Constructor": [
             {
-                "Register": [
-                    { "Lifetime": "Singleton" },
-                    { "Contract": [ "ITrace" ] }
-                ],
-                "AsAutowiring": "Trace"
-            },
-
-            {
-                "Register": [
-                    { "Lifetime": "Singleton" },
-                    { "Contract": [ "IConsole" ] }
-                ],
-                "AsAutowiring": "Console",
-                "Constructor": [
+                "Type": "ILog",
+                "Dependency": [
                     {
-                        "Type": "IProvider<ITrace>",
-                        "Dependency": [
-                            { "Contract": [ ] }
-                        ]
-                    }
-                ]
-            },
-
-            {
-                "Register": [
-                    { "Lifetime": "Singleton" },
-                    { "Contract": [ "ITimer" ] },
-                    { "Contract": [ "ITimerManager" ] }
-                ],
-                "AsAutowiring": "Timer",
-                "Constructor": [
-                    {
-                        "Type": "ILog",
-                        "Dependency": [
-                            { "Index": "0", "Type": "string", "Value": { "Type": "string", "Data": "Abc"} }
-                        ]
-                    }
-                ]
-            },
-
-            {
-                "Register": [
-                    { "Index": "0", "Type": "string"},
-                    { "Contract": [ "ILog" ] }
-                ],
-                "AsAutowiring": "Log",
-                "Constructor": [
-                    {
-                        "Type": "IConsole",
-                        "Dependency": [
-                            { "Contract": [ ] }
-                        ]
-                    },
-                    {
+                        "Index": "0",
                         "Type": "string",
-                        "State": { "Type": "string" }
+                        "Value": {
+                            "Type": "string",
+                            "Data": "Abc"
+                        }
                     }
                 ]
+            }
+        ]
+    },
+
+    {
+        "Register": [
+            {
+                "Index": "0",
+                "Type": "string"
+            },
+            { "Contract": [ "ILog" ] }
+        ],
+        "AsAutowiring": "Log",
+        "Constructor": [
+            {
+                "Type": "IConsole",
+                "Dependency": [
+                    { "Contract": [] }
+                ]
+            },
+            {
+                "Type": "string",
+                "State": { "Type": "string" }
             }
         ]
     }

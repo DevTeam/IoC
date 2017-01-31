@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    public interface IRegisterDto : IApplyStatementDto
+    public interface IRegisterDto : IConfigurationStatementDto
     {
         ITagDto TargetTag { get; }
 

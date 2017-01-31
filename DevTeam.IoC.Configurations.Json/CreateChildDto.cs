@@ -7,6 +7,6 @@
     internal class CreateChildDto: ICreateChildDto
     {
         [JsonProperty("CreateChild", Required = Required.Always)]
-        public IEnumerable<IApplyStatementDto> Statements { get; set; }
+        public IEnumerable<IConfigurationStatementDto> Statements { get; set; }
     }
 }

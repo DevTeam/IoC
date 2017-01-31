@@ -39,13 +39,11 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApplyDto.cs" />
     <Compile Include="ConfigurationDto.cs" />
     <Compile Include="ConfigurationReferenceDto.cs" />
     <Compile Include="ParameterDto.cs" />
     <Compile Include="ContractDto.cs" />
     <Compile Include="CreateChildDto.cs" />
-    <Compile Include="GetDependeciesDto.cs" />
     <Compile Include="JsonConfiguration.cs" />
     <Compile Include="JsonDerivedTypeConverter.cs" />
     <Compile Include="JsonEnumConverter.cs" />

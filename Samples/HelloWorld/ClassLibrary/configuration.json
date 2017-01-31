@@ -4,16 +4,12 @@
     { "using": "ClassLibrary" },
 
     {
-        "Apply": [
-            {
-                "Register": [ { "Contract": [ "IConsole" ] } ],
-                "AsAutowiring": "Console"
-            },
+        "Register": [ { "Contract": [ "IConsole" ] } ],
+        "AsAutowiring": "Console"
+    },
 
-            {
-                "Register": [ { "Contract": [ "IHelloWorld" ] } ],
-                "AsAutowiring": "HelloWorld"
-            }
-        ]
+    {
+        "Register": [ { "Contract": [ "IHelloWorld" ] } ],
+        "AsAutowiring": "HelloWorld"
     }
 ]

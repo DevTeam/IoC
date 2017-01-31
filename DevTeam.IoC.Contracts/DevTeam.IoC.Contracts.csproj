@@ -42,16 +42,12 @@
     <Compile Include="AutowiringAttribute.cs" />
     <Compile Include="ContainerExtensions.cs" />
     <Compile Include="ContractAttribute.cs" />
-    <Compile Include="Dto\IApplyDto.cs" />
-    <Compile Include="Dto\IApplyStatementDto.cs" />
     <Compile Include="Dto\IConfigurationDto.cs" />
     <Compile Include="Dto\IConfigurationReferenceDto.cs" />
     <Compile Include="Dto\IConfigurationStatementDto.cs" />
     <Compile Include="Dto\IParameterDto.cs" />
     <Compile Include="Dto\IContractDto.cs" />
     <Compile Include="Dto\ICreateChildDto.cs" />
-    <Compile Include="Dto\IDependencyDto.cs" />
-    <Compile Include="Dto\IGetDependeciesDto.cs" />
     <Compile Include="Dto\IKeyComparerDto.cs" />
     <Compile Include="Dto\ILifetimeDto.cs" />
     <Compile Include="Dto\IReferenceDto.cs" />

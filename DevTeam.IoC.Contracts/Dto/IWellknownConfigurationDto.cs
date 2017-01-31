@@ -2,7 +2,7 @@
 {
     using Contracts;
 
-    public interface IWellknownConfigurationDto : IDependencyDto
+    public interface IWellknownConfigurationDto : IConfigurationStatementDto
     {
         Wellknown.Configurations Configuration { get; }
     }

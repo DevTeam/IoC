@@ -12,14 +12,25 @@
         {
             Converters = new List<JsonConverter>
             {
-                new JsonDerivedTypeConverter<IConfigurationStatementDto>(typeof(ReferenceDto), typeof(UsingDto), typeof(GetDependeciesDto), typeof(ApplyDto)),
-                new JsonDerivedTypeConverter<IDependencyDto>(typeof(ConfigurationReferenceDto), typeof(ConfigurationTypeDto), typeof(WellknownConfigurationDto)),
+                new JsonDerivedTypeConverter<IConfigurationStatementDto>(
+                    typeof(ReferenceDto),
+                    typeof(UsingDto),
+                    typeof(RegisterDto),
+                    typeof(CreateChildDto),
+                    typeof(ConfigurationReferenceDto),
+                    typeof(ConfigurationTypeDto),
+                    typeof(WellknownConfigurationDto)),
                 new JsonEnumConverter<Wellknown.Configurations>(),
                 new JsonEnumConverter<Wellknown.Lifetimes>(),
                 new JsonEnumConverter<Wellknown.Scopes>(),
                 new JsonEnumConverter<Wellknown.KeyComparers>(),
-                new JsonDerivedTypeConverter<IApplyStatementDto>(typeof(RegisterDto), typeof(CreateChildDto)),
-                new JsonDerivedTypeConverter<IKeyDto>(typeof(TagDto), typeof(ContractDto), typeof(ScopeDto), typeof(LifetimeDto), typeof(KeyComparerDto), typeof(StateDto)),
+                new JsonDerivedTypeConverter<IKeyDto>(
+                    typeof(TagDto),
+                    typeof(ContractDto),
+                    typeof(ScopeDto),
+                    typeof(LifetimeDto),
+                    typeof(KeyComparerDto),
+                    typeof(StateDto)),
                 new JsonDerivedTypeConverter<IParameterDto>(typeof(ParameterDto)),
                 new JsonDerivedTypeConverter<IValueDto>(typeof(ValueDto)),
                 new JsonDerivedTypeConverter<IStateDto>(typeof(StateDto)),
