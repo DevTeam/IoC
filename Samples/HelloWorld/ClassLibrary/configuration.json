@@ -4,25 +4,14 @@
     { "using": "ClassLibrary" },
 
     {
-        "GetDependecies": [
-            { "Wellknown": "All" }
-        ]
-    },
-
-    {
         "Apply": [
             {
-                "Register": [
-                    { "Lifetime": "Singleton" },
-                    { "Contract": [ "IConsole" ] }
-                ],
+                "Register": [ { "Contract": [ "IConsole" ] } ],
                 "AsAutowiring": "Console"
             },
 
             {
-                "Register": [
-                    { "Contract": [ "IHelloWorld" ] }
-                ],
+                "Register": [ { "Contract": [ "IHelloWorld" ] } ],
                 "AsAutowiring": "HelloWorld"
             }
         ]
