@@ -9,45 +9,42 @@
 
     {
         "Register": [
-            { "Lifetime": "Singleton" },
-            { "Contract": [ "ITrace" ] }
+            { "lifetime": "Singleton" },
+            { "contract": [ "ITrace" ] }
         ],
         "AsAutowiring": "Trace"
     },
 
     {
         "Register": [
-            { "Lifetime": "Singleton" },
-            { "Contract": [ "IConsole" ] }
+            { "lifetime": "Singleton" },
+            { "contract": [ "IConsole" ] }
         ],
         "AsAutowiring": "Console",
-        "Constructor": [
+        "constructor": [
             {
-                "Type": "IProvider<ITrace>",
-                "Dependency": [
-                    { "Contract": [] }
-                ]
+                "paramType": "IProvider<ITrace>"
             }
         ]
     },
 
     {
         "Register": [
-            { "Lifetime": "Singleton" },
-            { "Contract": [ "ITimer" ] },
-            { "Contract": [ "ITimerManager" ] }
+            { "lifetime": "Singleton" },
+            { "contract": [ "ITimer" ] },
+            { "contract": [ "ITimerManager" ] }
         ],
         "AsAutowiring": "Timer",
-        "Constructor": [
+        "constructor": [
             {
-                "Type": "ILog",
-                "Dependency": [
+                "paramType": "ILog",
+                "dependency": [
                     {
-                        "Index": "0",
-                        "Type": "string",
-                        "Value": {
-                            "Type": "string",
-                            "Data": "Abc"
+                        "stateType": "string",
+                        "index": "0",
+                        "value": {
+                            "valueType": "string",
+                            "data": "Abc"
                         }
                     }
                 ]
@@ -58,22 +55,22 @@
     {
         "Register": [
             {
-                "Index": "0",
-                "Type": "string"
+                "stateType": "string",
+                "index": "0"
             },
-            { "Contract": [ "ILog" ] }
+            { "contract": [ "ILog" ] }
         ],
         "AsAutowiring": "Log",
-        "Constructor": [
+        "constructor": [
             {
-                "Type": "IConsole",
-                "Dependency": [
-                    { "Contract": [] }
+                "paramType": "IConsole",
+                "dependency": [
+                    { "contract": [] }
                 ]
             },
             {
-                "Type": "string",
-                "State": { "Type": "string" }
+                "paramType": "string",
+                "state": { "stateType": "string" }
             }
         ]
     }

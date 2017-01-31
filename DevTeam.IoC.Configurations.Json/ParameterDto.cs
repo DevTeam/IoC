@@ -6,16 +6,16 @@
 
     internal class ParameterDto : IParameterDto
     {
-        [JsonProperty("Type", Required = Required.Always)]
+        [JsonProperty("paramType", Required = Required.Always)]
         public string TypeName { get; set; }
 
-        [JsonProperty("Dependency", Required = Required.Default)]
+        [JsonProperty("dependency", Required = Required.Default)]
         public IEnumerable<IKeyDto> Dependency { get; set; }
 
-        [JsonProperty("State", Required = Required.Default)]
+        [JsonProperty("state", Required = Required.Default)]
         public IStateDto State { get; set; }
 
-        [JsonProperty("Value", Required = Required.Default)]
+        [JsonProperty("value", Required = Required.Default)]
         public string Value { get; set; }
     }
 }

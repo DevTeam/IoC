@@ -4,7 +4,7 @@
     {
         int Index { get; }
 
-        string TypeName { get; }
+        string StateTypeName { get; }
 
         IValueDto Value { get; }
     }

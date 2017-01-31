@@ -13,7 +13,7 @@
         private readonly IConfigurationDto _configurationDto;
 
         public ConfigurationDtoAdapter(
-            [State()] IConfigurationDto configurationDto)
+            [State] IConfigurationDto configurationDto)
         {
             if (configurationDto == null) throw new ArgumentNullException(nameof(configurationDto));
             _configurationDto = configurationDto;
@@ -46,11 +46,11 @@
                     continue;
                 }
 
-                var dependencyTypeDto = configurationStatement as IDependencyTypeDto;
-                if (dependencyTypeDto != null)
+                var dependencyConfigurationDto = configurationStatement as IDependencyConfigurationDto;
+                if (dependencyConfigurationDto != null)
                 {
                     Type configurationType;
-                    if (!typeResolver.TryResolveType(dependencyTypeDto.ConfigurationTypeName, out configurationType) || !typeof(IConfiguration).GetTypeInfo().IsAssignableFrom(configurationType.GetTypeInfo()))
+                    if (!typeResolver.TryResolveType(dependencyConfigurationDto.ConfigurationTypeName, out configurationType) || !typeof(IConfiguration).GetTypeInfo().IsAssignableFrom(configurationType.GetTypeInfo()))
                     {
                         throw new Exception($"Invalid configuration type {configurationType}");
                     }
@@ -157,9 +157,9 @@
                 if (stateDto != null)
                 {
                     Type stateType;
-                    if (!typeResolver.TryResolveType(stateDto.TypeName, out stateType))
+                    if (!typeResolver.TryResolveType(stateDto.StateTypeName, out stateType))
                     {
-                        throw new Exception($"Invalid state type {stateDto.TypeName}");
+                        throw new Exception($"Invalid state type {stateDto.StateTypeName}");
                     }
 
                     registration.State(stateDto.Index, stateType);
@@ -240,9 +240,9 @@
                             if (ctorParam.State != null)
                             {
                                 Type stateType;
-                                if (!typeResolver.TryResolveType(ctorParam.State.TypeName, out stateType))
+                                if (!typeResolver.TryResolveType(ctorParam.State.StateTypeName, out stateType))
                                 {
-                                    throw new Exception($"Invalid state type {ctorParam.State.TypeName}");
+                                    throw new Exception($"Invalid state type {ctorParam.State.StateTypeName}");
                                 }
 
                                 if (ctorParam.State.Value != null)
@@ -296,9 +296,9 @@
                                     if (stateDto != null)
                                     {
                                         Type stateType;
-                                        if (!typeResolver.TryResolveType(stateDto.TypeName, out stateType))
+                                        if (!typeResolver.TryResolveType(stateDto.StateTypeName, out stateType))
                                         {
-                                            throw new Exception($"Invalid state type {stateDto.TypeName}");
+                                            throw new Exception($"Invalid state type {stateDto.StateTypeName}");
                                         }
 
                                         if (stateDto.Value != null)

@@ -7,16 +7,13 @@
 
     internal class RegisterDto: IRegisterDto
     {
-        [JsonProperty("for", Required = Required.Default, DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public ITagDto TargetTag { get; set; }
-
         [JsonProperty("Register", Required = Required.Always)]
         public IEnumerable<IKeyDto> Keys { get; set; }
 
         [JsonProperty("AsAutowiring", Required = Required.Default)]
         public string AutowiringTypeName { get; set; }
 
-        [JsonProperty("Constructor", Required = Required.Default)]
+        [JsonProperty("constructor", Required = Required.Default)]
         public IEnumerable<IParameterDto> ConstructorParameters { get; set; }
 
         [JsonProperty("AsFactoryMethod", Required = Required.Default)]

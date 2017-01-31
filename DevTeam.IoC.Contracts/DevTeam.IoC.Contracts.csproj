@@ -57,7 +57,7 @@
     <Compile Include="Dto\IStateDto.cs" />
     <Compile Include="Dto\ITagDto.cs" />
     <Compile Include="Dto\IUsingDto.cs" />
-    <Compile Include="Dto\IDependencyTypeDto.cs" />
+    <Compile Include="Dto\IDependencyConfigurationDto.cs" />
     <Compile Include="Dto\IValueDto.cs" />
     <Compile Include="Dto\IDependencyWellknownDto.cs" />
     <Compile Include="IParameterMetadata.cs" />

@@ -9,58 +9,43 @@
 
     { "dependency.wellknown": "All" },
 
-    {
-        "Register": [
-            { "Contract": [ "IName<>" ] }
-        ],
-        "AsAutowiring": "Name<>"
-    },
+    { "Register": [ { "contract": [ "IName<>" ] } ], "AsAutowiring": "Name<>" },
+
+    { "Register": [ { "contract": [ "ILogger<>" ] } ], "AsAutowiring": "Logger<>" },
 
     {
         "Register": [
-            { "Contract": [ "ILogger<>" ] }
-        ],
-        "AsAutowiring": "Logger<>"
-    },
-
-    {
-        "Register": [
-            { "Type": "DateTimeOffset" },
-            { "Contract": [ "Event<DateTimeOffset>" ] }
+            { "stateType": "DateTimeOffset" },
+            { "contract": [ "Event<DateTimeOffset>" ] }
         ],
         "AsAutowiring": "Event<DateTimeOffset>",
-        "Constructor": [
+        "constructor": [
             {
-                "Type": "ILogger<Event<DateTimeOffset>>"
+                "paramType": "ILogger<Event<DateTimeOffset>>"
             },
             {
-                "Type": "DateTimeOffset",
-                "State": { "Type": "DateTimeOffset" }
+                "paramType": "DateTimeOffset",
+                "state": { "stateType": "DateTimeOffset" }
             }
         ]
     },
 
-    {
-        "Register": [
-            { "Contract": [ "IEventConsumer<Event<DateTimeOffset>>" ] }
-        ],
-        "AsAutowiring": "Chronometer"
-    },
+    { "Register": [ { "contract": [ "IEventConsumer<Event<DateTimeOffset>>" ] } ], "AsAutowiring": "Chronometer" },
 
     {
         "Register": [
-            { "Contract": [ "IEventProducer<Event<DateTimeOffset>>" ] }
+            { "contract": [ "IEventProducer<Event<DateTimeOffset>>" ] }
         ],
         "AsAutowiring": "Timer",
         "Constructor": [
             {
-                "Type": "ILogger<Timer>"
+                "paramType": "ILogger<Timer>"
             },
             {
-                "Type": "Func<DateTimeOffset, Event<DateTimeOffset>>"
+                "paramType": "Func<DateTimeOffset, Event<DateTimeOffset>>"
             },
             {
-                "Type": "TimeSpan",
+                "paramType": "TimeSpan",
                 "Value": "00:00:01"
             }
         ]
@@ -68,9 +53,9 @@
 
     {
         "Register": [
-            { "Lifetime": "Singleton" },
-            { "Lifetime": "AutoDisposing" },
-            { "Contract": [ "IEventBroker" ] }
+            { "lifetime": "Singleton" },
+            { "lifetime": "AutoDisposing" },
+            { "contract": [ "IEventBroker" ] }
         ],
         "AsAutowiring": "EventBroker<Event<DateTimeOffset>>"
     }

@@ -3,9 +3,9 @@
     using Contracts.Dto;
     using Newtonsoft.Json;
 
-    internal class DependencyTypeDto: IDependencyTypeDto
+    internal class DependencyConfigurationDto: IDependencyConfigurationDto
     {
-        [JsonProperty("dependency.type", Required = Required.Always)]
+        [JsonProperty("dependency.configuration", Required = Required.Always)]
         public string ConfigurationTypeName { get; set; }
     }
 }

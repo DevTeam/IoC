@@ -5,13 +5,13 @@
 
     internal class StateDto: IStateDto
     {
-        [JsonProperty("Index", Required = Required.Default)]
+        [JsonProperty("stateType", Required = Required.Always)]
+        public string StateTypeName { get; set; }
+
+        [JsonProperty("index", Required = Required.Default)]
         public int Index { get; set; }
 
-        [JsonProperty("Type", Required = Required.Always)]
-        public string TypeName { get; set; }
-
-        [JsonProperty("Value", Required = Required.Default)]
+        [JsonProperty("value", Required = Required.Default)]
         public IValueDto Value { get; set; }
     }
 }

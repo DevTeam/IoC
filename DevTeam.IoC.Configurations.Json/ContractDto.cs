@@ -6,7 +6,7 @@
 
     internal class ContractDto: IContractDto
     {
-        [JsonProperty("Contract", Required = Required.Always)]
+        [JsonProperty("contract", Required = Required.Always)]
         public IEnumerable<string> Contract { get; set; }
     }
 }

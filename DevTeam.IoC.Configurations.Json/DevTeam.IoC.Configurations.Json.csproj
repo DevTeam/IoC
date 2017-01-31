@@ -55,7 +55,7 @@
     <Compile Include="StateDto.cs" />
     <Compile Include="TagDto.cs" />
     <Compile Include="ReferenceDto.cs" />
-    <Compile Include="DependencyTypeDto.cs" />
+    <Compile Include="DependencyConfigurationDto.cs" />
     <Compile Include="UsingDto.cs" />
     <Compile Include="ValueDto.cs" />
     <Compile Include="DependencyWellknownDto.cs" />

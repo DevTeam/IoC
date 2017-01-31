@@ -18,7 +18,7 @@
                     typeof(RegisterDto),
                     typeof(CreateChildDto),
                     typeof(DependencyReferenceDto),
-                    typeof(DependencyTypeDto),
+                    typeof(DependencyConfigurationDto),
                     typeof(DependencyWellknownDto)),
                 new JsonEnumConverter<Wellknown.Configurations>(),
                 new JsonEnumConverter<Wellknown.Lifetimes>(),
