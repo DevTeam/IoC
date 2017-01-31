@@ -115,7 +115,7 @@
         }
 
         [Test]
-        public void ContanireShouldDisposeControlledInstanceWhenUnregisteredControlled()
+        public void ContanireShouldDisposeAutoDisposingInstanceWhenUnregisteredControlled()
         {
             // Given
             using (var container = CreateContainer())
@@ -126,7 +126,7 @@
                 // When
                 using (
                     container.Register()
-                    .Lifetime(Wellknown.Lifetimes.Controlled)
+                    .Lifetime(Wellknown.Lifetimes.AutoDisposing)
                     .Contract<IDisposableService>()
                     .AsFactoryMethod(ctx => mock.Object))
                 {
@@ -139,7 +139,7 @@
         }
 
         [Test]
-        public void ContanireShouldDisposeControlledInstanceWhenContainerDisposedForControlled()
+        public void ContanireShouldDisposeAutoDisposingInstanceWhenContainerDisposedForControlled()
         {
             // Given
             var mock = new Mock<IDisposableService>();
@@ -149,7 +149,7 @@
             {
                 // When
                 container.Register()
-                    .Lifetime(Wellknown.Lifetimes.Controlled)
+                    .Lifetime(Wellknown.Lifetimes.AutoDisposing)
                     .Contract<IDisposableService>()
                     .AsFactoryMethod(ctx => mock.Object);
 
@@ -161,7 +161,7 @@
         }
 
         [Test]
-        public void ContanireShouldResolveSingleInstanceAndDisposeControlledWhenControlledSingletone()
+        public void ContanireShouldResolveSingleInstanceAndDisposeAutoDisposingWhenAutoDisposingSingletone()
         {
             // Given
             using (var container = CreateContainer())
@@ -173,7 +173,7 @@
                 using (
                     container.Register()
                     .Lifetime(Wellknown.Lifetimes.Singleton)
-                    .Lifetime(Wellknown.Lifetimes.Controlled)
+                    .Lifetime(Wellknown.Lifetimes.AutoDisposing)
                     .Contract<IDisposableService>()
                     .AsFactoryMethod(ctx => mock.Object))
                 {
@@ -201,7 +201,7 @@
                     .AsFactoryMethod(ctx => new MyClass(ctx.Container.Resolve().Instance<ISimpleService>(), ctx.Container.Resolve().Instance<ISimpleService>())))
                 using (
                     container.Register()
-                    .Lifetime(Wellknown.Lifetimes.PerResolveLifetime)
+                    .Lifetime(Wellknown.Lifetimes.PerResolve)
                     .Contract<ISimpleService>()
                     .AsFactoryMethod(ctx => new Mock<ISimpleService>().Object))
                 {
@@ -223,7 +223,7 @@
                 // When
                 using (
                     container.Register()
-                    .Lifetime(Wellknown.Lifetimes.PerThreadLifetime)
+                    .Lifetime(Wellknown.Lifetimes.PerThread)
                     .Contract<ISimpleService>()
                     .AsFactoryMethod(ctx => new Mock<ISimpleService>().Object))
                 {

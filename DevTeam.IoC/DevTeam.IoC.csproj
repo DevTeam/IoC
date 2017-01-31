@@ -52,7 +52,7 @@
     <Compile Include="TasksConfiguration.cs" />
     <Compile Include="FilteredKeyComparer.cs" />
     <Compile Include="CompositeDisposable.cs" />
-    <Compile Include="ControlledLifetime.cs" />
+    <Compile Include="AutoDisposingLifetime.cs" />
     <Compile Include="EnumerablesConfiguration.cs" />
     <Compile Include="EpmtyStateProvider.cs" />
     <Compile Include="ExpressionInstanceFactoryProvider.cs" />

@@ -26,16 +26,16 @@
             yield return childContainer
                 .Register()
                 .Scope(Wellknown.Scopes.Global)
-                .Lifetime(Wellknown.Lifetimes.PerResolveLifetime)
-                .Lifetime(Wellknown.Lifetimes.Controlled)
+                .Lifetime(Wellknown.Lifetimes.PerResolve)
+                .Lifetime(Wellknown.Lifetimes.AutoDisposing)
                 .Contract<IEventRegistry>()
                 .AsAutowiring<EventRegistry>();
 
             yield return childContainer
                 .Register()
                 .Scope(Wellknown.Scopes.Internal)
-                .Lifetime(Wellknown.Lifetimes.PerResolveLifetime)
-                .Lifetime(Wellknown.Lifetimes.Controlled)
+                .Lifetime(Wellknown.Lifetimes.PerResolve)
+                .Lifetime(Wellknown.Lifetimes.AutoDisposing)
                 .Contract<IEventBroker>()
                 .AsAutowiring<EventBroker>();
 
@@ -56,15 +56,15 @@
             yield return childContainer
                 .Register()
                 .Scope(Wellknown.Scopes.Internal)
-                .Lifetime(Wellknown.Lifetimes.PerResolveLifetime)
-                .Lifetime(Wellknown.Lifetimes.Controlled)
+                .Lifetime(Wellknown.Lifetimes.PerResolve)
+                .Lifetime(Wellknown.Lifetimes.AutoDisposing)
                 .Contract<IEventSource<DateTimeOffset>>()
                 .AsAutowiring<TimerSource>();
 
             yield return childContainer
                 .Register()
                 .Scope(Wellknown.Scopes.Internal)
-                .Lifetime(Wellknown.Lifetimes.PerResolveLifetime)
+                .Lifetime(Wellknown.Lifetimes.PerResolve)
                 .Contract(typeof(IEventListener<>))
                 .AsAutowiring(typeof(ConsoleListener<>));
 

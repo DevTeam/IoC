@@ -4,78 +4,91 @@
     {
         public enum Configurations
         {
+            // Support all features.
             All,
 
+            // Support child resolving chuild containers.
             ChildrenContainers,
 
+            // Support lifetimes.
             Lifetimes,
 
+            // Support scopes.
             Scopes,
 
+            // Ssupport key comparers.
             KeyComaprers,
 
+            // Support resolving via IEnumerable<>.
             Enumerables,
 
+            // Support injection via Task.
             Tasks,
 
+            // Support resolving via IResolver<>, IProvider<>, Func<>
             Resolvers,
 
+            // Use cache to optimize a performance.
             Cache,
 
+            // Support configuration using Dto.
             Dto
         }
 
         public enum Lifetimes
         {
             /// <summary>
-            /// Shared for all resolves and self controlled.
+            /// Singleton instance.
             /// </summary>
             Singleton,
 
             /// <summary>
-            /// Disposable contracts will be disposed if a regestry is removed or a container is destroed.
+            /// IDisposable instance is disposed when a registration is removed or a container is disposed.
             /// </summary>
-            Controlled,
+            AutoDisposing,
 
             /// <summary>
-            /// Shared for all resolves for the one container and self controlled.
+            /// Singleton instance per container.
             /// </summary>
             PerContainer,
 
             /// <summary>
-            /// Shared for all resolves for the one resolving and self controlled.
+            /// Singleton instance per resolving.
             /// </summary>
-            PerResolveLifetime,
+            PerResolve,
 
             /// <summary>
-            /// Shared for all resolves for the one thread and self controlled.
+            /// Singleton instance per thread.
             /// </summary>
-            PerThreadLifetime,
+            PerThread,
 
             /// <summary>
-            /// Shared for all resolves for the specific state.
+            /// Singleton instance per state.
             /// </summary>
             PerState
         }
 
         public enum KeyComparers
         {
+            // Tag key does not impact on resolving.
             AnyTag,
 
+            // State key does not impact on resolving.
             AnyState,
 
+            // Tag and State keys do not impact on resolving.
             AnyTagAnyState,
         }
 
         public enum Scopes
         {
             /// <summary>
-            /// Registration will be visible in the current container only.
+            /// Registration is visible in the current container only.
             /// </summary>
             Internal,
 
             /// <summary>
-            /// Registration will be visible in whole hierarchy of containers.
+            /// Registration is be visible for whole hierarchy of containers.
             /// </summary>
             Global
         }

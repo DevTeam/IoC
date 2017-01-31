@@ -32,21 +32,21 @@
             yield return
                 resolver
                 .Register()
-                .Tag(Wellknown.Lifetimes.Controlled)
+                .Tag(Wellknown.Lifetimes.AutoDisposing)
                 .Contract<ILifetime>()
-                .AsFactoryMethod(ctx => new ControlledLifetime());
+                .AsFactoryMethod(ctx => new AutoDisposingLifetime());
 
             yield return
                 resolver
                 .Register()
-                .Tag(Wellknown.Lifetimes.PerResolveLifetime)
+                .Tag(Wellknown.Lifetimes.PerResolve)
                 .Contract<ILifetime>()
                 .AsFactoryMethod(ctx => new SingletonBasedLifetime<long>((lifetimeContext, resolverContext) => lifetimeContext.ResolveId));
 
             yield return
                 resolver
                 .Register()
-                .Tag(Wellknown.Lifetimes.PerThreadLifetime)
+                .Tag(Wellknown.Lifetimes.PerThread)
                 .Contract<ILifetime>()
                 .AsFactoryMethod(ctx => new SingletonBasedLifetime<long>((lifetimeContext, resolverContext) => lifetimeContext.ThreadId));
 

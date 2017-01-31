@@ -23,8 +23,8 @@
                     {
                         "Register": [
                             { "Scope": "Global" },
-                            { "Lifetime": "PerResolveLifetime" },
-                            { "Lifetime": "Controlled" },
+                            { "Lifetime": "PerResolve" },
+                            { "Lifetime": "AutoDisposing" },
                             { "Contract": [ "IEventRegistry" ] }
                         ],
                         "AsAutowiring": "EventRegistry"
@@ -33,8 +33,8 @@
                     {
                         "Register": [
                             { "Scope": "Internal" },
-                            { "Lifetime": "PerResolveLifetime" },
-                            { "Lifetime": "Controlled" },
+                            { "Lifetime": "PerResolve" },
+                            { "Lifetime": "AutoDisposing" },
                             { "Contract": [ "IEventBroker" ] }
                         ],
                         "AsAutowiring": "EventBroker"
@@ -43,8 +43,8 @@
                     {
                         "Register": [
                             { "Scope": "Internal" },
-                            { "Lifetime": "PerResolveLifetime" },
-                            { "Lifetime": "Controlled" },
+                            { "Lifetime": "PerResolve" },
+                            { "Lifetime": "AutoDisposing" },
                             { "Contract": [ "IEvent<>" ] },
                             { "KeyComparer": "AnyState" }
                         ],
@@ -63,8 +63,8 @@
                     {
                         "Register": [
                             { "Scope": "Internal" },
-                            { "Lifetime": "PerResolveLifetime" },
-                            { "Lifetime": "Controlled" },
+                            { "Lifetime": "PerResolve" },
+                            { "Lifetime": "AutoDisposing" },
                             { "Contract": [ "IEventSource<DateTimeOffset>" ] }
                         ],
                         "AsAutowiring": "TimerSource"
@@ -73,8 +73,8 @@
                     {
                         "Register": [
                             { "Scope": "Internal" },
-                            { "Lifetime": "PerResolveLifetime" },
-                            { "Lifetime": "Controlled" },
+                            { "Lifetime": "PerResolve" },
+                            { "Lifetime": "AutoDisposing" },
                             { "Contract": [ "IEventListener<>" ] }
                         ],
                         "AsAutowiring": "ConsoleListener<>"

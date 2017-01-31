@@ -75,7 +75,7 @@
             {
                 "Register": [
                     { "Lifetime": "Singleton" },
-                    { "Lifetime": "Controlled" },
+                    { "Lifetime": "AutoDisposing" },
                     { "Contract": [ "IEventBroker" ] }
                 ],
                 "AsAutowiring": "EventBroker<Event<DateTimeOffset>>"

@@ -6,7 +6,7 @@
 
     using Contracts;
 
-    internal class ControlledLifetime: ILifetime
+    internal class AutoDisposingLifetime: ILifetime
     {
         private readonly HashSet<object> _instances = new HashSet<object>();
 
