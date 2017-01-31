@@ -1,6 +1,6 @@
 namespace DevTeam.IoC.Contracts.Dto
 {
-    public interface IConfigurationReferenceDto: IConfigurationStatementDto
+    public interface IDependencyReferenceDto: IConfigurationStatementDto
     {
         string Reference { get; }
 

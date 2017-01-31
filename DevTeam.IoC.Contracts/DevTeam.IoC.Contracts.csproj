@@ -43,7 +43,7 @@
     <Compile Include="ContainerExtensions.cs" />
     <Compile Include="ContractAttribute.cs" />
     <Compile Include="Dto\IConfigurationDto.cs" />
-    <Compile Include="Dto\IConfigurationReferenceDto.cs" />
+    <Compile Include="Dto\IDependencyReferenceDto.cs" />
     <Compile Include="Dto\IConfigurationStatementDto.cs" />
     <Compile Include="Dto\IParameterDto.cs" />
     <Compile Include="Dto\IContractDto.cs" />
@@ -57,9 +57,9 @@
     <Compile Include="Dto\IStateDto.cs" />
     <Compile Include="Dto\ITagDto.cs" />
     <Compile Include="Dto\IUsingDto.cs" />
-    <Compile Include="Dto\IConfigurationTypeDto.cs" />
+    <Compile Include="Dto\IDependencyTypeDto.cs" />
     <Compile Include="Dto\IValueDto.cs" />
-    <Compile Include="Dto\IWellknownConfigurationDto.cs" />
+    <Compile Include="Dto\IDependencyWellknownDto.cs" />
     <Compile Include="IParameterMetadata.cs" />
     <Compile Include="ICache.cs" />
     <Compile Include="ICompositeKey.cs" />

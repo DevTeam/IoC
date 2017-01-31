@@ -40,7 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigurationDto.cs" />
-    <Compile Include="ConfigurationReferenceDto.cs" />
+    <Compile Include="DependencyReferenceDto.cs" />
     <Compile Include="ParameterDto.cs" />
     <Compile Include="ContractDto.cs" />
     <Compile Include="CreateChildDto.cs" />
@@ -55,10 +55,10 @@
     <Compile Include="StateDto.cs" />
     <Compile Include="TagDto.cs" />
     <Compile Include="ReferenceDto.cs" />
-    <Compile Include="ConfigurationTypeDto.cs" />
+    <Compile Include="DependencyTypeDto.cs" />
     <Compile Include="UsingDto.cs" />
     <Compile Include="ValueDto.cs" />
-    <Compile Include="WellknownConfigurationDto.cs" />
+    <Compile Include="DependencyWellknownDto.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DevTeam.IoC.Contracts\DevTeam.IoC.Contracts.csproj">

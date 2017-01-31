@@ -7,7 +7,7 @@
     { "using": "Contracts" },
     { "using": "ClassLibrary" },
 
-    { "Wellknown": "All" },
+    { "dependency.wellknown": "All" },
 
     {
         "Register": [

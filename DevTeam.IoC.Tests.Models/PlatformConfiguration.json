@@ -5,7 +5,7 @@
     { "using": "DevTeam.IoC.Tests.Models" },
     { "using": "DevTeam.IoC.Contracts" },
 
-    { "Wellknown": "All" },
+    { "dependency.wellknown": "All" },
 
     {
         "Register": [

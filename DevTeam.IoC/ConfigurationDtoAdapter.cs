@@ -39,18 +39,18 @@
                     continue;
                 }
 
-                var wellknownConfigurationDto = configurationStatement as IWellknownConfigurationDto;
-                if (wellknownConfigurationDto != null)
+                var dependencyWellknownDto = configurationStatement as IDependencyWellknownDto;
+                if (dependencyWellknownDto != null)
                 {
-                    yield return resolver.Configuration(wellknownConfigurationDto.Configuration);
+                    yield return resolver.Configuration(dependencyWellknownDto.Configuration);
                     continue;
                 }
 
-                var configurationTypeDto = configurationStatement as IConfigurationTypeDto;
-                if (configurationTypeDto != null)
+                var dependencyTypeDto = configurationStatement as IDependencyTypeDto;
+                if (dependencyTypeDto != null)
                 {
                     Type configurationType;
-                    if (!typeResolver.TryResolveType(configurationTypeDto.ConfigurationTypeName, out configurationType) || !typeof(IConfiguration).GetTypeInfo().IsAssignableFrom(configurationType.GetTypeInfo()))
+                    if (!typeResolver.TryResolveType(dependencyTypeDto.ConfigurationTypeName, out configurationType) || !typeof(IConfiguration).GetTypeInfo().IsAssignableFrom(configurationType.GetTypeInfo()))
                     {
                         throw new Exception($"Invalid configuration type {configurationType}");
                     }
@@ -61,18 +61,18 @@
                     continue;
                 }
 
-                var configurationReferenceDto = configurationStatement as IConfigurationReferenceDto;
-                if (configurationReferenceDto != null)
+                var dependencyReferenceDto = configurationStatement as IDependencyReferenceDto;
+                if (dependencyReferenceDto != null)
                 {
                     Type configurationType;
-                    if (!typeResolver.TryResolveType(configurationReferenceDto.ConfigurationTypeName, out configurationType) || !typeof(IConfiguration).GetTypeInfo().IsAssignableFrom(configurationType.GetTypeInfo()))
+                    if (!typeResolver.TryResolveType(dependencyReferenceDto.ConfigurationTypeName, out configurationType) || !typeof(IConfiguration).GetTypeInfo().IsAssignableFrom(configurationType.GetTypeInfo()))
                     {
                         throw new Exception($"Invalid configuration type {configurationType}");
                     }
 
                     var childContainer = resolver.CreateChild();
                     var referenceDescriptionResolver = childContainer.Resolve().Instance<IReferenceDescriptionResolver>();
-                    var reference = referenceDescriptionResolver.ResolveReference(configurationReferenceDto.Reference);
+                    var reference = referenceDescriptionResolver.ResolveReference(dependencyReferenceDto.Reference);
                     var configurationDescriptionDto = childContainer.Resolve().State<string>(0).Instance<IConfigurationDescriptionDto>(reference);
                     var сonfigurationDto = childContainer.Resolve().Tag(configurationType).State<IConfigurationDescriptionDto>(0).Instance<IConfigurationDto>(configurationDescriptionDto);
                     yield return new ConfigurationDtoAdapter(сonfigurationDto);

@@ -6,11 +6,8 @@
     { "using": "DevTeam.IoC.Configurations.Json" },
     { "using": "DevTeam.IoC.Tests.Models" },
 
-    { "Wellknown": "All" },
-    {
-        "Type": "JsonConfiguration",
-        "Reference": "PlatformConfiguration.json"
-    },
+    { "dependency.wellknown": "All" },
+    { "dependency.reference": "PlatformConfiguration.json", "Type": "JsonConfiguration" },
 
     {
         "CreateChild": [

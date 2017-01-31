@@ -3,9 +3,9 @@
     using Contracts.Dto;
     using Newtonsoft.Json;
 
-    internal class ConfigurationReferenceDto : IConfigurationReferenceDto
+    internal class DependencyReferenceDto : IDependencyReferenceDto
     {
-        [JsonProperty("Reference", Required = Required.Always)]
+        [JsonProperty("dependency.reference", Required = Required.Always)]
         public string Reference { get; set; }
 
         [JsonProperty("Type", Required = Required.Default, DefaultValueHandling = DefaultValueHandling.Ignore)]
