@@ -105,7 +105,7 @@
                     continue;
                 }
 
-                var createChildDto = configurationStatement as ICreateChildDto;
+                var createChildDto = configurationStatement as IContainerDto;
                 if (createChildDto != null)
                 {
                     foreach(var registration in Apply(resolver.CreateChild(), typeResolver, createChildDto.Statements))

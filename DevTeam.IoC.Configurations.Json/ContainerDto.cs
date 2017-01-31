@@ -4,9 +4,9 @@
     using Contracts.Dto;
     using Newtonsoft.Json;
 
-    internal class CreateChildDto: ICreateChildDto
+    internal class ContainerDto: IContainerDto
     {
-        [JsonProperty("CreateChild", Required = Required.Always)]
+        [JsonProperty("container", Required = Required.Always)]
         public IEnumerable<IConfigurationStatementDto> Statements { get; set; }
     }
 }

@@ -10,7 +10,7 @@
     { "dependency.reference": "PlatformConfiguration.json", "referenceType": "JsonConfiguration" },
 
     {
-        "CreateChild": [
+        "container": [
             {
                 "Register": [ { "scope": "Global" }, { "lifetime": "PerResolve" }, { "lifetime": "AutoDisposing" }, { "contract": [ "IEventRegistry" ] } ],
                 "AsAutowiring": "EventRegistry"

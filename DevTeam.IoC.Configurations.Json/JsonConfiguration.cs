@@ -16,7 +16,7 @@
                     typeof(ReferenceDto),
                     typeof(UsingDto),
                     typeof(RegisterDto),
-                    typeof(CreateChildDto),
+                    typeof(ContainerDto),
                     typeof(DependencyReferenceDto),
                     typeof(DependencyConfigurationDto),
                     typeof(DependencyWellknownDto)),

@@ -47,7 +47,7 @@
     <Compile Include="Dto\IConfigurationStatementDto.cs" />
     <Compile Include="Dto\IParameterDto.cs" />
     <Compile Include="Dto\IContractDto.cs" />
-    <Compile Include="Dto\ICreateChildDto.cs" />
+    <Compile Include="Dto\IContainerDto.cs" />
     <Compile Include="Dto\IKeyComparerDto.cs" />
     <Compile Include="Dto\ILifetimeDto.cs" />
     <Compile Include="Dto\IReferenceDto.cs" />

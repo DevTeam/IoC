@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    public interface ICreateChildDto : IConfigurationStatementDto
+    public interface IContainerDto : IConfigurationStatementDto
     {
         IEnumerable<IConfigurationStatementDto> Statements { get; }
     }

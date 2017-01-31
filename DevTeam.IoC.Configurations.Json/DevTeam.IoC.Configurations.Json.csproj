@@ -43,7 +43,7 @@
     <Compile Include="DependencyReferenceDto.cs" />
     <Compile Include="ParameterDto.cs" />
     <Compile Include="ContractDto.cs" />
-    <Compile Include="CreateChildDto.cs" />
+    <Compile Include="ContainerDto.cs" />
     <Compile Include="JsonConfiguration.cs" />
     <Compile Include="JsonDerivedTypeConverter.cs" />
     <Compile Include="JsonEnumConverter.cs" />
