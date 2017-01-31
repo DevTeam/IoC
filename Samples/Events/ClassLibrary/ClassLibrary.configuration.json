@@ -14,49 +14,28 @@
     { "Register": [ { "contract": [ "ILogger<>" ] } ], "AsAutowiring": "Logger<>" },
 
     {
-        "Register": [
-            { "stateType": "DateTimeOffset" },
-            { "contract": [ "Event<DateTimeOffset>" ] }
-        ],
+        "Register": [ { "stateType": "DateTimeOffset" }, { "contract": [ "Event<DateTimeOffset>" ] } ],
         "AsAutowiring": "Event<DateTimeOffset>",
         "constructor": [
-            {
-                "paramType": "ILogger<Event<DateTimeOffset>>"
-            },
-            {
-                "paramType": "DateTimeOffset",
-                "state": { "stateType": "DateTimeOffset" }
-            }
+            { "paramType": "ILogger<Event<DateTimeOffset>>" },
+            { "paramType": "DateTimeOffset", "state": { "stateType": "DateTimeOffset" } }
         ]
     },
 
     { "Register": [ { "contract": [ "IEventConsumer<Event<DateTimeOffset>>" ] } ], "AsAutowiring": "Chronometer" },
 
     {
-        "Register": [
-            { "contract": [ "IEventProducer<Event<DateTimeOffset>>" ] }
-        ],
+        "Register": [ { "contract": [ "IEventProducer<Event<DateTimeOffset>>" ] } ],
         "AsAutowiring": "Timer",
         "Constructor": [
-            {
-                "paramType": "ILogger<Timer>"
-            },
-            {
-                "paramType": "Func<DateTimeOffset, Event<DateTimeOffset>>"
-            },
-            {
-                "paramType": "TimeSpan",
-                "Value": "00:00:01"
-            }
+            { "paramType": "ILogger<Timer>" },
+            { "paramType": "Func<DateTimeOffset, Event<DateTimeOffset>>" },
+            { "paramType": "TimeSpan", "Value": "00:00:01" }
         ]
     },
 
     {
-        "Register": [
-            { "lifetime": "Singleton" },
-            { "lifetime": "AutoDisposing" },
-            { "contract": [ "IEventBroker" ] }
-        ],
+        "Register": [ { "lifetime": "Singleton" }, { "lifetime": "AutoDisposing" }, { "contract": [ "IEventBroker" ] } ],
         "AsAutowiring": "EventBroker<Event<DateTimeOffset>>"
     }
 ]

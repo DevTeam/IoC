@@ -8,70 +8,32 @@
     { "dependency.wellknown": "All" },
 
     {
-        "Register": [
-            { "lifetime": "Singleton" },
-            { "contract": [ "ITrace" ] }
-        ],
+        "Register": [ { "lifetime": "Singleton" }, { "contract": [ "ITrace" ] } ],
         "AsAutowiring": "Trace"
     },
 
     {
-        "Register": [
-            { "lifetime": "Singleton" },
-            { "contract": [ "IConsole" ] }
-        ],
+        "Register": [ { "lifetime": "Singleton" }, { "contract": [ "IConsole" ] } ],
         "AsAutowiring": "Console",
         "constructor": [
-            {
-                "paramType": "IProvider<ITrace>"
-            }
+            { "paramType": "IProvider<ITrace>" }
         ]
     },
 
     {
-        "Register": [
-            { "lifetime": "Singleton" },
-            { "contract": [ "ITimer" ] },
-            { "contract": [ "ITimerManager" ] }
-        ],
+        "Register": [ { "lifetime": "Singleton" }, { "contract": [ "ITimer" ] }, { "contract": [ "ITimerManager" ] } ],
         "AsAutowiring": "Timer",
         "constructor": [
-            {
-                "paramType": "ILog",
-                "dependency": [
-                    {
-                        "stateType": "string",
-                        "index": "0",
-                        "value": {
-                            "valueType": "string",
-                            "data": "Abc"
-                        }
-                    }
-                ]
-            }
+            { "paramType": "ILog", "dependency": [ { "stateType": "string", "index": "0", "value": { "valueType": "string", "data": "Abc" } } ] }
         ]
     },
 
     {
-        "Register": [
-            {
-                "stateType": "string",
-                "index": "0"
-            },
-            { "contract": [ "ILog" ] }
-        ],
+        "Register": [ { "stateType": "string", "index": "0" }, { "contract": [ "ILog" ] } ],
         "AsAutowiring": "Log",
         "constructor": [
-            {
-                "paramType": "IConsole",
-                "dependency": [
-                    { "contract": [] }
-                ]
-            },
-            {
-                "paramType": "string",
-                "state": { "stateType": "string" }
-            }
+            { "paramType": "IConsole", "dependency": [ { "contract": [] } ] },
+            { "paramType": "string", "state": { "stateType": "string" } }
         ]
     }
 ]
