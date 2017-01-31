@@ -2,6 +2,7 @@
 {
     using System;
 
+    // Has the only one dependency implementing type "IConsole"
     internal class HelloWorld : IHelloWorld
     {
         private readonly IConsole _console;

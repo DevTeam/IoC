@@ -1,15 +1,11 @@
 ﻿[
+    // "Add reference to assembly ClassLibrary"
     { "reference": "ClassLibrary" },
 
+    // "Add namespace ClassLibrary to resolve types"
     { "using": "ClassLibrary" },
 
-    {
-        "Register": [ { "contract": [ "IConsole" ] } ],
-        "AsAutowiring": "Console"
-    },
-
-    {
-        "Register": [ { "contract": [ "IHelloWorld" ] } ],
-        "AsAutowiring": "HelloWorld"
-    }
+    // "Register implementations"
+    { "Register": [ { "contract": [ "IConsole" ] } ], "AsAutowiring": "Console" },
+    { "Register": [ { "contract": [ "IHelloWorld" ] } ], "AsAutowiring": "HelloWorld" }
 ]

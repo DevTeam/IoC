@@ -12,13 +12,18 @@
     {
         public static void Main(string[] args)
         {
+            var jsonConfigStr = ReadConfiguration<IHelloWorld>("ClassLibrary.configuration.json");
+
+            // Create the root container
             using (var container = new Container())
-            using (container.Configure().DependsOn<JsonConfiguration>(ReadConfiguration<IHelloWorld>("ClassLibrary.configuration.json")).Apply())
+            // Appply the configuration from the json string
+            using (container.Configure().DependsOn<JsonConfiguration>(jsonConfigStr).Apply())
             {
+                // Resolve an instance implementing the interface "IHelloWorld"
                 var helloWorld = container.Resolve().Instance<IHelloWorld>();
+                
+                // Run method to say "Hello"
                 helloWorld.SayHello();
-                Console.WriteLine("Press any key to exit");
-                Console.ReadLine();
             }
         }
 
