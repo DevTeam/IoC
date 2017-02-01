@@ -5,14 +5,14 @@
 
     using Contracts;
 
-    internal class ScopesConfiguration: IConfiguration
+    internal class ScopesFeature: IConfiguration
     {
-        public static readonly IConfiguration Shared = new ScopesConfiguration();
+        public static readonly IConfiguration Shared = new ScopesFeature();
 
         private readonly InternalScope _internalScope = new InternalScope();
         private readonly GlobalScope _globalScope = new GlobalScope();
 
-        private ScopesConfiguration()
+        private ScopesFeature()
         {
         }
 

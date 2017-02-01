@@ -5,17 +5,17 @@
     using Contracts;
     using Contracts.Dto;
 
-    internal class DtoConfiguration: IConfiguration
+    internal class DtoFeature: IConfiguration
     {
-        public static readonly IConfiguration Shared = new DtoConfiguration();
+        public static readonly IConfiguration Shared = new DtoFeature();
 
-        private DtoConfiguration()
+        private DtoFeature()
         {
         }
 
         public IEnumerable<IConfiguration> GetDependencies(IResolver resolver)
         {
-            yield return LifetimesConfiguration.Shared;
+            yield return LifetimesFeature.Shared;
         }
 
         public IEnumerable<IDisposable> Apply(IResolver resolver)

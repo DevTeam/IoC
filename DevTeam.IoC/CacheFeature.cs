@@ -2,21 +2,19 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
     using Contracts;
 
-    internal class CacheConfiguration: IConfiguration
+    internal class CacheFeature: IConfiguration
     {
-        public static readonly IConfiguration Shared = new CacheConfiguration();
+        public static readonly IConfiguration Shared = new CacheFeature();
 
-        private CacheConfiguration()
+        private CacheFeature()
         {
         }
 
         public IEnumerable<IConfiguration> GetDependencies(IResolver resolver)
         {
-            yield return LifetimesConfiguration.Shared;
+            yield return LifetimesFeature.Shared;
         }
 
         public IEnumerable<IDisposable> Apply(IResolver resolver)

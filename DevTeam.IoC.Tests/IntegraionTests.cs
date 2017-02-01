@@ -45,7 +45,7 @@
 
                 using (container
                     .Configure()
-                    .DependsOn(Wellknown.Features.All)
+                    .DependsOn(Wellknown.Features.Full)
                     .DependsOn<JsonConfiguration>(json)
                     .Apply())
                 {
@@ -69,7 +69,7 @@
             using (var rootResolver = new Container("root"))
             using (rootResolver
                 .Configure()
-                .DependsOn(Wellknown.Features.All)
+                .DependsOn(Wellknown.Features.Full)
                 .Apply())
             {
                 PerfomanceTest(rootResolver, 1000);
@@ -82,7 +82,7 @@
             using (var rootResolver = new Container("root"))
             using (rootResolver
                 .Configure()
-                .DependsOn(Wellknown.Features.All)
+                .DependsOn(Wellknown.Features.Full)
                 .Apply())
             {
                 for (var i = 0; i < 100; i++)

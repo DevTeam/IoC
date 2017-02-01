@@ -8,11 +8,11 @@
 
     using Contracts;
 
-    internal class EnumerablesConfiguration: IConfiguration
+    internal class EnumerablesFeature: IConfiguration
     {
-        public static readonly IConfiguration Shared = new EnumerablesConfiguration();
+        public static readonly IConfiguration Shared = new EnumerablesFeature();
 
-        private EnumerablesConfiguration()
+        private EnumerablesFeature()
         {
         }
 

@@ -7,7 +7,7 @@
     { "using": "Contracts" },
     { "using": "ClassLibrary" },
 
-    { "dependency.feature": "All" },
+    { "dependency.feature": "Full" },
 
     { "Register": [ { "contract": [ "IName<>" ] } ], "AsAutowiring": "Name<>" },
 

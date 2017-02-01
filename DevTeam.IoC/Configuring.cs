@@ -41,7 +41,7 @@
         public IConfiguring DependsOn(Type configurationType, string description)
         {
             if (description == null) throw new ArgumentNullException(nameof(description));
-            _configurations.Add(new HashSet<IConfiguration> { DtoConfiguration.Shared, (IConfiguration)Activator.CreateInstance(configurationType) });
+            _configurations.Add(new HashSet<IConfiguration> { DtoFeature.Shared, (IConfiguration)Activator.CreateInstance(configurationType) });
             _configurations.Add(new HashSet<IConfiguration> { new ConfigurationFromDto(_resolver, configurationType, description) });
             return this;
         }

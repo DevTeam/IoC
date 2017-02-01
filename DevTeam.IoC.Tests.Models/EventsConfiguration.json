@@ -6,7 +6,7 @@
     { "using": "DevTeam.IoC.Configurations.Json" },
     { "using": "DevTeam.IoC.Tests.Models" },
 
-    { "dependency.feature": "All" },
+    { "dependency.feature": "Full" },
     { "dependency.reference": "PlatformConfiguration.json", "referenceType": "JsonConfiguration" },
 
     {

@@ -5,17 +5,17 @@
 
     using Contracts;
 
-    internal class ChildrenContainersConfiguration: IConfiguration
+    internal class ChildrenContainersFeature: IConfiguration
     {
-        public static readonly IConfiguration Shared = new ChildrenContainersConfiguration();
+        public static readonly IConfiguration Shared = new ChildrenContainersFeature();
 
-        private ChildrenContainersConfiguration()
+        private ChildrenContainersFeature()
         {
         }
 
         public IEnumerable<IConfiguration> GetDependencies(IResolver resolver)
         {
-            yield return LifetimesConfiguration.Shared;
+            yield return LifetimesFeature.Shared;
         }
 
         public IEnumerable<IDisposable> Apply(IResolver resolver)

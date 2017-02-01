@@ -5,11 +5,11 @@
 
     using Contracts;
 
-    internal class LifetimesConfiguration: IConfiguration
+    internal class LifetimesFeature: IConfiguration
     {
-        public static readonly IConfiguration Shared = new LifetimesConfiguration();
+        public static readonly IConfiguration Shared = new LifetimesFeature();
 
-        private LifetimesConfiguration()
+        private LifetimesFeature()
         {
         }
 

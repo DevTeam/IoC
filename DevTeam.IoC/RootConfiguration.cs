@@ -70,65 +70,65 @@
             yield return
                 container
                 .Register()
-                .Tag(Wellknown.Features.All)
+                .Tag(Wellknown.Features.Full)
                 .Contract<IConfiguration>()
-                .AsFactoryMethod(ctx => AllConfiguration.Shared);
+                .AsFactoryMethod(ctx => FullFeature.Shared);
 
             yield return
                 container
                 .Register()
                 .Tag(Wellknown.Features.ChildrenContainers)
                 .Contract<IConfiguration>()
-                .AsFactoryMethod(ctx => ChildrenContainersConfiguration.Shared);
+                .AsFactoryMethod(ctx => ChildrenContainersFeature.Shared);
 
             yield return
                 container
                 .Register()
                 .Tag(Wellknown.Features.Lifetimes)
                 .Contract<IConfiguration>()
-                .AsFactoryMethod(ctx => LifetimesConfiguration.Shared);
+                .AsFactoryMethod(ctx => LifetimesFeature.Shared);
 
             yield return
                 container
                 .Register()
                 .Tag(Wellknown.Features.Scopes)
                 .Contract<IConfiguration>()
-                .AsFactoryMethod(ctx => ScopesConfiguration.Shared);
+                .AsFactoryMethod(ctx => ScopesFeature.Shared);
 
             yield return
                 container
                 .Register()
                 .Tag(Wellknown.Features.KeyComaprers)
                 .Contract<IConfiguration>()
-                .AsFactoryMethod(ctx => KeyComparersConfiguration.Shared);
+                .AsFactoryMethod(ctx => KeyComparersFeature.Shared);
 
             yield return
                 container
                 .Register()
                 .Tag(Wellknown.Features.Enumerables)
                 .Contract<IConfiguration>()
-                .AsFactoryMethod(ctx => EnumerablesConfiguration.Shared);
+                .AsFactoryMethod(ctx => EnumerablesFeature.Shared);
 
             yield return
                 container
                 .Register()
                 .Tag(Wellknown.Features.Resolvers)
                 .Contract<IConfiguration>()
-                .AsFactoryMethod(ctx => ResolversConfiguration.Shared);
+                .AsFactoryMethod(ctx => ResolversFeature.Shared);
 
             yield return
                 container
                 .Register()
                 .Tag(Wellknown.Features.Cache)
                 .Contract<IConfiguration>()
-                .AsFactoryMethod(ctx => CacheConfiguration.Shared);
+                .AsFactoryMethod(ctx => CacheFeature.Shared);
 
             yield return
                 container
                 .Register()
                 .Tag(Wellknown.Features.Dto)
                 .Contract<IConfiguration>()
-                .AsFactoryMethod(ctx => DtoConfiguration.Shared);
+                .AsFactoryMethod(ctx => DtoFeature.Shared);
         }
 
         public override int GetHashCode()

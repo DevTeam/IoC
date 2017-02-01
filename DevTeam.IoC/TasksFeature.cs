@@ -1,18 +1,17 @@
 ﻿namespace DevTeam.IoC
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using System.Threading.Tasks;
     using Contracts;
 
-    internal class TasksConfiguration: IConfiguration
+    internal class TasksFeature: IConfiguration
     {
-        public static readonly IConfiguration Shared = new TasksConfiguration();
+        public static readonly IConfiguration Shared = new TasksFeature();
 
-        private TasksConfiguration()
+        private TasksFeature()
         {
         }
 

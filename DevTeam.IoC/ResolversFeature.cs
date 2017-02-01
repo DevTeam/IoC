@@ -6,17 +6,17 @@
     using System.Reflection;
     using Contracts;
 
-    internal class ResolversConfiguration : IConfiguration
+    internal class ResolversFeature : IConfiguration
     {
-        public static readonly IConfiguration Shared = new ResolversConfiguration();
+        public static readonly IConfiguration Shared = new ResolversFeature();
 
-        private ResolversConfiguration()
+        private ResolversFeature()
         {
         }
 
         public IEnumerable<IConfiguration> GetDependencies(IResolver resolver)
         {
-            yield return KeyComparersConfiguration.Shared;
+            yield return KeyComparersFeature.Shared;
         }
 
         public IEnumerable<IDisposable> Apply(IResolver resolver)

@@ -5,15 +5,15 @@
 
     using Contracts;
 
-    internal class KeyComparersConfiguration : IConfiguration
+    internal class KeyComparersFeature : IConfiguration
     {
-        public static readonly IConfiguration Shared = new KeyComparersConfiguration();
+        public static readonly IConfiguration Shared = new KeyComparersFeature();
 
         private static readonly FilteredKeyComparer AnyTagKeyComparer = new FilteredKeyComparer(new KeyFilterContext(type => type == typeof(ITagKey)));
         private static readonly FilteredKeyComparer AnyStateKeyComparer = new FilteredKeyComparer(new KeyFilterContext(type => type == typeof(IStateKey)));
         private static readonly FilteredKeyComparer AnyTagAnyStateKeyComparer = new FilteredKeyComparer(new KeyFilterContext(type => type == typeof(ITagKey) || type == typeof(IStateKey)));
 
-        private KeyComparersConfiguration()
+        private KeyComparersFeature()
         {
         }
 
