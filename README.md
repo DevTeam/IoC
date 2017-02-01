@@ -17,7 +17,7 @@ namespace ClassLibrary
     }
 
     // Has the only one dependency implementing type "IConsole"
-    publix class HelloWorld : IHelloWorld
+    public class HelloWorld : IHelloWorld
     {
         private readonly IConsole _console;
 
