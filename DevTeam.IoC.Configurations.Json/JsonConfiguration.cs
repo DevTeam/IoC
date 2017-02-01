@@ -39,7 +39,7 @@
 
         public IEnumerable<IConfiguration> GetDependencies(IResolver resolver)
         {
-            yield return resolver.Configuration(Wellknown.Features.Dto);
+            yield return resolver.Feature(Wellknown.Features.Dto);
         }
 
         public IEnumerable<IDisposable> Apply(IResolver resolver)

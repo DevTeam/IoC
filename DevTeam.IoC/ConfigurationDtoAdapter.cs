@@ -42,7 +42,7 @@
                 var dependencyWellknownDto = configurationStatement as IDependencyFeatureDto;
                 if (dependencyWellknownDto != null)
                 {
-                    yield return resolver.Configuration(dependencyWellknownDto.Feature);
+                    yield return resolver.Feature(dependencyWellknownDto.Feature);
                     continue;
                 }
 

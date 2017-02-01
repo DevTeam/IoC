@@ -21,7 +21,7 @@
 
         public IEnumerable<IConfiguration> GetDependencies(IResolver resolver)
         {
-            yield return resolver.Configuration(Wellknown.Features.Full);
+            yield return resolver.Feature(Wellknown.Features.Full);
         }
 
         public IEnumerable<IDisposable> Apply(IResolver resolver)

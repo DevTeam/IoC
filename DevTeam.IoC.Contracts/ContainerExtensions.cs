@@ -6,9 +6,9 @@
     {
         private static ICompositeKey _fluentKey;
 
-        public static IConfiguration Configuration(this IResolver resolver, Wellknown.Features wellknownFeature)
+        public static IConfiguration Feature(this IResolver resolver, Wellknown.Features feature)
         {
-            return resolver.Resolve().Tag(wellknownFeature).Instance<IConfiguration>();
+            return resolver.Resolve().Tag(feature).Instance<IConfiguration>();
         }
 
         public static IConfiguring Configure(this IResolver resolver)
