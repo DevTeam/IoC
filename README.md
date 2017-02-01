@@ -1,5 +1,15 @@
 There are many different implementations of the _Inversion of Control_ (**_IoC_**) pattern. Why you could choose precisely this? It has a lot of outstanding features:
 
+* Supports dependencies by:
+
+**_contract_** - interface or a set of interfaces
+
+**_state_** - one or more ordered state types
+
+**_tag_**  - some "label" represented by the value of any type
+
+* Fully extensible by registering an own implementation of some behavior described by the specific interface from [contracts assembly](https://github.com/DevTeam/IoC/tree/master/DevTeam.IoC.Contracts).
+
 * It is not necessary to add any references to IoC libraries, thus nearly any code could work according to _IoC_ pattern without any additional changes. For example, [this sample project](https://github.com/DevTeam/IoC/tree/master/Samples/HelloWorld/ClassLibrary) does not know about _IoC_ at all.
 
 * It provides an ability to use state during resolving. For example [class](https://github.com/DevTeam/IoC/blob/master/Samples/Events/ClassLibrary/Event.cs), has one dependency _"logger"_ and state _"data"_ that are injected via constructor.
@@ -18,11 +28,11 @@ class Event<T>
 
 **_ChildrenContainers_** - supports child resolving chuild containers.
 
-**_Lifetimes_** - supports lifetimes.
+**_Lifetimes_** - supports lifetimes (like Singleton, AutoDisposing, PerContainer, PerResolve, PerThread, PerState).
 
-**_Scopes_** - supports scopes.
+**_Scopes_** - supports scopes (like Internal, Global).
 
-**_KeyComaprers_** - supports key comparers.
+**_KeyComaprers_** - supports key comparers (like AnyTag, AnyState, AnyTagAnyState).
 
 **_Enumerables_** - supports resolving via IEnumerable<>.
 
@@ -203,8 +213,6 @@ namespace ClassLibrary
     }
 }
 ```
-
-For details see [wiki page](https://github.com/DevTeam/IoC/wiki)
 
 # Samples
 
