@@ -1,6 +1,22 @@
-According to Wikipedia _"Inversion of Control, or IoC, is an abstract principle describing an aspect of some software architecture designs in which the flow of control of a system is inverted in comparison to procedural programming."_
+There are many different implementations of the _Inversion of Control_ (**_IoC_**) pattern. Why you could choose precisely this? This implementation provides a lot of outstanding features:
 
-Let's consider the following example, when a class, illustrated as **_HelloWorld_** below, uses another class **_Console_**:
+* It is not necessary to add any references to IoC libraries, thus nearly any code could work according to _IoC_ pattern without any additional changes. For example, [this sample project](https://github.com/DevTeam/IoC/tree/master/Samples/HelloWorld/ClassLibrary) does not know about _IoC_ at all.
+
+* It provides an ability to use state during resolving. For example, [this class](https://github.com/DevTeam/IoC/blob/master/Samples/Events/ClassLibrary/Event.cs) has one dependency _"logger"_ and state _"data"_ that are injected via constructor.
+
+* There is a kit of pluggable features. See a list of features [here](https://github.com/DevTeam/IoC/blob/master/DevTeam.IoC.Contracts/Wellknown.cs). For example when feature "Tasks" is plugged ...
+
+# Inversion of Control
+
+According to [Wikipedia](https://en.wikipedia.org/wiki/Inversion_of_control) _"Inversion of Control, or IoC, is an abstract principle describing an aspect of some software architecture designs in which the flow of control of a system is inverted in comparison to procedural programming."_
+
+Inversion of control serves the following design purposes:
+* To decouple the execution of a task from implementation.
+* To focus a module on the task it is designed for.
+* To free modules from assumptions about how other systems do what they do and instead rely on contracts.
+* To prevent side effects when replacing a module.
+
+Let's consider the example, when a class, illustrated as **_HelloWorld_** below, uses another class **_Console_**:
 
 ```csharp
 namespace ClassLibrary
@@ -60,7 +76,7 @@ Having used inversion of control **_HelloWorld_** doesn’t rely on **_Console_*
 
 That means that we, in the setup phase of our tests, can change it so that **_HelloWorld_** uses a different implementation of **_IConsole_**, such as a mock object which doesn’t send any messages at all, and which also allows us to check that **_HelloWorld_** has used it in a correct way.
 
-# Applying Inversion of Control
+# Applying _Inversion of Control_ using the _Dependency Injection_ pattern via a constructor injection
 
 Enough with the **_HelloWorld_** and the **_Console_** and **_IConsole_**! Let’s look at the following example:
 
