@@ -1,4 +1,4 @@
-There are many different implementations of the _Inversion of Control_ (**_IoC_**) pattern. Why you could choose precisely this? This implementation provides a lot of outstanding features:
+There are many different implementations of the _Inversion of Control_ (**_IoC_**) pattern. Why you could choose precisely this? It has a lot of outstanding features:
 
 * It is not necessary to add any references to IoC libraries, thus nearly any code could work according to _IoC_ pattern without any additional changes. For example, [this sample project](https://github.com/DevTeam/IoC/tree/master/Samples/HelloWorld/ClassLibrary) does not know about _IoC_ at all.
 
