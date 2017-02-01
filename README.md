@@ -14,7 +14,19 @@ class Event<T>
 }
 ```
 
-* There is a kit of pluggable [features](https://github.com/DevTeam/IoC/blob/master/DevTeam.IoC.Contracts/Wellknown.cs). For example, when feature **_"Cache"_** is enabled, _IoC_ containers works faster? but consumes more memory. Or another one feature **_"Tasks"_** allows injection of [tasks](https://msdn.microsoft.com/en-us/library/dd537609(v=vs.110).aspx), [for example](https://github.com/DevTeam/IoC/blob/master/DevTeam.IoC.Tests.Models/EventRegistry.cs):
+* There is a kit of pluggable [features](https://github.com/DevTeam/IoC/blob/master/DevTeam.IoC.Contracts/Wellknown.cs). 
+**_Full_** - supports full set of features.
+**_ChildrenContainers_** - supports child resolving chuild containers.
+**_Lifetimes_** - supports lifetimes.
+**_Scopes_** - supports scopes.
+**_KeyComaprers_** - supports key comparers.
+**_Enumerables_** - supports resolving via IEnumerable<>.
+**_Tasks_** - supports injection via Task.
+**_Resolvers_** - supports resolving via IResolver<>, IProvider<>, Func<>.
+**_Cache_** - uses cache to optimize a performance.
+And others.
+             
+For example, when feature **_"Cache"_** is enabled, _IoC_ containers works faster? but consumes more memory. Or another one feature **_"Tasks"_** allows injection of [tasks](https://msdn.microsoft.com/en-us/library/dd537609(v=vs.110).aspx), [for example](https://github.com/DevTeam/IoC/blob/master/DevTeam.IoC.Tests.Models/EventRegistry.cs):
 
 ```csharp
 class EventRegistry : IEventRegistry, IDisposable
