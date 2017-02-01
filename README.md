@@ -56,6 +56,12 @@ class EventRegistry : IEventRegistry, IDisposable
         {
             logResolver.Start();
             resolver.Start();
+            
+            resolver.Wait();
+            eventBroker.Wait();
+            
+            _resolver = resolver.Result;            
+            _eventBroker = eventBroker.Result;
         }
 }
 ```
