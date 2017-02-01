@@ -4,7 +4,7 @@ There are many different implementations of the _Inversion of Control_ (**_IoC_*
 
 * Supports injection of dependencies by:
 
-        contract - interface or a set of interfaces
+        contract - interface/type or a set of interfaces/types
 
         state - one or more ordered state types
 
