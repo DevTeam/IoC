@@ -5,9 +5,9 @@ There are many different implementations of the _Inversion of Control_ (**_IoC_*
 * It provides an ability to use state during resolving. For example [class](https://github.com/DevTeam/IoC/blob/master/Samples/Events/ClassLibrary/Event.cs), has one dependency _"logger"_ and state _"data"_ that are injected via constructor.
 
 ```csharp
-internal class Event<T>
+class Event<T>
 {
-        public Event(
+        Event(
             ILogger<Event<T>> logger,
             T data)
         { ... }
@@ -19,7 +19,7 @@ internal class Event<T>
 ```csharp
 class EventRegistry : IEventRegistry, IDisposable
 {
-    public EventRegistry(
+    EventRegistry(
         Task<IResolver> resolver,
         Task<IEventBroker> eventBroker,
         ...)
@@ -47,7 +47,7 @@ namespace ClassLibrary
 {
     using System;
 
-    internal class Console
+    class Console
     {
         public void WriteLine(string line)
         {
@@ -55,9 +55,9 @@ namespace ClassLibrary
         }
     }
 
-    public class HelloWorld
+    class HelloWorld
     {
-        private readonly ClassLibrary.Console _console;
+        ClassLibrary.Console _console;
 
         public HelloWorld()
         {
