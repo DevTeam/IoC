@@ -2,9 +2,33 @@ There are many different implementations of the _Inversion of Control_ (**_IoC_*
 
 * It is not necessary to add any references to IoC libraries, thus nearly any code could work according to _IoC_ pattern without any additional changes. For example, [this sample project](https://github.com/DevTeam/IoC/tree/master/Samples/HelloWorld/ClassLibrary) does not know about _IoC_ at all.
 
-* It provides an ability to use state during resolving. For example, [this class](https://github.com/DevTeam/IoC/blob/master/Samples/Events/ClassLibrary/Event.cs) has one dependency _"logger"_ and state _"data"_ that are injected via constructor.
+* It provides an ability to use state during resolving. For example [class](https://github.com/DevTeam/IoC/blob/master/Samples/Events/ClassLibrary/Event.cs), has one dependency _"logger"_ and state _"data"_ that are injected via constructor.
 
-* There is a kit of pluggable features. See a list of features [here](https://github.com/DevTeam/IoC/blob/master/DevTeam.IoC.Contracts/Wellknown.cs). For example when feature "Tasks" is plugged ...
+```csharp
+internal class Event<T>
+{
+        public Event(
+            ILogger<Event<T>> logger,
+            T data)
+        { ... }
+}
+```
+
+* There is a kit of pluggable [features](https://github.com/DevTeam/IoC/blob/master/DevTeam.IoC.Contracts/Wellknown.cs). For example, when feature **_"Cache"_** is enabled, _IoC_ containers works faster? but consumes more memory. Or another one feature **_"Tasks"_** allows injection of [tasks](https://msdn.microsoft.com/en-us/library/dd537609(v=vs.110).aspx), [for example](https://github.com/DevTeam/IoC/blob/master/DevTeam.IoC.Tests.Models/EventRegistry.cs):
+
+```csharp
+class EventRegistry : IEventRegistry, IDisposable
+{
+    public EventRegistry(
+        Task<IResolver> resolver,
+        Task<IEventBroker> eventBroker,
+        ...)
+        {
+            logResolver.Start();
+            resolver.Start();
+        }
+}
+```
 
 # Inversion of Control
 
@@ -144,7 +168,7 @@ namespace ClassLibrary
         }
     }
 
-    // Has the only one dependency implementing type "IConsole"
+    // Has the only one dependency implementing interface "IConsole"
     internal class HelloWorld : IHelloWorld
     {
         private readonly IConsole _console;
