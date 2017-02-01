@@ -30,7 +30,7 @@ class Event<T>
 
 * There is a kit of pluggable [features](https://github.com/DevTeam/IoC/blob/master/DevTeam.IoC.Contracts/Wellknown.cs):
 
-        ChildrenContainers - supports child resolving child containers.
+        ChildrenContainers - supports the resolving of child containers.
 
         Lifetimes - supports lifetimes (Singleton, AutoDisposing, PerContainer, PerResolve, PerThread, PerState).
 
