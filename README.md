@@ -62,7 +62,7 @@ That means that we, in the setup phase of our tests, can change it so that **_He
 
 # Applying Inversion of Control
 
-Enough with the **_HelloWorld_** and the **_IConsole_** and **_IConsole_**! Let’s look at the following example:
+Enough with the **_HelloWorld_** and the **_Console_** and **_IConsole_**! Let’s look at the following example:
 
 # [Hellow World](https://github.com/DevTeam/IoC/tree/master/Samples/HelloWorld)
 
