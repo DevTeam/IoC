@@ -19,7 +19,7 @@
             // Given
             var simpleService = new Mock<ISimpleService>();
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Configurations.Resolvers).Apply())
+            using (container.Configure().DependsOn(Wellknown.Features.Resolvers).Apply())
             {
                 // When
                 using (container.Register().Contract<ISimpleService>().Tag("abc").AsFactoryMethod(ctx => simpleService.Object))
@@ -38,7 +38,7 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Configurations.Resolvers).Apply())
+            using (container.Configure().DependsOn(Wellknown.Features.Resolvers).Apply())
             {
                 // When
                 using (container.Register().Contract<ISimpleService>().Tag("abc").State<string>(0).State<int>(1).AsAutowiring<StateClass>())
@@ -59,7 +59,7 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Configurations.Resolvers).Apply())
+            using (container.Configure().DependsOn(Wellknown.Features.Resolvers).Apply())
             {
                 // When
                 using (container.Register().Contract<ISimpleService>().Tag("abc").State<string>(0).State<int>(1).AsAutowiring<StateClass>())

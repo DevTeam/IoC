@@ -5,7 +5,7 @@
     { "using": "DevTeam.IoC.Tests.Models" },
     { "using": "DevTeam.IoC.Contracts" },
 
-    { "dependency.wellknown": "All" },
+    { "dependency.feature": "All" },
 
     {
         "Register": [ { "lifetime": "Singleton" }, { "contract": [ "ITrace" ] } ],

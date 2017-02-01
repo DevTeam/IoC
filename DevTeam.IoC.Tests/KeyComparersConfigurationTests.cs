@@ -16,7 +16,7 @@
             // Given
             var mock = new Mock<ISimpleService>();
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Configurations.KeyComaprers).Apply())
+            using (container.Configure().DependsOn(Wellknown.Features.KeyComaprers).Apply())
             {
                 // When
                 using (

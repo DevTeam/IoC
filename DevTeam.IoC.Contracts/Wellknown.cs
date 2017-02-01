@@ -2,7 +2,7 @@
 {
     public static class Wellknown
     {
-        public enum Configurations
+        public enum Features
         {
             // Support all features.
             All,

@@ -59,7 +59,7 @@
     <Compile Include="Dto\IUsingDto.cs" />
     <Compile Include="Dto\IDependencyConfigurationDto.cs" />
     <Compile Include="Dto\IValueDto.cs" />
-    <Compile Include="Dto\IDependencyWellknownDto.cs" />
+    <Compile Include="Dto\IDependencyFeatureDto.cs" />
     <Compile Include="IParameterMetadata.cs" />
     <Compile Include="ICache.cs" />
     <Compile Include="ICompositeKey.cs" />

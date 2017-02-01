@@ -58,7 +58,7 @@
     <Compile Include="DependencyConfigurationDto.cs" />
     <Compile Include="UsingDto.cs" />
     <Compile Include="ValueDto.cs" />
-    <Compile Include="DependencyWellknownDto.cs" />
+    <Compile Include="DependencyFeatureDto.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DevTeam.IoC.Contracts\DevTeam.IoC.Contracts.csproj">

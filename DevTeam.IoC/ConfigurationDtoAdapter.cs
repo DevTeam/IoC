@@ -39,10 +39,10 @@
                     continue;
                 }
 
-                var dependencyWellknownDto = configurationStatement as IDependencyWellknownDto;
+                var dependencyWellknownDto = configurationStatement as IDependencyFeatureDto;
                 if (dependencyWellknownDto != null)
                 {
-                    yield return resolver.Configuration(dependencyWellknownDto.Configuration);
+                    yield return resolver.Configuration(dependencyWellknownDto.Feature);
                     continue;
                 }
 

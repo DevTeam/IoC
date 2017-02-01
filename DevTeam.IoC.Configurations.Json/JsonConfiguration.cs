@@ -19,8 +19,8 @@
                     typeof(ContainerDto),
                     typeof(DependencyReferenceDto),
                     typeof(DependencyConfigurationDto),
-                    typeof(DependencyWellknownDto)),
-                new JsonEnumConverter<Wellknown.Configurations>(),
+                    typeof(DependencyFeatureDto)),
+                new JsonEnumConverter<Wellknown.Features>(),
                 new JsonEnumConverter<Wellknown.Lifetimes>(),
                 new JsonEnumConverter<Wellknown.Scopes>(),
                 new JsonEnumConverter<Wellknown.KeyComparers>(),
@@ -39,7 +39,7 @@
 
         public IEnumerable<IConfiguration> GetDependencies(IResolver resolver)
         {
-            yield return resolver.Configuration(Wellknown.Configurations.Dto);
+            yield return resolver.Configuration(Wellknown.Features.Dto);
         }
 
         public IEnumerable<IDisposable> Apply(IResolver resolver)

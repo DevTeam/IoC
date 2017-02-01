@@ -11,7 +11,7 @@
     {
         public IEnumerable<IConfiguration> GetDependencies(IResolver resolver)
         {
-            yield return resolver.Configuration(Wellknown.Configurations.Lifetimes);
+            yield return resolver.Configuration(Wellknown.Features.Lifetimes);
             foreach (var config in resolver.Configure().DependsOn<JsonConfiguration>(ReadConfiguration("ClassLibrary.configuration.json")))
             {
                 yield return config;

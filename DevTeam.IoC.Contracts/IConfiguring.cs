@@ -9,7 +9,7 @@
 
         IConfiguring DependsOn<TConfiguration>() where TConfiguration : IConfiguration, new();
 
-        IConfiguring DependsOn(params Wellknown.Configurations[] configurations);
+        IConfiguring DependsOn(params Wellknown.Features[] features);
 
         IConfiguring DependsOn(Type configurationType, string description);
 

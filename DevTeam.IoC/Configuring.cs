@@ -31,10 +31,10 @@
             return DependsOn(new TConfiguration());
         }
 
-        public IConfiguring DependsOn(params Wellknown.Configurations[] configurations)
+        public IConfiguring DependsOn(params Wellknown.Features[] features)
         {
-            if (configurations == null) throw new ArgumentNullException(nameof(configurations));
-            _configurations.Add(new HashSet<IConfiguration>(configurations.Select(wellknownConfiguration => _resolver.Resolve().Tag(wellknownConfiguration).Instance<IConfiguration>())));
+            if (features == null) throw new ArgumentNullException(nameof(features));
+            _configurations.Add(new HashSet<IConfiguration>(features.Select(wellknownConfiguration => _resolver.Resolve().Tag(wellknownConfiguration).Instance<IConfiguration>())));
             return this;
         }
 

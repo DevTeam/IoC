@@ -70,63 +70,63 @@
             yield return
                 container
                 .Register()
-                .Tag(Wellknown.Configurations.All)
+                .Tag(Wellknown.Features.All)
                 .Contract<IConfiguration>()
                 .AsFactoryMethod(ctx => AllConfiguration.Shared);
 
             yield return
                 container
                 .Register()
-                .Tag(Wellknown.Configurations.ChildrenContainers)
+                .Tag(Wellknown.Features.ChildrenContainers)
                 .Contract<IConfiguration>()
                 .AsFactoryMethod(ctx => ChildrenContainersConfiguration.Shared);
 
             yield return
                 container
                 .Register()
-                .Tag(Wellknown.Configurations.Lifetimes)
+                .Tag(Wellknown.Features.Lifetimes)
                 .Contract<IConfiguration>()
                 .AsFactoryMethod(ctx => LifetimesConfiguration.Shared);
 
             yield return
                 container
                 .Register()
-                .Tag(Wellknown.Configurations.Scopes)
+                .Tag(Wellknown.Features.Scopes)
                 .Contract<IConfiguration>()
                 .AsFactoryMethod(ctx => ScopesConfiguration.Shared);
 
             yield return
                 container
                 .Register()
-                .Tag(Wellknown.Configurations.KeyComaprers)
+                .Tag(Wellknown.Features.KeyComaprers)
                 .Contract<IConfiguration>()
                 .AsFactoryMethod(ctx => KeyComparersConfiguration.Shared);
 
             yield return
                 container
                 .Register()
-                .Tag(Wellknown.Configurations.Enumerables)
+                .Tag(Wellknown.Features.Enumerables)
                 .Contract<IConfiguration>()
                 .AsFactoryMethod(ctx => EnumerablesConfiguration.Shared);
 
             yield return
                 container
                 .Register()
-                .Tag(Wellknown.Configurations.Resolvers)
+                .Tag(Wellknown.Features.Resolvers)
                 .Contract<IConfiguration>()
                 .AsFactoryMethod(ctx => ResolversConfiguration.Shared);
 
             yield return
                 container
                 .Register()
-                .Tag(Wellknown.Configurations.Cache)
+                .Tag(Wellknown.Features.Cache)
                 .Contract<IConfiguration>()
                 .AsFactoryMethod(ctx => CacheConfiguration.Shared);
 
             yield return
                 container
                 .Register()
-                .Tag(Wellknown.Configurations.Dto)
+                .Tag(Wellknown.Features.Dto)
                 .Contract<IConfiguration>()
                 .AsFactoryMethod(ctx => DtoConfiguration.Shared);
         }
