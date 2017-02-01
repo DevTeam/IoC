@@ -7,8 +7,7 @@ namespace ClassLibrary
 {
     using System;
 
-    // Has no any dependencies
-    internal class Console : IConsole
+    internal class Console
     {
         public void WriteLine(string line)
         {
@@ -16,10 +15,9 @@ namespace ClassLibrary
         }
     }
 
-    // Has the only one dependency implementing type "IConsole"
-    public class HelloWorld : IHelloWorld
+    public class HelloWorld
     {
-        private readonly IConsole _console;
+        private readonly ClassLibrary.Console _console;
 
         public HelloWorld()
         {
