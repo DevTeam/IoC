@@ -7,6 +7,8 @@ There are many different implementations of the _Inversion of Control_ (**_IoC_*
         state - one or more ordered state types
 
         tag  - some "label" represented by the value of any type
+        
+* Supports a hierarchy of _IoC_ containers.
 
 * Fully extensible by registering an own implementation of some behavior described by the specific interface from [contracts assembly](https://github.com/DevTeam/IoC/tree/master/DevTeam.IoC.Contracts).
 
