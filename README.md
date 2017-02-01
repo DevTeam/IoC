@@ -30,11 +30,11 @@ class Event<T>
 
         ChildrenContainers - supports child resolving chuild containers.
 
-        Lifetimes - supports lifetimes (like Singleton, AutoDisposing, PerContainer, PerResolve, PerThread, PerState).
+        Lifetimes - supports lifetimes (Singleton, AutoDisposing, PerContainer, PerResolve, PerThread, PerState).
 
-        Scopes - supports scopes (like Internal, Global).
+        Scopes - supports scopes (Internal, Global).
 
-        KeyComaprers - supports key comparers (like AnyTag, AnyState, AnyTagAnyState).
+        KeyComaprers - supports key comparers (AnyTag, AnyState, AnyTagAnyState).
 
         Enumerables - supports resolving via IEnumerable<>.
 
