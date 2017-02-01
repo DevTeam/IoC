@@ -1,4 +1,6 @@
-According to Wikipedia _"Inversion of Control, or IoC, is an abstract principle describing an aspect of some software architecture designs in which the flow of control of a system is inverted in comparison to procedural programming."_ Let's consider the following example, when a class, illustrated as **_HelloWorld_** below, uses another class **_Console_**:
+According to Wikipedia _"Inversion of Control, or IoC, is an abstract principle describing an aspect of some software architecture designs in which the flow of control of a system is inverted in comparison to procedural programming."_
+
+Let's consider the following example, when a class, illustrated as **_HelloWorld_** below, uses another class **_Console_**:
 
 ```csharp
 namespace ClassLibrary
