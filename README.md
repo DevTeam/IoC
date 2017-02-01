@@ -1,5 +1,7 @@
 There are many different implementations of the _Inversion of Control_ (**_IoC_**) pattern. Why you could choose precisely this? It has a lot of outstanding features:
 
+* .net core, .net framework 4.5 and higher, portable assemblies compatible
+
 * Supports dependencies by:
 
         contract - interface or a set of interfaces
