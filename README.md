@@ -2,11 +2,11 @@ There are many different implementations of the _Inversion of Control_ (**_IoC_*
 
 * Supports dependencies by:
 
-**_contract_** - interface or a set of interfaces
+        contract - interface or a set of interfaces
 
-**_state_** - one or more ordered state types
+        state - one or more ordered state types
 
-**_tag_**  - some "label" represented by the value of any type
+        tag  - some "label" represented by the value of any type
 
 * Fully extensible by registering an own implementation of some behavior described by the specific interface from [contracts assembly](https://github.com/DevTeam/IoC/tree/master/DevTeam.IoC.Contracts).
 
@@ -26,21 +26,21 @@ class Event<T>
 
 * There is a kit of pluggable [features](https://github.com/DevTeam/IoC/blob/master/DevTeam.IoC.Contracts/Wellknown.cs):
 
-**_ChildrenContainers_** - supports child resolving chuild containers.
+        ChildrenContainers - supports child resolving chuild containers.
 
-**_Lifetimes_** - supports lifetimes (like Singleton, AutoDisposing, PerContainer, PerResolve, PerThread, PerState).
+        Lifetimes - supports lifetimes (like Singleton, AutoDisposing, PerContainer, PerResolve, PerThread, PerState).
 
-**_Scopes_** - supports scopes (like Internal, Global).
+        Scopes - supports scopes (like Internal, Global).
 
-**_KeyComaprers_** - supports key comparers (like AnyTag, AnyState, AnyTagAnyState).
+        KeyComaprers - supports key comparers (like AnyTag, AnyState, AnyTagAnyState).
 
-**_Enumerables_** - supports resolving via IEnumerable<>.
+        Enumerables - supports resolving via IEnumerable<>.
 
-**_Tasks_** - supports injection via Task.
+        Tasks - supports injection via Task.
 
-**_Resolvers_** - supports resolving via IResolver<>, IProvider<>, Func<>.
+        Resolvers - supports resolving via IResolver<>, IProvider<>, Func<>.
 
-**_Cache_** - uses cache to optimize a performance.
+        Cache - uses cache to optimize a performance.
 
 And some others. For example, when feature **_"Cache"_** is enabled, _IoC_ containers works faster? but consumes more memory. Or another one feature **_"Tasks"_** allows injection of [tasks](https://msdn.microsoft.com/en-us/library/dd537609(v=vs.110).aspx), [for example](https://github.com/DevTeam/IoC/blob/master/DevTeam.IoC.Tests.Models/EventRegistry.cs):
 
