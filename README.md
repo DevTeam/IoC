@@ -6,7 +6,7 @@ Because it has many outstanding [features](https://github.com/DevTeam/IoC/wiki/F
 
 See [Wiki](https://github.com/DevTeam/IoC/wiki) for details.
 
-Here is just one sample _[Hellow World]_(https://github.com/DevTeam/IoC/tree/master/Samples/HelloWorld):
+Here is just one simplest example _[Hellow World]_(https://github.com/DevTeam/IoC/tree/master/Samples/HelloWorld):
 
 **The entry point**:
 
