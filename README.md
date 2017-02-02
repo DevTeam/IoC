@@ -4,6 +4,4 @@ Why you could choose this?
 
 It has a lot of outstanding [features](https://github.com/DevTeam/IoC/wiki/Features).
 
-See how it works [here](https://github.com/DevTeam/IoC/wiki/Samples).
-
-Just use [<img src="https://www.nuget.org/Content/Logos/nugetlogo.png" height="18"> packages](https://github.com/DevTeam/IoC/wiki/NuGet-packages) to use it.
+See how it works [here](https://github.com/DevTeam/IoC/wiki/Samples) and use [<img src="https://www.nuget.org/Content/Logos/nugetlogo.png" height="18"> packages](https://github.com/DevTeam/IoC/wiki/NuGet-packages) to use it.
