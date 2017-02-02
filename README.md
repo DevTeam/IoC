@@ -51,7 +51,7 @@ namespace ClassLibrary
 }
 ```
 
-**Implementation**:
+**Implementations**:
 ```csharp
 namespace ClassLibrary
 {
