@@ -1,6 +1,7 @@
+packages
 **/obj/
 **/bin/
-**/project.lock.json
+**/*.lock.json
 **/*.TMP
 **/*.DotSettings.user
 **/*.csproj.user
