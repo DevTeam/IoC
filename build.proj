@@ -7,7 +7,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<TestAssembly Include="C:\Projects\DevTeam\IoC\DevTeam.IoC.Tests"/>
+		<TestAssembly Include="DevTeam.IoC.Tests"/>
 		<Package Include="DevTeam.IoC.Contracts"/>
 		<Package Include="DevTeam.IoC"/>
 		<Package Include="DevTeam.IoC.Configurations.Json"/>
