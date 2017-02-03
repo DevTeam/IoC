@@ -68,17 +68,16 @@
 		</Exec>
 	</Target>
 
-	<!--Target Name="CreatePackages" DependsOnTargets="RestorePackages"-->
 	<Target Name="CreatePackages" DependsOnTargets="RunTests">
 		<Exec Command="packages\nuget.exe pack %(Package.Identity)\package.nuspec -Version $(Version) -OutputDirectory $(PackagesDirectory)"/>
 		<Message Text="##teamcity[publishArtifacts '$(PackagesDirectory)\%(Package.FileName)%(Package.Extension).$(Version).nupkg=>$(PackagesDirectory)\%(Package.FileName)%(Package.Extension).$(Version).nupkg']" />
 	</Target>
 
-	<Target Name="PushPackagesToNuGet">
+	<Target Name="PushPackagesToNuGet" DependsOnTargets="GetNuGet">
 		<Exec Command="packages\nuget.exe push $(PackagesDirectory)\%(Package.FileName)%(Package.Extension).$(Version).nupkg -ApiKey $(NuGetApiKey) -Source https://nuget.org/"/>
 	</Target>
 
-	<Target Name="PushPackagesToMyGet">
+	<Target Name="PushPackagesToMyGet" DependsOnTargets="GetNuGet">
 		<Exec Command="packages\nuget.exe push $(PackagesDirectory)\%(Package.FileName)%(Package.Extension).$(Version).nupkg -ApiKey $(MyGetApiKey) -Source https://www.myget.org/F/dev_team/api/v2/package"/>
 	</Target>
 
