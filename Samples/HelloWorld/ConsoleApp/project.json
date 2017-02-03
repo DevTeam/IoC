@@ -4,10 +4,13 @@
     "emitEntryPoint": true
   },
 
-    "dependencies": {
-        "ClassLibrary": "1.0.0-*",
-        "Microsoft.NETCore.App": "1.1.0"
-    },
+  "dependencies": {
+    "ClassLibrary": "1.0.0-*",
+    "Microsoft.NETCore.App": {
+        "type": "platform",
+        "version": "1.0.1"
+    }
+  },
 
   "frameworks": {
     "netcoreapp1.0": {
