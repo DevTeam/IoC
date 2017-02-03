@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>DevTeam.IoC</id>
-		<title>DevTeam IoC.</title>
+		<title>DevTeam IoC</title>
 		<language>en-us</language>
 		<version>$version$</version>
 		<authors>NikolayP</authors>

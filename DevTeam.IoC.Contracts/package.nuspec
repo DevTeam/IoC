@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>DevTeam.IoC.Contracts</id>
-		<title>DevTeam IoC contracts.</title>
+		<title>DevTeam IoC contracts</title>
 		<language>en-us</language>
 		<version>$version$</version>
 		<authors>NikolayP</authors>
