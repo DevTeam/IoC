@@ -1,3 +1,5 @@
+Build status: <img src="http://tcavs2015.cloudapp.net/app/rest/builds/buildType:(id:DevTeam_IoC_Build)/statusIcon"/>
+
 There are many different implementations of [Inversion of Control](https://github.com/DevTeam/IoC/wiki/Inversion-of-Control).
 
 Why it would be preferable to use this implementation?
@@ -83,4 +85,3 @@ namespace ClassLibrary
     }
 }
 ```
-
