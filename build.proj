@@ -54,7 +54,7 @@
 	</Target>
 
 	<Target Name="RestorePackages" DependsOnTargets="GetNuGet">
-		<Exec Command="nuget.exe restore DevTeam.IoC.sln"/>
+		<Exec Command="packages\nuget.exe restore DevTeam.IoC.sln"/>
 	</Target>
 
 	<Target Name="Build" DependsOnTargets="RestorePackages">
