@@ -70,7 +70,7 @@
 
 	<Target Name="CreatePackages" DependsOnTargets="RunTests">
 		<Exec Command="packages\nuget.exe pack %(Package.Identity)\package.nuspec -Version $(Version) -OutputDirectory $(PackagesDirectory)"/>
-		<Message Text="##teamcity[publishArtifacts '$(PackagesDirectory)\%(Package.FileName)%(Package.Extension).$(Version).nupkg=>$(PackagesDirectory)\%(Package.FileName)%(Package.Extension).$(Version).nupkg']" />
+		<Message Text="##teamcity[publishArtifacts '$(PackagesDirectory)\%(Package.FileName)%(Package.Extension).$(Version).nupkg=>$(PackagesDirectory)']" />
 	</Target>
 
 	<Target Name="PushPackagesToNuGet" DependsOnTargets="GetNuGet">
