@@ -32,6 +32,23 @@
         }
 
         [Test]
+        public void ContanireShouldRegisterUsigClassMetadata()
+        {
+            // Given
+            using (var container = CreateContainer())
+            {
+                // When
+                using (container.Register().Metadata<ClassWithMetadata>().AsFactoryMethod(ctx => new ClassWithMetadata(ctx.GetState<string>(0))))
+                {
+                    var actualObj = (ClassWithMetadata)container.Resolve().Contract<ISimpleService>().Tag("abc").State(0, typeof(string)).Instance("xyz");
+
+                    // Then
+                    actualObj.Str.ShouldBe("xyz");
+                }
+            }
+        }
+
+        [Test]
         public void ContanireShouldRegisterAndResolveWhenSeveralKeys()
         {
             // Given
@@ -133,6 +150,19 @@
             {
                 throw new System.NotImplementedException();
             }
+        }
+
+        [Contract(typeof(ISimpleService))]
+        [State(0, typeof(string))]
+        [Tag("abc")]
+        public class ClassWithMetadata: ISimpleService
+        {
+            public ClassWithMetadata(string str)
+            {
+                Str = str;
+            }
+
+            public string Str { get; private set; }
         }
     }
 }

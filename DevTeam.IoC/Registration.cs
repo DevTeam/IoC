@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using Contracts;
 
     internal class Registration : Token<IRegistration>, IRegistration
@@ -66,6 +67,32 @@
         {
             Extensions.Add(Fluent.Resolve().Tag(scope).Instance<IScope>());
             return this;
+        }
+
+        public IRegistration Metadata(Type implementation)
+        {
+            var typeInfo = implementation.GetTypeInfo();
+            foreach(var contract in typeInfo.GetCustomAttributes<ContractAttribute>())
+            {
+                Contract(contract.ContractTypes);
+            }
+
+            foreach (var state in typeInfo.GetCustomAttributes<StateAttribute>())
+            {
+                State(state.Index, state.StateType);
+            }
+
+            foreach (var tag in typeInfo.GetCustomAttributes<TagAttribute>())
+            {
+                Tag(tag.Tags);
+            }
+
+            return this;
+        }
+
+        public IRegistration Metadata<TImplementation>()
+        {
+            return Metadata(typeof(TImplementation));
         }
 
         public IDisposable AsFactoryMethod(Func<IResolverContext, object> factoryMethod)
