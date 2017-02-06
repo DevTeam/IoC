@@ -4,8 +4,8 @@
     {
         public enum Features
         {
-            // Support full set of features.
-            Full,
+            // Support default set of features.
+            Default,
 
             // Support child resolving chuild containers.
             ChildrenContainers,

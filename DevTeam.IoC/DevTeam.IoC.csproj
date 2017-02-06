@@ -58,7 +58,7 @@
     <Compile Include="ExpressionInstanceFactoryProvider.cs" />
     <Compile Include="Fluent.cs" />
     <Compile Include="MethodFactory.cs" />
-    <Compile Include="FullFeature.cs" />
+    <Compile Include="DefaultFeatures.cs" />
     <Compile Include="ContractKey.cs" />
     <Compile Include="GlobalScope.cs" />
     <Compile Include="InstanceFactory.cs" />

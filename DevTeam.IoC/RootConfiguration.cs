@@ -70,9 +70,9 @@
             yield return
                 container
                 .Register()
-                .Tag(Wellknown.Features.Full)
+                .Tag(Wellknown.Features.Default)
                 .Contract<IConfiguration>()
-                .AsFactoryMethod(ctx => FullFeature.Shared);
+                .AsFactoryMethod(ctx => DefaultFeatures.Shared);
 
             yield return
                 container

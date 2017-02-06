@@ -15,7 +15,7 @@
 
         public IEnumerable<IConfiguration> GetDependencies(IResolver resolver)
         {
-            yield return resolver.Feature(Wellknown.Features.Full);
+            yield return resolver.Feature(Wellknown.Features.Default);
             yield return new PlatformConfiguration(_trace);
         }
 

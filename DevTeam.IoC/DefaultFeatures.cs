@@ -5,11 +5,11 @@
 
     using Contracts;
 
-    internal class FullFeature: IConfiguration
+    internal class DefaultFeatures: IConfiguration
     {
-        public static readonly IConfiguration Shared = new FullFeature();
+        public static readonly IConfiguration Shared = new DefaultFeatures();
 
-        private FullFeature()
+        private DefaultFeatures()
         {
         }
 
