@@ -198,6 +198,7 @@
                 // When
                 using (
                     container.Register()
+                    .Contract<MyClass>()
                     .AsFactoryMethod(ctx => new MyClass(ctx.Container.Resolve().Instance<ISimpleService>(), ctx.Container.Resolve().Instance<ISimpleService>())))
                 using (
                     container.Register()

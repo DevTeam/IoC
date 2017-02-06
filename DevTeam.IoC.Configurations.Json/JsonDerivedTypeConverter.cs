@@ -26,13 +26,25 @@
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var jsonObject = JObject.Load(reader);
-            foreach (var derivedType in _derivedTypes)
-            {
-                if (!derivedType.Value.Except(jsonObject.Properties().Select(i => i.Name)).Any())
+
+            var type =  (
+                from derivedType in _derivedTypes
+                select new
                 {
-                    return jsonObject.ToObject(derivedType.Key, serializer);
+                    derivedType,
+                    cnt = (
+                        from name in derivedType.Value
+                        join propName in jsonObject.Properties().Select(i => i.Name) on name equals propName
+                        select propName).Count()
+                })
+                .OrderByDescending(i => i.cnt)
+                .Select(i => i.derivedType.Key)
+                .FirstOrDefault();
+
+                if (type != null)
+                {
+                    return jsonObject.ToObject(type, serializer);
                 }
-            }
 
             throw new NotImplementedException();
         }
@@ -49,12 +61,11 @@
                 let jsonIgnoreAttribute = prop.GetCustomAttribute(typeof(JsonIgnoreAttribute), true) as JsonIgnoreAttribute
                 where jsonIgnoreAttribute == null
                 let jsonPropertyAttribute = prop.GetCustomAttribute(typeof(JsonPropertyAttribute), true) as JsonPropertyAttribute
-                where jsonPropertyAttribute.Required == Required.Always || jsonPropertyAttribute.Required == Required.AllowNull
                 select jsonPropertyAttribute?.PropertyName ?? prop.Name).ToArray();
 
             if (names.Length == 0)
             {
-                throw new InvalidOperationException($"{type.Name} does not containt any required properties");
+                throw new InvalidOperationException($"{type.Name} does not containt any properties");
             }
 
             return names;

@@ -69,70 +69,43 @@
             return this;
         }
 
-        public IRegistration Metadata(Type implementation)
-        {
-            var typeInfo = implementation.GetTypeInfo();
-            foreach(var contract in typeInfo.GetCustomAttributes<ContractAttribute>())
-            {
-                Contract(contract.ContractTypes);
-            }
-
-            foreach (var state in typeInfo.GetCustomAttributes<StateAttribute>())
-            {
-                State(state.Index, state.StateType);
-            }
-
-            foreach (var tag in typeInfo.GetCustomAttributes<TagAttribute>())
-            {
-                Tag(tag.Tags);
-            }
-
-            return this;
-        }
-
-        public IRegistration Metadata<TImplementation>()
-        {
-            return Metadata(typeof(TImplementation));
-        }
-
         public IDisposable AsFactoryMethod(Func<IResolverContext, object> factoryMethod)
         {
             if (factoryMethod == null) throw new ArgumentNullException(nameof(factoryMethod));
-            CeateCompositeKeys();
             return AsFactoryMethodInternal(factoryMethod);
         }
 
         public IDisposable AsFactoryMethod<TImplementation>(Func<IResolverContext, TImplementation> factoryMethod)
         {
             if (factoryMethod == null) throw new ArgumentNullException(nameof(factoryMethod));
-            Contract<TImplementation>();
-            return AsFactoryMethodInternal(factoryMethod);
+            return AsFactoryMethodInternal(factoryMethod, typeof(TImplementation));
         }
 
         public IDisposable AsAutowiring(Type implementationType, IMetadataProvider metadataProvider = null)
         {
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
             metadataProvider = metadataProvider ?? AutowiringMetadataProvider.Shared;
-            return AsFactoryMethod(ctx =>
-            {
-                var resolvedType = metadataProvider.ResolveImplementationType(ctx, implementationType);
-                ICache<Type, IResolverFactory> factoryCache;
-                IResolverFactory factory;
-                if (ctx.Container.TryResolve(out factoryCache))
+            return AsFactoryMethodInternal(ctx =>
                 {
-                    if (!factoryCache.TryGet(resolvedType, out factory))
+                    var resolvedType = metadataProvider.ResolveImplementationType(ctx, implementationType);
+                    ICache<Type, IResolverFactory> factoryCache;
+                    IResolverFactory factory;
+                    if (ctx.Container.TryResolve(out factoryCache))
+                    {
+                        if (!factoryCache.TryGet(resolvedType, out factory))
+                        {
+                            factory = new MetadataFactory(resolvedType, _instanceFactoryProvider.Value, metadataProvider);
+                            factoryCache.Set(resolvedType, factory);
+                        }
+                    }
+                    else
                     {
                         factory = new MetadataFactory(resolvedType, _instanceFactoryProvider.Value, metadataProvider);
-                        factoryCache.Set(resolvedType, factory);
                     }
-                }
-                else
-                {
-                    factory = new MetadataFactory(resolvedType, _instanceFactoryProvider.Value, metadataProvider);
-                }
 
-                return factory.Create(ctx);
-            });
+                    return factory.Create(ctx);
+                },
+                implementationType);
         }
 
         public IDisposable AsAutowiring<TImplementation>()
@@ -161,7 +134,37 @@
             return _compositeKeys.Add(compositeKey);
         }
 
-        private void CeateCompositeKeys()
+        private bool ExtractMetadata(Type metadataType)
+        {
+            if (metadataType == typeof(object))
+            {
+                return false;
+            }
+
+            var hasMetadata = false;
+            var typeInfo = metadataType.GetTypeInfo();
+            foreach (var contract in typeInfo.GetCustomAttributes<ContractAttribute>())
+            {
+                Contract(contract.ContractTypes);
+                hasMetadata = true;
+            }
+
+            foreach (var state in typeInfo.GetCustomAttributes<StateAttribute>())
+            {
+                State(state.Index, state.StateType);
+                hasMetadata = true;
+            }
+
+            foreach (var tag in typeInfo.GetCustomAttributes<TagAttribute>())
+            {
+                Tag(tag.Tags);
+                hasMetadata = true;
+            }
+
+            return hasMetadata;
+        }
+
+        private void AppendCompositeKeys()
         {
             foreach (var contractKeys in _contractKeys)
             {
@@ -177,9 +180,17 @@
             _tagKeys.Clear();
         }
 
-        private IDisposable AsFactoryMethodInternal<TImplementation>(Func<IResolverContext, TImplementation> factoryMethod)
+        private IDisposable AsFactoryMethodInternal<TImplementation>(
+            Func<IResolverContext,
+            TImplementation> factoryMethod,
+            Type implementationType = null)
         {
-            CeateCompositeKeys();
+            AppendCompositeKeys();
+            if (ExtractMetadata(implementationType ?? typeof(TImplementation)))
+            {
+                AppendCompositeKeys();
+            }
+
             IDisposable registration;
             var context = Registry.CreateContext(_compositeKeys, new MethodFactory<TImplementation>(factoryMethod), Extensions);
             if (!Registry.TryRegister(context, out registration))

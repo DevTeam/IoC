@@ -10,7 +10,7 @@
         public string TypeName { get; set; }
 
         [JsonProperty("dependency", Required = Required.Default)]
-        public IEnumerable<IKeyDto> Dependency { get; set; }
+        public IEnumerable<IRegisterStatementDto> Dependency { get; set; }
 
         [JsonProperty("state", Required = Required.Default)]
         public IStateDto State { get; set; }

@@ -4,7 +4,7 @@
 
     public interface IRegisterDto : IConfigurationStatementDto
     {
-        IEnumerable<IKeyDto> Keys { get; }
+        IEnumerable<IRegisterStatementDto> Keys { get; }
 
         string AutowiringTypeName { get; }
 

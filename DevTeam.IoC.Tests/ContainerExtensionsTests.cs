@@ -32,13 +32,30 @@
         }
 
         [Test]
-        public void ContanireShouldRegisterUsigClassMetadata()
+        public void ContanireShouldRegisterUsigClassMetadataWhensFactoryMethod()
         {
             // Given
             using (var container = CreateContainer())
             {
                 // When
-                using (container.Register().Metadata<ClassWithMetadata>().AsFactoryMethod(ctx => new ClassWithMetadata(ctx.GetState<string>(0))))
+                using (container.Register().AsFactoryMethod(ctx => new ClassWithMetadata(ctx.GetState<string>(0))))
+                {
+                    var actualObj = (ClassWithMetadata)container.Resolve().Contract<ISimpleService>().Tag("abc").State(0, typeof(string)).Instance("xyz");
+
+                    // Then
+                    actualObj.Str.ShouldBe("xyz");
+                }
+            }
+        }
+
+        [Test]
+        public void ContanireShouldRegisterUsigClassMetadataAutomaticallyWhenAutowiring()
+        {
+            // Given
+            using (var container = CreateContainer())
+            {
+                // When
+                using (container.Register().AsAutowiring<ClassWithMetadata>())
                 {
                     var actualObj = (ClassWithMetadata)container.Resolve().Contract<ISimpleService>().Tag("abc").State(0, typeof(string)).Instance("xyz");
 
@@ -157,7 +174,7 @@
         [Tag("abc")]
         public class ClassWithMetadata: ISimpleService
         {
-            public ClassWithMetadata(string str)
+            public ClassWithMetadata([State] string str)
             {
                 Str = str;
             }

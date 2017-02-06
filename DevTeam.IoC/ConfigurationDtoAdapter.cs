@@ -132,9 +132,9 @@
             if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
             if (registerDto == null) throw new ArgumentNullException(nameof(registerDto));
             var registration = resolver.Register();
-            foreach (var keyDto in registerDto.Keys)
+            foreach (var registerStatementDto in registerDto.Keys ?? Enumerable.Empty<IRegisterStatementDto>())
             {
-                var contractDto = keyDto as IContractDto;
+                var contractDto = registerStatementDto as IContractDto;
                 if (contractDto != null)
                 {
                     var contractTypes = new List<Type>();
@@ -153,7 +153,7 @@
                     continue;
                 }
 
-                var stateDto = keyDto as IStateDto;
+                var stateDto = registerStatementDto as IStateDto;
                 if (stateDto != null)
                 {
                     Type stateType;
@@ -166,7 +166,7 @@
                     continue;
                 }
 
-                var tagDto = keyDto as ITagDto;
+                var tagDto = registerStatementDto as ITagDto;
                 if (tagDto != null)
                 {
                     object tag;
@@ -179,21 +179,21 @@
                     continue;
                 }
 
-                var lifetimeDto = keyDto as ILifetimeDto;
+                var lifetimeDto = registerStatementDto as ILifetimeDto;
                 if (lifetimeDto != null)
                 {
                     registration.Lifetime(lifetimeDto.Lifetime);
                     continue;
                 }
 
-                var scopeDto = keyDto as IScopeDto;
+                var scopeDto = registerStatementDto as IScopeDto;
                 if (scopeDto != null)
                 {
                     registration.Scope(scopeDto.Scope);
                     continue;
                 }
 
-                var keyComparerDto = keyDto as IKeyComparerDto;
+                var keyComparerDto = registerStatementDto as IKeyComparerDto;
                 if (keyComparerDto != null)
                 {
                     registration.KeyComparer(keyComparerDto.KeyComparer);

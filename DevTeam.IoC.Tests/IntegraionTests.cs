@@ -41,7 +41,7 @@
             ITrace trace;
             using (var container = new Container("root"))
             {
-                container.Register().AsFactoryMethod<IReferenceDescriptionResolver>(ctx => new ReferenceDescriptionResolver());
+                container.Register().Contract<IReferenceDescriptionResolver>().AsFactoryMethod<IReferenceDescriptionResolver>(ctx => new ReferenceDescriptionResolver());
 
                 using (container
                     .Configure()

@@ -7,8 +7,8 @@
 
     internal class RegisterDto: IRegisterDto
     {
-        [JsonProperty("Register", Required = Required.Always)]
-        public IEnumerable<IKeyDto> Keys { get; set; }
+        [JsonProperty("Register", Required = Required.Default)]
+        public IEnumerable<IRegisterStatementDto> Keys { get; set; }
 
         [JsonProperty("AsAutowiring", Required = Required.Default)]
         public string AutowiringTypeName { get; set; }

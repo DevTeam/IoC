@@ -29,7 +29,6 @@
     },
 
     {
-        "Register": [ { "stateType": "string", "index": "0" }, { "contract": [ "ILog" ] } ],
         "AsAutowiring": "Log",
         "constructor": [
             { "paramType": "IConsole", "dependency": [ { "contract": [] } ] },

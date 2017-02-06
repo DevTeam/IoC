@@ -2,7 +2,7 @@
 {
     using Contracts;
 
-    public interface IKeyComparerDto : IKeyDto
+    public interface IKeyComparerDto : IRegisterStatementDto
     {
         Wellknown.KeyComparers KeyComparer { get; }
     }

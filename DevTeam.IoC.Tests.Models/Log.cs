@@ -3,6 +3,8 @@
     using System;
     using Contracts;
 
+    [Contract(typeof(ILog))]
+    [State(0, typeof(string))]
     internal class Log : ILog
     {
         private readonly IConsole _console;

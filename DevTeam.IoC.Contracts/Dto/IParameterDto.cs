@@ -10,6 +10,6 @@
 
         IStateDto State { get; }
 
-        IEnumerable<IKeyDto> Dependency { get; }
+        IEnumerable<IRegisterStatementDto> Dependency { get; }
     }
 }

@@ -2,7 +2,7 @@
 {
     using Contracts;
 
-    public interface IScopeDto : IKeyDto
+    public interface IScopeDto : IRegisterStatementDto
     {
         Wellknown.Scopes Scope { get; }
     }

@@ -52,7 +52,7 @@
     <Compile Include="Dto\ILifetimeDto.cs" />
     <Compile Include="Dto\IReferenceDto.cs" />
     <Compile Include="Dto\IRegisterDto.cs" />
-    <Compile Include="Dto\IKeyDto.cs" />
+    <Compile Include="Dto\IRegisterStatementDto.cs" />
     <Compile Include="Dto\IScopeDto.cs" />
     <Compile Include="Dto\IStateDto.cs" />
     <Compile Include="Dto\ITagDto.cs" />

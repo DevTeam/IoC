@@ -1,6 +1,6 @@
 ﻿namespace DevTeam.IoC.Contracts.Dto
 {
-    public interface ITagDto : IKeyDto
+    public interface ITagDto : IRegisterStatementDto
     {
         string Value { get; }
 

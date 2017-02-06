@@ -24,7 +24,7 @@
                 new JsonEnumConverter<Wellknown.Lifetimes>(),
                 new JsonEnumConverter<Wellknown.Scopes>(),
                 new JsonEnumConverter<Wellknown.KeyComparers>(),
-                new JsonDerivedTypeConverter<IKeyDto>(
+                new JsonDerivedTypeConverter<IRegisterStatementDto>(
                     typeof(TagDto),
                     typeof(ContractDto),
                     typeof(ScopeDto),
@@ -33,7 +33,7 @@
                     typeof(StateDto)),
                 new JsonDerivedTypeConverter<IParameterDto>(typeof(ParameterDto)),
                 new JsonDerivedTypeConverter<IValueDto>(typeof(ValueDto)),
-                new JsonDerivedTypeConverter<IStateDto>(typeof(StateDto)),
+                new JsonDerivedTypeConverter<IStateDto>(typeof(StateDto))
             }
         };
 

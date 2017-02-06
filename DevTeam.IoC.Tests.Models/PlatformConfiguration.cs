@@ -50,8 +50,6 @@
 
             yield return resolver
                 .Register()
-                .Contract<ILog>()
-                .State<string>(0)
                 .AsAutowiring<Log>();
         }
     }

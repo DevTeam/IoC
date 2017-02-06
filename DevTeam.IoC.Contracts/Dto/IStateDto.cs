@@ -1,6 +1,6 @@
 ﻿namespace DevTeam.IoC.Contracts.Dto
 {
-    public interface IStateDto : IKeyDto
+    public interface IStateDto : IRegisterStatementDto
     {
         int Index { get; }
 

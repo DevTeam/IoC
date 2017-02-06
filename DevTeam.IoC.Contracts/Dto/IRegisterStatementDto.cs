@@ -1,6 +1,6 @@
 ﻿namespace DevTeam.IoC.Contracts.Dto
 {
-    public interface IKeyDto
+    public interface IRegisterStatementDto
     {
     }
 }

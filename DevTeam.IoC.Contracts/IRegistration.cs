@@ -12,10 +12,6 @@
 
         IDisposable AsAutowiring<TImplementation>();
 
-        IRegistration Metadata(Type implementation);
-
-        IRegistration Metadata<TImplementation>();
-
         IRegistration Lifetime(Wellknown.Lifetimes lifetime);
 
         IRegistration Lifetime(ILifetime lifetime);
