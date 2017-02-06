@@ -27,13 +27,10 @@ using (container.Configure().DependsOn<JsonConfiguration>(jsonConfigStr).Apply()
 The **Json configuration** jsonConfigStr:
 ```json
 [
-    // "Add reference to assembly ClassLibrary"
     { "reference": "ClassLibrary" },
 
-    // "Add namespace ClassLibrary to resolve types"
     { "using": "ClassLibrary" },
 
-    // "Register implementations"
     { "Register": [ { "contract": [ "IConsole" ] } ], "AsAutowiring": "Console" },
     { "Register": [ { "contract": [ "IHelloWorld" ] } ], "AsAutowiring": "HelloWorld" }
 ]
