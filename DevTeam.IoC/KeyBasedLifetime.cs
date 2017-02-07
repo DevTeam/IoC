@@ -5,15 +5,22 @@
 
     using Contracts;
 
-    internal class SingletonBasedLifetime<TKey> : ILifetime
+    internal class KeyBasedLifetime<TKey> : ILifetime
     {
         private readonly Func<ILifetimeContext, IResolverContext, TKey> _keySelector;
-        private readonly Dictionary<TKey, ILifetime> _lifitimes = new Dictionary<TKey, ILifetime>();
+        private readonly Func<ILifetime> _baseLifetimeFactory;
+        private readonly Dictionary<TKey, ILifetime> _lifetimes = new Dictionary<TKey, ILifetime>();
 
-        public SingletonBasedLifetime([NotNull] Func<ILifetimeContext, IResolverContext, TKey> keySelector)
+        internal int Count => _lifetimes.Count;
+
+        public KeyBasedLifetime(
+            [NotNull] Func<ILifetimeContext, IResolverContext, TKey> keySelector,
+            [NotNull] Func<ILifetime> baseLifetimeFactory)
         {
             if (keySelector == null) throw new ArgumentNullException(nameof(keySelector));
+            if (baseLifetimeFactory == null) throw new ArgumentNullException(nameof(baseLifetimeFactory));
             _keySelector = keySelector;
+            _baseLifetimeFactory = baseLifetimeFactory;
         }
 
         public object Create(ILifetimeContext lifetimeContext, IResolverContext resolverContext, IEnumerator<ILifetime> lifetimeEnumerator)
@@ -23,12 +30,12 @@
             if (lifetimeEnumerator == null) throw new ArgumentNullException(nameof(lifetimeEnumerator));
             ILifetime lifetime;
             var key = _keySelector(lifetimeContext, resolverContext);
-            lock (_lifitimes)
+            lock (_lifetimes)
             {
-                if (!_lifitimes.TryGetValue(key, out lifetime))
+                if (!_lifetimes.TryGetValue(key, out lifetime))
                 {
-                    lifetime = new SingletonLifetime();
-                    _lifitimes.Add(key, lifetime);
+                    lifetime = _baseLifetimeFactory();
+                    _lifetimes.Add(key, lifetime);
                 }
             }
 
@@ -38,14 +45,14 @@
 
         public void Dispose()
         {
-            lock (_lifitimes)
+            lock (_lifetimes)
             {
-                foreach (var lifetime in _lifitimes)
+                foreach (var lifetime in _lifetimes)
                 {
                     lifetime.Value.Dispose();
                 }
 
-                _lifitimes.Clear();
+                _lifetimes.Clear();
             }
         }
     }

@@ -40,6 +40,7 @@
             var actualObj = lifetime.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object);
 
             // Then
+            _baseLifetime.Verify(i => i.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object), Times.Exactly(1));
             actualObj.ShouldBe(obj);
             lifetime.Count.ShouldBe(0);
         }
@@ -58,6 +59,7 @@
             var actualObj = lifetime.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object);
 
             // Then
+            _baseLifetime.Verify(i => i.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object), Times.Exactly(1));
             actualObj.ShouldBe(obj.Object);
             lifetime.Count.ShouldBe(1);
         }

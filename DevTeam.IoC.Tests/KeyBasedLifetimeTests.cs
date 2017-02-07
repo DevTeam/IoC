@@ -1,5 +1,6 @@
 ﻿namespace DevTeam.IoC.Tests
 {
+    using System;
     using System.Collections.Generic;
     using Contracts;
     using Moq;
@@ -9,7 +10,7 @@
     using Shouldly;
 
     [TestFixture]
-    public class SingletonLifetimeTests
+    public class KeyBasedLifetimeTests
     {
         private Mock<IEnumerator<ILifetime>> _lifetimeEnumerator;
         private Mock<ILifetime> _baseLifetime;
@@ -31,10 +32,8 @@
             // Given
             var obj = new object();
             var registrationKey = new object();
-            var lifetime = CreateInstance();
+            var lifetime = CreateInstance((lifetimeContext, resolverContext) => 0);
             _resolverContext.SetupGet(i => i.RegistrationKey).Returns(registrationKey);
-            var key = new CompositeKey(new IContractKey[]{ new ContractKey(typeof(string), true) }, new ITagKey[] { new TagKey("abc") }, new IStateKey[] { new StateKey(0, typeof(string)) });
-            _resolverContext.SetupGet(i => i.Key).Returns(key);
             _lifetimeEnumerator.Setup(i => i.MoveNext()).Returns(true);
             _lifetimeEnumerator.SetupGet(i => i.Current).Returns(_baseLifetime.Object);
             _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object)).Returns(obj);
@@ -53,7 +52,7 @@
             // Given
             var obj = new object();
             var registrationKey = new object();
-            var lifetime = CreateInstance();
+            var lifetime = CreateInstance((lifetimeContext, resolverContext) => 0);
             _resolverContext.SetupGet(i => i.RegistrationKey).Returns(registrationKey);
             var key = new CompositeKey(new IContractKey[] { new ContractKey(typeof(string), true) }, new ITagKey[] { new TagKey("abc") }, new IStateKey[] { new StateKey(0, typeof(string)) });
             _resolverContext.SetupGet(i => i.Key).Returns(key);
@@ -69,80 +68,26 @@
             lifetime.Count.ShouldBe(0);
         }
 
-        [Test]
-        public void ShouldReturnTheSameObjectWhenTheSameGenericArguments()
-        {
-            // Given
-            var obj = new object();
-            var registrationKey = new object();
-            var lifetime = CreateInstance();
-            _resolverContext.SetupGet(i => i.RegistrationKey).Returns(registrationKey);
-            var key = new CompositeKey(new IContractKey[] { new ContractKey(typeof(IEnumerable<string>), true) }, new ITagKey[] { new TagKey("abc") }, new IStateKey[] { new StateKey(0, typeof(string)) });
-            _resolverContext.SetupGet(i => i.Key).Returns(key);
-            _lifetimeEnumerator.Setup(i => i.MoveNext()).Returns(true);
-            _lifetimeEnumerator.SetupGet(i => i.Current).Returns(_baseLifetime.Object);
-            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object)).Returns(obj);
-
-            // When
-            var actualObj1 = lifetime.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object);
-            var actualObj2 = lifetime.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object);
-
-            // Then
-            _baseLifetime.Verify(i => i.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object), Times.Exactly(1));
-            actualObj1.ShouldBe(obj);
-            actualObj1.ShouldBe(actualObj2);
-            lifetime.Count.ShouldBe(1);
-        }
 
         [Test]
-        public void ShouldReturnTheSameObjectWhenDifferentTags()
+        public void ShouldReturnDifferentObjectsWhenThereAreDifferentKeys()
         {
             // Given
+            var key = 0;
             var obj1 = new object();
             var obj2 = new object();
             var registrationKey = new object();
-            var lifetime = CreateInstance();
+            var lifetime = CreateInstance((lifetimeContext, resolverContext) => key);
             _resolverContext.SetupGet(i => i.RegistrationKey).Returns(registrationKey);
             _lifetimeEnumerator.Setup(i => i.MoveNext()).Returns(true);
             _lifetimeEnumerator.SetupGet(i => i.Current).Returns(_baseLifetime.Object);
 
             // When
-            var key1 = new CompositeKey(new IContractKey[] { new ContractKey(typeof(IEnumerable<string>), true) }, new ITagKey[] { new TagKey("abc") }, new IStateKey[] { new StateKey(0, typeof(string)) });
-            _resolverContext.SetupGet(i => i.Key).Returns(key1);
+            key = 1;
             _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object)).Returns(obj1);
             var actualObj1 = lifetime.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object);
 
-            var key2 = new CompositeKey(new IContractKey[] { new ContractKey(typeof(IEnumerable<string>), true) }, new ITagKey[] { new TagKey("xyz") }, new IStateKey[] { new StateKey(0, typeof(string)) });
-            _resolverContext.SetupGet(i => i.Key).Returns(key2);
-            var actualObj2 = lifetime.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object);
-
-            // Then
-            _baseLifetime.Verify(i => i.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object), Times.Exactly(1));
-            actualObj1.ShouldBe(actualObj2);
-            lifetime.Count.ShouldBe(1);
-        }
-
-
-        [Test]
-        public void ShouldReturnDifferentObjectsWhenThereAreDifferentGenericArguments()
-        {
-            // Given
-            var obj1 = new object();
-            var obj2 = new object();
-            var registrationKey = new object();
-            var lifetime = CreateInstance();
-            _resolverContext.SetupGet(i => i.RegistrationKey).Returns(registrationKey);
-            _lifetimeEnumerator.Setup(i => i.MoveNext()).Returns(true);
-            _lifetimeEnumerator.SetupGet(i => i.Current).Returns(_baseLifetime.Object);
-
-            // When
-            var key1 = new CompositeKey(new IContractKey[] { new ContractKey(typeof(IEnumerable<string>), true) }, new ITagKey[] { new TagKey("abc") }, new IStateKey[] { new StateKey(0, typeof(string)) });
-            _resolverContext.SetupGet(i => i.Key).Returns(key1);
-            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object)).Returns(obj1);
-            var actualObj1 = lifetime.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object);
-
-            var key2 = new CompositeKey(new IContractKey[] { new ContractKey(typeof(IEnumerable<int>), true) }, new ITagKey[] { new TagKey("abc") }, new IStateKey[] { new StateKey(0, typeof(string)) });
-            _resolverContext.SetupGet(i => i.Key).Returns(key2);
+            key = 2;
             _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object)).Returns(obj2);
             var actualObj2 = lifetime.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object);
 
@@ -153,9 +98,36 @@
             lifetime.Count.ShouldBe(2);
         }
 
-        private SingletonLifetime CreateInstance()
+        [Test]
+        public void ShouldReturnSameObjectsWhenThereAreSameKeys()
         {
-            return new SingletonLifetime();
+            // Given
+            var key = 0;
+            var obj = new object();
+            var registrationKey = new object();
+            var lifetime = CreateInstance((lifetimeContext, resolverContext) => key);
+            _resolverContext.SetupGet(i => i.RegistrationKey).Returns(registrationKey);
+            _lifetimeEnumerator.Setup(i => i.MoveNext()).Returns(true);
+            _lifetimeEnumerator.SetupGet(i => i.Current).Returns(_baseLifetime.Object);
+            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object)).Returns(obj);
+
+            // When
+            key = 3;
+            var actualObj1 = lifetime.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object);
+
+            key = 3;
+            var actualObj2 = lifetime.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object);
+
+            // Then
+            _baseLifetime.Verify(i => i.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object), Times.Exactly(2));
+            actualObj1.ShouldBe(obj);
+            actualObj2.ShouldBe(obj);
+            lifetime.Count.ShouldBe(1);
+        }
+
+        private KeyBasedLifetime<int> CreateInstance(Func<ILifetimeContext, IResolverContext, int> keySelector)
+        {
+            return new KeyBasedLifetime<int>(keySelector, () => _baseLifetime.Object);
         }
     }
 }

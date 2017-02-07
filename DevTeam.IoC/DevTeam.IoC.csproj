@@ -66,7 +66,7 @@
     <Compile Include="InternalScope.cs" />
     <Compile Include="KeyFilterContext.cs" />
     <Compile Include="LifetimeContext.cs" />
-    <Compile Include="SingletonBasedLifetime.cs" />
+    <Compile Include="KeyBasedLifetime.cs" />
     <Compile Include="ResolversFeature.cs" />
     <Compile Include="KeyFactory.cs" />
     <Compile Include="KeyComparersFeature.cs" />

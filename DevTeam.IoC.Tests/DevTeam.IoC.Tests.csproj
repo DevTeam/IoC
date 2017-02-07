@@ -81,6 +81,7 @@
     <Compile Include="ContainerTests.cs" />
     <Compile Include="ISimpleService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="KeyBasedLifetimeTests.cs" />
     <Compile Include="SingletonLifetimeTests.cs" />
     <Compile Include="TestExtensions.cs" />
     <Compile Include="TypeResolverTests.cs" />
