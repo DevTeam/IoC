@@ -10,6 +10,8 @@
         private static readonly IStateKey[] EmptyStateKeys = new IStateKey[0];
         private readonly Dictionary<ICompositeKey, object> _instances = new Dictionary<ICompositeKey, object>();
 
+        internal int Count => _instances.Count;
+
         public object Create(ILifetimeContext lifetimeContext, IResolverContext resolverContext, IEnumerator<ILifetime> lifetimeEnumerator)
         {
             ITagKey registrationKey = new TagKey(resolverContext.RegistrationKey);

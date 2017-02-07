@@ -39,6 +39,7 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Annotations.cs" />
     <Compile Include="AutowiringAttribute.cs" />
     <Compile Include="ContainerExtensions.cs" />
     <Compile Include="ContractAttribute.cs" />

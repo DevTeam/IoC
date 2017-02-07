@@ -62,6 +62,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoDisposingLifetimeTests.cs" />
     <Compile Include="AutowiringInstanceFactoryTests.cs" />
     <Compile Include="ContractKeyTests.cs" />
     <Compile Include="IntegraionTests.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="ContainerTests.cs" />
     <Compile Include="ISimpleService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SingletonLifetimeTests.cs" />
     <Compile Include="TestExtensions.cs" />
     <Compile Include="TypeResolverTests.cs" />
   </ItemGroup>

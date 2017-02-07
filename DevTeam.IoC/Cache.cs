@@ -11,6 +11,7 @@
 
         public bool TryGet(TKey key, out TValue value)
         {
+            if (key == null) throw new ArgumentNullException(nameof(key));
             WeakReference<TValue> weakReference;
             if (_cache.TryGetValue(key, out weakReference))
             {
@@ -28,11 +29,14 @@
 
         public void Set(TKey key, TValue value)
         {
+            if (key == null) throw new ArgumentNullException(nameof(key));
+            if (value == null) throw new ArgumentNullException(nameof(value));
             _cache[key] = new WeakReference<TValue>(value);
         }
 
         public bool TryRemove(TKey key)
         {
+            if (key == null) throw new ArgumentNullException(nameof(key));
             return _cache.Remove(key);
         }
     }

@@ -6,18 +6,24 @@
     {
         private static ICompositeKey _fluentKey;
 
-        public static IConfiguration Feature(this IResolver resolver, Wellknown.Features feature)
+        [NotNull]
+        [PublicAPI]
+        public static IConfiguration Feature([NotNull] this IResolver resolver, Wellknown.Features feature)
         {
             return resolver.Resolve().Tag(feature).Instance<IConfiguration>();
         }
 
-        public static IConfiguring Configure(this IResolver resolver)
+        [NotNull]
+        [PublicAPI]
+        public static IConfiguring Configure([NotNull] this IResolver resolver)
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             return GetFluent(resolver).Configure(resolver);
         }
 
-        public static IDisposable Register(this IResolver resolver, IRegistryContext context)
+        [NotNull]
+        [PublicAPI]
+        public static IDisposable Register([NotNull] this IResolver resolver, [NotNull] IRegistryContext context)
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             if (context == null) throw new ArgumentNullException(nameof(context));
@@ -31,13 +37,17 @@
             return registration;
         }
 
-        public static IRegistration Register(this IResolver resolver)
+        [NotNull]
+        [PublicAPI]
+        public static IRegistration Register([NotNull] this IResolver resolver)
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             return GetFluent(resolver).Register();
         }
 
-        public static IContainer CreateChild(this IResolver resolver, object tag = null)
+        [NotNull]
+        [PublicAPI]
+        public static IContainer CreateChild([NotNull] this IResolver resolver, [CanBeNull] object tag = null)
         {
             if (tag == null)
             {
@@ -47,28 +57,42 @@
             return resolver.Resolve().State<object>(0).Instance<IContainer>("child");
         }
 
-        public static IResolving Resolve(this IResolver resolver)
+        [NotNull]
+        [PublicAPI]
+        public static IResolving Resolve([NotNull] this IResolver resolver)
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             return GetFluent(resolver).Resolve();
         }
 
-        public static object GetState(this IResolverContext ctx, int index, Type stateType)
+        [CanBeNull]
+        [PublicAPI]
+        public static object GetState([NotNull] this IResolverContext ctx, int index, [NotNull] Type stateType)
         {
+            if (ctx == null) throw new ArgumentNullException(nameof(ctx));
+            if (stateType == null) throw new ArgumentNullException(nameof(stateType));
+            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
             return ctx.StateProvider.GetState(ctx, ctx.Container.KeyFactory.CreateStateKey(index, stateType));
         }
 
-        public static T GetState<T>(this IResolverContext ctx, int index)
+        [CanBeNull]
+        [PublicAPI]
+        public static T GetState<T>([NotNull] this IResolverContext ctx, int index)
         {
+            if (ctx == null) throw new ArgumentNullException(nameof(ctx));
+            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
             return (T)ctx.GetState(index, typeof(T));
         }
 
-        private static IFluent GetFluent(IResolver resolver)
+        [NotNull]
+        private static IFluent GetFluent([NotNull] IResolver resolver)
         {
+            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             if (_fluentKey == null)
             {
                 _fluentKey = resolver.KeyFactory.CreateCompositeKey(new[] { resolver.KeyFactory.CreateContractKey(typeof(IFluent), true) }, new ITagKey[0], new IStateKey[0]);
             }
+
             IResolverContext ctx;
             resolver.TryCreateContext(_fluentKey, out ctx);
             return (IFluent)resolver.Resolve(ctx);

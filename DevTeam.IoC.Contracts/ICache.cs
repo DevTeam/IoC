@@ -2,10 +2,10 @@
 {
     public interface ICache<in TKey, TValue>
     {
-        bool TryGet(TKey key, out TValue value);
+        bool TryGet([NotNull] TKey key, out TValue value);
 
-        void Set(TKey key, TValue value);
+        void Set([NotNull] TKey key, [NotNull] TValue value);
 
-        bool TryRemove(TKey key);
+        bool TryRemove([NotNull] TKey key);
     }
 }
