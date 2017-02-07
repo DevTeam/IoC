@@ -127,7 +127,25 @@
 
         private KeyBasedLifetime<int> CreateInstance(Func<ILifetimeContext, IResolverContext, int> keySelector)
         {
-            return new KeyBasedLifetime<int>(keySelector, () => _baseLifetime.Object);
+            return new MyBasedLifetime(keySelector, _baseLifetime.Object);
+        }
+
+        private class MyBasedLifetime : KeyBasedLifetime<int>
+        {
+            private readonly ILifetime _baseLifetime;
+
+            public MyBasedLifetime(
+                Func<ILifetimeContext, IResolverContext, int> keySelector,
+                ILifetime baseLifetime)
+                : base(keySelector)
+            {
+                _baseLifetime = baseLifetime;
+            }
+
+            protected override ILifetime CreateBaseLifetime(IEnumerator<ILifetime> lifetimeEnumerator)
+            {
+                return _baseLifetime;
+            }
         }
     }
 }

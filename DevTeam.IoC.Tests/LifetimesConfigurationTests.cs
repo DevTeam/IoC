@@ -215,7 +215,7 @@
         }
 
         [Test]
-        public void ContanireShouldResolveSingleInstanceWhenPerThread()
+        public void ContainerShouldResolveSingleInstanceWhenPerThread()
         {
             // Given
             using (var container = CreateContainer())

@@ -5,46 +5,64 @@
     using System.Linq;
     using Contracts;
 
-    internal class SingletonLifetime: ILifetime
+    internal class SingletonLifetime: KeyBasedLifetime<ICompositeKey>
     {
         private static readonly IStateKey[] EmptyStateKeys = new IStateKey[0];
+        private static readonly ILifetime TransientLifetime = new TransientLifetime();
         private readonly Dictionary<ICompositeKey, object> _instances = new Dictionary<ICompositeKey, object>();
 
-        internal int Count => _instances.Count;
+        public SingletonLifetime()
+            : base(KeySelector)
+        {
+        }
 
-        public object Create(ILifetimeContext lifetimeContext, IResolverContext resolverContext, IEnumerator<ILifetime> lifetimeEnumerator)
+        protected override ILifetime CreateBaseLifetime(IEnumerator<ILifetime> lifetimeEnumerator)
+        {
+            if (!lifetimeEnumerator.MoveNext())
+            {
+                throw new InvalidOperationException("Should have another one lifetime in the chain");
+            }
+
+            return new Lifetime(lifetimeEnumerator.Current);
+        }
+
+        private static ICompositeKey KeySelector(ILifetimeContext lifetimeContext, IResolverContext resolverContext)
         {
             if (lifetimeContext == null) throw new ArgumentNullException(nameof(lifetimeContext));
             if (resolverContext == null) throw new ArgumentNullException(nameof(resolverContext));
-            if (lifetimeEnumerator == null) throw new ArgumentNullException(nameof(lifetimeEnumerator));
             ITagKey registrationKey = new TagKey(resolverContext.RegistrationKey);
             var contractKeys = resolverContext.Key.ContractKeys.Select(i => i.GenericTypeArguments).SelectMany(i => i).Select(i => (IContractKey)new ContractKey(i, true)).ToArray();
             var tagKeys = Enumerable.Repeat(registrationKey, 1).ToArray();
-            var key = new CompositeKey(contractKeys, tagKeys, EmptyStateKeys);
-            lock (_instances)
-            {
-                object instance;
-                if (_instances.TryGetValue(key, out instance))
-                {
-                    return instance;
-                }
-
-                if (!lifetimeEnumerator.MoveNext())
-                {
-                    throw new InvalidOperationException();
-                }
-
-                instance = lifetimeEnumerator.Current.Create(lifetimeContext, resolverContext, lifetimeEnumerator);
-                _instances.Add(key, instance);
-                return instance;
-            }
+            return new CompositeKey(contractKeys, tagKeys, EmptyStateKeys);
         }
 
-        public void Dispose()
+        private class Lifetime: ILifetime
         {
-            lock (_instances)
+            private readonly ILifetime _baseLifetime;
+            private readonly object _lockObject = new object();
+            private object _instance;
+
+            public Lifetime(ILifetime baseLifetime)
             {
-                _instances.Clear();
+                _baseLifetime = baseLifetime;
+            }
+
+            public void Dispose()
+            {
+                _baseLifetime.Dispose();
+            }
+
+            public object Create(ILifetimeContext lifetimeContext, IResolverContext resolverContext, IEnumerator<ILifetime> lifetimeEnumerator)
+            {
+                lock (_lockObject)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = _baseLifetime.Create(lifetimeContext, resolverContext, lifetimeEnumerator);
+                    }
+
+                    return _instance;
+                }
             }
         }
     }

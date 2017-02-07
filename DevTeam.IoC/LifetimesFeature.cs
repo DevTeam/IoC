@@ -41,28 +41,28 @@
                 .Register()
                 .Tag(Wellknown.Lifetimes.PerResolve)
                 .Contract<ILifetime>()
-                .AsFactoryMethod(ctx => new KeyBasedLifetime<long>((lifetimeContext, resolverContext) => lifetimeContext.ResolveId, () => new SingletonLifetime()));
+                .AsFactoryMethod(ctx => new SingletonBasedLifetime<long>((lifetimeContext, resolverContext) => lifetimeContext.ResolveId));
 
             yield return
                 resolver
                 .Register()
                 .Tag(Wellknown.Lifetimes.PerThread)
                 .Contract<ILifetime>()
-                .AsFactoryMethod(ctx => new KeyBasedLifetime<long>((lifetimeContext, resolverContext) => lifetimeContext.ThreadId, () => new SingletonLifetime()));
+                .AsFactoryMethod(ctx => new SingletonBasedLifetime<long>((lifetimeContext, resolverContext) => lifetimeContext.ThreadId));
 
             yield return
                 resolver
                 .Register()
                 .Tag(Wellknown.Lifetimes.PerContainer)
                 .Contract<ILifetime>()
-                .AsFactoryMethod(ctx => new KeyBasedLifetime<IResolver>((lifetimeContext, resolverContext) => resolverContext.Container, () => new SingletonLifetime()));
+                .AsFactoryMethod(ctx => new SingletonBasedLifetime<IResolver>((lifetimeContext, resolverContext) => resolverContext.Container));
 
             yield return
                 resolver
                 .Register()
                 .Tag(Wellknown.Lifetimes.PerState)
                 .Contract<ILifetime>()
-                .AsFactoryMethod(ctx => new KeyBasedLifetime<object>((lifetimeContext, resolverContext) => resolverContext.StateProvider.GetKey(resolverContext), () => new SingletonLifetime()));
+                .AsFactoryMethod(ctx => new SingletonBasedLifetime<object>((lifetimeContext, resolverContext) => resolverContext.StateProvider.GetKey(resolverContext)));
         }
 
         public override int GetHashCode()

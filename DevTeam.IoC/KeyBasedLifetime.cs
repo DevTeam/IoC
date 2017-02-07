@@ -5,22 +5,18 @@
 
     using Contracts;
 
-    internal class KeyBasedLifetime<TKey> : ILifetime
+    internal abstract class KeyBasedLifetime<TKey> : ILifetime
     {
         private readonly Func<ILifetimeContext, IResolverContext, TKey> _keySelector;
-        private readonly Func<ILifetime> _baseLifetimeFactory;
         private readonly Dictionary<TKey, ILifetime> _lifetimes = new Dictionary<TKey, ILifetime>();
 
         internal int Count => _lifetimes.Count;
 
         public KeyBasedLifetime(
-            [NotNull] Func<ILifetimeContext, IResolverContext, TKey> keySelector,
-            [NotNull] Func<ILifetime> baseLifetimeFactory)
+            [NotNull] Func<ILifetimeContext, IResolverContext, TKey> keySelector)
         {
             if (keySelector == null) throw new ArgumentNullException(nameof(keySelector));
-            if (baseLifetimeFactory == null) throw new ArgumentNullException(nameof(baseLifetimeFactory));
             _keySelector = keySelector;
-            _baseLifetimeFactory = baseLifetimeFactory;
         }
 
         public object Create(ILifetimeContext lifetimeContext, IResolverContext resolverContext, IEnumerator<ILifetime> lifetimeEnumerator)
@@ -34,13 +30,12 @@
             {
                 if (!_lifetimes.TryGetValue(key, out lifetime))
                 {
-                    lifetime = _baseLifetimeFactory();
+                    lifetime = CreateBaseLifetime(lifetimeEnumerator);
                     _lifetimes.Add(key, lifetime);
                 }
             }
 
             return lifetime.Create(lifetimeContext, resolverContext, lifetimeEnumerator);
-            
         }
 
         public void Dispose()
@@ -55,5 +50,7 @@
                 _lifetimes.Clear();
             }
         }
+
+        protected abstract ILifetime CreateBaseLifetime(IEnumerator<ILifetime> lifetimeEnumerator);
     }
 }
