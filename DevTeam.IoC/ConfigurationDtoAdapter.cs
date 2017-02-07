@@ -206,7 +206,7 @@
                 IMetadataProvider metadataProvider = null;
                 if (registerDto.ConstructorParameters != null)
                 {
-                    var constructorParameters = new List<ConstructorParameter>();
+                    var constructorParameters = new List<ParameterMetadata>();
                     var bindingCtorParams = registerDto.ConstructorParameters.ToArray();
                     var stateIndex = 0;
                     foreach (var ctorParam in bindingCtorParams)
@@ -330,7 +330,7 @@
                             }
                         }
 
-                        var param = new ConstructorParameter(type, stateKey == null ? new[] { key } : null, stateIndex, state.ToArray(), value, stateKey);
+                        var param = new ParameterMetadata(type, stateKey == null ? new[] { key } : null, stateIndex, state.ToArray(), value, stateKey);
                         constructorParameters.Add(param);
                         if (!param.IsDependency)
                         {
@@ -424,48 +424,15 @@
             return true;
         }
 
-        private class ConstructorParameter : IParameterMetadata
-        {
-            public ConstructorParameter(
-                [NotNull] Type type,
-                [CanBeNull] IKey[] keys,
-                int stateIndex,
-                [CanBeNull] object[] state,
-                [CanBeNull] object value,
-                [CanBeNull] IStateKey stateKey)
-            {
-                if (type == null) throw new ArgumentNullException(nameof(type));
-                if (stateIndex < 0) throw new ArgumentOutOfRangeException(nameof(stateIndex));
-                Type = type;
-                Keys = keys;
-                State = state;
-                Value = value;
-                StateKey = stateKey;
-                IsDependency = keys != null && value == null;
-            }
-
-            public Type Type { [NotNull] get; }
-
-            public bool IsDependency { get; }
-
-            public object[] State { [CanBeNull] get; }
-
-            public object Value { [CanBeNull] get; }
-
-            public IStateKey StateKey { [CanBeNull] get; }
-
-            public IKey[] Keys { [CanBeNull] get; }
-        }
-
         private class MetadataProvider : IMetadataProvider
         {
             private readonly IMetadataProvider _defaultMetadataProvider;
-            private readonly ICollection<ConstructorParameter> _ctorParams;
+            private readonly ICollection<ParameterMetadata> _ctorParams;
             private readonly IParameterMetadata[] _constructorArguments;
 
             public MetadataProvider(
                 [NotNull] IMetadataProvider defaultMetadataProvider,
-                [NotNull] ICollection<ConstructorParameter> ctorParams)
+                [NotNull] ICollection<ParameterMetadata> ctorParams)
             {
                 if (defaultMetadataProvider == null) throw new ArgumentNullException(nameof(defaultMetadataProvider));
                 if (ctorParams == null) throw new ArgumentNullException(nameof(ctorParams));
@@ -509,7 +476,7 @@
                     .Any(i => MatchParameter(i.ctorParam, i.bindingParam));
             }
 
-            private static bool MatchParameter(ParameterInfo ctorParam, ConstructorParameter bindingCtorParam)
+            private static bool MatchParameter(ParameterInfo ctorParam, ParameterMetadata bindingCtorParam)
             {
                 return ctorParam.ParameterType == bindingCtorParam.Type;
             }

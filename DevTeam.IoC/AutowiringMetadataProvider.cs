@@ -68,32 +68,18 @@
             var stateIndex = 0;
             for (var paramIndex = 0; paramIndex < ctorParams.Length; paramIndex++)
             {
-                var paramInfo = new ParameterMetadata(ctorParams[paramIndex], stateIndex);
-                if (!paramInfo.IsDependency)
-                {
-                    stateIndex++;
-                }
-
-                arguments[paramIndex] = paramInfo;
-            }
-
-            return arguments;
-        }
-
-        private class ParameterMetadata : IParameterMetadata
-        {
-            public ParameterMetadata(ParameterInfo info, int stateIndex)
-            {
-                Value = null;
+                var info = ctorParams[paramIndex];
                 var contractAttributes = info.GetCustomAttributes<ContractAttribute>().ToArray();
                 var stateAttributes = info.GetCustomAttributes<StateAttribute>().OrderBy(i => i.Index).ToArray();
+                IStateKey stateKey = null;
+                IKey[] keys = null;
+                object[] state = null;
                 if (stateAttributes.Length == 1 && contractAttributes.Length == 0 && !stateAttributes[0].IsDependency)
                 {
-                    StateKey = new StateKey(stateIndex, info.ParameterType);
+                    stateKey = new StateKey(stateIndex, info.ParameterType);
                 }
                 else
                 {
-                    IsDependency = true;
                     IEnumerable<IContractKey> contractKeys;
                     if (contractAttributes.Length > 0)
                     {
@@ -105,21 +91,28 @@
                     }
 
                     var tagKeys = info.GetCustomAttributes<TagAttribute>().SelectMany(i => i.Tags).Select(i => (IKey)new TagKey(i));
-                    State = stateAttributes.OrderBy(i => i.Index).Select(i => i.Value).ToArray();
+                    state = stateAttributes.OrderBy(i => i.Index).Select(i => i.Value).ToArray();
                     var stateKeys = stateAttributes.Select(i => (IKey)new StateKey(i.Index, i.StateType));
-                    Keys = contractKeys.Concat(tagKeys).Concat(stateKeys).ToArray();
+                    keys = contractKeys.Concat(tagKeys).Concat(stateKeys).ToArray();
                 }
+
+                var paramInfo = new ParameterMetadata(
+                    constructor.DeclaringType,
+                    keys,
+                    stateIndex,
+                    state,
+                    null,
+                    stateKey);
+
+                if (!paramInfo.IsDependency)
+                {
+                    stateIndex++;
+                }
+
+                arguments[paramIndex] = paramInfo;
             }
 
-            public bool IsDependency { get; }
-
-            public IKey[] Keys { get; }
-
-            public IStateKey StateKey { get; }
-
-            public object[] State { get; }
-
-            public object Value { get; }
+            return arguments;
         }
     }
 }

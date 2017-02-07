@@ -81,6 +81,35 @@
             }
         }
 
+        [Test]
+        public void ShouldGetConstructorParameters()
+        {
+            // Given
+            var metadataProvider = CreateInstance();
+            var ctor = typeof(AutowiringClass).GetConstructors().First();
+            var expectedCtorParams = new IParameterMetadata[]
+            {
+                new ParameterMetadata(ctor.DeclaringType, null, 0, new object[0], null, new StateKey(0, typeof(int))),
+                new ParameterMetadata(ctor.DeclaringType, new IKey[] { new ContractKey(typeof(IEnumerable<string>), true) },0, new object[0], null, null ),
+                new ParameterMetadata(ctor.DeclaringType, new IKey[] { new ContractKey(typeof(IDisposable), true) }, 0, new object[0], null, null ),
+                new ParameterMetadata(ctor.DeclaringType, new IKey[] { new ContractKey(typeof(string), true), new StateKey(1, typeof(int)), }, 0, new object[1] { null }, null, null ),
+                new ParameterMetadata(ctor.DeclaringType, new IKey[] { new ContractKey(typeof(string), true), new TagKey("abc"), }, 0, new object[0], null, null ),
+                new ParameterMetadata(ctor.DeclaringType, null, 0, new object[0], null, new StateKey(1, typeof(string))),
+            };
+
+            // When
+            var actualCtorParams = metadataProvider.GetConstructorParameters(ctor);
+
+            // Then
+            actualCtorParams.Length.ShouldBe(expectedCtorParams.Length);
+            actualCtorParams[0].ShouldBe(expectedCtorParams[0]);
+            actualCtorParams[1].ShouldBe(expectedCtorParams[1]);
+            actualCtorParams[2].ShouldBe(expectedCtorParams[2]);
+            actualCtorParams[3].ShouldBe(expectedCtorParams[3]);
+            actualCtorParams[4].ShouldBe(expectedCtorParams[4]);
+            actualCtorParams[5].ShouldBe(expectedCtorParams[5]);
+        }
+
         private AutowiringMetadataProvider CreateInstance()
         {
             return new AutowiringMetadataProvider();
@@ -136,6 +165,19 @@
             }
 
             public SeveralCtorClass(int num)
+            {
+            }
+        }
+
+        private class AutowiringClass
+        {
+            public AutowiringClass(
+                [State] int arg0,
+                IEnumerable<string> arg1,
+                [Contract(typeof(IDisposable))] IList<int> arg2,
+                [Contract(typeof(string))] [State(1, typeof(int))] string arg3,
+                [Contract(typeof(string))] [Tag("abc")] string arg4,
+                [State] string arg5)
             {
             }
         }

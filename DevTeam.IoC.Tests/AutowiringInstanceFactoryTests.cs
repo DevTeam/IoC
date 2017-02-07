@@ -81,11 +81,11 @@
         public void ShouldCreateObjectWhenDependencyWithStateClass()
         {
             // Given
-            var factory = CreateFactory<DependencyWithVauesClass>();
+            var factory = CreateFactory<DependencyWithValuesClass>();
             _container.Register().Contract<StateClass>().Tag("xyz").State(0, typeof(string)).State(1, typeof(int)).AsAutowiring<StateClass>();
 
             // When
-            var instance = (DependencyWithVauesClass)factory.Create(CreateContext("abc", 3));
+            var instance = (DependencyWithValuesClass)factory.Create(CreateContext("abc", 3));
 
             // Then
             instance.Arg1.ShouldBe("abc");
@@ -153,9 +153,9 @@
             public int Arg2 { get; }
         }
 
-        private class DependencyWithVauesClass
+        private class DependencyWithValuesClass
         {
-            public DependencyWithVauesClass(
+            public DependencyWithValuesClass(
                 [State] string arg1,
                 [Contract(typeof(StateClass))] [Tag("xyz")] [State(1, typeof(int), Value = 5)] [State(0, typeof(string), Value = "fgh")] StateClass stateClass,
                 [State] int arg2)
