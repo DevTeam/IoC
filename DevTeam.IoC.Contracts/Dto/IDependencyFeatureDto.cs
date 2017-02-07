@@ -5,6 +5,6 @@
     [PublicAPI]
     public interface IDependencyFeatureDto : IConfigurationStatementDto
     {
-        Wellknown.Features Feature { get; }
+        Wellknown.Features Feature { [NotNull] get; }
     }
 }

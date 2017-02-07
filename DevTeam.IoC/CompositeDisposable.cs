@@ -3,12 +3,13 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Contracts;
 
     internal class CompositeDisposable : IDisposable
     {
         private readonly IList<IDisposable> _configurations;
 
-        public CompositeDisposable(IEnumerable<IDisposable> configurations)
+        public CompositeDisposable([NotNull] IEnumerable<IDisposable> configurations)
         {
             if (configurations == null) throw new ArgumentNullException(nameof(configurations));
             _configurations = configurations.ToList();

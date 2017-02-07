@@ -5,8 +5,8 @@
     {
         int Index { get; }
 
-        string StateTypeName { get; }
+        string StateTypeName { [NotNull] get; }
 
-        IValueDto Value { get; }
+        IValueDto Value { [CanBeNull] get; }
     }
 }

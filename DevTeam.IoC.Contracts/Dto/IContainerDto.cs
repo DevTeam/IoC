@@ -5,6 +5,6 @@
     [PublicAPI]
     public interface IContainerDto : IConfigurationStatementDto
     {
-        IEnumerable<IConfigurationStatementDto> Statements { get; }
+        IEnumerable<IConfigurationStatementDto> Statements { [NotNull] get; }
     }
 }

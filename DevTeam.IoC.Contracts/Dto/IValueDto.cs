@@ -3,8 +3,8 @@
     [PublicAPI]
     public interface IValueDto
     {
-        string Data { get; }
+        string Data { [NotNull] get; }
 
-        string TypeName { get; }
+        string TypeName { [CanBeNull] get; }
     }
 }

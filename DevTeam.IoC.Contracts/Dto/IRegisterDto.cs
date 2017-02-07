@@ -5,12 +5,12 @@
     [PublicAPI]
     public interface IRegisterDto : IConfigurationStatementDto
     {
-        IEnumerable<IRegisterStatementDto> Keys { get; }
+        IEnumerable<IRegisterStatementDto> Keys { [CanBeNull] get; }
 
-        string AutowiringTypeName { get; }
+        string AutowiringTypeName { [CanBeNull] get; }
 
-        string FactoryMethodName { get; }
+        string FactoryMethodName { [CanBeNull] get; }
 
-        IEnumerable<IParameterDto> ConstructorParameters { get; }
+        IEnumerable<IParameterDto> ConstructorParameters { [CanBeNull] get; }
     }
 }

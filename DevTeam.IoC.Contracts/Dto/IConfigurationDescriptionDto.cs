@@ -3,6 +3,6 @@
     [PublicAPI]
     public interface IConfigurationDescriptionDto
     {
-        string Description { get; }
+        string Description { [NotNull] get; }
     }
 }

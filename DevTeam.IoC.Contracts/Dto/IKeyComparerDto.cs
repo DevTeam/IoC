@@ -5,6 +5,6 @@
     [PublicAPI]
     public interface IKeyComparerDto : IRegisterStatementDto
     {
-        Wellknown.KeyComparers KeyComparer { get; }
+        Wellknown.KeyComparers KeyComparer { [NotNull] get; }
     }
 }

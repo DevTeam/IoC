@@ -3,6 +3,6 @@
     [PublicAPI]
     public interface IReferenceDto : IConfigurationStatementDto
     {
-        string Reference { get; }
+        string Reference { [NotNull] get; }
     }
 }

@@ -3,6 +3,6 @@
     [PublicAPI]
     public interface IDependencyConfigurationDto : IConfigurationStatementDto
     {
-        string ConfigurationTypeName { get; }
+        string ConfigurationTypeName { [NotNull] get; }
     }
 }

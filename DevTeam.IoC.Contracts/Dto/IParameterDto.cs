@@ -5,12 +5,12 @@
     [PublicAPI]
     public interface IParameterDto
     {
-        string TypeName { get; }
+        string TypeName { [NotNull] get; }
 
-        string Value { get; }
+        string Value { [CanBeNull] get; }
 
-        IStateDto State { get; }
+        IStateDto State { [CanBeNull] get; }
 
-        IEnumerable<IRegisterStatementDto> Dependency { get; }
+        IEnumerable<IRegisterStatementDto> Dependency { [CanBeNull] get; }
     }
 }

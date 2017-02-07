@@ -3,8 +3,8 @@
     [PublicAPI]
     public interface ITagDto : IRegisterStatementDto
     {
-        string Value { get; }
+        string Value { [NotNull] get; }
 
-        string TypeName { get; }
+        string TypeName { [CanBeNull] get; }
     }
 }

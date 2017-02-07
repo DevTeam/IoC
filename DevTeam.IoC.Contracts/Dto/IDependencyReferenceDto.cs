@@ -3,8 +3,8 @@ namespace DevTeam.IoC.Contracts.Dto
     [PublicAPI]
     public interface IDependencyReferenceDto: IConfigurationStatementDto
     {
-        string Reference { get; }
+        string Reference { [NotNull] get; }
 
-        string ConfigurationTypeName { get; }
+        string ConfigurationTypeName { [NotNull] get; }
     }
 }

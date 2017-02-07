@@ -3,6 +3,6 @@
     [PublicAPI]
     public interface IUsingDto : IConfigurationStatementDto
     {
-        string Using { get; }
+        string Using { [NotNull] get; }
     }
 }

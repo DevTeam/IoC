@@ -5,6 +5,6 @@
     [PublicAPI]
     public interface IContractDto : IRegisterStatementDto
     {
-        IEnumerable<string> Contract { get; }
+        IEnumerable<string> Contract { [NotNull] get; }
     }
 }

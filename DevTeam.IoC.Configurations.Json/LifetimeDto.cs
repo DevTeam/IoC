@@ -7,6 +7,6 @@
     internal class LifetimeDto : ILifetimeDto
     {
         [JsonProperty("lifetime", Required = Required.Always)]
-        public Wellknown.Lifetimes Lifetime { get; set; }
+        public Wellknown.Lifetimes Lifetime { get; [NotNull] set; }
     }
 }

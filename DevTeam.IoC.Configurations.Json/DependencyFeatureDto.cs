@@ -7,6 +7,6 @@
     internal class DependencyFeatureDto: IDependencyFeatureDto
     {
         [JsonProperty("dependency.feature", Required = Required.Always)]
-        public Wellknown.Features Feature { get; set; }
+        public Wellknown.Features Feature { get; [NotNull] set; }
     }
 }
