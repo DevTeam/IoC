@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
 
+    [PublicAPI]
     public interface IRegistryContext
     {
         IContainer Container { get; }

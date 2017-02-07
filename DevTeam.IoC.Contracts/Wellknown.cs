@@ -1,5 +1,6 @@
 ﻿namespace DevTeam.IoC.Contracts
 {
+    [PublicAPI]
     public static class Wellknown
     {
         public enum Features
@@ -7,8 +8,8 @@
             // Support default set of features.
             Default,
 
-            // Support child resolving chuild containers.
-            ChildrenContainers,
+            // Support child resolving child containers.
+            ChildContainers,
 
             // Support lifetimes.
             Lifetimes,
@@ -16,10 +17,12 @@
             // Support scopes.
             Scopes,
 
-            // Ssupport key comparers.
+            // Support key comparers.
+            // ReSharper disable once IdentifierTypo
             KeyComaprers,
 
             // Support resolving via IEnumerable<>.
+            // ReSharper disable once IdentifierTypo
             Enumerables,
 
             // Support injection via Task.

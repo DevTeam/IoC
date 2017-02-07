@@ -1,5 +1,6 @@
 ﻿namespace DevTeam.IoC.Contracts
 {
+    [PublicAPI]
     public interface ICache<in TKey, TValue>
     {
         bool TryGet([NotNull] TKey key, out TValue value);

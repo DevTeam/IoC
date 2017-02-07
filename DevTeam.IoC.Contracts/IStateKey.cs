@@ -2,6 +2,7 @@
 {
     using System;
 
+    [PublicAPI]
     public interface IStateKey: IKey
     {
         int Index { get; }

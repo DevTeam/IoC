@@ -16,13 +16,13 @@
 
         public IEnumerable<IConfiguration> GetDependencies(IResolver resolver)
         {
+            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             yield return KeyComparersFeature.Shared;
         }
 
         public IEnumerable<IDisposable> Apply(IResolver resolver)
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-
             yield return
                 resolver
                 .Register()

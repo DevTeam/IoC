@@ -2,6 +2,7 @@
 {
     using Contracts;
 
+    [PublicAPI]
     public interface IDependencyFeatureDto : IConfigurationStatementDto
     {
         Wellknown.Features Feature { get; }

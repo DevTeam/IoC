@@ -2,6 +2,7 @@
 {
     using System;
 
+    [PublicAPI]
     public interface IKeyFactory
     {
         ICompositeKey CreateCompositeKey(IContractKey[] contractKey, ITagKey[] tagKeys, IStateKey[] stateKeys);

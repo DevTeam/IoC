@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
 
+    [PublicAPI]
     public interface IToken<out T>
     {
         T Key(IEnumerable<IKey> keys);

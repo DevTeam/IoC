@@ -1,5 +1,6 @@
 ﻿namespace DevTeam.IoC.Contracts
 {
+    [PublicAPI]
     public interface IResolving : IToken<IResolving>
     {
         object Instance(params object[] state);

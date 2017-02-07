@@ -2,19 +2,18 @@
 {
     using System;
 
+    [PublicAPI]
     public static class ContainerExtensions
     {
         private static ICompositeKey _fluentKey;
 
         [NotNull]
-        [PublicAPI]
         public static IConfiguration Feature([NotNull] this IResolver resolver, Wellknown.Features feature)
         {
             return resolver.Resolve().Tag(feature).Instance<IConfiguration>();
         }
 
         [NotNull]
-        [PublicAPI]
         public static IConfiguring Configure([NotNull] this IResolver resolver)
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
@@ -22,7 +21,6 @@
         }
 
         [NotNull]
-        [PublicAPI]
         public static IDisposable Register([NotNull] this IResolver resolver, [NotNull] IRegistryContext context)
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
@@ -38,7 +36,6 @@
         }
 
         [NotNull]
-        [PublicAPI]
         public static IRegistration Register([NotNull] this IResolver resolver)
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
@@ -46,7 +43,6 @@
         }
 
         [NotNull]
-        [PublicAPI]
         public static IContainer CreateChild([NotNull] this IResolver resolver, [CanBeNull] object tag = null)
         {
             if (tag == null)
@@ -58,7 +54,6 @@
         }
 
         [NotNull]
-        [PublicAPI]
         public static IResolving Resolve([NotNull] this IResolver resolver)
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
@@ -66,7 +61,6 @@
         }
 
         [CanBeNull]
-        [PublicAPI]
         public static object GetState([NotNull] this IResolverContext ctx, int index, [NotNull] Type stateType)
         {
             if (ctx == null) throw new ArgumentNullException(nameof(ctx));
@@ -76,7 +70,6 @@
         }
 
         [CanBeNull]
-        [PublicAPI]
         public static T GetState<T>([NotNull] this IResolverContext ctx, int index)
         {
             if (ctx == null) throw new ArgumentNullException(nameof(ctx));

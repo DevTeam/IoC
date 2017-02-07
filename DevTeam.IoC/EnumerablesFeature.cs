@@ -3,11 +3,13 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Reflection;
 
     using Contracts;
 
+    [SuppressMessage("ReSharper", "IdentifierTypo")]
     internal class EnumerablesFeature: IConfiguration
     {
         public static readonly IConfiguration Shared = new EnumerablesFeature();
@@ -18,11 +20,13 @@
 
         public IEnumerable<IConfiguration> GetDependencies(IResolver resolver)
         {
+            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             yield break;
         }
 
         public IEnumerable<IDisposable> Apply(IResolver resolver)
         {
+            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             yield return
                 resolver
                 .Register()

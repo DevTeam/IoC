@@ -2,6 +2,7 @@
 {
     using System;
 
+    [PublicAPI]
     public interface ITypeResolver
     {
         void AddReference(string reference);

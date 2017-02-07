@@ -2,6 +2,7 @@
 {
     using System;
 
+    [PublicAPI]
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Class, AllowMultiple = true)]
     public class ContractAttribute : Attribute
     {

@@ -2,6 +2,7 @@
 {
     using Contracts;
 
+    [PublicAPI]
     public interface ILifetimeDto : IRegisterStatementDto
     {
         Wellknown.Lifetimes Lifetime { get; }

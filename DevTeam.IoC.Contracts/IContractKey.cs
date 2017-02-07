@@ -2,11 +2,12 @@
 {
     using System;
 
+    [PublicAPI]
     public interface IContractKey: IKey
     {
-        Type ContractType { get; }
+        Type ContractType { [NotNull] get; }
 
-        Type[] GenericTypeArguments { get; }
+        Type[] GenericTypeArguments { [NotNull] get; }
 
         bool ToResolve { get; }
     }

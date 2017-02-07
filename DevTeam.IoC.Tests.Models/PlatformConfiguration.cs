@@ -21,11 +21,13 @@
 
         public IEnumerable<IConfiguration> GetDependencies(IResolver resolver)
         {
+            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             yield return resolver.Feature(Wellknown.Features.Default);
         }
 
         public IEnumerable<IDisposable> Apply(IResolver resolver)
         {
+            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             if (_trace)
             {
                 yield return resolver

@@ -1,5 +1,6 @@
 ﻿namespace DevTeam.IoC.Contracts
 {
+    [PublicAPI]
     public interface IFluent
     {
         bool TryGetRegistry(out IRegistry registry);

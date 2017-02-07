@@ -3,6 +3,8 @@
     using System;
     using System.Reflection;
 
+    [PublicAPI]
+
     public interface IMetadataProvider
     {
         Type ResolveImplementationType(IResolverContext resolverContext, Type type);

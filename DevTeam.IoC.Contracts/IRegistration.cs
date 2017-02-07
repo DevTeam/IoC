@@ -2,6 +2,7 @@
 {
     using System;
 
+    [PublicAPI]
     public interface IRegistration : IToken<IRegistration>
     {
         IDisposable AsFactoryMethod(Func<IResolverContext, object> factoryMethod);

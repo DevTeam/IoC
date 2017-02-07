@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
 
+    [PublicAPI]
     public interface IRegistry
     {
         IRegistryContext CreateContext(

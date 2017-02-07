@@ -1,11 +1,12 @@
 ﻿namespace DevTeam.IoC.Contracts
 {
+    [PublicAPI]
     public interface ICompositeKey: IKey
     {
-        IContractKey[] ContractKeys { get; }
+        IContractKey[] ContractKeys { [NotNull] get; }
 
-        ITagKey[] TagKeys { get; }
+        ITagKey[] TagKeys { [NotNull] get; }
 
-        IStateKey[] StateKeys { get; }
+        IStateKey[] StateKeys { [NotNull] get; }
     }
 }

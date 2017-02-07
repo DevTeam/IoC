@@ -2,6 +2,7 @@
 {
     using System.Reflection;
 
+    [PublicAPI]
     public interface IInstanceFactoryProvider
     {
         IInstanceFactory GetFactory(ConstructorInfo constructor);

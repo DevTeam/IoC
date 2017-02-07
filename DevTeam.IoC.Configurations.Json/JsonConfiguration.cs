@@ -39,11 +39,13 @@
 
         public IEnumerable<IConfiguration> GetDependencies(IResolver resolver)
         {
+            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             yield return resolver.Feature(Wellknown.Features.Dto);
         }
 
         public IEnumerable<IDisposable> Apply(IResolver resolver)
         {
+            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             yield return resolver
                 .Register()
                 .Tag(GetType())

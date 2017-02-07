@@ -3,10 +3,13 @@
     using System;
     using System.Collections.Generic;
 
+    [PublicAPI]
     public interface IConfiguration
     {
-        IEnumerable<IConfiguration> GetDependencies(IResolver resolver);
+        [NotNull]
+        IEnumerable<IConfiguration> GetDependencies([NotNull] IResolver resolver);
 
-        IEnumerable<IDisposable> Apply(IResolver resolver);
+        [NotNull]
+        IEnumerable<IDisposable> Apply([NotNull] IResolver resolver);
     }
 }

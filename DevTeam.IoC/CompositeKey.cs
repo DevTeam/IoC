@@ -1,5 +1,6 @@
 ﻿namespace DevTeam.IoC
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -10,8 +11,14 @@
         private readonly int _baseHashCode;
         private readonly IContractKey[] _contractKeys;
 
-        public CompositeKey(IContractKey[] contractKey, ITagKey[] tagKeys, IStateKey[] stateKeys)
+        public CompositeKey(
+            [NotNull] IContractKey[] contractKey,
+            [NotNull] ITagKey[] tagKeys,
+            [NotNull] IStateKey[] stateKeys)
         {
+            if (contractKey == null) throw new ArgumentNullException(nameof(contractKey));
+            if (tagKeys == null) throw new ArgumentNullException(nameof(tagKeys));
+            if (stateKeys == null) throw new ArgumentNullException(nameof(stateKeys));
             ContractKeys = contractKey;
             TagKeys = tagKeys;
             StateKeys = stateKeys;

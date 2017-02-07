@@ -40,7 +40,10 @@
 
         public IConfiguring DependsOn(Type configurationType, string description)
         {
+            if (configurationType == null) throw new ArgumentNullException(nameof(configurationType));
             if (description == null) throw new ArgumentNullException(nameof(description));
+            if (configurationType == null) throw new ArgumentNullException(nameof(configurationType));
+            if (string.IsNullOrWhiteSpace(description)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(description));
             _configurations.Add(new HashSet<IConfiguration> { DtoFeature.Shared, (IConfiguration)Activator.CreateInstance(configurationType) });
             _configurations.Add(new HashSet<IConfiguration> { new ConfigurationFromDto(_resolver, configurationType, description) });
             return this;
@@ -49,6 +52,7 @@
         public IConfiguring DependsOn<TConfiguration>(string description) where TConfiguration : IConfiguration, new()
         {
             if (description == null) throw new ArgumentNullException(nameof(description));
+            if (string.IsNullOrWhiteSpace(description)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(description));
             return DependsOn(typeof(TConfiguration), description);
         }
 
@@ -67,8 +71,9 @@
             return new CompositeDisposable(_configurations.Select(Apply));
         }
 
-        private IDisposable Apply(IEnumerable<IConfiguration> configuration)
+        private IDisposable Apply([NotNull] IEnumerable<IConfiguration> configuration)
         {
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             return new CompositeDisposable(ApplyConfigurations(configuration));
         }
 
@@ -103,15 +108,22 @@
             private readonly Type _configurationType;
             private readonly Lazy<IConfiguration> _configuration;
 
-            public ConfigurationFromDto(IResolver resolver, Type configurationType, string description)
+            public ConfigurationFromDto(
+                [NotNull] IResolver resolver,
+                [NotNull] Type configurationType,
+                [NotNull] string description)
             {
+                if (resolver == null) throw new ArgumentNullException(nameof(resolver));
+                if (configurationType == null) throw new ArgumentNullException(nameof(configurationType));
+                if (string.IsNullOrWhiteSpace(description)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(description));
                 _resolver = resolver;
                 _configurationType = configurationType;
                 _configuration = new Lazy<IConfiguration>(() => CreateConfiguration(description));
             }
 
-            private IConfiguration CreateConfiguration(string description)
+            private IConfiguration CreateConfiguration([NotNull] string description)
             {
+                if (string.IsNullOrWhiteSpace(description)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(description));
                 var configurationDescriptionDto = _resolver.Resolve().State<string>(0).Instance<IConfigurationDescriptionDto>(description);
                 var configurationDto = _resolver.Resolve().Tag(_configurationType).State<IConfigurationDescriptionDto>(0).Instance<IConfigurationDto>(configurationDescriptionDto);
                 return _resolver.Resolve().State<IConfigurationDto>(0).Instance<IConfiguration>(configurationDto);
@@ -119,6 +131,7 @@
 
             public IEnumerable<IConfiguration> GetDependencies(IResolver resolver)
             {
+                if (resolver == null) throw new ArgumentNullException(nameof(resolver));
                 foreach (var dependency in _configuration.Value.GetDependencies(resolver))
                 {
                     yield return dependency;
@@ -127,6 +140,7 @@
 
             public IEnumerable<IDisposable> Apply(IResolver resolver)
             {
+                if (resolver == null) throw new ArgumentNullException(nameof(resolver));
                 return _configuration.Value.Apply(resolver);
             }
         }

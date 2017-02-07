@@ -26,6 +26,7 @@
 
         public IEnumerable<IConfiguration> GetDependencies(IResolver resolver)
         {
+            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             yield break;
         }
 
@@ -34,7 +35,6 @@
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             var container = resolver as Container;
             if (container == null) throw new ArgumentException(nameof(resolver));
-
             yield return RawRegister<IResolver>(container, ResolverKeys, ctx => ctx.Container);
             yield return RawRegister<IRegistry>(container, RegistryKeys, ctx => (Container)ctx.Container);
             yield return RawRegister<IKeyFactory>(container, KeyFactoryKeys, ctx => KeyFactory);
@@ -77,7 +77,7 @@
             yield return
                 container
                 .Register()
-                .Tag(Wellknown.Features.ChildrenContainers)
+                .Tag(Wellknown.Features.ChildContainers)
                 .Contract<IConfiguration>()
                 .AsFactoryMethod(ctx => ChildrenContainersFeature.Shared);
 

@@ -15,12 +15,14 @@
 
         public IEnumerable<IConfiguration> GetDependencies(IResolver resolver)
         {
+            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             yield return LifetimesFeature.Shared;
         }
 
         public IEnumerable<IDisposable> Apply(IResolver resolver)
         {
-           yield return
+            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
+            yield return
                 resolver
                 .Register()
                 .Contract<ITypeResolver>()

@@ -13,7 +13,7 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Features.ChildrenContainers).Apply())
+            using (container.Configure().DependsOn(Wellknown.Features.ChildContainers).Apply())
             {
                 // When
                 var childContainer = container.Resolve().Contract<IContainer>().Instance() as IContainer;
@@ -28,7 +28,7 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Features.ChildrenContainers).Apply())
+            using (container.Configure().DependsOn(Wellknown.Features.ChildContainers).Apply())
             {
                 // When
                 var childContainer = container.Resolve().Contract<IContainer>().State(0, typeof(object)).Instance("abc") as IContainer;

@@ -1,5 +1,6 @@
 ﻿namespace DevTeam.IoC.Contracts
 {
+    [PublicAPI]
     public interface IResolverContext
     {
         IContainer Container { get; }
