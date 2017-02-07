@@ -478,7 +478,7 @@
 
             private static bool MatchParameter(ParameterInfo ctorParam, ParameterMetadata bindingCtorParam)
             {
-                return ctorParam.ParameterType == bindingCtorParam.Type;
+                return ctorParam.ParameterType == bindingCtorParam.ImplementationType;
             }
         }
     }

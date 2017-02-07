@@ -5,7 +5,7 @@
     [PublicAPI]
     public interface IParameterMetadata
     {
-        Type Type { [NotNull] get; }
+        Type ImplementationType { [NotNull] get; }
 
         bool IsDependency { get; }
 

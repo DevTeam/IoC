@@ -10,16 +10,16 @@
         private static readonly object[] EmptyState = new object[0];
 
         public ParameterMetadata(
-            [NotNull] Type type,
+            [NotNull] Type implementationType,
             [CanBeNull] IKey[] keys,
             int stateIndex,
             [CanBeNull] object[] state,
             [CanBeNull] object value,
             [CanBeNull] IStateKey stateKey)
         {
-            if (type == null) throw new ArgumentNullException(nameof(type));
+            if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
             if (stateIndex < 0) throw new ArgumentOutOfRangeException(nameof(stateIndex));
-            Type = type;
+            ImplementationType = implementationType;
             Keys = keys ?? EmptyKeys;
             State = state ?? EmptyState;
             Value = value;
@@ -27,7 +27,7 @@
             IsDependency = keys != null && value == null;
         }
 
-        public Type Type { [NotNull] get; }
+        public Type ImplementationType { [NotNull] get; }
 
         public bool IsDependency { get; }
 
@@ -41,7 +41,7 @@
 
         protected bool Equals(ParameterMetadata other)
         {
-            return Type == other.Type && IsDependency == other.IsDependency && State.SequenceEqual(other.State) && Equals(Value, other.Value) && Equals(StateKey, other.StateKey) && Keys.SequenceEqual(other.Keys);
+            return ImplementationType == other.ImplementationType && IsDependency == other.IsDependency && State.SequenceEqual(other.State) && Equals(Value, other.Value) && Equals(StateKey, other.StateKey) && Keys.SequenceEqual(other.Keys);
         }
 
         public override bool Equals(object obj)
