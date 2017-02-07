@@ -98,8 +98,7 @@
         public void ShouldReturnTheSameObjectWhenDifferentTags()
         {
             // Given
-            var obj1 = new object();
-            var obj2 = new object();
+            var obj = new object();
             var registrationKey = new object();
             var lifetime = CreateInstance();
             _resolverContext.SetupGet(i => i.RegistrationKey).Returns(registrationKey);
@@ -109,7 +108,7 @@
             // When
             var key1 = new CompositeKey(new IContractKey[] { new ContractKey(typeof(IEnumerable<string>), true) }, new ITagKey[] { new TagKey("abc") }, new IStateKey[] { new StateKey(0, typeof(string)) });
             _resolverContext.SetupGet(i => i.Key).Returns(key1);
-            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object)).Returns(obj1);
+            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object)).Returns(obj);
             var actualObj1 = lifetime.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object);
 
             var key2 = new CompositeKey(new IContractKey[] { new ContractKey(typeof(IEnumerable<string>), true) }, new ITagKey[] { new TagKey("xyz") }, new IStateKey[] { new StateKey(0, typeof(string)) });

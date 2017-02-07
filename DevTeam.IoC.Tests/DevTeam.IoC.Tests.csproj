@@ -84,6 +84,7 @@
     <Compile Include="KeyBasedLifetimeTests.cs" />
     <Compile Include="SingletonLifetimeTests.cs" />
     <Compile Include="TestExtensions.cs" />
+    <Compile Include="TransientLifetimeTests.cs" />
     <Compile Include="TypeResolverTests.cs" />
   </ItemGroup>
   <ItemGroup>
