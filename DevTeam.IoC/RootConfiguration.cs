@@ -8,9 +8,8 @@
     internal class RootConfiguration: IConfiguration
     {
         public static readonly IConfiguration Shared = new RootConfiguration();
-
         public static readonly KeyFactory KeyFactory = new KeyFactory();
-
+        public static readonly IMetadataProvider MetadataProvider = new AutowiringMetadataProvider();
         private static readonly IInstanceFactoryProvider ExpressionInstanceFactoryProvider = new ExpressionInstanceFactoryProvider();
         private static readonly IEnumerable<ICompositeKey> ResolverKeys = CreateKeys<IResolver>();
         private static readonly IEnumerable<ICompositeKey> RegistryKeys = CreateKeys<IRegistry>();
@@ -19,6 +18,7 @@
         private static readonly IEnumerable<ICompositeKey> InstanceFactoryProviderKeys = CreateKeys<IInstanceFactoryProvider>();
         private static readonly IEnumerable<ICompositeKey> ResolvingKeys = CreateKeys<IResolving>();
         private static readonly IEnumerable<ICompositeKey> RegistrationKeys = CreateKeys<IRegistration>();
+        private static readonly IEnumerable<ICompositeKey> MetadataProviderKeys = CreateKeys<IMetadataProvider>();
 
         private RootConfiguration()
         {
@@ -42,6 +42,7 @@
             yield return RawRegister(container, InstanceFactoryProviderKeys, ctx => ExpressionInstanceFactoryProvider);
             yield return RawRegister<IResolving>(container, ResolvingKeys, ctx => new Resolving(new Fluent(ctx.Container), container));
             yield return RawRegister<IRegistration>(container, RegistrationKeys, ctx => new Registration(new Fluent(ctx.Container), container));
+            yield return RawRegister(container, MetadataProviderKeys, ctx => MetadataProvider);
 
             yield return
                 container
@@ -62,14 +63,14 @@
                         IResolverFactory factory;
                         if (!factoryCache.TryGet(implementationType, out factory))
                         {
-                            factory = new MetadataFactory(implementationType, ExpressionInstanceFactoryProvider);
+                            factory = new MetadataFactory(implementationType, ExpressionInstanceFactoryProvider, MetadataProvider);
                             factoryCache.Set(implementationType, factory);
                         }
 
                         return factory;
                     }
 
-                    return new MetadataFactory(implementationType, ExpressionInstanceFactoryProvider);
+                    return new MetadataFactory(implementationType, ExpressionInstanceFactoryProvider, MetadataProvider);
                 });
 
             yield return

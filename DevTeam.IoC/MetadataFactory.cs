@@ -11,11 +11,14 @@
         private readonly IInstanceFactory _instanceFactory;
         private readonly IParameterMetadata[] _parameters;
 
-        public MetadataFactory(Type implementationType, IInstanceFactoryProvider instanceFactoryProvider, IMetadataProvider metadataProvider = null)
+        public MetadataFactory(
+            [NotNull] Type implementationType,
+            [NotNull] IInstanceFactoryProvider instanceFactoryProvider,
+            [NotNull] IMetadataProvider metadataProvider)
         {
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
             if (instanceFactoryProvider == null) throw new ArgumentNullException(nameof(instanceFactoryProvider));
-            metadataProvider = metadataProvider ?? AutowiringMetadataProvider.Shared;
+            if (metadataProvider == null) throw new ArgumentNullException(nameof(metadataProvider));
 
             Exception error;
             ConstructorInfo constructor;

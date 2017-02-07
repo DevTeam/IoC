@@ -86,7 +86,7 @@
         public IDisposable AsAutowiring(Type implementationType, IMetadataProvider metadataProvider = null)
         {
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
-            metadataProvider = metadataProvider ?? AutowiringMetadataProvider.Shared;
+            metadataProvider = metadataProvider ?? Fluent.Resolve().Instance<IMetadataProvider>();
             return AsFactoryMethodInternal(ctx =>
                 {
                     var resolvedType = metadataProvider.ResolveImplementationType(ctx, implementationType);

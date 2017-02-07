@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="AutoDisposingLifetimeTests.cs" />
     <Compile Include="AutowiringInstanceFactoryTests.cs" />
+    <Compile Include="AutowiringMetadataProviderTests.cs" />
     <Compile Include="ContractKeyTests.cs" />
     <Compile Include="IntegraionTests.cs" />
     <Compile Include="JsonConfigurationTests.cs" />

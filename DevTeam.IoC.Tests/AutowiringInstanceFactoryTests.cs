@@ -97,7 +97,7 @@
 
         private static IResolverFactory CreateFactory<T>()
         {
-            return new MetadataFactory(typeof(T), new ExpressionInstanceFactoryProvider());
+            return new MetadataFactory(typeof(T), new ExpressionInstanceFactoryProvider(), new AutowiringMetadataProvider());
         }
 
         private IResolverContext CreateContext(params object[] state)

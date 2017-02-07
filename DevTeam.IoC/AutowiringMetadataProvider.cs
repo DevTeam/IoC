@@ -8,23 +8,17 @@
 
     internal class AutowiringMetadataProvider : IMetadataProvider
     {
-        public static readonly IMetadataProvider Shared = new AutowiringMetadataProvider();
-
-        private AutowiringMetadataProvider()
-        {
-        }
-
-        public Type ResolveImplementationType(IResolverContext resolverContext, Type type)
+        public Type ResolveImplementationType(IResolverContext resolverContext, Type implementationType)
         {
             if (resolverContext == null) throw new ArgumentNullException(nameof(resolverContext));
-            if (type == null) throw new ArgumentNullException(nameof(type));
-            var contractKey = resolverContext.Key.ContractKeys.First();
-            if (contractKey != null && contractKey.GenericTypeArguments.Length > 0 && type.GetTypeInfo().GenericTypeParameters.Length == contractKey.GenericTypeArguments.Length)
+            if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
+            var contractKey = resolverContext.Key.ContractKeys.FirstOrDefault();
+            if (contractKey != null && contractKey.GenericTypeArguments.Length > 0 && implementationType.GetTypeInfo().GenericTypeParameters.Length == contractKey.GenericTypeArguments.Length)
             {
-                return type.MakeGenericType(contractKey.GenericTypeArguments);
+                return implementationType.MakeGenericType(contractKey.GenericTypeArguments);
             }
 
-            return type;
+            return implementationType;
         }
 
         public bool TrySelectConstructor(Type implementationType, out ConstructorInfo constructor, out Exception error)
@@ -86,7 +80,7 @@
             return arguments;
         }
 
-        internal class ParameterMetadata : IParameterMetadata
+        private class ParameterMetadata : IParameterMetadata
         {
             public ParameterMetadata(ParameterInfo info, int stateIndex)
             {

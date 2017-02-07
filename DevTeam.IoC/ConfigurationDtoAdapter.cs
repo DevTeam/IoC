@@ -338,7 +338,7 @@
                         }
                     }
 
-                    metadataProvider = new MetadataProvider(constructorParameters);
+                    metadataProvider = new MetadataProvider(resolver.Resolve().Instance<IMetadataProvider>(), constructorParameters);
                 }
 
                 registration.AsAutowiring(autowiringType, metadataProvider);
@@ -459,21 +459,26 @@
 
         private class MetadataProvider : IMetadataProvider
         {
-            private readonly ICollection<ConstructorParameter> _bindingCtorParams;
+            private readonly IMetadataProvider _defaultMetadataProvider;
+            private readonly ICollection<ConstructorParameter> _ctorParams;
             private readonly IParameterMetadata[] _constructorArguments;
 
-            public MetadataProvider(ICollection<ConstructorParameter> bindingCtorParams)
+            public MetadataProvider(
+                [NotNull] IMetadataProvider defaultMetadataProvider,
+                [NotNull] ICollection<ConstructorParameter> ctorParams)
             {
-                if (bindingCtorParams == null) throw new ArgumentNullException(nameof(bindingCtorParams));
-                _bindingCtorParams = bindingCtorParams;
-                _constructorArguments = bindingCtorParams.Cast<IParameterMetadata>().ToArray();
+                if (defaultMetadataProvider == null) throw new ArgumentNullException(nameof(defaultMetadataProvider));
+                if (ctorParams == null) throw new ArgumentNullException(nameof(ctorParams));
+                _defaultMetadataProvider = defaultMetadataProvider;
+                _ctorParams = ctorParams;
+                _constructorArguments = ctorParams.Cast<IParameterMetadata>().ToArray();
             }
 
-            public Type ResolveImplementationType(IResolverContext resolverContext, Type type)
+            public Type ResolveImplementationType(IResolverContext resolverContext, Type implementationType)
             {
                 if (resolverContext == null) throw new ArgumentNullException(nameof(resolverContext));
-                if (type == null) throw new ArgumentNullException(nameof(type));
-                return AutowiringMetadataProvider.Shared.ResolveImplementationType(resolverContext, type);
+                if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
+                return _defaultMetadataProvider.ResolveImplementationType(resolverContext, implementationType);
             }
 
             public bool TrySelectConstructor(Type implementationType, out ConstructorInfo constructor, out Exception error)
@@ -494,13 +499,13 @@
             private bool MatchConstructor(ConstructorInfo ctor)
             {
                 var ctorParams = ctor.GetParameters();
-                if (ctorParams.Length != _bindingCtorParams.Count)
+                if (ctorParams.Length != _ctorParams.Count)
                 {
                     return false;
                 }
 
                 return ctorParams
-                    .Zip(_bindingCtorParams, (ctorParam, bindingParam) => new { ctorParam, bindingParam })
+                    .Zip(_ctorParams, (ctorParam, bindingParam) => new { ctorParam, bindingParam })
                     .Any(i => MatchParameter(i.ctorParam, i.bindingParam));
             }
 
