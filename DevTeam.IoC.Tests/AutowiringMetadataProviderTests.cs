@@ -25,6 +25,7 @@
         [TestCase(typeof(IEnumerable<>), typeof(IEnumerable<string>), typeof(IEnumerable<string>))]
         [TestCase(typeof(IEnumerable<>), typeof(IList<string>), typeof(IEnumerable<string>))]
         [TestCase(typeof(IEnumerable<string>), typeof(IEnumerable<int>), typeof(IEnumerable<string>))]
+        [TestCase(typeof(IEnumerable<>), typeof(IDictionary<int, string>), typeof(IEnumerable<>))]
         public void ShouldResolveImplementationType(Type implementationType, Type contractKeyType, Type expectedResolveImplementationType)
         {
             // Given

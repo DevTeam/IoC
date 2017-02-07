@@ -2,7 +2,7 @@
 {
     using System;
 
-    [AttributeUsage(AttributeTargets.Constructor)]
+    [AttributeUsage(AttributeTargets.Constructor | AttributeTargets.GenericParameter)]
 
     public class AutowiringAttribute : Attribute
     {
