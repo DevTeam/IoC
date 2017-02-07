@@ -3,6 +3,7 @@
     [PublicAPI]
     public interface IInstanceFactory
     {
-        object Create(params object[] args);
+        [NotNull]
+        object Create([NotNull][ItemCanBeNull] params object[] args);
     }
 }

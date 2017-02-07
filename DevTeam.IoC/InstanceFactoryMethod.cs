@@ -1,4 +1,7 @@
 ﻿namespace DevTeam.IoC
 {
-    internal delegate object InstanceFactoryMethod(params object[] args);
+    using Contracts;
+
+    [NotNull]
+    internal delegate object InstanceFactoryMethod([NotNull][ItemCanBeNull] params object[] args);
 }

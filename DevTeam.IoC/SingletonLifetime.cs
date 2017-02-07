@@ -14,6 +14,9 @@
 
         public object Create(ILifetimeContext lifetimeContext, IResolverContext resolverContext, IEnumerator<ILifetime> lifetimeEnumerator)
         {
+            if (lifetimeContext == null) throw new ArgumentNullException(nameof(lifetimeContext));
+            if (resolverContext == null) throw new ArgumentNullException(nameof(resolverContext));
+            if (lifetimeEnumerator == null) throw new ArgumentNullException(nameof(lifetimeEnumerator));
             ITagKey registrationKey = new TagKey(resolverContext.RegistrationKey);
             var contractKeys = resolverContext.Key.ContractKeys.Select(i => i.GenericTypeArguments).SelectMany(i => i).Select(i => (IContractKey)new ContractKey(i, true)).ToArray();
             var tagKeys = Enumerable.Repeat(registrationKey, 1).ToArray();

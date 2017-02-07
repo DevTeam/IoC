@@ -5,23 +5,32 @@
     [PublicAPI]
     public interface IRegistration : IToken<IRegistration>
     {
-        IDisposable AsFactoryMethod(Func<IResolverContext, object> factoryMethod);
+        [NotNull]
+        IDisposable AsFactoryMethod([NotNull] Func<IResolverContext, object> factoryMethod);
 
-        IDisposable AsFactoryMethod<TImplementation>(Func<IResolverContext, TImplementation> factoryMethod);
+        [NotNull]
+        IDisposable AsFactoryMethod<TImplementation>([NotNull] Func<IResolverContext, TImplementation> factoryMethod);
 
-        IDisposable AsAutowiring(Type implementationType, IMetadataProvider metadataProvider = null);
+        [NotNull]
+        IDisposable AsAutowiring([NotNull] Type implementationType, [CanBeNull] IMetadataProvider metadataProvider = null);
 
+        [NotNull]
         IDisposable AsAutowiring<TImplementation>();
 
+        [NotNull]
         IRegistration Lifetime(Wellknown.Lifetimes lifetime);
 
-        IRegistration Lifetime(ILifetime lifetime);
+        [NotNull]
+        IRegistration Lifetime([NotNull] ILifetime lifetime);
 
+        [NotNull]
         IRegistration KeyComparer(Wellknown.KeyComparers keyComparer);
 
-        IRegistration KeyComparer(IKeyComparer keyComparer);
+        [NotNull]
+        IRegistration KeyComparer([NotNull] IKeyComparer keyComparer);
 
-        IRegistration Scope(IScope scope);
+        [NotNull]
+        IRegistration Scope([NotNull] IScope scope);
 
         IRegistration Scope(Wellknown.Scopes scope);
     }

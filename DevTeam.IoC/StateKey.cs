@@ -6,7 +6,7 @@
 
     internal struct StateKey: IStateKey
     {
-        public StateKey(int index, Type stateType)
+        public StateKey(int index, [NotNull] Type stateType)
         {
             if (stateType == null) throw new ArgumentNullException(nameof(stateType));
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));

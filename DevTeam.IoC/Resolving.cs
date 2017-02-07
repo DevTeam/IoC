@@ -12,15 +12,16 @@
         private readonly HashSet<IStateKey> _stateKeys = new HashSet<IStateKey>();
         private ICompositeKey _compositeKey;
 
-        public Resolving(IFluent fluent, IResolver resolver)
+        public Resolving([NotNull] IFluent fluent, [NotNull] IResolver resolver)
             : base(fluent, resolver)
         {
             if (fluent == null) throw new ArgumentNullException(nameof(fluent));
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
         }
 
-        public override IResolving Contract(params Type[] contractTypes)
+        public override IResolving Contract([NotNull] params Type[] contractTypes)
         {
+            if (contractTypes == null) throw new ArgumentNullException(nameof(contractTypes));
             AddContractKey(contractTypes.Select(type => KeyFactory.CreateContractKey(type, true)));
             return this;
         }

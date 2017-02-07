@@ -7,10 +7,12 @@
 
     public interface IMetadataProvider
     {
-        Type ResolveImplementationType(IResolverContext resolverContext, Type type);
+        [NotNull]
+        Type ResolveImplementationType([NotNull] IResolverContext resolverContext, [NotNull] Type type);
 
-        bool TrySelectConstructor(Type implementationType, out ConstructorInfo constructor, out Exception error);
+        bool TrySelectConstructor([NotNull] Type implementationType, out ConstructorInfo constructor, out Exception error);
 
-        IParameterMetadata[] GetConstructorParameters(ConstructorInfo constructor);
+        [NotNull]
+        IParameterMetadata[] GetConstructorParameters([NotNull] ConstructorInfo constructor);
     }
 }

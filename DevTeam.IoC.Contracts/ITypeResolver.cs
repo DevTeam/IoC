@@ -5,10 +5,10 @@
     [PublicAPI]
     public interface ITypeResolver
     {
-        void AddReference(string reference);
+        void AddReference([NotNull] string reference);
 
-        void AddUsing(string usingName);
+        void AddUsingStatement([NotNull] string usingName);
 
-        bool TryResolveType(string typeName, out Type type);
+        bool TryResolveType([CanBeNull] string typeName, out Type type);
     }
 }

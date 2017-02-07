@@ -6,11 +6,12 @@
     [PublicAPI]
     public interface IRegistry
     {
+        [NotNull]
         IRegistryContext CreateContext(
-            IEnumerable<ICompositeKey> keys,
-            IResolverFactory factory,
-            IEnumerable<IExtension> extensions);
+            [NotNull] IEnumerable<ICompositeKey> keys,
+            [NotNull] IResolverFactory factory,
+            [NotNull] IEnumerable<IExtension> extensions);
 
-        bool TryRegister(IRegistryContext context, out IDisposable registration);
+        bool TryRegister([NotNull] IRegistryContext context, out IDisposable registration);
     }
 }

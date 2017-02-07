@@ -14,9 +14,10 @@
         private readonly HashSet<ICompositeKey> _compositeKeys = new HashSet<ICompositeKey>();
         private readonly Lazy<IInstanceFactoryProvider> _instanceFactoryProvider;
 
-        public Registration(IFluent fluent, IResolver resolver)
+        public Registration([NotNull] IFluent fluent, [NotNull] IResolver resolver)
             : base(fluent, resolver)
         {
+            if (fluent == null) throw new ArgumentNullException(nameof(fluent));
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             _instanceFactoryProvider = new Lazy<IInstanceFactoryProvider>(GetInstanceFactoryProvider);
         }
@@ -25,6 +26,7 @@
 
         public override IRegistration Contract(params Type[] contractTypes)
         {
+            if (contractTypes == null) throw new ArgumentNullException(nameof(contractTypes));
             AddContractKey(contractTypes.Select(type => KeyFactory.CreateContractKey(type, false)));
             return this;
         }
@@ -113,7 +115,7 @@
             return AsAutowiring(typeof(TImplementation));
         }
 
-        protected override bool AddContractKey(IEnumerable<IContractKey> keys)
+        protected override bool AddContractKey([NotNull] IEnumerable<IContractKey> keys)
         {
             _contractKeys.Add(new HashSet<IContractKey>(keys));
             return true;

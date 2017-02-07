@@ -5,10 +5,13 @@
     {
         bool TryGetRegistry(out IRegistry registry);
 
-        IConfiguring Configure(IResolver resolver);
+        [NotNull]
+        IConfiguring Configure([NotNull] IResolver resolver);
 
+        [NotNull]
         IRegistration Register();
 
+        [NotNull]
         IResolving Resolve();
     }
 }

@@ -3,6 +3,7 @@
     [PublicAPI]
     public interface IResolver<out TContract>
     {
+        [NotNull]
         TContract Resolve();
     }
 }

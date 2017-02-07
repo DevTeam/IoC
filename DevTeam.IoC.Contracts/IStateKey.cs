@@ -7,6 +7,6 @@
     {
         int Index { get; }
 
-        Type StateType { get; }
+        Type StateType { [NotNull] get; }
     }
 }

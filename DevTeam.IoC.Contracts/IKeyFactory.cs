@@ -5,12 +5,16 @@
     [PublicAPI]
     public interface IKeyFactory
     {
-        ICompositeKey CreateCompositeKey(IContractKey[] contractKey, ITagKey[] tagKeys, IStateKey[] stateKeys);
+        [NotNull]
+        ICompositeKey CreateCompositeKey([NotNull] IContractKey[] contractKey, [NotNull] ITagKey[] tagKeys, [NotNull] IStateKey[] stateKeys);
 
-        IContractKey CreateContractKey(Type contractType, bool toResolve);
+        [NotNull]
+        IContractKey CreateContractKey([NotNull] Type contractType, bool toResolve);
 
-        IStateKey CreateStateKey(int index, Type stateType);
+        [NotNull]
+        IStateKey CreateStateKey(int index, [NotNull] Type stateType);
 
-        ITagKey CreateTagKey(object tag);
+        [NotNull]
+        ITagKey CreateTagKey([NotNull] object tag);
     }
 }

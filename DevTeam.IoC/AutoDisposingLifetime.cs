@@ -13,6 +13,9 @@
 
         public object Create(ILifetimeContext lifetimeContext, IResolverContext resolverContext, IEnumerator<ILifetime> lifetimeEnumerator)
         {
+            if (lifetimeContext == null) throw new ArgumentNullException(nameof(lifetimeContext));
+            if (resolverContext == null) throw new ArgumentNullException(nameof(resolverContext));
+            if (lifetimeEnumerator == null) throw new ArgumentNullException(nameof(lifetimeEnumerator));
             if (!lifetimeEnumerator.MoveNext())
             {
                 throw new InvalidOperationException();

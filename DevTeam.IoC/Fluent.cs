@@ -20,6 +20,7 @@
 
         public IConfiguring Configure(IResolver resolver)
         {
+            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             return new Configuring(resolver);
         }
 

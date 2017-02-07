@@ -14,7 +14,7 @@
         private readonly Dictionary<IEqualityComparer<ICompositeKey>, Dictionary<ICompositeKey, RegistrationItem>> _registrations = new Dictionary<IEqualityComparer<ICompositeKey>, Dictionary<ICompositeKey, RegistrationItem>>();
         private ICache<ICompositeKey, RegistrationItem> _cache;
 
-        public Container(object tag = null, IContainer parentContainer = null)
+        public Container([CanBeNull] object tag = null, [CanBeNull] IContainer parentContainer = null)
         {
             _parentContainer = parentContainer;
             Tag = tag;
@@ -60,7 +60,7 @@
                     {
                         IResolverContext resolverContext;
                         if (_parentContainer.TryCreateContext(StaticContractKey<IRegistry>.Shared, out resolverContext,
-                            EpmtyStateProvider.Shared))
+                            EmptyStateProvider.Shared))
                         {
                             var parentRegistry = (IRegistry) _parentContainer.Resolve(resolverContext);
                             return parentRegistry.TryRegister(context, out registration);
@@ -138,7 +138,13 @@
             if (context == null) throw new ArgumentNullException(nameof(context));
             if (context.Container == this)
             {
-                return context.InstanceFactory.Create(context);
+                var instance = context.InstanceFactory.Create(context);
+                if (instance == null)
+                {
+                    throw new InvalidOperationException($"{nameof(instance)} can not be null");
+                }
+
+                return instance;
             }
 
             if (_parentContainer != null)

@@ -23,6 +23,7 @@
 
         public bool TryGet(out TContract instance, IStateProvider stateProvider)
         {
+            if (stateProvider == null) throw new ArgumentNullException(nameof(stateProvider));
             object objInstance;
             if (_resolving.TryInstance(out objInstance, stateProvider))
             {
@@ -36,6 +37,7 @@
 
         public bool TryGet(out TContract instance, params object[] state)
         {
+            if (state == null) throw new ArgumentNullException(nameof(state));
             object objInstance;
             if (_resolving.TryInstance(out objInstance, state))
             {

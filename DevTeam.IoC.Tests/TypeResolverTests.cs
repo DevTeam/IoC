@@ -41,7 +41,7 @@
 
             foreach (var usingItem in usings.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
             {
-                typeResolver.AddUsing(usingItem);
+                typeResolver.AddUsingStatement(usingItem);
             }
             
             // When

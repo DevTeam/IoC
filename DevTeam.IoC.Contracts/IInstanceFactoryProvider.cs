@@ -5,6 +5,7 @@
     [PublicAPI]
     public interface IInstanceFactoryProvider
     {
-        IInstanceFactory GetFactory(ConstructorInfo constructor);
+        [NotNull]
+        IInstanceFactory GetFactory([NotNull] ConstructorInfo constructor);
     }
 }

@@ -3,6 +3,7 @@
     [PublicAPI]
     public interface IResolver<in TSTate1, in TSTate2, out TContract>
     {
-        TContract Resolve(TSTate1 state1, TSTate2 state2);
+        [NotNull]
+        TContract Resolve([CanBeNull] TSTate1 state1, [CanBeNull] TSTate2 state2);
     }
 }

@@ -15,7 +15,10 @@
 
         public object Create(params object[] args)
         {
-            return _instanceFactoryMethod(args);
+            if (args == null) throw new ArgumentNullException(nameof(args));
+            var instance = _instanceFactoryMethod(args);
+            if (instance == null) throw new InvalidOperationException($"{nameof(instance)} can not be null");
+            return instance;
         }
     }
 }

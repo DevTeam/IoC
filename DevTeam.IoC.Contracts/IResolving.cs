@@ -3,20 +3,24 @@
     [PublicAPI]
     public interface IResolving : IToken<IResolving>
     {
-        object Instance(params object[] state);
+        [NotNull]
+        object Instance([NotNull][ItemCanBeNull] params object[] state);
 
-        object Instance(IStateProvider stateProvider);
+        [NotNull]
+        object Instance([NotNull] IStateProvider stateProvider);
 
-        TContract Instance<TContract>(params object[] state);
+        [NotNull]
+        TContract Instance<TContract>([NotNull][ItemCanBeNull] params object[] state);
 
-        TContract Instance<TContract>(IStateProvider stateProvider);
+        [NotNull]
+        TContract Instance<TContract>([NotNull] IStateProvider stateProvider);
 
-        bool Instance<TContract>(out TContract instance, params object[] state);
+        bool Instance<TContract>(out TContract instance, [NotNull][ItemCanBeNull] params object[] state);
 
-        bool TryInstance(out object instance, params object[] state);
+        bool TryInstance(out object instance, [NotNull][ItemCanBeNull] params object[] state);
 
-        bool TryInstance(out object instance, IStateProvider stateProvider);
+        bool TryInstance(out object instance, [NotNull] IStateProvider stateProvider);
 
-        bool TryInstance<TContract>(out TContract instance, IStateProvider stateProvider);
+        bool TryInstance<TContract>(out TContract instance, [NotNull] IStateProvider stateProvider);
     }
 }

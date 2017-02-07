@@ -6,18 +6,25 @@
     [PublicAPI]
     public interface IToken<out T>
     {
-        T Key(IEnumerable<IKey> keys);
+        [NotNull]
+        T Key([NotNull] IEnumerable<IKey> keys);
 
-        T Key(params IKey[] keys);
+        [NotNull]
+        T Key([NotNull] params IKey[] keys);
 
-        T Contract(params Type[] contractTypes);
+        [NotNull]
+        T Contract([NotNull] params Type[] contractTypes);
 
+        [NotNull]
         T Contract<TContract>();
 
-        T State(int index, Type stateType);
+        [NotNull]
+        T State(int index, [NotNull] Type stateType);
 
+        [NotNull]
         T State<TState>(int index);
 
+        [NotNull]
         T Tag(params object[] tags);
     }
 }

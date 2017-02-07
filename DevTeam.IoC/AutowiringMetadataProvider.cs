@@ -31,8 +31,8 @@
         {
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
             var implementationTypeInfo = implementationType.GetTypeInfo();
-            var ctors = implementationTypeInfo.DeclaredConstructors.Where(i => i.IsPublic).ToArray();
-            if (ctors.Length == 1)
+            var constructorInfos = implementationTypeInfo.DeclaredConstructors.Where(i => i.IsPublic).ToArray();
+            if (constructorInfos.Length == 1)
             {
                 constructor = implementationTypeInfo.DeclaredConstructors.First();
                 error = default(Exception);
@@ -42,7 +42,7 @@
             try
             {
                 var autowiringConstructor = (
-                    from ctor in ctors
+                    from ctor in constructorInfos
                     let autowiringAttribute = ctor.GetCustomAttribute<AutowiringAttribute>()
                     where autowiringAttribute != null
                     select ctor).SingleOrDefault();

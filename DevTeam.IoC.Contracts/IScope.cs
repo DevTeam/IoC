@@ -3,8 +3,8 @@
     [PublicAPI]
     public interface IScope: IExtension
     {
-        bool AllowsRegistration(IRegistryContext context);
+        bool AllowsRegistration([NotNull] IRegistryContext context);
 
-        bool AllowsResolving(IResolverContext context);
+        bool AllowsResolving([NotNull] IResolverContext context);
     }
 }

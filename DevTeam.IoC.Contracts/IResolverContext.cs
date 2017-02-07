@@ -3,18 +3,18 @@
     [PublicAPI]
     public interface IResolverContext
     {
-        IContainer Container { get; }
+        IContainer Container { [NotNull] get; }
 
-        IContainer ParentContainer { get; }
+        IContainer ParentContainer { [CanBeNull] get; }
 
-        ICompositeKey Key { get; }
+        ICompositeKey Key { [NotNull] get; }
 
-        object RegistrationKey { get; }
+        object RegistrationKey { [NotNull] get; }
 
-        IResolverFactory InstanceFactory { get; }
+        IResolverFactory InstanceFactory { [NotNull] get; }
 
-        IStateProvider StateProvider { get; }
+        IStateProvider StateProvider { [NotNull] get; }
 
-        IRegistryContext RegistryContext { get; }
+        IRegistryContext RegistryContext { [NotNull] get; }
     }
 }

@@ -3,6 +3,7 @@
     [PublicAPI]
     public interface IReferenceDescriptionResolver
     {
-        string ResolveReference(string reference);
+        [NotNull]
+        string ResolveReference([NotNull] string reference);
     }
 }

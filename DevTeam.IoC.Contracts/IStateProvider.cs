@@ -3,8 +3,10 @@
     [PublicAPI]
     public interface IStateProvider
     {
-        object GetKey(IResolverContext resolverContext);
+        [NotNull]
+        object GetKey([NotNull] IResolverContext resolverContext);
 
-        object GetState(IResolverContext resolverContext, IStateKey stateKey);
+        [CanBeNull]
+        object GetState([NotNull] IResolverContext resolverContext, [NotNull] IStateKey stateKey);
     }
 }

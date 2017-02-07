@@ -34,6 +34,7 @@
             return _instanceFactory.Create(_parameters.Select(param => ResolveParameter(resolverContext, param)).ToArray());
         }
 
+        [CanBeNull]
         private static object ResolveParameter(IResolverContext resolverContext, IParameterMetadata parameterMetadata)
         {
             if (parameterMetadata.IsDependency)

@@ -3,6 +3,6 @@
     [PublicAPI]
     public interface IProvider<in TSTate1, TContract>
     {
-        bool TryGet(out TContract instance, TSTate1 state1);
+        bool TryGet(out TContract instance, [CanBeNull] TSTate1 state1);
     }
 }

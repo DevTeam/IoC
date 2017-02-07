@@ -3,10 +3,11 @@
     [PublicAPI]
     public interface IResolver
     {
-        IKeyFactory KeyFactory { get; }
+        IKeyFactory KeyFactory { [NotNull] get; }
 
-        bool TryCreateContext(ICompositeKey key, out IResolverContext resolverContext, IStateProvider stateProvider = null);
+        bool TryCreateContext([NotNull] ICompositeKey key, out IResolverContext resolverContext, IStateProvider stateProvider = null);
 
-        object Resolve(IResolverContext context);
+        [NotNull]
+        object Resolve([NotNull] IResolverContext context);
     }
 }

@@ -54,7 +54,7 @@
     <Compile Include="CompositeDisposable.cs" />
     <Compile Include="AutoDisposingLifetime.cs" />
     <Compile Include="EnumerablesFeature.cs" />
-    <Compile Include="EpmtyStateProvider.cs" />
+    <Compile Include="EmptyStateProvider.cs" />
     <Compile Include="ExpressionInstanceFactoryProvider.cs" />
     <Compile Include="Fluent.cs" />
     <Compile Include="MethodFactory.cs" />

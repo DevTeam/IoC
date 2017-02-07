@@ -5,12 +5,12 @@
     {
         bool IsDependency { get; }
 
-        IKey[] Keys { get; }
+        IKey[] Keys { [CanBeNull] get; }
 
-        object[] State { get; }
+        object[] State { [CanBeNull] get; }
 
-        object Value { get; }
+        object Value { [CanBeNull] get; }
 
-        IStateKey StateKey { get; }
+        IStateKey StateKey { [CanBeNull] get; }
     }
 }

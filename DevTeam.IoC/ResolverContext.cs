@@ -7,13 +7,13 @@
     internal class ResolverContext: IResolverContext
     {
         public ResolverContext(
-            IContainer container,
-            IContainer parentContainer,
-            IRegistryContext registryContext,
-            IResolverFactory factory,
-            ICompositeKey key,
-            object registrationKey,
-            IStateProvider stateProvider = null)
+            [NotNull] IContainer container,
+            [CanBeNull] IContainer parentContainer,
+            [NotNull] IRegistryContext registryContext,
+            [NotNull] IResolverFactory factory,
+            [NotNull] ICompositeKey key,
+            [NotNull] object registrationKey,
+            [CanBeNull] IStateProvider stateProvider = null)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
             if (registryContext == null) throw new ArgumentNullException(nameof(registryContext));
@@ -27,7 +27,7 @@
             InstanceFactory = factory;
             Key = key;
             RegistrationKey = registrationKey;
-            StateProvider = stateProvider ?? EpmtyStateProvider.Shared;
+            StateProvider = stateProvider ?? EmptyStateProvider.Shared;
         }
 
         public IContainer Container { get; }

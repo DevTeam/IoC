@@ -97,7 +97,6 @@
     <Compile Include="ILifetime.cs" />
     <Compile Include="IRegistry.cs" />
     <Compile Include="IRegistryContext.cs" />
-    <Compile Include="IReleasingContext.cs" />
     <Compile Include="IResolver.cs" />
     <Compile Include="IResolverContext.cs" />
     <Compile Include="IScope.cs" />

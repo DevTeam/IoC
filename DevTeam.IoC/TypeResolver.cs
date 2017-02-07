@@ -28,27 +28,35 @@
             {"decimal", typeof(decimal)}
         };
 
-        private readonly List<string> _usings = new List<string>();
+        private readonly List<string> _usingStatements = new List<string>();
         private readonly List<Assembly> _references = new List<Assembly>();
 
         private IEnumerable<Assembly> References => _references;
 
-        private IEnumerable<string> Usings => _usings;
+        private IEnumerable<string> UsingStatements => _usingStatements;
 
         public void AddReference(string reference)
         {
             if (reference == null) throw new ArgumentNullException(nameof(reference));
+            if (IsNullOrWhiteSpace(reference)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(reference));
             _references.Add(Assembly.Load(new AssemblyName(reference)));
         }
 
-        public void AddUsing(string usingName)
+        public void AddUsingStatement(string usingName)
         {
             if (usingName == null) throw new ArgumentNullException(nameof(usingName));
-            _usings.Add(usingName);
+            if (IsNullOrWhiteSpace(usingName)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(usingName));
+            _usingStatements.Add(usingName);
         }
 
         public bool TryResolveType(string typeName, out Type type)
         {
+            if (IsNullOrWhiteSpace(typeName))
+            {
+                type = default(Type);
+                return false;
+            }
+
             if (TryResolveSimpleType(typeName, out type))
             {
                 return true;
@@ -240,7 +248,7 @@
                     return true;
                 }
 
-                foreach (var usingName in typeResolver.Usings)
+                foreach (var usingName in typeResolver.UsingStatements)
                 {
                     var fullTypeName = $"{usingName}.{typeName}";
                     if (LoadType(fullTypeName, typeResolver))

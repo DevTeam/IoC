@@ -6,6 +6,7 @@
     [PublicAPI]
     public interface ILifetime: IExtension, IDisposable
     {
-        object Create(ILifetimeContext lifetimeContext, IResolverContext resolverContext, IEnumerator<ILifetime> lifetimeEnumerator);
+        [NotNull]
+        object Create([NotNull] ILifetimeContext lifetimeContext, [NotNull] IResolverContext resolverContext, [NotNull] IEnumerator<ILifetime> lifetimeEnumerator);
     }
 }

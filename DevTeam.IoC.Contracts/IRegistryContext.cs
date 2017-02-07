@@ -5,14 +5,14 @@
     [PublicAPI]
     public interface IRegistryContext
     {
-        IContainer Container { get; }
+        IContainer Container { [NotNull] get; }
 
-        IContainer ParentContainer { get; }
+        IContainer ParentContainer { [CanBeNull] get; }
 
-        IEnumerable<ICompositeKey> Keys { get; }
+        IEnumerable<ICompositeKey> Keys { [NotNull] get; }
 
-        IResolverFactory InstanceFactory { get; }
+        IResolverFactory InstanceFactory { [NotNull] get; }
 
-        IEnumerable<IExtension> Extensions { get; }
+        IEnumerable<IExtension> Extensions { [NotNull] get; }
     }
 }

@@ -22,6 +22,7 @@
         public IStateKey CreateStateKey(int index, Type stateType)
         {
             if (stateType == null) throw new ArgumentNullException(nameof(stateType));
+            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
             return new StateKey(index, stateType);
         }
 

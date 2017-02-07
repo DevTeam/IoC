@@ -6,8 +6,10 @@
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Class, AllowMultiple = true)]
     public class StateAttribute : Attribute
     {
-        public StateAttribute(int index, Type stateType)
+        public StateAttribute(int index, [NotNull] Type stateType)
         {
+            if (stateType == null) throw new ArgumentNullException(nameof(stateType));
+            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
             Index = index;
             StateType = stateType;
             IsDependency = true;
@@ -22,8 +24,9 @@
 
         public int Index { get; }
 
-        public Type StateType { get; }
+        public Type StateType { [NotNull] get; }
 
+        [CanBeNull]
         public object Value { get; set; }
     }
 }

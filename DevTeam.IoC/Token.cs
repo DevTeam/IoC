@@ -72,6 +72,7 @@
 
         public T Key(params IKey[] keys)
         {
+            if (keys == null) throw new ArgumentNullException(nameof(keys));
             return Key((IEnumerable<IKey>)keys);
         }
 
@@ -96,8 +97,9 @@
             return State(index, typeof(TState));
         }
 
-        public T Tag(params object[] tags)
+        public T Tag([NotNull] params object[] tags)
         {
+            if (tags == null) throw new ArgumentNullException(nameof(tags));
             foreach (var tag in tags)
             {
                 AddTagKey(KeyFactory.CreateTagKey(tag));

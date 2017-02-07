@@ -51,6 +51,11 @@
                 .AsFactoryMethod(ctx =>
                 {
                     var implementationType = (Type)ctx.StateProvider.GetState(ctx, new StateKey(0, typeof(Type)));
+                    if (implementationType == null)
+                    {
+                        throw new InvalidOperationException($"Can not resolve {nameof(implementationType)}");
+                    }
+
                     ICache<Type, IResolverFactory> factoryCache;
                     if (ctx.Container.TryResolve(out factoryCache))
                     {

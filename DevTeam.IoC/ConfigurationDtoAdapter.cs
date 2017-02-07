@@ -34,7 +34,7 @@
                 var usingStatementDto = configurationStatement as IUsingDto;
                 if (usingStatementDto != null)
                 {
-                    typeResolver.AddUsing(usingStatementDto.Using);
+                    typeResolver.AddUsingStatement(usingStatementDto.Using);
                     continue;
                 }
 
@@ -73,9 +73,8 @@
                     var referenceDescriptionResolver = childContainer.Resolve().Instance<IReferenceDescriptionResolver>();
                     var reference = referenceDescriptionResolver.ResolveReference(dependencyReferenceDto.Reference);
                     var configurationDescriptionDto = childContainer.Resolve().State<string>(0).Instance<IConfigurationDescriptionDto>(reference);
-                    var сonfigurationDto = childContainer.Resolve().Tag(configurationType).State<IConfigurationDescriptionDto>(0).Instance<IConfigurationDto>(configurationDescriptionDto);
-                    yield return new ConfigurationDtoAdapter(сonfigurationDto);
-                    continue;
+                    var configurationDto = childContainer.Resolve().Tag(configurationType).State<IConfigurationDescriptionDto>(0).Instance<IConfigurationDto>(configurationDescriptionDto);
+                    yield return new ConfigurationDtoAdapter(configurationDto);
                 }
             }
         }
@@ -100,7 +99,7 @@
                 var usingStatementDto = configurationStatement as IUsingDto;
                 if (usingStatementDto != null)
                 {
-                    typeResolver.AddUsing(usingStatementDto.Using);
+                    typeResolver.AddUsingStatement(usingStatementDto.Using);
                     continue;
                 }
 
@@ -118,11 +117,8 @@
                 if (registerDto != null)
                 {
                     HandleRegisterDto(resolver, typeResolver, registerDto);
-                    continue;
                 }
             }
-
-            yield break;
         }
 
         private void HandleRegisterDto(IResolver resolver, ITypeResolver typeResolver, IRegisterDto registerDto)
@@ -196,7 +192,6 @@
                 if (keyComparerDto != null)
                 {
                     registration.KeyComparer(keyComparerDto.KeyComparer);
-                    continue;
                 }
             }
 
@@ -431,8 +426,16 @@
 
         private class ConstructorParameter : IParameterMetadata
         {
-            public ConstructorParameter(Type type, IKey[] keys, int stateIndex, object[] state, object value, IStateKey stateKey)
+            public ConstructorParameter(
+                [NotNull] Type type,
+                [CanBeNull] IKey[] keys,
+                int stateIndex,
+                [CanBeNull] object[] state,
+                [CanBeNull] object value,
+                [CanBeNull] IStateKey stateKey)
             {
+                if (type == null) throw new ArgumentNullException(nameof(type));
+                if (stateIndex < 0) throw new ArgumentOutOfRangeException(nameof(stateIndex));
                 Type = type;
                 Keys = keys;
                 State = state;
@@ -441,17 +444,17 @@
                 IsDependency = keys != null && value == null;
             }
 
-            public Type Type { get; }
+            public Type Type { [NotNull] get; }
 
             public bool IsDependency { get; }
 
-            public object[] State { get; }
+            public object[] State { [CanBeNull] get; }
 
-            public object Value { get; }
+            public object Value { [CanBeNull] get; }
 
-            public IStateKey StateKey { get; }
+            public IStateKey StateKey { [CanBeNull] get; }
 
-            public IKey[] Keys { get; }
+            public IKey[] Keys { [CanBeNull] get; }
         }
 
         private class MetadataProvider : IMetadataProvider
@@ -468,11 +471,14 @@
 
             public Type ResolveImplementationType(IResolverContext resolverContext, Type type)
             {
+                if (resolverContext == null) throw new ArgumentNullException(nameof(resolverContext));
+                if (type == null) throw new ArgumentNullException(nameof(type));
                 return AutowiringMetadataProvider.Shared.ResolveImplementationType(resolverContext, type);
             }
 
             public bool TrySelectConstructor(Type implementationType, out ConstructorInfo constructor, out Exception error)
             {
+                if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
                 var typeInfo = implementationType.GetTypeInfo();
                 constructor = typeInfo.DeclaredConstructors.Where(MatchConstructor).FirstOrDefault();
                 error = default(Exception);
@@ -481,6 +487,7 @@
 
             public IParameterMetadata[] GetConstructorParameters(ConstructorInfo constructor)
             {
+                if (constructor == null) throw new ArgumentNullException(nameof(constructor));
                 return _constructorArguments;
             }
 
