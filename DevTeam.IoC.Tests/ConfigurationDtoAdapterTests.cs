@@ -164,10 +164,42 @@
 
             // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
             configuration.Apply(_container).ToArray();
-            var registratioContainerName = _container.Resolve().Instance<string>();
+            var registrationContainerName = _container.Resolve().Instance<string>();
 
             // Then
-            registratioContainerName.ShouldBe("child");
+            registrationContainerName.ShouldBe("child");
+        }
+
+        [Test]
+        [TestCase("{0}.{1}")]
+        [TestCase("{0}. {1}")]
+        [TestCase("  {0}   .   {1} ")]
+        [TestCase("{0} : {1}")]
+        [TestCase("{0}::{1}")]
+        [TestCase("{0}->{1}")]
+        public void ShouldApplyWhenRegisterFactoryMethod(string format)
+        {
+            // Given
+            var configurationDto = new ConfigurationDto();
+            var configuration = CreateInstance(configurationDto);
+
+            // When
+            configurationDto.Add(
+                new RegisterDto
+                {
+                    Keys = new IRegisterStatementDto[]
+                    {
+                        new ContractDto { Contract = new []{ typeof(string).FullName }}
+                    },
+                    FactoryMethodName = string.Format(format, typeof(MyFactory).FullName, nameof(MyFactory.CreateAbcString))
+                });
+
+            // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+            configuration.Apply(_container).ToArray();
+            var registrationContainerName = _container.Resolve().Instance<string>();
+
+            // Then
+            registrationContainerName.ShouldBe("abc");
         }
 
         private ConfigurationDtoAdapter CreateInstance(IConfigurationDto configurationDto)
@@ -223,6 +255,11 @@
             public static string Create(IResolverContext ctx)
             {
                 return ctx.RegistryContext.Container.Tag?.ToString() ?? "null";
+            }
+
+            public static string CreateAbcString(IResolverContext ctx)
+            {
+                return "abc";
             }
         }
     }

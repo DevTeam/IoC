@@ -365,7 +365,7 @@
 
             if (!string.IsNullOrWhiteSpace(registerDto.FactoryMethodName))
             {
-                var parts = registerDto.FactoryMethodName.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+                var parts = registerDto.FactoryMethodName.Split(new[] { ".", ":", "::", "->" }, StringSplitOptions.RemoveEmptyEntries).Select(i => i.Trim()).ToArray();
                 if (parts.Length < 2)
                 {
                     throw new Exception($"Invalid factory method name {registerDto.FactoryMethodName}");
