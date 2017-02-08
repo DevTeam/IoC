@@ -9,7 +9,7 @@
     using Shouldly;
 
     [TestFixture]
-    public class IntegraionTests
+    public class PerformanceTests
     {
         [Test]
         public void SimpleTest()

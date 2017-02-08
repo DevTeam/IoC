@@ -69,7 +69,7 @@
     <Compile Include="CompositeDisposableTests.cs" />
     <Compile Include="CompositeKeyTests.cs" />
     <Compile Include="ContractKeyTests.cs" />
-    <Compile Include="IntegraionTests.cs" />
+    <Compile Include="PerformanceTests.cs" />
     <Compile Include="JsonConfigurationTests.cs" />
     <Compile Include="ManualMetadataProviderTests.cs" />
     <Compile Include="ReferenceDescriptionResolver.cs" />
