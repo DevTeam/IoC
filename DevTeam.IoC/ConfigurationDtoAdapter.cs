@@ -8,7 +8,7 @@
     using Contracts;
     using Contracts.Dto;
 
-    internal partial class ConfigurationDtoAdapter : IConfiguration
+    internal class ConfigurationDtoAdapter : IConfiguration
     {
         private readonly IConfigurationDto _configurationDto;
 
