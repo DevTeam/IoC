@@ -45,6 +45,7 @@
     <Compile Include="ConfigurationDescriptionDto.cs" />
     <Compile Include="ConfigurationDtoAdapter.cs" />
     <Compile Include="IWeakReference.cs" />
+    <Compile Include="ManualMetadataProvider.cs" />
     <Compile Include="ParameterMetadata.cs" />
     <Compile Include="IFuncProvider.cs" />
     <Compile Include="MetadataFactory.cs" />

@@ -8,7 +8,7 @@
     using Contracts;
     using Contracts.Dto;
 
-    internal class ConfigurationDtoAdapter : IConfiguration
+    internal partial class ConfigurationDtoAdapter : IConfiguration
     {
         private readonly IConfigurationDto _configurationDto;
 
@@ -206,7 +206,7 @@
                 IMetadataProvider metadataProvider = null;
                 if (registerDto.ConstructorParameters != null)
                 {
-                    var constructorParameters = new List<ParameterMetadata>();
+                    var constructorParameters = new List<IParameterMetadata>();
                     var bindingCtorParams = registerDto.ConstructorParameters.ToArray();
                     var stateIndex = 0;
                     foreach (var ctorParam in bindingCtorParams)
@@ -338,7 +338,7 @@
                         }
                     }
 
-                    metadataProvider = new MetadataProvider(resolver.Resolve().Instance<IMetadataProvider>(), constructorParameters);
+                    metadataProvider = resolver.Resolve().State<IEnumerable<IParameterMetadata>>(0).Instance<IMetadataProvider>(constructorParameters);
                 }
 
                 registration.AsAutowiring(autowiringType, metadataProvider);
@@ -422,64 +422,6 @@
 
             value = Convert.ChangeType(valueText, type);
             return true;
-        }
-
-        private class MetadataProvider : IMetadataProvider
-        {
-            private readonly IMetadataProvider _defaultMetadataProvider;
-            private readonly ICollection<ParameterMetadata> _ctorParams;
-            private readonly IParameterMetadata[] _constructorArguments;
-
-            public MetadataProvider(
-                [NotNull] IMetadataProvider defaultMetadataProvider,
-                [NotNull] ICollection<ParameterMetadata> ctorParams)
-            {
-                if (defaultMetadataProvider == null) throw new ArgumentNullException(nameof(defaultMetadataProvider));
-                if (ctorParams == null) throw new ArgumentNullException(nameof(ctorParams));
-                _defaultMetadataProvider = defaultMetadataProvider;
-                _ctorParams = ctorParams;
-                _constructorArguments = ctorParams.Cast<IParameterMetadata>().ToArray();
-            }
-
-            public Type ResolveImplementationType(IResolverContext resolverContext, Type implementationType)
-            {
-                if (resolverContext == null) throw new ArgumentNullException(nameof(resolverContext));
-                if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
-                return _defaultMetadataProvider.ResolveImplementationType(resolverContext, implementationType);
-            }
-
-            public bool TrySelectConstructor(Type implementationType, out ConstructorInfo constructor, out Exception error)
-            {
-                if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
-                var typeInfo = implementationType.GetTypeInfo();
-                constructor = typeInfo.DeclaredConstructors.Where(MatchConstructor).FirstOrDefault();
-                error = default(Exception);
-                return constructor != null;
-            }
-
-            public IParameterMetadata[] GetConstructorParameters(ConstructorInfo constructor)
-            {
-                if (constructor == null) throw new ArgumentNullException(nameof(constructor));
-                return _constructorArguments;
-            }
-
-            private bool MatchConstructor(ConstructorInfo ctor)
-            {
-                var ctorParams = ctor.GetParameters();
-                if (ctorParams.Length != _ctorParams.Count)
-                {
-                    return false;
-                }
-
-                return ctorParams
-                    .Zip(_ctorParams, (ctorParam, bindingParam) => new { ctorParam, bindingParam })
-                    .Any(i => MatchParameter(i.ctorParam, i.bindingParam));
-            }
-
-            private static bool MatchParameter(ParameterInfo ctorParam, ParameterMetadata bindingCtorParam)
-            {
-                return ctorParam.ParameterType == bindingCtorParam.ImplementationType;
-            }
         }
     }
 }

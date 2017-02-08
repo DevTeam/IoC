@@ -46,6 +46,22 @@
 
             yield return
                 container
+                    .Register()
+                    .State<IEnumerable<IParameterMetadata>>(0)
+                    .Contract<IMetadataProvider>()
+                    .AsFactoryMethod(ctx =>
+                    {
+                        var ctorParams = ctx.GetState<IEnumerable<IParameterMetadata>>(0);
+                        if (ctorParams == null)
+                        {
+                            throw new InvalidOperationException($"{nameof(ctorParams)} was not defined.");
+                        }
+
+                        return new ManualMetadataProvider(MetadataProvider, ctorParams);
+                    });
+
+            yield return
+                container
                 .Register()
                 .State<Type>(0)
                 .Contract<IResolverFactory>()
