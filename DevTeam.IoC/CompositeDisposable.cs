@@ -15,6 +15,8 @@
             _configurations = configurations.ToList();
         }
 
+        internal int Count => _configurations.Count;
+
         public void Dispose()
         {
             foreach (var configuration in _configurations)
