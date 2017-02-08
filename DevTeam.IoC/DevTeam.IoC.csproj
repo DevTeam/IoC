@@ -44,6 +44,7 @@
     <Compile Include="CacheFeature.cs" />
     <Compile Include="ConfigurationDescriptionDto.cs" />
     <Compile Include="ConfigurationDtoAdapter.cs" />
+    <Compile Include="IWeakReference.cs" />
     <Compile Include="ParameterMetadata.cs" />
     <Compile Include="IFuncProvider.cs" />
     <Compile Include="MetadataFactory.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="Token.cs" />
     <Compile Include="TransientLifetime.cs" />
     <Compile Include="TypeResolver.cs" />
+    <Compile Include="WeakReference.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DevTeam.IoC.Contracts\DevTeam.IoC.Contracts.csproj">
