@@ -70,6 +70,7 @@
     <Compile Include="ContractKeyTests.cs" />
     <Compile Include="IntegraionTests.cs" />
     <Compile Include="JsonConfigurationTests.cs" />
+    <Compile Include="ManualMetadataProviderTests.cs" />
     <Compile Include="ReferenceDescriptionResolver.cs" />
     <Compile Include="ResolversConfigurationTests.cs" />
     <Compile Include="IDisposableService.cs" />

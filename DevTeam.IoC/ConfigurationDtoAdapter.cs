@@ -211,21 +211,21 @@
                     var stateIndex = 0;
                     foreach (var ctorParam in bindingCtorParams)
                     {
-                        Type type;
-                        if (!typeResolver.TryResolveType(ctorParam.TypeName, out type))
+                        Type parameterType;
+                        if (!typeResolver.TryResolveType(ctorParam.TypeName, out parameterType))
                         {
                             throw new Exception($"Invalid constructor parameter type {ctorParam.TypeName}");
                         }
 
-                        IKey key = null;
                         IStateKey stateKey = null;
+                        IKey key = null;
                         object value = null;
                         var state = new List<object>();
                         if (ctorParam.Value != null)
                         {
-                            if (!TryGetValue(type, ctorParam.Value, out value))
+                            if (!TryGetValue(parameterType, ctorParam.Value, out value))
                             {
-                                throw new Exception($"Invalid value \"{ctorParam.Value}\" of type {type.Name}");
+                                throw new Exception($"Invalid value \"{ctorParam.Value}\" of type {parameterType.Name}");
                             }
                         }
                         else
@@ -257,6 +257,7 @@
                             if (ctorParam.Dependency != null)
                             {
                                 var resolving = new Resolving(resolver.Resolve().Instance<IFluent>(), resolver);
+                                var hasContractKey = false;
                                 foreach (var keyDto in ctorParam.Dependency)
                                 {
                                     var contractDto = keyDto as IContractDto;
@@ -276,14 +277,11 @@
 
                                         if (contractTypes.Count == 0)
                                         {
-                                            contractTypes.Add(type);
+                                            contractTypes.Add(parameterType);
                                         }
 
                                         resolving.Contract(contractTypes.ToArray());
-                                    }
-                                    else
-                                    {
-                                        resolving.Contract(type);
+                                        hasContractKey = true;
                                     }
 
                                     var stateDto = keyDto as IStateDto;
@@ -322,15 +320,20 @@
                                     }
                                 }
 
+                                if (!hasContractKey)
+                                {
+                                    resolving.Contract(parameterType);
+                                }
+                                
                                 key = resolving.CreateCompositeKey();
                             }
                             else
                             {
-                                key = new ContractKey(type, true);
+                                key = new ContractKey(parameterType, true);
                             }
                         }
 
-                        var param = new ParameterMetadata(type, stateKey == null ? new[] { key } : null, stateIndex, state.ToArray(), value, stateKey);
+                        var param = new ParameterMetadata(stateKey == null ? new[] { key } : null, stateIndex, state.ToArray(), value, stateKey);
                         constructorParameters.Add(param);
                         if (!param.IsDependency)
                         {

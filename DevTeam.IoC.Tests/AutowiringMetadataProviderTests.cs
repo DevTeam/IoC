@@ -89,12 +89,12 @@
             var ctor = typeof(AutowiringClass).GetConstructors().First();
             var expectedCtorParams = new IParameterMetadata[]
             {
-                new ParameterMetadata(ctor.DeclaringType, null, 0, new object[0], null, new StateKey(0, typeof(int))),
-                new ParameterMetadata(ctor.DeclaringType, new IKey[] { new ContractKey(typeof(IEnumerable<string>), true) },0, new object[0], null, null ),
-                new ParameterMetadata(ctor.DeclaringType, new IKey[] { new ContractKey(typeof(IDisposable), true) }, 0, new object[0], null, null ),
-                new ParameterMetadata(ctor.DeclaringType, new IKey[] { new ContractKey(typeof(string), true), new StateKey(1, typeof(int)), }, 0, new object[1] { null }, null, null ),
-                new ParameterMetadata(ctor.DeclaringType, new IKey[] { new ContractKey(typeof(string), true), new TagKey("abc"), }, 0, new object[0], null, null ),
-                new ParameterMetadata(ctor.DeclaringType, null, 0, new object[0], null, new StateKey(1, typeof(string))),
+                new ParameterMetadata(null, 0, new object[0], null, new StateKey(0, typeof(int))),
+                new ParameterMetadata(new IKey[] { new ContractKey(typeof(IEnumerable<string>), true) },0, new object[0], null, null ),
+                new ParameterMetadata(new IKey[] { new ContractKey(typeof(IDisposable), true) }, 0, new object[0], null, null ),
+                new ParameterMetadata(new IKey[] { new ContractKey(typeof(string), true), new StateKey(1, typeof(int)), }, 0, new object[1] { null }, null, null ),
+                new ParameterMetadata(new IKey[] { new ContractKey(typeof(string), true), new TagKey("abc"), }, 0, new object[0], null, null ),
+                new ParameterMetadata(null, 0, new object[0], null, new StateKey(1, typeof(string))),
             };
 
             // When

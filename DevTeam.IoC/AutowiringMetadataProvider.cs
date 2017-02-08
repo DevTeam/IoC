@@ -97,7 +97,6 @@
                 }
 
                 var paramInfo = new ParameterMetadata(
-                    constructor.DeclaringType,
                     keys,
                     stateIndex,
                     state,

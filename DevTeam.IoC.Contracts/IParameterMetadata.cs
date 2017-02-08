@@ -5,8 +5,6 @@
     [PublicAPI]
     public interface IParameterMetadata
     {
-        Type ImplementationType { [NotNull] get; }
-
         bool IsDependency { get; }
 
         IKey[] Keys { [CanBeNull] get; }

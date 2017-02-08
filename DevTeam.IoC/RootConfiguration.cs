@@ -51,13 +51,13 @@
                     .Contract<IMetadataProvider>()
                     .AsFactoryMethod(ctx =>
                     {
-                        var ctorParams = ctx.GetState<IEnumerable<IParameterMetadata>>(0);
-                        if (ctorParams == null)
+                        var constructorParams = ctx.GetState<IEnumerable<IParameterMetadata>>(0);
+                        if (constructorParams == null)
                         {
-                            throw new InvalidOperationException($"{nameof(ctorParams)} was not defined.");
+                            throw new InvalidOperationException($"{nameof(constructorParams)} was not defined.");
                         }
 
-                        return new ManualMetadataProvider(MetadataProvider, ctorParams);
+                        return new ManualMetadataProvider(MetadataProvider, constructorParams);
                     });
 
             yield return
