@@ -83,7 +83,7 @@
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             if (_fluentKey == null)
             {
-                _fluentKey = resolver.KeyFactory.CreateCompositeKey(new[] { resolver.KeyFactory.CreateContractKey(typeof(IFluent), true) }, new ITagKey[0], new IStateKey[0]);
+                _fluentKey = resolver.KeyFactory.CreateCompositeKey(new[] { resolver.KeyFactory.CreateContractKey(typeof(IFluent), true) });
             }
 
             IResolverContext ctx;

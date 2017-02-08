@@ -165,7 +165,7 @@
 
         private static IEnumerable<ICompositeKey> CreateKeys<TContract>()
         {
-            var key = new CompositeKey(new[] { (IContractKey)new ContractKey(typeof(TContract), true), }, new ITagKey[0], new IStateKey[0]);
+            var key = new CompositeKey(new[] { (IContractKey)new ContractKey(typeof(TContract), true), }, Enumerable.Empty<ITagKey>(), Enumerable.Empty<IStateKey>());
             return Enumerable.Repeat(key, 1).ToArray();
         }
 

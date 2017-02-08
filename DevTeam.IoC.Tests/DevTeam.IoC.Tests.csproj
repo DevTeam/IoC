@@ -67,6 +67,7 @@
     <Compile Include="AutowiringMetadataProviderTests.cs" />
     <Compile Include="CacheTests.cs" />
     <Compile Include="CompositeDisposableTests.cs" />
+    <Compile Include="CompositeKeyTests.cs" />
     <Compile Include="ContractKeyTests.cs" />
     <Compile Include="IntegraionTests.cs" />
     <Compile Include="JsonConfigurationTests.cs" />

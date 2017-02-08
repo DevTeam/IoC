@@ -7,7 +7,6 @@
 
     internal class SingletonLifetime: KeyBasedLifetime<ICompositeKey>
     {
-        private static readonly IStateKey[] EmptyStateKeys = new IStateKey[0];
         private static readonly ILifetime TransientLifetime = new TransientLifetime();
         private readonly Dictionary<ICompositeKey, object> _instances = new Dictionary<ICompositeKey, object>();
 
@@ -31,9 +30,9 @@
             if (lifetimeContext == null) throw new ArgumentNullException(nameof(lifetimeContext));
             if (resolverContext == null) throw new ArgumentNullException(nameof(resolverContext));
             ITagKey registrationKey = new TagKey(resolverContext.RegistrationKey);
-            var contractKeys = resolverContext.Key.ContractKeys.Select(i => i.GenericTypeArguments).SelectMany(i => i).Select(i => (IContractKey)new ContractKey(i, true)).ToArray();
-            var tagKeys = Enumerable.Repeat(registrationKey, 1).ToArray();
-            return new CompositeKey(contractKeys, tagKeys, EmptyStateKeys);
+            var contractKeys = resolverContext.Key.ContractKeys.Select(i => i.GenericTypeArguments).SelectMany(i => i).Select(i => (IContractKey)new ContractKey(i, true));
+            var tagKeys = Enumerable.Repeat(registrationKey, 1);
+            return new CompositeKey(contractKeys, tagKeys, Enumerable.Empty<IStateKey>());
         }
 
         private class Lifetime: ILifetime

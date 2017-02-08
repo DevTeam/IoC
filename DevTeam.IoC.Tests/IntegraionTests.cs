@@ -34,6 +34,20 @@
         }
 
         [Test]
+        public void SimplePerformanceTest()
+        {
+            using (var rootContainer = new Container("root"))
+            using (rootContainer.Configure().DependsOn(Wellknown.Features.Default).Apply())
+            using (rootContainer.Register().Contract<ISimpleService>().AsAutowiring<SimpleService>())
+            {
+                for (var i = 0; i < 10000; i++)
+                {
+                    rootContainer.Resolve().Instance<ISimpleService>();
+                }
+            }
+        }
+
+        [Test]
         public void TestWhenJsonConfiguration()
         {
             var eventsConfigurationFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "EventsConfiguration.json");
@@ -64,7 +78,7 @@
 
         [Test]
         [Repeat(5)]
-        public void ResolvePerfomanceTest()
+        public void ResolvePerformanceTest()
         {
             using (var rootResolver = new Container("root"))
             using (rootResolver
@@ -72,12 +86,12 @@
                 .DependsOn(Wellknown.Features.Default)
                 .Apply())
             {
-                PerfomanceTest(rootResolver, 1000);
+                PerformanceTest(rootResolver, 1000);
             }
         }
 
         [Test]
-        public void ConfigurePerfomanceTest()
+        public void ConfigurePerformanceTest()
         {
             using (var rootResolver = new Container("root"))
             using (rootResolver
@@ -87,12 +101,12 @@
             {
                 for (var i = 0; i < 100; i++)
                 {
-                    PerfomanceTest(rootResolver, 5);
+                    PerformanceTest(rootResolver, 10);
                 }
             }
         }
 
-        private static void PerfomanceTest(IResolver rootResolver, int ticks)
+        private static void PerformanceTest(IResolver rootResolver, int ticks)
         {
             using (var childContainer = rootResolver.CreateChild())
             using (childContainer
@@ -109,6 +123,10 @@
                     timerManager.Tick();
                 }
             }
+        }
+
+        private class SimpleService : ISimpleService
+        {
         }
     }
 }

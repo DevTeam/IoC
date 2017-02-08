@@ -176,8 +176,8 @@
             {
                 _compositeKey = KeyFactory.CreateCompositeKey(
                     _genericContractKeys.Count > 0 ? _genericContractKeys.OrderBy(i => i.ContractType.FullName).ToArray() : EmptyContractKeys,
-                    _tagKeys.Count > 0 ? _tagKeys.OrderBy(i => i.Tag).ToArray() : EmptyTagKeys,
-                    _stateKeys.Count > 0 ? _stateKeys.OrderBy(i => i.Index).ToArray() : EmptyStateKeys);
+                    _tagKeys.OrderBy(i => i.Tag),
+                    _stateKeys.OrderBy(i => i.Index));
             }
 
             return _compositeKey;

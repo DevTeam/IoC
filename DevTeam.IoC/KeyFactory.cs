@@ -1,16 +1,16 @@
 ﻿namespace DevTeam.IoC
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Contracts;
 
     internal class KeyFactory: IKeyFactory
     {
-        public ICompositeKey CreateCompositeKey(IContractKey[] contractKey, ITagKey[] tagKeys, IStateKey[] stateKeys)
+        public ICompositeKey CreateCompositeKey(IEnumerable<IContractKey> contractKey, IEnumerable<ITagKey> tagKeys = null, IEnumerable<IStateKey> stateKeys = null)
         {
             if (contractKey == null) throw new ArgumentNullException(nameof(contractKey));
-            if (tagKeys == null) throw new ArgumentNullException(nameof(tagKeys));
-            if (stateKeys == null) throw new ArgumentNullException(nameof(stateKeys));
-            return new CompositeKey(contractKey, tagKeys, stateKeys);
+            return new CompositeKey(contractKey, tagKeys ?? Enumerable.Empty<ITagKey>(), stateKeys ?? Enumerable.Empty<IStateKey>());
         }
 
         public IContractKey CreateContractKey(Type contractType, bool toResolve)

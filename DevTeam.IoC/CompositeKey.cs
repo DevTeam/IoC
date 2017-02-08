@@ -9,23 +9,24 @@
     internal class CompositeKey: ICompositeKey
     {
         private readonly int _baseHashCode;
-        private readonly IContractKey[] _contractKeys;
 
         public CompositeKey(
-            [NotNull] IContractKey[] contractKey,
-            [NotNull] ITagKey[] tagKeys,
-            [NotNull] IStateKey[] stateKeys)
+            [NotNull] IEnumerable<IContractKey> contractKey,
+            [NotNull] IEnumerable<ITagKey> tagKeys,
+            [NotNull] IEnumerable<IStateKey> stateKeys)
         {
             if (contractKey == null) throw new ArgumentNullException(nameof(contractKey));
             if (tagKeys == null) throw new ArgumentNullException(nameof(tagKeys));
             if (stateKeys == null) throw new ArgumentNullException(nameof(stateKeys));
-            ContractKeys = contractKey;
-            TagKeys = tagKeys;
-            StateKeys = stateKeys;
-            _contractKeys = contractKey.OrderBy(i => i.ContractType.FullName).ToArray();
+            var tagKeysGroupedByType = (
+                from tagKey in tagKeys
+                group tagKey by tagKey.Tag.GetType()).OrderBy(i => i.Key.FullName);
+            TagKeys = tagKeysGroupedByType.Select(i => i.OrderBy(j => j)).SelectMany(i => i).ToArray();
+            StateKeys = stateKeys.OrderBy(i => i.Index).ToArray();
+            ContractKeys = contractKey.OrderBy(i => i.ContractType.FullName).ToArray();
             unchecked
             {
-                _baseHashCode = _contractKeys.Aggregate(1, (code, key) =>
+                _baseHashCode = ContractKeys.Aggregate(1, (code, key) =>
                 {
                     unchecked
                     {
@@ -81,8 +82,8 @@
         {
             var filter = KeyFilterContext.Current;
             return
-                _contractKeys.Length == other._contractKeys.Length
-                && _contractKeys.SequenceEqual(other._contractKeys)
+                ContractKeys.Length == other.ContractKeys.Length
+                && ContractKeys.SequenceEqual(other.ContractKeys)
                 && (filter.Filter(typeof(ITagKey)) || TagKeys.SequenceEqual(other.TagKeys))
                 && (filter.Filter(typeof(IStateKey)) || StateKeys.SequenceEqual(other.StateKeys));
         }

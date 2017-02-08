@@ -1,12 +1,13 @@
 ﻿namespace DevTeam.IoC.Contracts
 {
     using System;
+    using System.Collections.Generic;
 
     [PublicAPI]
     public interface IKeyFactory
     {
         [NotNull]
-        ICompositeKey CreateCompositeKey([NotNull] IContractKey[] contractKey, [NotNull] ITagKey[] tagKeys, [NotNull] IStateKey[] stateKeys);
+        ICompositeKey CreateCompositeKey([NotNull] IEnumerable<IContractKey> contractKey, [CanBeNull] IEnumerable<ITagKey> tagKeys = null, [CanBeNull] IEnumerable<IStateKey> stateKeys = null);
 
         [NotNull]
         IContractKey CreateContractKey([NotNull] Type contractType, bool toResolve);
