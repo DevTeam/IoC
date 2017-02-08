@@ -17,6 +17,7 @@
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             yield return LifetimesFeature.Shared;
+            yield return ChildContainersFeature.Shared;
         }
 
         public IEnumerable<IDisposable> Apply(IResolver resolver)
@@ -40,7 +41,17 @@
                 .Register()
                 .State<string>(0)
                 .Contract<IConfigurationDescriptionDto>()
-                .AsFactoryMethod(ctx => new ConfigurationDescriptionDto(ctx.GetState<string>(0)));
+                .AsFactoryMethod(ctx =>
+                    {
+                        var description = ctx.GetState<string>(0);
+                        if (string.IsNullOrWhiteSpace(description))
+                        {
+                            throw new InvalidOperationException("Empty description is not allowed.");
+                        }
+
+                        // ReSharper disable once AssignNullToNotNullAttribute
+                        return new ConfigurationDescriptionDto(description);
+                    });
         }
     }
 }

@@ -5,11 +5,11 @@
 
     using Contracts;
 
-    internal class ChildrenContainersFeature: IConfiguration
+    internal class ChildContainersFeature: IConfiguration
     {
-        public static readonly IConfiguration Shared = new ChildrenContainersFeature();
+        public static readonly IConfiguration Shared = new ChildContainersFeature();
 
-        private ChildrenContainersFeature()
+        private ChildContainersFeature()
         {
         }
 

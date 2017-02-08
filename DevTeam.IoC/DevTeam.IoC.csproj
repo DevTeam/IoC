@@ -91,7 +91,7 @@
     <Compile Include="ScopesFeature.cs" />
     <Compile Include="SingletonLifetime.cs" />
     <Compile Include="StateKey.cs" />
-    <Compile Include="ChildrenContainersFeature.cs" />
+    <Compile Include="ChildContainersFeature.cs" />
     <Compile Include="StaticContractKey.cs" />
     <Compile Include="TagKey.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -12,6 +12,8 @@
     {
         private readonly IConfigurationDto _configurationDto;
 
+        internal IConfigurationDto ConfigurationDto => _configurationDto;
+
         public ConfigurationDtoAdapter([State] IConfigurationDto configurationDto)
         {
             if (configurationDto == null) throw new ArgumentNullException(nameof(configurationDto));
@@ -54,9 +56,12 @@
                         throw new Exception($"Invalid configuration type {configurationType}");
                     }
 
-                    var childContainer = resolver.CreateChild();
-                    childContainer.Register().Contract<IConfiguration>().AsAutowiring(configurationType);
-                    yield return childContainer.Resolve().Instance<IConfiguration>();
+                    using (var childContainer = resolver.CreateChild())
+                    {
+                        childContainer.Register().Contract<IConfiguration>().AsAutowiring(configurationType);
+                        yield return childContainer.Resolve().Instance<IConfiguration>();
+                    }
+
                     continue;
                 }
 

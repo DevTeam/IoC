@@ -101,7 +101,7 @@
                 .Register()
                 .Tag(Wellknown.Features.ChildContainers)
                 .Contract<IConfiguration>()
-                .AsFactoryMethod(ctx => ChildrenContainersFeature.Shared);
+                .AsFactoryMethod(ctx => ChildContainersFeature.Shared);
 
             yield return
                 container
@@ -151,6 +151,13 @@
                 .Tag(Wellknown.Features.Dto)
                 .Contract<IConfiguration>()
                 .AsFactoryMethod(ctx => DtoFeature.Shared);
+
+            yield return
+                container
+                .Register()
+                .Tag(Wellknown.Features.Tasks)
+                .Contract<IConfiguration>()
+                .AsFactoryMethod(ctx => TasksFeature.Shared);
         }
 
         public override int GetHashCode()

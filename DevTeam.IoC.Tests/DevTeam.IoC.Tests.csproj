@@ -68,6 +68,7 @@
     <Compile Include="CacheTests.cs" />
     <Compile Include="CompositeDisposableTests.cs" />
     <Compile Include="CompositeKeyTests.cs" />
+    <Compile Include="ConfigurationDtoAdapterTests.cs" />
     <Compile Include="ContractKeyTests.cs" />
     <Compile Include="PerformanceTests.cs" />
     <Compile Include="JsonConfigurationTests.cs" />
