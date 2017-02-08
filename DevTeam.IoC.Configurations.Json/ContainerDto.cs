@@ -9,5 +9,8 @@
     {
         [JsonProperty("container", Required = Required.Always)]
         public IEnumerable<IConfigurationStatementDto> Statements { get; [NotNull] set; }
+
+        [JsonProperty("tag", Required = Required.Default)]
+        public ITagDto Tag { get; [NotNull] set; }
     }
 }

@@ -31,6 +31,8 @@
                     typeof(LifetimeDto),
                     typeof(KeyComparerDto),
                     typeof(StateDto)),
+                new JsonDerivedTypeConverter<ITagDto>(
+                    typeof(TagDto)),
                 new JsonDerivedTypeConverter<IParameterDto>(typeof(ParameterDto)),
                 new JsonDerivedTypeConverter<IValueDto>(typeof(ValueDto)),
                 new JsonDerivedTypeConverter<IStateDto>(typeof(StateDto))

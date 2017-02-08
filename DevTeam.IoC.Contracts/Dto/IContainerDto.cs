@@ -6,5 +6,7 @@
     public interface IContainerDto : IConfigurationStatementDto
     {
         IEnumerable<IConfigurationStatementDto> Statements { [NotNull] get; }
+
+        ITagDto Tag { [CanBeNull] get; }
     }
 }

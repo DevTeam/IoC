@@ -24,6 +24,7 @@
             _typeResolver = new MyTypeResolver();
             var rootContainer = new Container();
             rootContainer.Configure().DependsOn(Wellknown.Features.Dto).Apply();
+            rootContainer.Configure().DependsOn(Wellknown.Features.Scopes).Apply();
             _container = rootContainer.CreateChild();
             _container.Register().Contract<ITypeResolver>().AsFactoryMethod(ctx => _typeResolver);
         }
@@ -51,7 +52,8 @@
 
             // When
             configurationDto.Add(new UsingDto { Using = "abc" });
-            configurationDto.Add(new ReferenceDto() { Reference = "xyz" });
+            configurationDto.Add(new ReferenceDto { Reference = "xyz" });
+            // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
             configuration.GetDependencies(_container).ToArray();
 
             // Then
@@ -116,6 +118,58 @@
             dependencies[0].ShouldBe(_container.Feature(feature));
         }
 
+        [Test]
+        public void ShouldApplyWhenUsingAndReferences()
+        {
+            // Given
+            var configurationDto = new ConfigurationDto();
+            var configuration = CreateInstance(configurationDto);
+
+            // When
+            configurationDto.Add(new UsingDto { Using = "abc" });
+            configurationDto.Add(new ReferenceDto { Reference = "xyz" });
+            // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+            configuration.Apply(_container).ToArray();
+
+            // Then
+            _typeResolver.UsingStatement.ShouldBe(new[] { "abc" });
+            _typeResolver.References.ShouldBe(new[] { "xyz" });
+        }
+
+        [Test]
+        public void ShouldApplyWhenChildContainer()
+        {
+            // Given
+            var configurationDto = new ConfigurationDto();
+            var configuration = CreateInstance(configurationDto);
+
+            // When
+            configurationDto.Add(
+                new ContainerDto
+                {
+                    Statements = new IConfigurationStatementDto[]
+                    {
+                        new RegisterDto
+                        {
+                            Keys = new IRegisterStatementDto []
+                            {
+                                new ContractDto { Contract = new []{ typeof(string).FullName }},
+                                new ScopeDto { Scope = Wellknown.Scopes.Global }
+                            },
+                            FactoryMethodName = $"{typeof(MyFactory).FullName}.{nameof(MyFactory.Create)}"
+                        }
+                    },
+                    Tag = new TagDto { Value = "10", TypeName = typeof(int).FullName }
+                });
+
+            // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+            configuration.Apply(_container).ToArray();
+            var registratioContainerName = _container.Resolve().Instance<string>();
+
+            // Then
+            registratioContainerName.ShouldBe("child");
+        }
+
         private ConfigurationDtoAdapter CreateInstance(IConfigurationDto configurationDto)
         {
             return new ConfigurationDtoAdapter(configurationDto);
@@ -161,6 +215,14 @@
             public IEnumerable<IDisposable> Apply(IResolver resolver)
             {
                 throw new NotImplementedException();
+            }
+        }
+
+        private static class MyFactory
+        {
+            public static string Create(IResolverContext ctx)
+            {
+                return ctx.RegistryContext.Container.Tag?.ToString() ?? "null";
             }
         }
     }

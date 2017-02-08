@@ -33,17 +33,17 @@
                     continue;
                 }
 
-                var usingStatementDto = configurationStatement as IUsingDto;
-                if (usingStatementDto != null)
+                var usingDto = configurationStatement as IUsingDto;
+                if (usingDto != null)
                 {
-                    typeResolver.AddUsingStatement(usingStatementDto.Using);
+                    typeResolver.AddUsingStatement(usingDto.Using);
                     continue;
                 }
 
-                var dependencyWellknownDto = configurationStatement as IDependencyFeatureDto;
-                if (dependencyWellknownDto != null)
+                var dependencyFeatureDto = configurationStatement as IDependencyFeatureDto;
+                if (dependencyFeatureDto != null)
                 {
-                    yield return resolver.Feature(dependencyWellknownDto.Feature);
+                    yield return resolver.Feature(dependencyFeatureDto.Feature);
                     continue;
                 }
 
@@ -101,20 +101,30 @@
                     continue;
                 }
 
-                var usingStatementDto = configurationStatement as IUsingDto;
-                if (usingStatementDto != null)
+                var usingDto = configurationStatement as IUsingDto;
+                if (usingDto != null)
                 {
-                    typeResolver.AddUsingStatement(usingStatementDto.Using);
+                    typeResolver.AddUsingStatement(usingDto.Using);
                     continue;
                 }
 
-                var createChildDto = configurationStatement as IContainerDto;
-                if (createChildDto != null)
+                var containerDto = configurationStatement as IContainerDto;
+                if (containerDto != null)
                 {
-                    foreach(var registration in Apply(resolver.CreateChild(), typeResolver, createChildDto.Statements))
+                    object containerTag = null;
+                    if (containerDto.Tag != null)
+                    {
+                        if (!TryGetTagValue(typeResolver, containerDto.Tag, out containerTag))
+                        {
+                            throw new Exception($"Invalid container tag {containerDto.Tag.Value}");
+                        }
+                    }
+
+                    foreach(var registration in Apply(resolver.CreateChild(containerTag), typeResolver, containerDto.Statements))
                     {
                         yield return registration;
                     }
+
                     continue;
                 }
 
