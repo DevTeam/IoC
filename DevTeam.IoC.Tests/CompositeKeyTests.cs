@@ -16,6 +16,7 @@
         private IStateKey _stateKey2;
         private ITagKey _tagKey1;
         private ITagKey _tagKey2;
+        private TagKey _tagKey3;
 
         [SetUp]
         public void SetUp()
@@ -27,6 +28,7 @@
             _stateKey2 = new StateKey(1, typeof(int));
             _tagKey1 = new TagKey("abc");
             _tagKey2 = new TagKey(33);
+            _tagKey3 = new TagKey("xyz");
         }
 
         [Test]
@@ -35,8 +37,8 @@
             // Given
 
             // When
-            var key1 = CreateInstance(new[] { _contractKey1, _contractKey2, _contractKey3 }, new[] { _tagKey1, _tagKey2 }, new[] { _stateKey1, _stateKey2 });
-            var key2 = CreateInstance(new[] { _contractKey1, _contractKey2, _contractKey3 }, new[] { _tagKey1, _tagKey2 }, new[] { _stateKey1, _stateKey2 });
+            var key1 = CreateInstance(new[] { _contractKey1, _contractKey2, _contractKey3 }, new[] { _tagKey1, _tagKey2, _tagKey3 }, new[] { _stateKey1, _stateKey2 });
+            var key2 = CreateInstance(new[] { _contractKey1, _contractKey2, _contractKey3 }, new[] { _tagKey1, _tagKey2, _tagKey3 }, new[] { _stateKey1, _stateKey2 });
 
             // Then
             key1.GetHashCode().ShouldBe(key2.GetHashCode());
@@ -49,8 +51,8 @@
             // Given
 
             // When
-            var key1 = CreateInstance(new[] { _contractKey2, _contractKey1, _contractKey3 }, new[] { _tagKey2, _tagKey1 }, new[] { _stateKey2, _stateKey1 });
-            var key2 = CreateInstance(new[] { _contractKey1, _contractKey2, _contractKey3 }, new[] { _tagKey1, _tagKey2 }, new[] { _stateKey1, _stateKey2 });
+            var key1 = CreateInstance(new[] { _contractKey2, _contractKey1, _contractKey3 }, new[] { _tagKey3, _tagKey2, _tagKey1 }, new[] { _stateKey2, _stateKey1 });
+            var key2 = CreateInstance(new[] { _contractKey1, _contractKey2, _contractKey3 }, new[] { _tagKey1, _tagKey3, _tagKey2 }, new[] { _stateKey1, _stateKey2 });
 
             // Then
             key1.GetHashCode().ShouldBe(key2.GetHashCode());

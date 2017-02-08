@@ -202,6 +202,119 @@
             registrationContainerName.ShouldBe("abc");
         }
 
+        [Test]
+        public void ShouldApplyWhenRegisterAutowiringTypeName()
+        {
+            // Given
+            var configurationDto = new ConfigurationDto();
+            var configuration = CreateInstance(configurationDto);
+
+            // When
+            configurationDto.Add(
+                new RegisterDto
+                {
+                    Keys = new IRegisterStatementDto[]
+                    {
+                        new ContractDto { Contract = new []{ typeof(ISimpleService).FullName }}
+                    },
+                    AutowiringTypeName = typeof(SimpleService).FullName
+                });
+
+            // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+            configuration.Apply(_container).ToArray();
+            var instance = _container.Resolve().Instance<ISimpleService>();
+
+            // Then
+            instance.ShouldBeOfType<SimpleService>();
+        }
+
+        [Test]
+        public void ShouldApplyWhenRegisterUsingContract()
+        {
+            // Given
+            var configurationDto = new ConfigurationDto();
+            var configuration = CreateInstance(configurationDto);
+
+            // When
+            configurationDto.Add(
+                new RegisterDto
+                {
+                    Keys = new IRegisterStatementDto[]
+                    {
+                        new ContractDto { Contract = new []{ typeof(ISimpleService).FullName, typeof(IDisposable).FullName }}
+                    },
+                    AutowiringTypeName = typeof(SimpleService).FullName
+                });
+
+            // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+            configuration.Apply(_container).ToArray();
+            var instance = _container.Resolve().Contract(typeof(IDisposable), typeof(ISimpleService)).Instance<ISimpleService>();
+
+            // Then
+            instance.ShouldBeOfType<SimpleService>();
+        }
+
+        [Test]
+        public void ShouldApplyWhenRegisterUsingTags()
+        {
+            // Given
+            var configurationDto = new ConfigurationDto();
+            var configuration = CreateInstance(configurationDto);
+
+            // When
+            configurationDto.Add(
+                new RegisterDto
+                {
+                    Keys = new IRegisterStatementDto[]
+                    {
+                        new ContractDto { Contract = new []{ typeof(ISimpleService).FullName }},
+                        new TagDto { Value = "abc" },
+                        new TagDto { Value = "33", TypeName = typeof(int).FullName },
+                        new TagDto { Value = "xyz", TypeName = typeof(string).FullName }
+                    },
+                    AutowiringTypeName = typeof(SimpleService).FullName
+                });
+
+            // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+            configuration.Apply(_container).ToArray();
+            var instance1 = _container.Resolve().Tag("abc").Tag("xyz").Tag(33).Instance<ISimpleService>();
+            var instance2 = _container.Resolve().Tag(33).Tag("abc").Tag("xyz").Instance<ISimpleService>();
+            var instance3 = _container.Resolve().Tag("xyz").Tag(33).Tag("abc").Instance<ISimpleService>();
+
+            // Then
+            instance1.ShouldBeOfType<SimpleService>();
+            instance2.ShouldBeOfType<SimpleService>();
+            instance3.ShouldBeOfType<SimpleService>();
+        }
+
+        [Test]
+        public void ShouldApplyWhenRegisterUsingState()
+        {
+            // Given
+            var configurationDto = new ConfigurationDto();
+            var configuration = CreateInstance(configurationDto);
+
+            // When
+            configurationDto.Add(
+                new RegisterDto
+                {
+                    Keys = new IRegisterStatementDto[]
+                    {
+                        new ContractDto { Contract = new []{ typeof(ISimpleService).FullName }},
+                        new TagDto { Value = "abc" },
+                        new StateDto { Index = 0, StateTypeName = typeof(string).FullName } 
+                    },
+                    AutowiringTypeName = typeof(SimpleService).FullName
+                });
+
+            // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+            configuration.Apply(_container).ToArray();
+            var instance = _container.Resolve().Tag("abc").State<string>(0).Instance<ISimpleService>("xyz");
+
+            // Then
+            instance.ShouldBeOfType<SimpleService>();
+        }
+
         private ConfigurationDtoAdapter CreateInstance(IConfigurationDto configurationDto)
         {
             return new ConfigurationDtoAdapter(configurationDto);
@@ -257,9 +370,18 @@
                 return ctx.RegistryContext.Container.Tag?.ToString() ?? "null";
             }
 
+            // ReSharper disable once UnusedParameter.Local
             public static string CreateAbcString(IResolverContext ctx)
             {
                 return "abc";
+            }
+        }
+
+        private class SimpleService : ISimpleService, IDisposable
+        {
+            public void Dispose()
+            {
+                throw new NotImplementedException();
             }
         }
     }

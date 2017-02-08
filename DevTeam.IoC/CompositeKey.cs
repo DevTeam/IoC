@@ -21,7 +21,7 @@
             var tagKeysGroupedByType = (
                 from tagKey in tagKeys
                 group tagKey by tagKey.Tag.GetType()).OrderBy(i => i.Key.FullName);
-            TagKeys = tagKeysGroupedByType.Select(i => i.OrderBy(j => j)).SelectMany(i => i).ToArray();
+            TagKeys = tagKeysGroupedByType.Select(i => i.OrderBy(j => j.Tag)).SelectMany(i => i).ToArray();
             StateKeys = stateKeys.OrderBy(i => i.Index).ToArray();
             ContractKeys = contractKey.OrderBy(i => i.ContractType.FullName).ToArray();
             unchecked

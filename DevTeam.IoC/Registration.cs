@@ -171,10 +171,7 @@
             foreach (var contractKeys in _contractKeys)
             {
                 var generics = contractKeys.OrderBy(i => i.ContractType.FullName);
-                _compositeKeys.Add(KeyFactory.CreateCompositeKey(
-                    generics,
-                    _tagKeys.OrderBy(i => i.Tag),
-                    _stateKeys.OrderBy(i => i.Index)));
+                _compositeKeys.Add(KeyFactory.CreateCompositeKey(generics, _tagKeys, _stateKeys));
             }
 
             _contractKeys.Clear();
