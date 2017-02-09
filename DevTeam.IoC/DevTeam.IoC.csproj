@@ -44,6 +44,8 @@
     <Compile Include="CacheFeature.cs" />
     <Compile Include="ConfigurationDescriptionDto.cs" />
     <Compile Include="ConfigurationDtoAdapter.cs" />
+    <Compile Include="ConfigurationFromAssembly.cs" />
+    <Compile Include="ConfigurationFromDto.cs" />
     <Compile Include="IWeakReference.cs" />
     <Compile Include="ManualMetadataProvider.cs" />
     <Compile Include="ParameterMetadata.cs" />

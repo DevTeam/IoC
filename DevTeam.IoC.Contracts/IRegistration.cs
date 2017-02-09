@@ -18,6 +18,12 @@
         IDisposable AsAutowiring<TImplementation>();
 
         [NotNull]
+        IRegistration Attributes([NotNull] Type implementationType);
+
+        [NotNull]
+        IRegistration Attributes<TImplementation>();
+
+        [NotNull]
         IRegistration Lifetime(Wellknown.Lifetimes lifetime);
 
         [NotNull]

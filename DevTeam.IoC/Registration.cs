@@ -24,6 +24,17 @@
 
         private List<IExtension> Extensions { get; } = new List<IExtension>();
 
+        public IRegistration Attributes(Type implementationType)
+        {
+            ExtractMetadata(implementationType);
+            return this;
+        }
+
+        public IRegistration Attributes<TImplementation>()
+        {
+            return Attributes(typeof(TImplementation));
+        }
+
         public override IRegistration Contract(params Type[] contractTypes)
         {
             if (contractTypes == null) throw new ArgumentNullException(nameof(contractTypes));

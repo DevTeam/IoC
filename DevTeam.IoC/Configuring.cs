@@ -4,8 +4,8 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using Contracts;
-    using Contracts.Dto;
 
     internal class Configuring : IConfiguring
     {
@@ -22,6 +22,7 @@
         public IConfiguring DependsOn(params IConfiguration[] configurations)
         {
             if (configurations == null) throw new ArgumentNullException(nameof(configurations));
+            if (configurations.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(configurations));
             _configurations.Add(new HashSet<IConfiguration>(configurations));
             return this;
         }
@@ -34,7 +35,8 @@
         public IConfiguring DependsOn(params Wellknown.Features[] features)
         {
             if (features == null) throw new ArgumentNullException(nameof(features));
-            _configurations.Add(new HashSet<IConfiguration>(features.Select(wellknownConfiguration => _resolver.Resolve().Tag(wellknownConfiguration).Instance<IConfiguration>())));
+            if (features.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(features));
+            _configurations.Add(new HashSet<IConfiguration>(features.Distinct().Select(wellknownConfiguration => _resolver.Resolve().Tag(wellknownConfiguration).Instance<IConfiguration>())));
             return this;
         }
 
@@ -54,6 +56,14 @@
             if (description == null) throw new ArgumentNullException(nameof(description));
             if (string.IsNullOrWhiteSpace(description)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(description));
             return DependsOn(typeof(TConfiguration), description);
+        }
+
+        public IConfiguring DependsOn([NotNull] params Assembly[] assemblies)
+        {
+            if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
+            if (assemblies.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(assemblies));
+            DependsOn(assemblies.Distinct().Select(assembly => (IConfiguration)new ConfigurationFromAssembly(assembly)).ToArray());
+            return this;
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -99,49 +109,6 @@
                         yield return disposable;
                     }
                 }
-            }
-        }
-
-        private class ConfigurationFromDto: IConfiguration
-        {
-            private readonly IResolver _resolver;
-            private readonly Type _configurationType;
-            private readonly Lazy<IConfiguration> _configuration;
-
-            public ConfigurationFromDto(
-                [NotNull] IResolver resolver,
-                [NotNull] Type configurationType,
-                [NotNull] string description)
-            {
-                if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-                if (configurationType == null) throw new ArgumentNullException(nameof(configurationType));
-                if (string.IsNullOrWhiteSpace(description)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(description));
-                _resolver = resolver;
-                _configurationType = configurationType;
-                _configuration = new Lazy<IConfiguration>(() => CreateConfiguration(description));
-            }
-
-            private IConfiguration CreateConfiguration([NotNull] string description)
-            {
-                if (string.IsNullOrWhiteSpace(description)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(description));
-                var configurationDescriptionDto = _resolver.Resolve().State<string>(0).Instance<IConfigurationDescriptionDto>(description);
-                var configurationDto = _resolver.Resolve().Tag(_configurationType).State<IConfigurationDescriptionDto>(0).Instance<IConfigurationDto>(configurationDescriptionDto);
-                return _resolver.Resolve().State<IConfigurationDto>(0).Instance<IConfiguration>(configurationDto);
-            }
-
-            public IEnumerable<IConfiguration> GetDependencies(IResolver resolver)
-            {
-                if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-                foreach (var dependency in _configuration.Value.GetDependencies(resolver))
-                {
-                    yield return dependency;
-                }
-            }
-
-            public IEnumerable<IDisposable> Apply(IResolver resolver)
-            {
-                if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-                return _configuration.Value.Apply(resolver);
             }
         }
     }

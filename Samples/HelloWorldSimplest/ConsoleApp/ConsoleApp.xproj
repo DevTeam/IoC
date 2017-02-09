@@ -16,7 +16,6 @@
     <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\DevTeam.IoC.Configurations.Json\DevTeam.IoC.Configurations.Json.csproj" />
     <ProjectReference Include="..\..\..\DevTeam.IoC.Contracts\DevTeam.IoC.Contracts.csproj" />
     <ProjectReference Include="..\..\..\DevTeam.IoC\DevTeam.IoC.csproj" />
   </ItemGroup>

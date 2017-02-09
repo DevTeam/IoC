@@ -18,9 +18,6 @@
             "DevTeam.IoC": {
                 "target": "project"
             },
-            "DevTeam.IoC.Configurations.Json": {
-                "target": "project"
-            },
             "DevTeam.IoC.Contracts": {
                 "target": "project"
             }

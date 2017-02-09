@@ -1,9 +1,8 @@
 ﻿namespace ConsoleApp
 {
-    using System.IO;
+    using System.Reflection;
     using ClassLibrary;
     using DevTeam.IoC;
-    using DevTeam.IoC.Configurations.Json;
     using DevTeam.IoC.Contracts;
 
     [Contract(typeof(Program))]
@@ -11,11 +10,10 @@
     {
         public static void Main()
         {
-            var iocJson = File.ReadAllText("IoC.json");
-
-            // Create the root container and apply the configuration from the json string
             using (var container = new Container())
-            using (container.Configure().DependsOn<JsonConfiguration>(iocJson).Apply())
+            using (container.Configure().DependsOn(
+                Assembly.GetEntryAssembly(),
+                Assembly.Load(new AssemblyName("ClassLibrary"))).Apply())
             {
                 container.Resolve().Instance<Program>();
             }

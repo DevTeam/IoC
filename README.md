@@ -16,11 +16,10 @@ Here is just one simplest example [_Hellow World Simplest_](https://github.com/D
     {
         public static void Main()
         {
-            var iocJson = File.ReadAllText("IoC.json");
-
-            // Create the root container and apply the configuration from the json string
             using (var container = new Container())
-            using (container.Configure().DependsOn<JsonConfiguration>(iocJson).Apply())
+            using (container.Configure().DependsOn(
+                Assembly.GetEntryAssembly(),
+                Assembly.Load(new AssemblyName("ClassLibrary"))).Apply())
             {
                 container.Resolve().Instance<Program>();
             }
@@ -31,20 +30,6 @@ Here is just one simplest example [_Hellow World Simplest_](https://github.com/D
             helloWorld.SayHello();
         }
     }
-```
-
-[IoC.json file](https://github.com/DevTeam/IoC/tree/master/Samples/HelloWorldSimplest/ConsoleApp/IoC.json):
-```json
-[
-    { "reference": "ClassLibrary" },
-    { "reference": "ConsoleApp" },
-    { "using": "ClassLibrary" },
-    { "using": "ConsoleApp" },
-
-    { "autowiring": "Console" },
-    { "autowiring": "HelloWorld" },
-    { "autowiring": "Program" }
-]
 ```
 
 [**Contracts**](https://github.com/DevTeam/IoC/tree/master/Samples/HelloWorldSimplest/ClassLibrary):
