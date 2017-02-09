@@ -9,24 +9,24 @@
 
     { "dependency.feature": "Default" },
 
-    { "register": [ { "contract": [ "IName<>" ] } ], "asAutowiring": "Name<>" },
+    { "register": [ { "contract": [ "IName<>" ] } ], "autowiring": "Name<>" },
 
-    { "register": [ { "contract": [ "ILogger<>" ] } ], "asAutowiring": "Logger<>" },
+    { "register": [ { "contract": [ "ILogger<>" ] } ], "autowiring": "Logger<>" },
 
     {
         "register": [ { "stateType": "DateTimeOffset" }, { "contract": [ "Event<DateTimeOffset>" ] } ],
-        "asAutowiring": "Event<DateTimeOffset>",
+        "autowiring": "Event<DateTimeOffset>",
         "constructor": [
             { "paramType": "ILogger<Event<DateTimeOffset>>" },
             { "paramType": "DateTimeOffset", "state": { "stateType": "DateTimeOffset" } }
         ]
     },
 
-    { "register": [ { "contract": [ "IEventConsumer<Event<DateTimeOffset>>" ] } ], "asAutowiring": "Chronometer" },
+    { "register": [ { "contract": [ "IEventConsumer<Event<DateTimeOffset>>" ] } ], "autowiring": "Chronometer" },
 
     {
         "register": [ { "contract": [ "IEventProducer<Event<DateTimeOffset>>" ] } ],
-        "asAutowiring": "Timer",
+        "autowiring": "Timer",
         "constructor": [
             { "paramType": "ILogger<Timer>" },
             { "paramType": "Func<DateTimeOffset, Event<DateTimeOffset>>" },
@@ -36,6 +36,6 @@
 
     {
         "register": [ { "lifetime": "Singleton" }, { "lifetime": "AutoDisposing" }, { "contract": [ "IEventBroker" ] } ],
-        "asAutowiring": "EventBroker<Event<DateTimeOffset>>"
+        "autowiring": "EventBroker<Event<DateTimeOffset>>"
     }
 ]

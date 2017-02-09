@@ -3,6 +3,6 @@
 
     { "using": "ClassLibrary" },
 
-    { "register": [ { "contract": [ "IConsole" ] } ], "asAutowiring": "Console" },
-    { "register": [ { "contract": [ "IHelloWorld" ] } ], "asAutowiring": "HelloWorld" }
+    { "register": [ { "contract": [ "IConsole" ] } ], "autowiring": "Console" },
+    { "register": [ { "contract": [ "IHelloWorld" ] } ], "autowiring": "HelloWorld" }
 ]

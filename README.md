@@ -6,33 +6,44 @@ Why it would be preferable to use this implementation?
 
 Because it has many outstanding [features](https://github.com/DevTeam/IoC/wiki/Features), just look at [these samples](https://github.com/DevTeam/IoC/wiki/Samples) and use these [<img src="https://www.nuget.org/Content/Logos/nugetlogo.png" height="18"> packages](https://github.com/DevTeam/IoC/wiki/NuGet-packages) to make your code more efficient. See [Wiki](https://github.com/DevTeam/IoC/wiki) for details.
 
-Here is just one simplest example [_Hellow World_](https://github.com/DevTeam/IoC/tree/master/Samples/HelloWorld):
+Here is just one simplest example [_Hellow World Simplest_](https://github.com/DevTeam/IoC/tree/master/Samples/HelloWorldSimplest):
 
 **The entry point**:
 
 ```csharp
-// Create the root container
-using (var container = new Container())
-// Appply the configuration from the json string
-using (container.Configure().DependsOn<JsonConfiguration>(jsonConfigStr).Apply())
-{
-  // Resolve an instance implementing the interface "IHelloWorld"
-  var helloWorld = container.Resolve().Instance<IHelloWorld>();
-  
-  // Run method to say "Hello"
-  helloWorld.SayHello();
-}
+    [Contract(typeof(Program))]
+    public class Program
+    {
+        public static void Main()
+        {
+            var iocJson = File.ReadAllText("IoC.json");
+
+            // Create the root container and apply the configuration from the json string
+            using (var container = new Container())
+            using (container.Configure().DependsOn<JsonConfiguration>(iocJson).Apply())
+            {
+                container.Resolve().Instance<Program>();
+            }
+        }
+
+        public Program(IHelloWorld helloWorld)
+        {
+            helloWorld.SayHello();
+        }
+    }
 ```
 
-The **Json configuration** jsonConfigStr:
+[_IoC.json_file](https://github.com/DevTeam/IoC/tree/master/Samples/HelloWorldSimplest/ConsoleApp/IoC.json):
 ```json
 [
     { "reference": "ClassLibrary" },
-
+    { "reference": "ConsoleApp" },
     { "using": "ClassLibrary" },
+    { "using": "ConsoleApp" },
 
-    { "register": [ { "contract": [ "IConsole" ] } ], "asAutowiring": "Console" },
-    { "register": [ { "contract": [ "IHelloWorld" ] } ], "asAutowiring": "HelloWorld" }
+    { "autowiring": "Console" },
+    { "autowiring": "HelloWorld" },
+    { "autowiring": "Program" }
 ]
 ```
 
@@ -59,6 +70,7 @@ namespace ClassLibrary
     using System;
 
     // Has no any dependencies
+    [Contract(typeof(IConsole))]
     internal class Console : IConsole
     {
         public void WriteLine(string line)
@@ -68,6 +80,7 @@ namespace ClassLibrary
     }
 
     // Has the only one dependency implementing interface "IConsole"
+    [Contract(typeof(IHelloWorld))]
     internal class HelloWorld : IHelloWorld
     {
         private readonly IConsole _console;

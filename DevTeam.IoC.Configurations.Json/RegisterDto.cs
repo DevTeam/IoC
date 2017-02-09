@@ -11,13 +11,13 @@
         [JsonProperty("register", Required = Required.Default)]
         public IEnumerable<IRegisterStatementDto> Keys { get; [CanBeNull] set; }
 
-        [JsonProperty("asAutowiring", Required = Required.Default)]
+        [JsonProperty("autowiring", Required = Required.Default)]
         public string AutowiringTypeName { get; [CanBeNull] set; }
 
         [JsonProperty("constructor", Required = Required.Default)]
         public IEnumerable<IParameterDto> ConstructorParameters { get; [CanBeNull] set; }
 
-        [JsonProperty("asFactoryMethod", Required = Required.Default)]
+        [JsonProperty("factoryMethod", Required = Required.Default)]
         public string FactoryMethodName { get; [CanBeNull] set; }
     }
 }

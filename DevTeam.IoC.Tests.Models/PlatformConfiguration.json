@@ -9,12 +9,12 @@
 
     {
         "register": [ { "lifetime": "Singleton" }, { "contract": [ "ITrace" ] } ],
-        "asAutowiring": "Trace"
+        "autowiring": "Trace"
     },
 
     {
         "register": [ { "lifetime": "Singleton" }, { "contract": [ "IConsole" ] } ],
-        "asAutowiring": "Console",
+        "autowiring": "Console",
         "constructor": [
             { "paramType": "IProvider<ITrace>" }
         ]
@@ -22,14 +22,14 @@
 
     {
         "register": [ { "lifetime": "Singleton" }, { "contract": [ "ITimer" ] }, { "contract": [ "ITimerManager" ] } ],
-        "asAutowiring": "Timer",
+        "autowiring": "Timer",
         "constructor": [
             { "paramType": "ILog", "dependency": [ { "stateType": "string", "index": "0", "value": { "valueType": "string", "data": "Abc" } } ] }
         ]
     },
 
     {
-        "asAutowiring": "Log",
+        "autowiring": "Log",
         "constructor": [
             { "paramType": "IConsole", "dependency": [ { "contract": [] } ] },
             { "paramType": "string", "state": { "stateType": "string" } }
