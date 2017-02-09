@@ -26,6 +26,8 @@
         [NotNull]
         IConfiguring<T> DependsOn(params Assembly[] assemblies);
 
+        IConfiguring<T> Register([NotNull] Func<IRegistration, IDisposable> registration);
+
         [NotNull]
         IConfiguredResolver Apply();
     }

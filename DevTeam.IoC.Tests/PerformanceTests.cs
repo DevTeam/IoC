@@ -38,8 +38,8 @@
             using (var rootContainer = new Container("root")
                 .Configure()
                 .DependsOn(Wellknown.Features.Default)
+                .Register(r => r.Contract<ISimpleService>().AsAutowiring<SimpleService>())
                 .Apply())
-            using (rootContainer.Register().Contract<ISimpleService>().AsAutowiring<SimpleService>())
             {
                 for (var i = 0; i < 10000; i++)
                 {
@@ -54,24 +54,20 @@
             var eventsConfigurationFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "EventsConfiguration.json");
             var json = File.ReadAllText(eventsConfigurationFile);
             ITrace trace;
-            using (var container = new Container("root"))
+            using (var container = new Container("root")
+                .Configure()
+                .Register(r => r.Contract<IReferenceDescriptionResolver>().AsFactoryMethod<IReferenceDescriptionResolver>(ctx => new ReferenceDescriptionResolver()))
+                .DependsOn(Wellknown.Features.Default)
+                .DependsOn<JsonConfiguration>(json)
+                .Apply())
             {
-                container.Register().Contract<IReferenceDescriptionResolver>().AsFactoryMethod<IReferenceDescriptionResolver>(ctx => new ReferenceDescriptionResolver());
+                var eventRegistry = container.Resolve().Instance<IEventRegistry>();
+                eventRegistry.RegisterEvent<DateTimeOffset>();
 
-                using (container
-                    .Configure()
-                    .DependsOn(Wellknown.Features.Default)
-                    .DependsOn<JsonConfiguration>(json)
-                    .Apply())
-                {
-                    var eventRegistry = container.Resolve().Instance<IEventRegistry>();
-                    eventRegistry.RegisterEvent<DateTimeOffset>();
+                var timerManager = container.Resolve().Instance<ITimerManager>();
+                timerManager.Tick();
 
-                    var timerManager = container.Resolve().Instance<ITimerManager>();
-                    timerManager.Tick();
-
-                    trace = container.Resolve().Instance<ITrace>();
-                }
+                trace = container.Resolve().Instance<ITrace>();
             }
 
             trace.Output.Count.ShouldBe(24);

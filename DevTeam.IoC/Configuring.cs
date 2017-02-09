@@ -13,6 +13,7 @@
         private readonly T _resolver;
         private readonly List<HashSet<IConfiguration>> _configurations = new List<HashSet<IConfiguration>>();
         private readonly HashSet<IConfiguration> _appliedConfigurations = new HashSet<IConfiguration>();
+        private readonly List<IDisposable> _registrations = new List<IDisposable>();
 
         public Configuring(T resolver)
         {
@@ -79,8 +80,16 @@
 
         public IConfiguredResolver Apply()
         {
-            var registration = new CompositeDisposable(_configurations.Select(Apply));
+            _registrations.AddRange(_configurations.Select(Apply));
+            var registration = new CompositeDisposable(_registrations);
             return new ResolverWithRegistration<T>(_resolver, registration);
+        }
+
+        public IConfiguring<T> Register(Func<IRegistration, IDisposable> registration)
+        {
+            if (registration == null) throw new ArgumentNullException(nameof(registration));
+            _registrations.Add(registration(_resolver.Register()));
+            return this;
         }
 
         private IDisposable Apply([NotNull] IEnumerable<IConfiguration> configuration)
