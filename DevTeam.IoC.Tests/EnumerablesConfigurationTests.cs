@@ -14,7 +14,7 @@
     public class EnumerablesConfigurationTests
     {
         [Test]
-        public void ContanireShouldResolveAllInstancesWhenResolveEnumerable()
+        public void ContainerShouldResolveAllInstancesWhenResolveEnumerable()
         {
             // Given
             var mock1 = new Mock<ISimpleService>();
@@ -45,7 +45,7 @@
         }
 
         [Test]
-        public void ContanireShouldResolveEmptyWhenNoRegistrations()
+        public void ContainerShouldResolveEmptyWhenNoRegistrations()
         {
             // Given
             using (var container = CreateContainer())

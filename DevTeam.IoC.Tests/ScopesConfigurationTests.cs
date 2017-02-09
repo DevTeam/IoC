@@ -12,7 +12,7 @@
     public class ScopesConfigurationTests
     {
         [Test]
-        public void ContanireShouldResolveWhenGlobalScope()
+        public void ContainerShouldResolveWhenGlobalScope()
         {
             // Given
             var mock = new Mock<ISimpleService>();
@@ -36,7 +36,7 @@
         }
 
         [Test]
-        public void ContanireShouldUnregisterWhenGlobalScope()
+        public void ContainerShouldUnregisterWhenGlobalScope()
         {
             // Given
             var mock = new Mock<ISimpleService>();
@@ -65,7 +65,7 @@
         }
 
         [Test]
-        public void ContanireShouldNotResolveWhenInternalScopeAndChildContainer()
+        public void ContainerShouldNotResolveWhenInternalScopeAndChildContainer()
         {
             // Given
             var mock = new Mock<ISimpleService>();
@@ -90,7 +90,7 @@
         }
 
         [Test]
-        public void ContanireShouldUnregisterWhenInternalScope()
+        public void ContainerShouldUnregisterWhenInternalScope()
         {
             // Given
             var mock = new Mock<ISimpleService>();

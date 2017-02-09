@@ -12,7 +12,7 @@
     public class LifetimesConfigurationTests
     {
         [Test]
-        public void ContanireShouldResolveSingleInstanceWhenSingletone()
+        public void ContainerShouldResolveSingleInstanceWhenSingletone()
         {
             // Given
             using (var container = CreateContainer())
@@ -35,7 +35,7 @@
         }
 
         [Test]
-        public void ContanireShouldResolveSingleInstanceWhenSingletoneUsingDifferentContracts()
+        public void ContainerShouldResolveSingleInstanceWhenSingletoneUsingDifferentContracts()
         {
             // Given
             using (var container = CreateContainer())
@@ -59,7 +59,7 @@
         }
 
         [Test]
-        public void ContanireShouldResolveDifInstancesWhenDifStateAndPerState()
+        public void ContainerShouldResolveDifInstancesWhenDifStateAndPerState()
         {
             // Given
             using (var container = CreateContainer())
@@ -85,7 +85,7 @@
         }
 
         [Test]
-        public void ContanireShouldResolveSingleInstanceWhenSingletoneUsingDifferentGenericContracts()
+        public void ContainerShouldResolveSingleInstanceWhenSingletoneUsingDifferentGenericContracts()
         {
             // Given
             using (var container = CreateContainer())
@@ -115,7 +115,7 @@
         }
 
         [Test]
-        public void ContanireShouldDisposeAutoDisposingInstanceWhenUnregisteredControlled()
+        public void ContainerShouldDisposeAutoDisposingInstanceWhenUnregisteredControlled()
         {
             // Given
             using (var container = CreateContainer())
@@ -139,7 +139,7 @@
         }
 
         [Test]
-        public void ContanireShouldDisposeAutoDisposingInstanceWhenContainerDisposedForControlled()
+        public void ContainerShouldDisposeAutoDisposingInstanceWhenContainerDisposedForControlled()
         {
             // Given
             var mock = new Mock<IDisposableService>();
@@ -161,7 +161,7 @@
         }
 
         [Test]
-        public void ContanireShouldResolveSingleInstanceAndDisposeAutoDisposingWhenAutoDisposingSingletone()
+        public void ContainerShouldResolveSingleInstanceAndDisposeAutoDisposingWhenAutoDisposingSingletone()
         {
             // Given
             using (var container = CreateContainer())
@@ -189,7 +189,7 @@
         }
 
         [Test]
-        public void ContanireShouldResolveSingleInstanceWhenPerResolve()
+        public void ContainerShouldResolveSingleInstanceWhenPerResolve()
         {
             // Given
             using (var container = CreateContainer())

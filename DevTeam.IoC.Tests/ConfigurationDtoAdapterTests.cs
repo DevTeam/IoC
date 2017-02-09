@@ -147,6 +147,7 @@
             configurationDto.Add(
                 new ContainerDto
                 {
+                    Tag = new TagDto { Value = "10", TypeName = typeof(int).FullName },
                     Statements = new IConfigurationStatementDto[]
                     {
                         new RegisterDto
@@ -158,8 +159,7 @@
                             },
                             FactoryMethodName = $"{typeof(MyFactory).FullName}.{nameof(MyFactory.Create)}"
                         }
-                    },
-                    Tag = new TagDto { Value = "10", TypeName = typeof(int).FullName }
+                    }
                 });
 
             // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
@@ -167,7 +167,7 @@
             var registrationContainerName = _container.Resolve().Instance<string>();
 
             // Then
-            registrationContainerName.ShouldBe("child");
+            registrationContainerName.ShouldBe("10");
         }
 
         [Test]

@@ -50,7 +50,7 @@
                 return resolver.Resolve().Instance<IContainer>();
             }
 
-            return resolver.Resolve().State<object>(0).Instance<IContainer>("child");
+            return resolver.Resolve().State<object>(0).Instance<IContainer>(tag);
         }
 
         [NotNull]

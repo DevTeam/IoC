@@ -14,7 +14,7 @@
     public class ContainerExtensionsTests
     {
         [Test]
-        public void ContanireShouldRegisterAndResolveWhenOneKey()
+        public void ContainerShouldRegisterAndResolveWhenOneKey()
         {
             // Given
             var simpleService = new Mock<ISimpleService>();
@@ -32,7 +32,7 @@
         }
 
         [Test]
-        public void ContanireShouldRegisterUsigClassMetadataWhensFactoryMethod()
+        public void ContainerShouldRegisterUsigClassMetadataWhensFactoryMethod()
         {
             // Given
             using (var container = CreateContainer())
@@ -49,7 +49,7 @@
         }
 
         [Test]
-        public void ContanireShouldRegisterUsigClassMetadataAutomaticallyWhenAutowiring()
+        public void ContainerShouldRegisterUsigClassMetadataAutomaticallyWhenAutowiring()
         {
             // Given
             using (var container = CreateContainer())
@@ -66,7 +66,7 @@
         }
 
         [Test]
-        public void ContanireShouldRegisterAndResolveWhenSeveralKeys()
+        public void ContainerShouldRegisterAndResolveWhenSeveralKeys()
         {
             // Given
             var simpleService = new Mock<ISimpleService>();
@@ -86,7 +86,7 @@
         }
 
         [Test]
-        public void ContanireShouldRegisterAndResolveWhenSeveralKeysAndUndefinedGenericType()
+        public void ContainerShouldRegisterAndResolveWhenSeveralKeysAndUndefinedGenericType()
         {
             // Given
             var genericService = new Mock<IGenericService<string>>();
@@ -106,7 +106,7 @@
         }
 
         [Test]
-        public void ContanireShouldRegisterAndResolveWhenSeveralKeysAndDefinedGenericType()
+        public void ContainerShouldRegisterAndResolveWhenSeveralKeysAndDefinedGenericType()
         {
             // Given
             var genericService = new Mock<IGenericService<string>>();
@@ -125,7 +125,7 @@
             }
         }
 
-        public void ContanireShouldRegisterAndResolveWhenSeveralKeysAndSpecifiedGenericType()
+        public void ContainerShouldRegisterAndResolveWhenSeveralKeysAndSpecifiedGenericType()
         {
             // Given
             var genericService = new Mock<IGenericService<string>>();

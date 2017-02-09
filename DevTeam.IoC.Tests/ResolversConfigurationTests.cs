@@ -14,7 +14,7 @@
     public class ResolversConfigurationTests
     {
         [Test]
-        public void ContanireShouldResolveViaTypedResolver()
+        public void ContainerShouldResolveViaTypedResolver()
         {
             // Given
             var simpleService = new Mock<ISimpleService>();
@@ -34,7 +34,7 @@
         }
 
         [Test]
-        public void ContanireShouldResolveViaTypedResolverWithState()
+        public void ContainerShouldResolveViaTypedResolverWithState()
         {
             // Given
             using (var container = CreateContainer())
@@ -55,7 +55,7 @@
         }
 
         [Test]
-        public void ContanireShouldResolveViaTypedResolverWithTypedState()
+        public void ContainerShouldResolveViaTypedResolverWithTypedState()
         {
             // Given
             using (var container = CreateContainer())
