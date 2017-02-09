@@ -10,13 +10,25 @@
         IDisposable AsFactoryMethod([NotNull] Func<IResolverContext, object> factoryMethod);
 
         [NotNull]
+        IConfiguring<T> ConfigureFactoryMethod([NotNull] Func<IResolverContext, object> factoryMethod);
+
+        [NotNull]
         IDisposable AsFactoryMethod<TImplementation>([NotNull] Func<IResolverContext, TImplementation> factoryMethod);
+
+        [NotNull]
+        IConfiguring<T> ConfigureFactoryMethod<TImplementation>([NotNull] Func<IResolverContext, TImplementation> factoryMethod);
 
         [NotNull]
         IDisposable AsAutowiring([NotNull] Type implementationType, [CanBeNull] IMetadataProvider metadataProvider = null);
 
         [NotNull]
+        IConfiguring<T> ConfigureAsAutowiring([NotNull] Type implementationType, [CanBeNull] IMetadataProvider metadataProvider = null);
+
+        [NotNull]
         IDisposable AsAutowiring<TImplementation>();
+
+        [NotNull]
+        IConfiguring<T> ConfigureAsAutowiring<TImplementation>();
 
         [NotNull]
         IRegistration<T> Attributes([NotNull] Type implementationType);

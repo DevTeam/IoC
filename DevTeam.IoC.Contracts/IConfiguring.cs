@@ -26,7 +26,8 @@
         [NotNull]
         IConfiguring<T> DependsOn(params Assembly[] assemblies);
 
-        IConfiguring<T> Register([NotNull] Func<IRegistration<T>, IDisposable> registration);
+        [NotNull]
+        IRegistration<T> Register();
 
         [NotNull]
         IDisposable Apply();

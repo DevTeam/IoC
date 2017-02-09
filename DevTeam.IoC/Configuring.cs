@@ -73,6 +73,12 @@
             return GetEnumerator();
         }
 
+        public IRegistration<T> Register()
+        {
+            Include();
+            return _resolver.Register();
+        }
+
         public IEnumerator<IConfiguration> GetEnumerator()
         {
             return _configurations.SelectMany(i => i).GetEnumerator();
@@ -88,15 +94,8 @@
 
         public T Include()
         {
-            _resolver.Resolve<T>().Instance<IInternalResourceStore>().AddResource(Apply());
+            _resolver.Resolve().Instance<IInternalResourceStore>().AddResource(Apply());
             return _resolver;
-        }
-
-        public IConfiguring<T> Register(Func<IRegistration<T>, IDisposable> registration)
-        {
-            if (registration == null) throw new ArgumentNullException(nameof(registration));
-            _registrations.Add(registration(_resolver.Register<T>()));
-            return this;
         }
 
         private IDisposable Apply([NotNull] IEnumerable<IConfiguration> configuration)

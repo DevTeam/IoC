@@ -89,10 +89,20 @@
             return AsFactoryMethodInternal(factoryMethod);
         }
 
+        public IConfiguring<T> ConfigureFactoryMethod<TImplementation>(Func<IResolverContext, TImplementation> factoryMethod)
+        {
+            return Include(AsFactoryMethod(factoryMethod)).Configure();
+        }
+
         public IDisposable AsFactoryMethod<TImplementation>(Func<IResolverContext, TImplementation> factoryMethod)
         {
             if (factoryMethod == null) throw new ArgumentNullException(nameof(factoryMethod));
             return AsFactoryMethodInternal(factoryMethod, typeof(TImplementation));
+        }
+
+        public IConfiguring<T> ConfigureFactoryMethod(Func<IResolverContext, object> factoryMethod)
+        {
+            return Include(AsFactoryMethod(factoryMethod)).Configure();
         }
 
         public IDisposable AsAutowiring(Type implementationType, IMetadataProvider metadataProvider = null)
@@ -122,9 +132,20 @@
                 implementationType);
         }
 
+        public IConfiguring<T> ConfigureAsAutowiring(Type implementationType, IMetadataProvider metadataProvider = null)
+        {
+            if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
+            return Include(AsAutowiring(implementationType, metadataProvider)).Configure();
+        }
+
         public IDisposable AsAutowiring<TImplementation>()
         {
             return AsAutowiring(typeof(TImplementation));
+        }
+
+        public IConfiguring<T> ConfigureAsAutowiring<TImplementation>()
+        {
+            return Include(AsAutowiring<TImplementation>()).Configure();
         }
 
         protected override bool AddContractKey([NotNull] IEnumerable<IContractKey> keys)
@@ -146,6 +167,12 @@
         protected override bool AddCompositeKey(ICompositeKey compositeKey)
         {
             return _compositeKeys.Add(compositeKey);
+        }
+
+        private T Include(IDisposable resource)
+        {
+            Resolver.Resolve().Instance<IInternalResourceStore>().AddResource(resource);
+            return Resolver;
         }
 
         private bool ExtractMetadata(Type metadataType)

@@ -38,7 +38,9 @@
             using (var rootContainer = new Container("root")
                 .Configure()
                 .DependsOn(Wellknown.Feature.Default)
-                .Register(r => r.Contract<ISimpleService>().AsAutowiring<SimpleService>())
+                .Register()
+                .Contract<ISimpleService>()
+                .ConfigureAsAutowiring<SimpleService>()
                 .Include())
             {
                 for (var i = 0; i < 10000; i++)
@@ -56,7 +58,9 @@
             ITrace trace;
             using (var container = new Container("root")
                 .Configure()
-                .Register(r => r.Contract<IReferenceDescriptionResolver>().AsFactoryMethod<IReferenceDescriptionResolver>(ctx => new ReferenceDescriptionResolver()))
+                .Register()
+                .Contract<IReferenceDescriptionResolver>()
+                .ConfigureFactoryMethod<IReferenceDescriptionResolver>(ctx => new ReferenceDescriptionResolver())
                 .DependsOn(Wellknown.Feature.Default)
                 .DependsOn<JsonConfiguration>(json)
                 .Include())
