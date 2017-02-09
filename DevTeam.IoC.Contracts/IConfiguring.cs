@@ -5,27 +5,28 @@
     using System.Reflection;
 
     [PublicAPI]
-    public interface IConfiguring : IEnumerable<IConfiguration>
+    public interface IConfiguring<T> : IEnumerable<IConfiguration>
+        where T : IResolver
     {
         [NotNull]
-        IConfiguring DependsOn([NotNull][ItemNotNull] params IConfiguration[] configurations);
+        IConfiguring<T> DependsOn([NotNull][ItemNotNull] params IConfiguration[] configurations);
 
         [NotNull]
-        IConfiguring DependsOn<TConfiguration>() where TConfiguration : IConfiguration, new();
+        IConfiguring<T> DependsOn<TConfiguration>() where TConfiguration : IConfiguration, new();
 
         [NotNull]
-        IConfiguring DependsOn([NotNull] params Wellknown.Features[] features);
+        IConfiguring<T> DependsOn([NotNull] params Wellknown.Features[] features);
 
         [NotNull]
-        IConfiguring DependsOn([NotNull] Type configurationType, [NotNull] string description);
+        IConfiguring<T> DependsOn([NotNull] Type configurationType, [NotNull] string description);
 
         [NotNull]
-        IConfiguring DependsOn<TConfiguration>([NotNull] string description) where TConfiguration: IConfiguration, new();
+        IConfiguring<T> DependsOn<TConfiguration>([NotNull] string description) where TConfiguration: IConfiguration, new();
 
         [NotNull]
-        IConfiguring DependsOn(params Assembly[] assemblies);
+        IConfiguring<T> DependsOn(params Assembly[] assemblies);
 
         [NotNull]
-        IDisposable Apply();
+        IConfiguredResolver Apply();
     }
 }

@@ -14,10 +14,11 @@
         {
             var jsonConfigStr = ReadConfiguration<IHelloWorld>("ClassLibrary.configuration.json");
 
-            // Create the root container
-            using (var container = new Container())
-            // Appply the configuration from the json string
-            using (container.Configure().DependsOn<JsonConfiguration>(jsonConfigStr).Apply())
+            // Create the root container and apply the configuration from the json string
+            using (var container = new Container()
+                .Configure()
+                .DependsOn<JsonConfiguration>(jsonConfigStr)
+                .Apply())
             {
                 // Resolve an instance implementing the interface "IHelloWorld"
                 var helloWorld = container.Resolve().Instance<IHelloWorld>();

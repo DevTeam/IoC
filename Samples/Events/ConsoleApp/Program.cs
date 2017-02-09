@@ -8,8 +8,10 @@
     {
         public static void Main()
         {
-            using (var container = new Container())
-            using (container.Configure().DependsOn<Configuration>().Apply())
+            using (var container = new Container()
+                .Configure()
+                .DependsOn<Configuration>()
+                .Apply())
             {
                 container.Resolve().Instance<IEventBroker>();
                 System.Console.ReadLine();

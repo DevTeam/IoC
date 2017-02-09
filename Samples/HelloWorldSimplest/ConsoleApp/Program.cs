@@ -10,10 +10,12 @@
     {
         public static void Main()
         {
-            using (var container = new Container())
-            using (container.Configure().DependsOn(
-                Assembly.GetEntryAssembly(),
-                Assembly.Load(new AssemblyName("ClassLibrary"))).Apply())
+            using (var container = new Container()
+                .Configure()
+                .DependsOn(
+                    Assembly.GetEntryAssembly(),
+                    Assembly.Load(new AssemblyName("ClassLibrary"))
+                ).Apply())
             {
                 container.Resolve().Instance<Program>();
             }

@@ -7,7 +7,7 @@
     public interface IConfiguration
     {
         [NotNull]
-        IEnumerable<IConfiguration> GetDependencies([NotNull] IResolver resolver);
+        IEnumerable<IConfiguration> GetDependencies<T>([NotNull] T resolver) where T : IResolver, IDisposable;
 
         [NotNull]
         IEnumerable<IDisposable> Apply([NotNull] IResolver resolver);

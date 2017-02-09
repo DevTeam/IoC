@@ -18,10 +18,11 @@
             return _resolver.TryResolve(out registry);
         }
 
-        public IConfiguring Configure(IResolver resolver)
+        public IConfiguring<T> Configure<T>(T resolver)
+            where T : IResolver, IDisposable
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            return new Configuring(resolver);
+            return new Configuring<T>(resolver);
         }
 
         public IRegistration Register()

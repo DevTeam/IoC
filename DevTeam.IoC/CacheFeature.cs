@@ -12,7 +12,7 @@
         {
         }
 
-        public IEnumerable<IConfiguration> GetDependencies(IResolver resolver)
+        public IEnumerable<IConfiguration> GetDependencies<T>([NotNull] T resolver) where T : IResolver, IDisposable
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             yield return LifetimesFeature.Shared;

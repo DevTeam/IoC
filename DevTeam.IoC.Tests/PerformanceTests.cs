@@ -93,8 +93,7 @@
         [Test]
         public void ConfigurePerformanceTest()
         {
-            using (var rootResolver = new Container("root"))
-            using (rootResolver
+            using (var rootResolver = new Container("root")
                 .Configure()
                 .DependsOn(Wellknown.Features.Default)
                 .Apply())
@@ -108,8 +107,7 @@
 
         private static void PerformanceTest(IResolver rootResolver, int ticks)
         {
-            using (var childContainer = rootResolver.CreateChild())
-            using (childContainer
+            using (var childContainer = rootResolver.CreateChild("child")
                 .Configure()
                 .DependsOn(new EventsConfiguration(false))
                 .Apply())
@@ -125,6 +123,7 @@
             }
         }
 
+        // ReSharper disable once ClassNeverInstantiated.Local
         private class SimpleService : ISimpleService
         {
         }

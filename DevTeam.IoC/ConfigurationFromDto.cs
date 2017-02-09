@@ -24,15 +24,7 @@
             _configuration = new Lazy<IConfiguration>(() => CreateConfiguration(description));
         }
 
-        private IConfiguration CreateConfiguration([NotNull] string description)
-        {
-            if (string.IsNullOrWhiteSpace(description)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(description));
-            var configurationDescriptionDto = _resolver.Resolve().State<string>(0).Instance<IConfigurationDescriptionDto>(description);
-            var configurationDto = _resolver.Resolve().Tag(_configurationType).State<IConfigurationDescriptionDto>(0).Instance<IConfigurationDto>(configurationDescriptionDto);
-            return _resolver.Resolve().State<IConfigurationDto>(0).Instance<IConfiguration>(configurationDto);
-        }
-
-        public IEnumerable<IConfiguration> GetDependencies(IResolver resolver)
+        public IEnumerable<IConfiguration> GetDependencies<T>(T resolver) where T : IResolver, IDisposable
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             foreach (var dependency in _configuration.Value.GetDependencies(resolver))
@@ -45,6 +37,14 @@
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             return _configuration.Value.Apply(resolver);
+        }
+
+        private IConfiguration CreateConfiguration([NotNull] string description)
+        {
+            if (string.IsNullOrWhiteSpace(description)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(description));
+            var configurationDescriptionDto = _resolver.Resolve().State<string>(0).Instance<IConfigurationDescriptionDto>(description);
+            var configurationDto = _resolver.Resolve().Tag(_configurationType).State<IConfigurationDescriptionDto>(0).Instance<IConfigurationDto>(configurationDescriptionDto);
+            return _resolver.Resolve().State<IConfigurationDto>(0).Instance<IConfiguration>(configurationDto);
         }
     }
 }

@@ -14,10 +14,11 @@
         }
 
         [NotNull]
-        public static IConfiguring Configure([NotNull] this IResolver resolver)
+        public static IConfiguring<T> Configure<T>([NotNull] this T resolver)
+            where T: IResolver, IDisposable
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            return GetFluent(resolver).Configure(resolver);
+            return GetFluent(resolver).Configure<T>(resolver);
         }
 
         [NotNull]
@@ -43,7 +44,8 @@
         }
 
         [NotNull]
-        public static IContainer CreateChild([NotNull] this IResolver resolver, [CanBeNull] object tag = null)
+        public static IContainer CreateChild<T>([NotNull] this T resolver, [CanBeNull] object tag = null)
+            where T: IResolver
         {
             if (tag == null)
             {

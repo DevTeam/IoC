@@ -16,7 +16,7 @@
             if (assembly == null) throw new ArgumentNullException(nameof(assembly));
         }
 
-        public IEnumerable<IConfiguration> GetDependencies(IResolver resolver)
+        public IEnumerable<IConfiguration> GetDependencies<T>(T resolver) where T : IResolver, IDisposable
         {
             yield break;
         }
