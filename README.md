@@ -8,7 +8,7 @@ Because it has many outstanding [features](https://github.com/DevTeam/IoC/wiki/F
 
 Here is just one simplest example [_Hellow World Simplest_](https://github.com/DevTeam/IoC/tree/master/Samples/HelloWorldSimplest):
 
-**The entry point**:
+[**The entry point**](https://github.com/DevTeam/IoC/blob/master/Samples/HelloWorldSimplest/ConsoleApp/Program.cs):
 
 ```csharp
     [Contract(typeof(Program))]
@@ -33,7 +33,7 @@ Here is just one simplest example [_Hellow World Simplest_](https://github.com/D
     }
 ```
 
-[_IoC.json_file](https://github.com/DevTeam/IoC/tree/master/Samples/HelloWorldSimplest/ConsoleApp/IoC.json):
+[IoC.json file](https://github.com/DevTeam/IoC/tree/master/Samples/HelloWorldSimplest/ConsoleApp/IoC.json):
 ```json
 [
     { "reference": "ClassLibrary" },
@@ -47,7 +47,7 @@ Here is just one simplest example [_Hellow World Simplest_](https://github.com/D
 ]
 ```
 
-**Contracts**:
+[**Contracts**](https://github.com/DevTeam/IoC/tree/master/Samples/HelloWorldSimplest/ClassLibrary):
 ```csharp
 namespace ClassLibrary
 {
@@ -63,7 +63,7 @@ namespace ClassLibrary
 }
 ```
 
-**Implementations**:
+[**Implementations**](https://github.com/DevTeam/IoC/tree/master/Samples/HelloWorldSimplest/ClassLibrary):
 ```csharp
 namespace ClassLibrary
 {
