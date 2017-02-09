@@ -29,6 +29,6 @@
         IConfiguring<T> Register([NotNull] Func<IRegistration, IDisposable> registration);
 
         [NotNull]
-        IConfiguredResolver Apply();
+        T Apply();
     }
 }

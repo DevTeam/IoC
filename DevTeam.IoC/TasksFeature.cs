@@ -15,7 +15,7 @@
         {
         }
 
-        public IEnumerable<IConfiguration> GetDependencies<T>(T resolver) where T : IResolver, IDisposable
+        public IEnumerable<IConfiguration> GetDependencies<T>(T resolver) where T : IResolver
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             yield break;

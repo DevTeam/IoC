@@ -352,7 +352,7 @@
 
         private class MyConfiguration : IConfiguration
         {
-            public IEnumerable<IConfiguration> GetDependencies<T>(T resolver) where T : IResolver, IDisposable
+            public IEnumerable<IConfiguration> GetDependencies<T>(T resolver) where T : IResolver
             {
                 throw new NotImplementedException();
             }

@@ -15,7 +15,7 @@
 
         [NotNull]
         public static IConfiguring<T> Configure<T>([NotNull] this T resolver)
-            where T: IResolver, IDisposable
+            where T: IResolver
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             return GetFluent(resolver).Configure<T>(resolver);

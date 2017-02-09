@@ -46,7 +46,11 @@
     <Compile Include="ConfigurationDtoAdapter.cs" />
     <Compile Include="ConfigurationFromAssembly.cs" />
     <Compile Include="ConfigurationFromDto.cs" />
+    <Compile Include="ContainerConfiguration.cs" />
+    <Compile Include="IInternalResourceStore.cs" />
+    <Compile Include="InternalResourceStore.cs" />
     <Compile Include="IWeakReference.cs" />
+    <Compile Include="LowLevelRegistration.cs" />
     <Compile Include="ManualMetadataProvider.cs" />
     <Compile Include="ParameterMetadata.cs" />
     <Compile Include="IFuncProvider.cs" />

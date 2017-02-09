@@ -10,6 +10,7 @@
     {
         private static readonly ICompositeKey CacheKey = RootConfiguration.KeyFactory.CreateCompositeKey(new [] { RootConfiguration.KeyFactory.CreateContractKey(typeof(ICache<ICompositeKey, RegistrationItem>), true) });
         private readonly IDisposable _rootConfigurationRegistration;
+        private readonly IDisposable _configurationRegistration;
         private readonly IContainer _parentContainer;
         private readonly Dictionary<IEqualityComparer<ICompositeKey>, Dictionary<ICompositeKey, RegistrationItem>> _registrations = new Dictionary<IEqualityComparer<ICompositeKey>, Dictionary<ICompositeKey, RegistrationItem>>();
         private ICache<ICompositeKey, RegistrationItem> _cache;
@@ -23,6 +24,8 @@
             {
                 _rootConfigurationRegistration = new CompositeDisposable(RootConfiguration.Shared.Apply(this));
             }
+
+            _configurationRegistration = new CompositeDisposable(ContainerConfiguration.Shared.Apply(this));
         }
 
         public object Tag { get; }
@@ -88,8 +91,8 @@
 
                 try
                 {
-                    ICache<ICompositeKey, RegistrationItem> сache;
-                    var hasCache = TryGetCache(out сache);
+                    ICache<ICompositeKey, RegistrationItem> cache;
+                    var hasCache = TryGetCache(out cache);
                     foreach (var key in context.Keys)
                     {
                         registrations.Add(key, newRegistration);
@@ -97,7 +100,7 @@
 
                         if (hasCache)
                         {
-                            сache.TryRemove(key);
+                            cache.TryRemove(key);
                         }
                     }
                 }
@@ -163,6 +166,7 @@
             }
 
             _registrations.Clear();
+            _configurationRegistration.Dispose();
             _rootConfigurationRegistration?.Dispose();
         }
 

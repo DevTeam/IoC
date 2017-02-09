@@ -11,20 +11,20 @@
         public static readonly KeyFactory KeyFactory = new KeyFactory();
         public static readonly IMetadataProvider MetadataProvider = new AutowiringMetadataProvider();
         private static readonly IInstanceFactoryProvider ExpressionInstanceFactoryProvider = new ExpressionInstanceFactoryProvider();
-        private static readonly IEnumerable<ICompositeKey> ResolverKeys = CreateKeys<IResolver>();
-        private static readonly IEnumerable<ICompositeKey> RegistryKeys = CreateKeys<IRegistry>();
-        private static readonly IEnumerable<ICompositeKey> KeyFactoryKeys = CreateKeys<IKeyFactory>();
-        private static readonly IEnumerable<ICompositeKey> FluentKeys = CreateKeys<IFluent>();
-        private static readonly IEnumerable<ICompositeKey> InstanceFactoryProviderKeys = CreateKeys<IInstanceFactoryProvider>();
-        private static readonly IEnumerable<ICompositeKey> ResolvingKeys = CreateKeys<IResolving>();
-        private static readonly IEnumerable<ICompositeKey> RegistrationKeys = CreateKeys<IRegistration>();
-        private static readonly IEnumerable<ICompositeKey> MetadataProviderKeys = CreateKeys<IMetadataProvider>();
+        private static readonly IEnumerable<ICompositeKey> ResolverKeys = LowLevelRegistration.CreateKeys<IResolver>();
+        private static readonly IEnumerable<ICompositeKey> RegistryKeys = LowLevelRegistration.CreateKeys<IRegistry>();
+        private static readonly IEnumerable<ICompositeKey> KeyFactoryKeys = LowLevelRegistration.CreateKeys<IKeyFactory>();
+        private static readonly IEnumerable<ICompositeKey> FluentKeys = LowLevelRegistration.CreateKeys<IFluent>();
+        private static readonly IEnumerable<ICompositeKey> InstanceFactoryProviderKeys = LowLevelRegistration.CreateKeys<IInstanceFactoryProvider>();
+        private static readonly IEnumerable<ICompositeKey> ResolvingKeys = LowLevelRegistration.CreateKeys<IResolving>();
+        private static readonly IEnumerable<ICompositeKey> RegistrationKeys = LowLevelRegistration.CreateKeys<IRegistration>();
+        private static readonly IEnumerable<ICompositeKey> MetadataProviderKeys = LowLevelRegistration.CreateKeys<IMetadataProvider>();
 
         private RootConfiguration()
         {
         }
 
-        public IEnumerable<IConfiguration> GetDependencies<T>(T resolver) where T : IResolver, IDisposable
+        public IEnumerable<IConfiguration> GetDependencies<T>(T resolver) where T : IResolver
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             yield break;
@@ -35,14 +35,14 @@
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             var container = resolver as Container;
             if (container == null) throw new ArgumentException(nameof(resolver));
-            yield return RawRegister<IResolver>(container, ResolverKeys, ctx => ctx.Container);
-            yield return RawRegister<IRegistry>(container, RegistryKeys, ctx => (Container)ctx.Container);
-            yield return RawRegister<IKeyFactory>(container, KeyFactoryKeys, ctx => KeyFactory);
-            yield return RawRegister<IFluent>(container, FluentKeys, ctx => new Fluent(ctx.Container));
-            yield return RawRegister(container, InstanceFactoryProviderKeys, ctx => ExpressionInstanceFactoryProvider);
-            yield return RawRegister<IResolving>(container, ResolvingKeys, ctx => new Resolving(new Fluent(ctx.Container), container));
-            yield return RawRegister<IRegistration>(container, RegistrationKeys, ctx => new Registration(new Fluent(ctx.Container), container));
-            yield return RawRegister(container, MetadataProviderKeys, ctx => MetadataProvider);
+            yield return LowLevelRegistration.RawRegister<IResolver>(container, ResolverKeys, ctx => ctx.Container);
+            yield return LowLevelRegistration.RawRegister<IRegistry>(container, RegistryKeys, ctx => (Container)ctx.Container);
+            yield return LowLevelRegistration.RawRegister<IKeyFactory>(container, KeyFactoryKeys, ctx => KeyFactory);
+            yield return LowLevelRegistration.RawRegister<IFluent>(container, FluentKeys, ctx => new Fluent(ctx.Container));
+            yield return LowLevelRegistration.RawRegister(container, InstanceFactoryProviderKeys, ctx => ExpressionInstanceFactoryProvider);
+            yield return LowLevelRegistration.RawRegister<IResolving>(container, ResolvingKeys, ctx => new Resolving(new Fluent(ctx.Container), container));
+            yield return LowLevelRegistration.RawRegister<IRegistration>(container, RegistrationKeys, ctx => new Registration(new Fluent(ctx.Container), container));
+            yield return LowLevelRegistration.RawRegister(container, MetadataProviderKeys, ctx => MetadataProvider);
 
             yield return
                 container
@@ -168,20 +168,6 @@
         public override bool Equals(object obj)
         {
             return obj != null && GetType() == obj.GetType();
-        }
-
-        private static IEnumerable<ICompositeKey> CreateKeys<TContract>()
-        {
-            var key = new CompositeKey(new[] { (IContractKey)new ContractKey(typeof(TContract), true), }, Enumerable.Empty<ITagKey>(), Enumerable.Empty<IStateKey>());
-            return Enumerable.Repeat(key, 1).ToArray();
-        }
-
-        private static IDisposable RawRegister<TContract>(IRegistry registry, IEnumerable<ICompositeKey> keys, Func<IResolverContext, TContract> factoryMethod)
-        {
-            var registryContext = registry.CreateContext(keys, new MethodFactory<TContract>(factoryMethod), Enumerable.Empty<IExtension>());
-            IDisposable disposable;
-            registry.TryRegister(registryContext, out disposable);
-            return disposable;
         }
     }
 }

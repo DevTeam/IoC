@@ -8,7 +8,7 @@
     using Contracts;
 
     internal class Configuring<T> : IConfiguring<T>
-        where T : IResolver, IDisposable
+        where T : IResolver
     {
         private readonly T _resolver;
         private readonly List<HashSet<IConfiguration>> _configurations = new List<HashSet<IConfiguration>>();
@@ -78,11 +78,12 @@
             return _configurations.SelectMany(i => i).GetEnumerator();
         }
 
-        public IConfiguredResolver Apply()
+        public T Apply()
         {
             _registrations.AddRange(_configurations.Select(Apply));
             var registration = new CompositeDisposable(_registrations);
-            return new ResolverWithRegistration<T>(_resolver, registration);
+            _resolver.Resolve().Instance<IInternalResourceStore>().AddResource(registration);
+            return _resolver;
         }
 
         public IConfiguring<T> Register(Func<IRegistration, IDisposable> registration)
@@ -120,65 +121,6 @@
                         yield return disposable;
                     }
                 }
-            }
-        }
-
-        private interface IResolverWithRegistration
-        {
-            IResolver BaseResolver { get; }
-        }
-
-        private class ResolverWithRegistration<TResolver> : IConfiguredResolver, IResolverWithRegistration
-            where TResolver: IResolver, IDisposable
-        {
-            private readonly TResolver _baseResolver;
-            private readonly IDisposable _registration;
-
-            public ResolverWithRegistration([NotNull] TResolver baseResolver, [NotNull] IDisposable registration)
-            {
-                if (baseResolver == null) throw new ArgumentNullException(nameof(baseResolver));
-                if (registration == null) throw new ArgumentNullException(nameof(registration));
-                _baseResolver = baseResolver;
-                _registration = registration;
-            }
-
-            public IResolver BaseResolver => _baseResolver;
-
-            public IKeyFactory KeyFactory => _baseResolver.KeyFactory;
-
-            public bool TryCreateContext(ICompositeKey key, out IResolverContext resolverContext, IStateProvider stateProvider = null)
-            {
-                return _baseResolver.TryCreateContext(key, out resolverContext, stateProvider);
-            }
-
-            public object Resolve(IResolverContext context)
-            {
-                return _baseResolver.Resolve(context);
-            }
-
-            public void Dispose()
-            {
-                _baseResolver.Dispose();
-                _registration.Dispose();
-            }
-
-            public override bool Equals(object obj)
-            {
-                if (ReferenceEquals(null, obj)) return false;
-                if (ReferenceEquals(this, obj)) return true;
-                if (obj.GetType() != GetType()) return false;
-                var resolverWithRegistration = obj as IResolverWithRegistration;
-                if (resolverWithRegistration != null)
-                {
-                    return Equals(resolverWithRegistration.BaseResolver, _baseResolver);
-                }
-
-                return Equals(obj, _baseResolver);
-            }
-
-            public override int GetHashCode()
-            {
-                return EqualityComparer<TResolver>.Default.GetHashCode(_baseResolver);
             }
         }
     }

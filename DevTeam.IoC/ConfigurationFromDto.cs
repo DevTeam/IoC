@@ -24,7 +24,7 @@
             _configuration = new Lazy<IConfiguration>(() => CreateConfiguration(description));
         }
 
-        public IEnumerable<IConfiguration> GetDependencies<T>(T resolver) where T : IResolver, IDisposable
+        public IEnumerable<IConfiguration> GetDependencies<T>(T resolver) where T : IResolver
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             foreach (var dependency in _configuration.Value.GetDependencies(resolver))

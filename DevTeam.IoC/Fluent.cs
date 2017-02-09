@@ -19,7 +19,7 @@
         }
 
         public IConfiguring<T> Configure<T>(T resolver)
-            where T : IResolver, IDisposable
+            where T : IResolver
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             return new Configuring<T>(resolver);
