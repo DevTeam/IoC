@@ -15,8 +15,7 @@
         public void SimpleTest()
         {
             ITrace trace;
-            using (var rootContainer = new Container("root"))
-            using (rootContainer
+            using (var rootContainer = new Container("root")
                 .Configure()
                 .DependsOn(new EventsConfiguration(true))
                 .Apply())
@@ -36,8 +35,10 @@
         [Test]
         public void SimplePerformanceTest()
         {
-            using (var rootContainer = new Container("root"))
-            using (rootContainer.Configure().DependsOn(Wellknown.Features.Default).Apply())
+            using (var rootContainer = new Container("root")
+                .Configure()
+                .DependsOn(Wellknown.Features.Default)
+                .Apply())
             using (rootContainer.Register().Contract<ISimpleService>().AsAutowiring<SimpleService>())
             {
                 for (var i = 0; i < 10000; i++)
@@ -80,8 +81,7 @@
         [Repeat(5)]
         public void ResolvePerformanceTest()
         {
-            using (var rootResolver = new Container("root"))
-            using (rootResolver
+            using (var rootResolver = new Container("root")
                 .Configure()
                 .DependsOn(Wellknown.Features.Default)
                 .Apply())
