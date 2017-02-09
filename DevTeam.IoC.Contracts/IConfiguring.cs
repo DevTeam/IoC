@@ -5,7 +5,7 @@
     using System.Reflection;
 
     [PublicAPI]
-    public interface IConfiguring<T> : IEnumerable<IConfiguration>
+    public interface IConfiguring<out T> : IEnumerable<IConfiguration>
         where T : IResolver
     {
         [NotNull]
@@ -27,6 +27,9 @@
         IConfiguring<T> DependsOn(params Assembly[] assemblies);
 
         IConfiguring<T> Register([NotNull] Func<IRegistration, IDisposable> registration);
+
+        [NotNull]
+        IDisposable Create();
 
         [NotNull]
         T Apply();
