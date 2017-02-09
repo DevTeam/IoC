@@ -23,8 +23,8 @@
         {
             _typeResolver = new MyTypeResolver();
             var rootContainer = new Container();
-            rootContainer.Configure().DependsOn(Wellknown.Features.Dto).Apply();
-            rootContainer.Configure().DependsOn(Wellknown.Features.Scopes).Apply();
+            rootContainer.Configure().DependsOn(Wellknown.Feature.Dto).Apply();
+            rootContainer.Configure().DependsOn(Wellknown.Feature.Scopes).Apply();
             _container = rootContainer.CreateChild();
             _container.Register().Contract<ITypeResolver>().AsFactoryMethod(ctx => _typeResolver);
         }
@@ -103,7 +103,7 @@
 
         [Test]
         [Theory]
-        public void ShouldGetDependenciesWhenDependencyFeature(Wellknown.Features feature)
+        public void ShouldGetDependenciesWhenDependencyFeature(Wellknown.Feature feature)
         {
             // Given
             var configurationDto = new ConfigurationDto();
@@ -155,7 +155,7 @@
                             Keys = new IRegisterStatementDto []
                             {
                                 new ContractDto { Contract = new []{ typeof(string).FullName }},
-                                new ScopeDto { Scope = Wellknown.Scopes.Global }
+                                new ScopeDto { Scope = Wellknown.Scope.Global }
                             },
                             FactoryMethodName = $"{typeof(MyFactory).FullName}.{nameof(MyFactory.Create)}"
                         }

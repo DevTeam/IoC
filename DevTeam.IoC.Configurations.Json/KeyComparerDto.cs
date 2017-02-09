@@ -7,6 +7,6 @@
     internal class KeyComparerDto : IKeyComparerDto
     {
         [JsonProperty("keyComparer", Required = Required.Always)]
-        public Wellknown.KeyComparers KeyComparer { get; [NotNull] set; }
+        public Wellknown.KeyComparer KeyComparer { get; [NotNull] set; }
     }
 }

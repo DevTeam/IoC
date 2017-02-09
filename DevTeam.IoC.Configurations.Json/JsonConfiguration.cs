@@ -20,10 +20,10 @@
                     typeof(DependencyReferenceDto),
                     typeof(DependencyConfigurationDto),
                     typeof(DependencyFeatureDto)),
-                new JsonEnumConverter<Wellknown.Features>(),
-                new JsonEnumConverter<Wellknown.Lifetimes>(),
-                new JsonEnumConverter<Wellknown.Scopes>(),
-                new JsonEnumConverter<Wellknown.KeyComparers>(),
+                new JsonEnumConverter<Wellknown.Feature>(),
+                new JsonEnumConverter<Wellknown.Lifetime>(),
+                new JsonEnumConverter<Wellknown.Scope>(),
+                new JsonEnumConverter<Wellknown.KeyComparer>(),
                 new JsonDerivedTypeConverter<IRegisterStatementDto>(
                     typeof(TagDto),
                     typeof(ContractDto),
@@ -42,7 +42,7 @@
         public IEnumerable<IConfiguration> GetDependencies<T>(T resolver) where T : IResolver
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            yield return resolver.Feature(Wellknown.Features.Dto);
+            yield return resolver.Feature(Wellknown.Feature.Dto);
         }
 
         public IEnumerable<IDisposable> Apply(IResolver resolver)

@@ -25,14 +25,14 @@
             yield return 
                 resolver
                 .Register()
-                .Lifetime(Wellknown.Lifetimes.AutoDisposing)
+                .Lifetime(Wellknown.Lifetime.AutoDisposing)
                 .Contract<IContainer>()
                 .AsFactoryMethod(ctx => new Container(null, ctx.Container));
 
             yield return
                 resolver
                 .Register()
-                .Lifetime(Wellknown.Lifetimes.AutoDisposing)
+                .Lifetime(Wellknown.Lifetime.AutoDisposing)
                 .State(0, typeof(object))
                 .Contract<IContainer>()
                 .AsFactoryMethod(ctx => new Container(ctx.GetState<object>(0), ctx.Container));

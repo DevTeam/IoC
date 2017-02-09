@@ -24,13 +24,13 @@
         IRegistration Attributes<TImplementation>();
 
         [NotNull]
-        IRegistration Lifetime(Wellknown.Lifetimes lifetime);
+        IRegistration Lifetime(Wellknown.Lifetime lifetime);
 
         [NotNull]
         IRegistration Lifetime([NotNull] ILifetime lifetime);
 
         [NotNull]
-        IRegistration KeyComparer(Wellknown.KeyComparers keyComparer);
+        IRegistration KeyComparer(Wellknown.KeyComparer keyComparer);
 
         [NotNull]
         IRegistration KeyComparer([NotNull] IKeyComparer keyComparer);
@@ -38,6 +38,6 @@
         [NotNull]
         IRegistration Scope([NotNull] IScope scope);
 
-        IRegistration Scope(Wellknown.Scopes scope);
+        IRegistration Scope(Wellknown.Scope scope);
     }
 }

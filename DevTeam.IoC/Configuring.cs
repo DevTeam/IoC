@@ -34,7 +34,7 @@
             return DependsOn(new TConfiguration());
         }
 
-        public IConfiguring<T> DependsOn(params Wellknown.Features[] features)
+        public IConfiguring<T> DependsOn(params Wellknown.Feature[] features)
         {
             if (features == null) throw new ArgumentNullException(nameof(features));
             if (features.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(features));

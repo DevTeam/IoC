@@ -8,7 +8,7 @@
         private static ICompositeKey _fluentKey;
 
         [NotNull]
-        public static IConfiguration Feature([NotNull] this IResolver resolver, Wellknown.Features feature)
+        public static IConfiguration Feature([NotNull] this IResolver resolver, Wellknown.Feature feature)
         {
             return resolver.Resolve().Tag(feature).Instance<IConfiguration>();
         }

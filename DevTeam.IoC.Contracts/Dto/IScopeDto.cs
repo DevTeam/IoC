@@ -5,6 +5,6 @@
     [PublicAPI]
     public interface IScopeDto : IRegisterStatementDto
     {
-        Wellknown.Scopes Scope { [NotNull] get; }
+        Wellknown.Scope Scope { [NotNull] get; }
     }
 }

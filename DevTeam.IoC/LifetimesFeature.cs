@@ -25,42 +25,42 @@
             yield return 
                 resolver
                 .Register()
-                .Tag(Wellknown.Lifetimes.Singleton)
+                .Tag(Wellknown.Lifetime.Singleton)
                 .Contract<ILifetime>()
                 .AsFactoryMethod(ctx => new SingletonLifetime());
 
             yield return
                 resolver
                 .Register()
-                .Tag(Wellknown.Lifetimes.AutoDisposing)
+                .Tag(Wellknown.Lifetime.AutoDisposing)
                 .Contract<ILifetime>()
                 .AsFactoryMethod(ctx => new AutoDisposingLifetime());
 
             yield return
                 resolver
                 .Register()
-                .Tag(Wellknown.Lifetimes.PerResolve)
+                .Tag(Wellknown.Lifetime.PerResolve)
                 .Contract<ILifetime>()
                 .AsFactoryMethod(ctx => new SingletonBasedLifetime<long>((lifetimeContext, resolverContext) => lifetimeContext.ResolveId));
 
             yield return
                 resolver
                 .Register()
-                .Tag(Wellknown.Lifetimes.PerThread)
+                .Tag(Wellknown.Lifetime.PerThread)
                 .Contract<ILifetime>()
                 .AsFactoryMethod(ctx => new SingletonBasedLifetime<long>((lifetimeContext, resolverContext) => lifetimeContext.ThreadId));
 
             yield return
                 resolver
                 .Register()
-                .Tag(Wellknown.Lifetimes.PerContainer)
+                .Tag(Wellknown.Lifetime.PerContainer)
                 .Contract<ILifetime>()
                 .AsFactoryMethod(ctx => new SingletonBasedLifetime<IResolver>((lifetimeContext, resolverContext) => resolverContext.Container));
 
             yield return
                 resolver
                 .Register()
-                .Tag(Wellknown.Lifetimes.PerState)
+                .Tag(Wellknown.Lifetime.PerState)
                 .Contract<ILifetime>()
                 .AsFactoryMethod(ctx => new SingletonBasedLifetime<object>((lifetimeContext, resolverContext) => resolverContext.StateProvider.GetKey(resolverContext)));
         }

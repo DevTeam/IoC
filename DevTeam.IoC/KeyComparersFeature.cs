@@ -29,21 +29,21 @@
             yield return 
                 resolver
                 .Register()
-                .Tag(Wellknown.KeyComparers.AnyTag)
+                .Tag(Wellknown.KeyComparer.AnyTag)
                 .Contract<IKeyComparer>()
                 .AsFactoryMethod(ctx => AnyTagKeyComparer);
 
             yield return
                 resolver
                 .Register()
-                .Tag(Wellknown.KeyComparers.AnyState)
+                .Tag(Wellknown.KeyComparer.AnyState)
                 .Contract<IKeyComparer>()
                 .AsFactoryMethod(ctx => AnyStateKeyComparer);
 
             yield return
                 resolver
                 .Register()
-                .Tag(Wellknown.KeyComparers.AnyTagAnyState)
+                .Tag(Wellknown.KeyComparer.AnyTagAnyState)
                 .Contract<IKeyComparer>()
                 .AsFactoryMethod(ctx => AnyTagAnyStateKeyComparer);
         }

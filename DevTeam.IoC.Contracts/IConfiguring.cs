@@ -15,7 +15,7 @@
         IConfiguring<T> DependsOn<TConfiguration>() where TConfiguration : IConfiguration, new();
 
         [NotNull]
-        IConfiguring<T> DependsOn([NotNull] params Wellknown.Features[] features);
+        IConfiguring<T> DependsOn([NotNull] params Wellknown.Feature[] features);
 
         [NotNull]
         IConfiguring<T> DependsOn([NotNull] Type configurationType, [NotNull] string description);

@@ -16,7 +16,7 @@
         public IEnumerable<IConfiguration> GetDependencies<T>(T resolver) where T : IResolver
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            yield return resolver.Feature(Wellknown.Features.Default);
+            yield return resolver.Feature(Wellknown.Feature.Default);
             yield return new PlatformConfiguration(_trace);
         }
 
@@ -27,46 +27,46 @@
 
             yield return childContainer
                 .Register()
-                .Scope(Wellknown.Scopes.Global)
-                .Lifetime(Wellknown.Lifetimes.PerResolve)
-                .Lifetime(Wellknown.Lifetimes.AutoDisposing)
+                .Scope(Wellknown.Scope.Global)
+                .Lifetime(Wellknown.Lifetime.PerResolve)
+                .Lifetime(Wellknown.Lifetime.AutoDisposing)
                 .Contract<IEventRegistry>()
                 .AsAutowiring<EventRegistry>();
 
             yield return childContainer
                 .Register()
-                .Scope(Wellknown.Scopes.Internal)
-                .Lifetime(Wellknown.Lifetimes.PerResolve)
-                .Lifetime(Wellknown.Lifetimes.AutoDisposing)
+                .Scope(Wellknown.Scope.Internal)
+                .Lifetime(Wellknown.Lifetime.PerResolve)
+                .Lifetime(Wellknown.Lifetime.AutoDisposing)
                 .Contract<IEventBroker>()
                 .AsAutowiring<EventBroker>();
 
             yield return childContainer
                 .Register()
-                .Scope(Wellknown.Scopes.Internal)
+                .Scope(Wellknown.Scope.Internal)
                 .Contract(typeof(IEvent<>))
-                .KeyComparer(Wellknown.KeyComparers.AnyState)
+                .KeyComparer(Wellknown.KeyComparer.AnyState)
                 .AsAutowiring(typeof(Event<>));
 
             yield return childContainer
                 .Register()
-                .Scope(Wellknown.Scopes.Internal)
+                .Scope(Wellknown.Scope.Internal)
                 .Contract<long>()
                 .Tag("IdGenerator")
                 .AsFactoryMethod(IdGenerator.GenerateId);
 
             yield return childContainer
                 .Register()
-                .Scope(Wellknown.Scopes.Internal)
-                .Lifetime(Wellknown.Lifetimes.PerResolve)
-                .Lifetime(Wellknown.Lifetimes.AutoDisposing)
+                .Scope(Wellknown.Scope.Internal)
+                .Lifetime(Wellknown.Lifetime.PerResolve)
+                .Lifetime(Wellknown.Lifetime.AutoDisposing)
                 .Contract<IEventSource<DateTimeOffset>>()
                 .AsAutowiring<TimerSource>();
 
             yield return childContainer
                 .Register()
-                .Scope(Wellknown.Scopes.Internal)
-                .Lifetime(Wellknown.Lifetimes.PerResolve)
+                .Scope(Wellknown.Scope.Internal)
+                .Lifetime(Wellknown.Lifetime.PerResolve)
                 .Contract(typeof(IEventListener<>))
                 .AsAutowiring(typeof(ConsoleListener<>));
 

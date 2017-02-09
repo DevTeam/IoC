@@ -7,6 +7,6 @@
     internal class ScopeDto: IScopeDto
     {
         [JsonProperty("scope", Required = Required.Always)]
-        public Wellknown.Scopes Scope { get; [NotNull] set; }
+        public Wellknown.Scope Scope { get; [NotNull] set; }
     }
 }

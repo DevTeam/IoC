@@ -37,7 +37,7 @@
         {
             using (var rootContainer = new Container("root")
                 .Configure()
-                .DependsOn(Wellknown.Features.Default)
+                .DependsOn(Wellknown.Feature.Default)
                 .Register(r => r.Contract<ISimpleService>().AsAutowiring<SimpleService>())
                 .Apply())
             {
@@ -57,7 +57,7 @@
             using (var container = new Container("root")
                 .Configure()
                 .Register(r => r.Contract<IReferenceDescriptionResolver>().AsFactoryMethod<IReferenceDescriptionResolver>(ctx => new ReferenceDescriptionResolver()))
-                .DependsOn(Wellknown.Features.Default)
+                .DependsOn(Wellknown.Feature.Default)
                 .DependsOn<JsonConfiguration>(json)
                 .Apply())
             {
@@ -79,7 +79,7 @@
         {
             using (var rootResolver = new Container("root")
                 .Configure()
-                .DependsOn(Wellknown.Features.Default)
+                .DependsOn(Wellknown.Feature.Default)
                 .Apply())
             {
                 PerformanceTest(rootResolver, 1000);
@@ -91,7 +91,7 @@
         {
             using (var rootResolver = new Container("root")
                 .Configure()
-                .DependsOn(Wellknown.Features.Default)
+                .DependsOn(Wellknown.Feature.Default)
                 .Apply())
             {
                 for (var i = 0; i < 100; i++)

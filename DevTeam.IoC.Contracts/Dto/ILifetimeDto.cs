@@ -5,6 +5,6 @@
     [PublicAPI]
     public interface ILifetimeDto : IRegisterStatementDto
     {
-        Wellknown.Lifetimes Lifetime { [NotNull] get; }
+        Wellknown.Lifetime Lifetime { [NotNull] get; }
     }
 }

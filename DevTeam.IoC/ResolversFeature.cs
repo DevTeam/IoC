@@ -28,14 +28,14 @@
                 .Register()
                 .Contract(typeof(IResolver<>))
                 .Contract(typeof(IProvider<>))
-                .KeyComparer(Wellknown.KeyComparers.AnyTagAnyState)
+                .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
                 .AsFactoryMethod(ResolveResolver);
 
             yield return
                 resolver
                 .Register()
                 .Contract(typeof(Func<>))
-                .KeyComparer(Wellknown.KeyComparers.AnyTagAnyState)
+                .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
                 .AsFactoryMethod(ResolveFunc);
 
             yield return
@@ -43,14 +43,14 @@
                 .Register()
                 .Contract(typeof(IResolver<,>))
                 .Contract(typeof(IProvider<,>))
-                .KeyComparer(Wellknown.KeyComparers.AnyTagAnyState)
+                .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
                 .AsFactoryMethod(ResolveResolver);
 
             yield return
                 resolver
                 .Register()
                 .Contract(typeof(Func<,>))
-                .KeyComparer(Wellknown.KeyComparers.AnyTagAnyState)
+                .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
                 .AsFactoryMethod(ResolveFunc);
 
             yield return
@@ -58,14 +58,14 @@
                 .Register()
                 .Contract(typeof(IResolver<,,>))
                 .Contract(typeof(IProvider<,,>))
-                .KeyComparer(Wellknown.KeyComparers.AnyTagAnyState)
+                .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
                 .AsFactoryMethod(ResolveResolver);
 
             yield return
                 resolver
                 .Register()
                 .Contract(typeof(Func<,,>))
-                .KeyComparer(Wellknown.KeyComparers.AnyTagAnyState)
+                .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
                 .AsFactoryMethod(ResolveFunc);
 
             yield return
@@ -73,14 +73,14 @@
                 .Register()
                 .Contract(typeof(IResolver<,,,>))
                 .Contract(typeof(IProvider<,,,>))
-                .KeyComparer(Wellknown.KeyComparers.AnyTagAnyState)
+                .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
                 .AsFactoryMethod(ResolveResolver);
 
             yield return
                 resolver
                 .Register()
                 .Contract(typeof(Func<,,,>))
-                .KeyComparer(Wellknown.KeyComparers.AnyTagAnyState)
+                .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
                 .AsFactoryMethod(ResolveFunc);
 
             yield return
@@ -88,14 +88,14 @@
                 .Register()
                 .Contract(typeof(IResolver<,,,,>))
                 .Contract(typeof(IProvider<,,,,>))
-                .KeyComparer(Wellknown.KeyComparers.AnyTagAnyState)
+                .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
                 .AsFactoryMethod(ResolveResolver);
 
             yield return
                 resolver
                 .Register()
                 .Contract(typeof(Func<,,,,>))
-                .KeyComparer(Wellknown.KeyComparers.AnyTagAnyState)
+                .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
                 .AsFactoryMethod(ResolveFunc);
         }
 

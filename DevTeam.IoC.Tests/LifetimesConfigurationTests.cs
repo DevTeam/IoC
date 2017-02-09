@@ -16,12 +16,12 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Features.Lifetimes).Apply())
+            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).Apply())
             {
                 // When
                 using (
                     container.Register()
-                    .Lifetime(Wellknown.Lifetimes.Singleton)
+                    .Lifetime(Wellknown.Lifetime.Singleton)
                     .Contract<ISimpleService>()
                     .AsFactoryMethod(ctx => new Mock<ISimpleService>().Object))
                 {
@@ -39,12 +39,12 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Features.Lifetimes).Apply())
+            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).Apply())
             {
                 // When
                 using (
                     container.Register()
-                    .Lifetime(Wellknown.Lifetimes.Singleton)
+                    .Lifetime(Wellknown.Lifetime.Singleton)
                     .Contract<ISimpleService>()
                     .Contract<IDisposableService>()
                     .AsFactoryMethod(ctx => new Stub()))
@@ -63,12 +63,12 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Features.Lifetimes).Apply())
+            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).Apply())
             {
                 // When
                 using (
                     container.Register()
-                    .Lifetime(Wellknown.Lifetimes.PerState)
+                    .Lifetime(Wellknown.Lifetime.PerState)
                     .Contract<Statefull>()
                     .State<string>(0)
                     .AsFactoryMethod(ctx => new Statefull(ctx.GetState<string>(0))))
@@ -89,12 +89,12 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Features.Lifetimes).Apply())
+            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).Apply())
             {
                 // When
                 using (
                     container.Register()
-                    .Lifetime(Wellknown.Lifetimes.Singleton)
+                    .Lifetime(Wellknown.Lifetime.Singleton)
                     .Contract<ISimpleService>()
                     .Contract<IDisposableService>()
                     .Contract(typeof(IGenericService<>))
@@ -119,14 +119,14 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Features.Lifetimes).Apply())
+            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).Apply())
             {
                 var mock = new Mock<IDisposableService>();
 
                 // When
                 using (
                     container.Register()
-                    .Lifetime(Wellknown.Lifetimes.AutoDisposing)
+                    .Lifetime(Wellknown.Lifetime.AutoDisposing)
                     .Contract<IDisposableService>()
                     .AsFactoryMethod(ctx => mock.Object))
                 {
@@ -145,11 +145,11 @@
             var mock = new Mock<IDisposableService>();
 
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Features.Lifetimes).Apply())
+            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).Apply())
             {
                 // When
                 container.Register()
-                    .Lifetime(Wellknown.Lifetimes.AutoDisposing)
+                    .Lifetime(Wellknown.Lifetime.AutoDisposing)
                     .Contract<IDisposableService>()
                     .AsFactoryMethod(ctx => mock.Object);
 
@@ -165,15 +165,15 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Features.Lifetimes).Apply())
+            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).Apply())
             {
                 var mock = new Mock<IDisposableService>();
 
                 // When
                 using (
                     container.Register()
-                    .Lifetime(Wellknown.Lifetimes.Singleton)
-                    .Lifetime(Wellknown.Lifetimes.AutoDisposing)
+                    .Lifetime(Wellknown.Lifetime.Singleton)
+                    .Lifetime(Wellknown.Lifetime.AutoDisposing)
                     .Contract<IDisposableService>()
                     .AsFactoryMethod(ctx => mock.Object))
                 {
@@ -193,7 +193,7 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Features.Lifetimes).Apply())
+            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).Apply())
             {
                 // When
                 using (
@@ -202,7 +202,7 @@
                     .AsFactoryMethod(ctx => new MyClass(ctx.Container.Resolve().Instance<ISimpleService>(), ctx.Container.Resolve().Instance<ISimpleService>())))
                 using (
                     container.Register()
-                    .Lifetime(Wellknown.Lifetimes.PerResolve)
+                    .Lifetime(Wellknown.Lifetime.PerResolve)
                     .Contract<ISimpleService>()
                     .AsFactoryMethod(ctx => new Mock<ISimpleService>().Object))
                 {
@@ -219,12 +219,12 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Features.Lifetimes).Apply())
+            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).Apply())
             {
                 // When
                 using (
                     container.Register()
-                    .Lifetime(Wellknown.Lifetimes.PerThread)
+                    .Lifetime(Wellknown.Lifetime.PerThread)
                     .Contract<ISimpleService>()
                     .AsFactoryMethod(ctx => new Mock<ISimpleService>().Object))
                 {

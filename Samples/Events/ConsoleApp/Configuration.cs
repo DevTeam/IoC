@@ -12,7 +12,7 @@
         public IEnumerable<IConfiguration> GetDependencies<T>(T resolver) where T : IResolver
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            yield return resolver.Feature(Wellknown.Features.Lifetimes);
+            yield return resolver.Feature(Wellknown.Feature.Lifetimes);
             foreach (var config in resolver.Configure().DependsOn<JsonConfiguration>(ReadConfiguration("ClassLibrary.configuration.json")))
             {
                 yield return config;
@@ -22,7 +22,7 @@
         public IEnumerable<IDisposable> Apply(IResolver resolver)
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            yield return resolver.Register().Lifetime(Wellknown.Lifetimes.Singleton).Contract<IConsole>().AsAutowiring<Console>();
+            yield return resolver.Register().Lifetime(Wellknown.Lifetime.Singleton).Contract<IConsole>().AsAutowiring<Console>();
         }
 
         private string ReadConfiguration([NotNull] string jsonFileName)

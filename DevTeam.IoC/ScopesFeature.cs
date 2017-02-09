@@ -28,14 +28,14 @@
             yield return
                 resolver
                 .Register()
-                .Tag(Wellknown.Scopes.Internal)
+                .Tag(Wellknown.Scope.Internal)
                 .Contract<IScope>()
                 .AsFactoryMethod(ctx => _internalScope);
 
             yield return
                 resolver
                 .Register()
-                .Tag(Wellknown.Scopes.Global)
+                .Tag(Wellknown.Scope.Global)
                 .Contract<IScope>()
                 .AsFactoryMethod(ctx => _globalScope);
         }

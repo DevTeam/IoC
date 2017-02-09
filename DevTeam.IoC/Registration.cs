@@ -49,7 +49,7 @@
             return this;
         }
 
-        public IRegistration Lifetime(Wellknown.Lifetimes lifetime)
+        public IRegistration Lifetime(Wellknown.Lifetime lifetime)
         {
             Extensions.Add(Fluent.Resolve().Tag(lifetime).Instance<ILifetime>());
             return this;
@@ -62,7 +62,7 @@
             return this;
         }
 
-        public IRegistration KeyComparer(Wellknown.KeyComparers keyComparer)
+        public IRegistration KeyComparer(Wellknown.KeyComparer keyComparer)
         {
             Extensions.Add(Fluent.Resolve().Tag(keyComparer).Instance<IKeyComparer>());
             return this;
@@ -76,7 +76,7 @@
             return this;
         }
 
-        public IRegistration Scope(Wellknown.Scopes scope)
+        public IRegistration Scope(Wellknown.Scope scope)
         {
             Extensions.Add(Fluent.Resolve().Tag(scope).Instance<IScope>());
             return this;

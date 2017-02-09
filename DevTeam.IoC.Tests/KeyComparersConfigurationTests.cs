@@ -16,12 +16,12 @@
             // Given
             var mock = new Mock<ISimpleService>();
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Features.KeyComaprers).Apply())
+            using (container.Configure().DependsOn(Wellknown.Feature.KeyComaprers).Apply())
             {
                 // When
                 using (
                     container.Register()
-                    .KeyComparer(Wellknown.KeyComparers.AnyTag)
+                    .KeyComparer(Wellknown.KeyComparer.AnyTag)
                     .Tag("abc")
                     .Contract<ISimpleService>()
                     .AsFactoryMethod(ctx => mock.Object))

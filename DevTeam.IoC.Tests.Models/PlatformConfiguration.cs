@@ -22,7 +22,7 @@
         public IEnumerable<IConfiguration> GetDependencies<T>(T resolver) where T : IResolver
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            yield return resolver.Feature(Wellknown.Features.Default);
+            yield return resolver.Feature(Wellknown.Feature.Default);
         }
 
         public IEnumerable<IDisposable> Apply(IResolver resolver)
@@ -32,20 +32,20 @@
             {
                 yield return resolver
                     .Register()
-                    .Lifetime(Wellknown.Lifetimes.Singleton)
+                    .Lifetime(Wellknown.Lifetime.Singleton)
                     .Contract<ITrace>()
                     .AsAutowiring<Trace>();
             }
 
             yield return resolver
                 .Register()
-                .Lifetime(Wellknown.Lifetimes.Singleton)
+                .Lifetime(Wellknown.Lifetime.Singleton)
                 .Contract<IConsole>()
                 .AsAutowiring<Console>();
 
             yield return resolver
                 .Register()
-                .Lifetime(Wellknown.Lifetimes.Singleton)
+                .Lifetime(Wellknown.Lifetime.Singleton)
                 .Contract<ITimer>()
                 .Contract<ITimerManager>()
                 .AsAutowiring<Timer>();

@@ -28,7 +28,7 @@
                 resolver
                 .Register()
                 .Contract(typeof(Task<>))
-                .KeyComparer(Wellknown.KeyComparers.AnyTagAnyState)
+                .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
                 .AsFactoryMethod(ResolveTask);
         }
 

@@ -3,7 +3,7 @@
     [PublicAPI]
     public static class Wellknown
     {
-        public enum Features
+        public enum Feature
         {
             // Support default set of features.
             Default,
@@ -38,7 +38,7 @@
             Dto
         }
 
-        public enum Lifetimes
+        public enum Lifetime
         {
             /// <summary>
             /// Singleton instance.
@@ -71,7 +71,7 @@
             PerState
         }
 
-        public enum KeyComparers
+        public enum KeyComparer
         {
             // Tag key does not impact on resolving.
             AnyTag,
@@ -83,7 +83,7 @@
             AnyTagAnyState,
         }
 
-        public enum Scopes
+        public enum Scope
         {
             /// <summary>
             /// Registration is visible in the current container only.

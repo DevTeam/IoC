@@ -23,13 +23,13 @@
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             yield return
                 resolver.Register()
-                    .Lifetime(Wellknown.Lifetimes.PerContainer)
+                    .Lifetime(Wellknown.Lifetime.PerContainer)
                     .Contract<ICache<Type, IResolverFactory>>()
                     .AsFactoryMethod(ctx => new Cache<Type, IResolverFactory>());
 
             yield return
                 resolver.Register()
-                    .Lifetime(Wellknown.Lifetimes.PerContainer)
+                    .Lifetime(Wellknown.Lifetime.PerContainer)
                     .Contract<ICache<ICompositeKey, RegistrationItem>>()
                     .AsFactoryMethod(ctx => new Cache<ICompositeKey, RegistrationItem>());
         }
