@@ -18,7 +18,7 @@
             where T: IResolver
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            return GetFluent(resolver).Configure<T>(resolver);
+            return GetFluent(resolver).Configure(resolver);
         }
 
         [NotNull]
