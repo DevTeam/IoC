@@ -58,7 +58,7 @@
 
                     using (var childContainer = resolver.CreateChild())
                     {
-                        childContainer.Register().Contract<IConfiguration>().AsAutowiring(configurationType);
+                        childContainer.Register().Contract<IConfiguration>().Autowiring(configurationType);
                         yield return childContainer.Resolve().Instance<IConfiguration>();
                     }
 
@@ -359,7 +359,7 @@
                     metadataProvider = resolver.Resolve().State<IEnumerable<IParameterMetadata>>(0).Instance<IMetadataProvider>(constructorParameters);
                 }
 
-                registration.AsAutowiring(autowiringType, metadataProvider);
+                registration.Autowiring(autowiringType, metadataProvider);
                 return;
             }
 
@@ -385,7 +385,7 @@
                     throw new Exception($"Factory method {registerDto.FactoryMethodName} was not found");
                 }
 
-                registration.AsFactoryMethod(ctx => factoryMethod.Invoke(null, new object[] { ctx }));
+                registration.FactoryMethod(ctx => factoryMethod.Invoke(null, new object[] { ctx }));
             }
         }
 

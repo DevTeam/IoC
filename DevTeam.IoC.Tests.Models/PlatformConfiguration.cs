@@ -34,25 +34,25 @@
                     .Register()
                     .Lifetime(Wellknown.Lifetime.Singleton)
                     .Contract<ITrace>()
-                    .AsAutowiring<Trace>();
+                    .Autowiring<Trace>();
             }
 
             yield return resolver
                 .Register()
                 .Lifetime(Wellknown.Lifetime.Singleton)
                 .Contract<IConsole>()
-                .AsAutowiring<Console>();
+                .Autowiring<Console>();
 
             yield return resolver
                 .Register()
                 .Lifetime(Wellknown.Lifetime.Singleton)
                 .Contract<ITimer>()
                 .Contract<ITimerManager>()
-                .AsAutowiring<Timer>();
+                .Autowiring<Timer>();
 
             yield return resolver
                 .Register()
-                .AsAutowiring<Log>();
+                .Autowiring<Log>();
         }
     }
 }

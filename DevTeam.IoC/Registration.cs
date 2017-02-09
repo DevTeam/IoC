@@ -83,29 +83,29 @@
             return this;
         }
 
-        public IDisposable AsFactoryMethod(Func<IResolverContext, object> factoryMethod)
+        public IDisposable FactoryMethod(Func<IResolverContext, object> factoryMethod)
         {
             if (factoryMethod == null) throw new ArgumentNullException(nameof(factoryMethod));
             return AsFactoryMethodInternal(factoryMethod);
         }
 
-        public IConfiguring<T> ConfigureFactoryMethod<TImplementation>(Func<IResolverContext, TImplementation> factoryMethod)
+        public IConfiguring<T> AsFactoryMethod<TImplementation>(Func<IResolverContext, TImplementation> factoryMethod)
         {
-            return Include(AsFactoryMethod(factoryMethod)).Configure();
+            return Include(FactoryMethod(factoryMethod)).Configure();
         }
 
-        public IDisposable AsFactoryMethod<TImplementation>(Func<IResolverContext, TImplementation> factoryMethod)
+        public IDisposable FactoryMethod<TImplementation>(Func<IResolverContext, TImplementation> factoryMethod)
         {
             if (factoryMethod == null) throw new ArgumentNullException(nameof(factoryMethod));
             return AsFactoryMethodInternal(factoryMethod, typeof(TImplementation));
         }
 
-        public IConfiguring<T> ConfigureFactoryMethod(Func<IResolverContext, object> factoryMethod)
+        public IConfiguring<T> AsFactoryMethod(Func<IResolverContext, object> factoryMethod)
         {
-            return Include(AsFactoryMethod(factoryMethod)).Configure();
+            return Include(FactoryMethod(factoryMethod)).Configure();
         }
 
-        public IDisposable AsAutowiring(Type implementationType, IMetadataProvider metadataProvider = null)
+        public IDisposable Autowiring(Type implementationType, IMetadataProvider metadataProvider = null)
         {
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
             metadataProvider = metadataProvider ?? Fluent.Resolve(Resolver).Instance<IMetadataProvider>();
@@ -132,20 +132,20 @@
                 implementationType);
         }
 
-        public IConfiguring<T> ConfigureAsAutowiring(Type implementationType, IMetadataProvider metadataProvider = null)
+        public IConfiguring<T> AsAutowiring(Type implementationType, IMetadataProvider metadataProvider = null)
         {
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
-            return Include(AsAutowiring(implementationType, metadataProvider)).Configure();
+            return Include(Autowiring(implementationType, metadataProvider)).Configure();
         }
 
-        public IDisposable AsAutowiring<TImplementation>()
+        public IDisposable Autowiring<TImplementation>()
         {
-            return AsAutowiring(typeof(TImplementation));
+            return Autowiring(typeof(TImplementation));
         }
 
-        public IConfiguring<T> ConfigureAsAutowiring<TImplementation>()
+        public IConfiguring<T> AsAutowiring<TImplementation>()
         {
-            return Include(AsAutowiring<TImplementation>()).Configure();
+            return Include(Autowiring<TImplementation>()).Configure();
         }
 
         protected override bool AddContractKey([NotNull] IEnumerable<IContractKey> keys)

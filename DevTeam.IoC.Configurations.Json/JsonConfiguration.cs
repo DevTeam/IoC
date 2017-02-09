@@ -53,7 +53,7 @@
                 .Tag(GetType())
                 .State<IConfigurationDescriptionDto>(0)
                 .Contract<IConfigurationDto>()
-                .AsFactoryMethod(ctx =>
+                .FactoryMethod(ctx =>
                 {
                     var configurationDescriptionDto = ctx.GetState<IConfigurationDescriptionDto>(0);
                     if (configurationDescriptionDto == null)

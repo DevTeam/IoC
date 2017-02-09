@@ -19,10 +19,10 @@
             // Given
             var simpleService = new Mock<ISimpleService>();
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Feature.Resolvers).Include())
+            using (container.Configure().DependsOn(Wellknown.Feature.Resolvers).Finish())
             {
                 // When
-                using (container.Register().Contract<ISimpleService>().Tag("abc").AsFactoryMethod(ctx => simpleService.Object))
+                using (container.Register().Contract<ISimpleService>().Tag("abc").FactoryMethod(ctx => simpleService.Object))
                 {
                     var resolver = container.Resolve().Tag("abc").Instance<IResolver<ISimpleService>>();
                     var actualObj = resolver.Resolve();
@@ -38,10 +38,10 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Feature.Resolvers).Include())
+            using (container.Configure().DependsOn(Wellknown.Feature.Resolvers).Finish())
             {
                 // When
-                using (container.Register().Contract<ISimpleService>().Tag("abc").State<string>(0).State<int>(1).AsAutowiring<StateClass>())
+                using (container.Register().Contract<ISimpleService>().Tag("abc").State<string>(0).State<int>(1).Autowiring<StateClass>())
                 {
                     var resolver = container.Resolve().Tag("abc").Instance<IResolver<string, int, ISimpleService>>();
                     var actualObj = resolver.Resolve("text", 33) as StateClass;
@@ -59,10 +59,10 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Feature.Resolvers).Include())
+            using (container.Configure().DependsOn(Wellknown.Feature.Resolvers).Finish())
             {
                 // When
-                using (container.Register().Contract<ISimpleService>().Tag("abc").State<string>(0).State<int>(1).AsAutowiring<StateClass>())
+                using (container.Register().Contract<ISimpleService>().Tag("abc").State<string>(0).State<int>(1).Autowiring<StateClass>())
                 {
                     var resolver = container.Resolve().Tag("abc").Instance<IResolver<string, int, ISimpleService>>();
                     var actualObj = resolver.Resolve("text", 33) as StateClass;

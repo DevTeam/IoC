@@ -20,19 +20,19 @@
             var mock1 = new Mock<ISimpleService>();
             var mock2 = new Mock<ISimpleService>();
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Feature.Enumerables).Include())
+            using (container.Configure().DependsOn(Wellknown.Feature.Enumerables).Finish())
             {
                 // When
                 using (
                     container.Register()
                     .Tag("a")
                     .Contract<ISimpleService>()
-                    .AsFactoryMethod(ctx => mock1.Object))
+                    .FactoryMethod(ctx => mock1.Object))
                 using (
                     container.Register()
                     .Tag("b")
                     .Contract<ISimpleService>()
-                    .AsFactoryMethod(ctx => mock2.Object))
+                    .FactoryMethod(ctx => mock2.Object))
                 {
                     var listOfObj = container.Resolve().Instance<IEnumerable<ISimpleService>>().ToList();
 
@@ -49,7 +49,7 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Feature.Enumerables).Include())
+            using (container.Configure().DependsOn(Wellknown.Feature.Enumerables).Finish())
             {
                 // When
                 var listOfObj = container.Resolve().Instance<IEnumerable<ISimpleService>>().ToList();

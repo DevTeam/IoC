@@ -29,7 +29,7 @@
                 .Register()
                 .Contract(typeof(Task<>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .AsFactoryMethod(ResolveTask);
+                .FactoryMethod(ResolveTask);
         }
 
         public override int GetHashCode()

@@ -31,7 +31,7 @@
                 resolver
                 .Register()
                 .Contract(typeof(IEnumerable<>))
-                .AsFactoryMethod(ResolveEnumerable);
+                .FactoryMethod(ResolveEnumerable);
         }
 
         public override int GetHashCode()

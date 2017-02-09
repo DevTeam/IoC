@@ -22,7 +22,7 @@
         public IEnumerable<IDisposable> Apply(IResolver resolver)
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            yield return resolver.Register().Lifetime(Wellknown.Lifetime.Singleton).Contract<IConsole>().AsAutowiring<Console>();
+            yield return resolver.Register().Lifetime(Wellknown.Lifetime.Singleton).Contract<IConsole>().Autowiring<Console>();
         }
 
         private string ReadConfiguration([NotNull] string jsonFileName)

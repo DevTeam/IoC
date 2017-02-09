@@ -27,21 +27,21 @@
                 resolver
                 .Register()
                 .Contract<ITypeResolver>()
-                .AsAutowiring<TypeResolver>();
+                .Autowiring<TypeResolver>();
 
             yield return
                 resolver
                 .Register()
                 .Contract<IConfiguration>()
                 .State<IConfigurationDto>(0)
-                .AsAutowiring<ConfigurationDtoAdapter>();
+                .Autowiring<ConfigurationDtoAdapter>();
 
             yield return
                 resolver
                 .Register()
                 .State<string>(0)
                 .Contract<IConfigurationDescriptionDto>()
-                .AsFactoryMethod(ctx =>
+                .FactoryMethod(ctx =>
                     {
                         var description = ctx.GetState<string>(0);
                         if (string.IsNullOrWhiteSpace(description))

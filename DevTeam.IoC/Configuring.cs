@@ -75,7 +75,7 @@
 
         public IRegistration<T> Register()
         {
-            Include();
+            Finish();
             return _resolver.Register();
         }
 
@@ -92,7 +92,7 @@
             return registration;
         }
 
-        public T Include()
+        public T Finish()
         {
             _resolver.Resolve().Instance<IInternalResourceStore>().AddResource(Apply());
             return _resolver;

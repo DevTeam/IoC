@@ -65,7 +65,7 @@
         {
             // Given
             var factory = CreateFactory<DependencyClass>();
-            _container.Register().Contract<StateClass>().Tag("xxx").State(1, typeof(int)).State(0, typeof(string)).AsFactoryMethod(ctx => new StateClass("aa", 4));
+            _container.Register().Contract<StateClass>().Tag("xxx").State(1, typeof(int)).State(0, typeof(string)).FactoryMethod(ctx => new StateClass("aa", 4));
 
             // When
             var instance = (DependencyClass)factory.Create(CreateContext("abc", 3));
@@ -82,7 +82,7 @@
         {
             // Given
             var factory = CreateFactory<DependencyWithValuesClass>();
-            _container.Register().Contract<StateClass>().Tag("xyz").State(0, typeof(string)).State(1, typeof(int)).AsAutowiring<StateClass>();
+            _container.Register().Contract<StateClass>().Tag("xyz").State(0, typeof(string)).State(1, typeof(int)).Autowiring<StateClass>();
 
             // When
             var instance = (DependencyWithValuesClass)factory.Create(CreateContext("abc", 3));

@@ -18,7 +18,7 @@
             using (var container = new Container()
                 .Configure()
                 .DependsOn<JsonConfiguration>(jsonConfigStr)
-                .Include())
+                .Finish())
             {
                 // Resolve an instance implementing the interface "IHelloWorld"
                 var helloWorld = container.Resolve().Instance<IHelloWorld>();

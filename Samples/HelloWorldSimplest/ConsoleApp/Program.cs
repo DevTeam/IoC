@@ -15,7 +15,7 @@
                 .DependsOn(
                     Assembly.GetEntryAssembly(),
                     Assembly.Load(new AssemblyName("ClassLibrary"))
-                ).Include())
+                ).Finish())
             {
                 container.Resolve().Instance<Program>();
             }

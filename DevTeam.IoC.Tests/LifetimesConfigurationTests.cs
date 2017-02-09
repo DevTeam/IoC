@@ -16,14 +16,14 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).Include())
+            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).Finish())
             {
                 // When
                 using (
                     container.Register()
                     .Lifetime(Wellknown.Lifetime.Singleton)
                     .Contract<ISimpleService>()
-                    .AsFactoryMethod(ctx => new Mock<ISimpleService>().Object))
+                    .FactoryMethod(ctx => new Mock<ISimpleService>().Object))
                 {
                     var actualObj1 = container.Resolve().Instance<ISimpleService>();
                     var actualObj2 = container.Resolve().Instance<ISimpleService>();
@@ -39,7 +39,7 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).Include())
+            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).Finish())
             {
                 // When
                 using (
@@ -47,7 +47,7 @@
                     .Lifetime(Wellknown.Lifetime.Singleton)
                     .Contract<ISimpleService>()
                     .Contract<IDisposableService>()
-                    .AsFactoryMethod(ctx => new Stub()))
+                    .FactoryMethod(ctx => new Stub()))
                 {
                     object actualObj1 = container.Resolve().Instance<ISimpleService>();
                     object actualObj2 = container.Resolve().Instance<IDisposableService>();
@@ -63,7 +63,7 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).Include())
+            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).Finish())
             {
                 // When
                 using (
@@ -71,7 +71,7 @@
                     .Lifetime(Wellknown.Lifetime.PerState)
                     .Contract<Statefull>()
                     .State<string>(0)
-                    .AsFactoryMethod(ctx => new Statefull(ctx.GetState<string>(0))))
+                    .FactoryMethod(ctx => new Statefull(ctx.GetState<string>(0))))
                 {
                     var actualObj1 = container.Resolve().State<string>(0).Instance<Statefull>("a");
                     var actualObj2 = container.Resolve().State<string>(0).Instance<Statefull>("b");
@@ -89,7 +89,7 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).Include())
+            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).Finish())
             {
                 // When
                 using (
@@ -99,7 +99,7 @@
                     .Contract<IDisposableService>()
                     .Contract(typeof(IGenericService<>))
                     .Contract(typeof(IGenericService<>), typeof(ISimpleService))
-                    .AsFactoryMethod(ctx => new Stub<string>()))
+                    .FactoryMethod(ctx => new Stub<string>()))
                 {
                     object actualObj1 = container.Resolve().Instance<ISimpleService>();
                     object actualObj2 = container.Resolve().Instance<IDisposableService>();
@@ -119,7 +119,7 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).Include())
+            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).Finish())
             {
                 var mock = new Mock<IDisposableService>();
 
@@ -128,7 +128,7 @@
                     container.Register()
                     .Lifetime(Wellknown.Lifetime.AutoDisposing)
                     .Contract<IDisposableService>()
-                    .AsFactoryMethod(ctx => mock.Object))
+                    .FactoryMethod(ctx => mock.Object))
                 {
                     container.Resolve().Instance<IDisposableService>();
                 }
@@ -145,13 +145,13 @@
             var mock = new Mock<IDisposableService>();
 
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).Include())
+            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).Finish())
             {
                 // When
                 container.Register()
                     .Lifetime(Wellknown.Lifetime.AutoDisposing)
                     .Contract<IDisposableService>()
-                    .AsFactoryMethod(ctx => mock.Object);
+                    .FactoryMethod(ctx => mock.Object);
 
                 container.Resolve().Instance<IDisposableService>();
             }
@@ -165,7 +165,7 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).Include())
+            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).Finish())
             {
                 var mock = new Mock<IDisposableService>();
 
@@ -175,7 +175,7 @@
                     .Lifetime(Wellknown.Lifetime.Singleton)
                     .Lifetime(Wellknown.Lifetime.AutoDisposing)
                     .Contract<IDisposableService>()
-                    .AsFactoryMethod(ctx => mock.Object))
+                    .FactoryMethod(ctx => mock.Object))
                 {
                     var actualObj1 = container.Resolve().Instance<IDisposableService>();
                     var actualObj2 = container.Resolve().Instance<IDisposableService>();
@@ -193,18 +193,18 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).Include())
+            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).Finish())
             {
                 // When
                 using (
                     container.Register()
                     .Contract<MyClass>()
-                    .AsFactoryMethod(ctx => new MyClass(ctx.Container.Resolve().Instance<ISimpleService>(), ctx.Container.Resolve().Instance<ISimpleService>())))
+                    .FactoryMethod(ctx => new MyClass(ctx.Container.Resolve().Instance<ISimpleService>(), ctx.Container.Resolve().Instance<ISimpleService>())))
                 using (
                     container.Register()
                     .Lifetime(Wellknown.Lifetime.PerResolve)
                     .Contract<ISimpleService>()
-                    .AsFactoryMethod(ctx => new Mock<ISimpleService>().Object))
+                    .FactoryMethod(ctx => new Mock<ISimpleService>().Object))
                 {
                     var myClass = container.Resolve().Instance<MyClass>();
 
@@ -219,14 +219,14 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).Include())
+            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).Finish())
             {
                 // When
                 using (
                     container.Register()
                     .Lifetime(Wellknown.Lifetime.PerThread)
                     .Contract<ISimpleService>()
-                    .AsFactoryMethod(ctx => new Mock<ISimpleService>().Object))
+                    .FactoryMethod(ctx => new Mock<ISimpleService>().Object))
                 {
                     var simpleService1 = container.Resolve().Instance<ISimpleService>();
                     var simpleService2 = container.Resolve().Instance<ISimpleService>();

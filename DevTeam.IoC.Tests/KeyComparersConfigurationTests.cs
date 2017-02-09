@@ -16,7 +16,7 @@
             // Given
             var mock = new Mock<ISimpleService>();
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Feature.KeyComaprers).Include())
+            using (container.Configure().DependsOn(Wellknown.Feature.KeyComaprers).Finish())
             {
                 // When
                 using (
@@ -24,7 +24,7 @@
                     .KeyComparer(Wellknown.KeyComparer.AnyTag)
                     .Tag("abc")
                     .Contract<ISimpleService>()
-                    .AsFactoryMethod(ctx => mock.Object))
+                    .FactoryMethod(ctx => mock.Object))
                 {
                     var actualObj = container.Resolve().Tag("xyz").Instance<ISimpleService>();
 

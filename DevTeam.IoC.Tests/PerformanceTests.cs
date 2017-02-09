@@ -18,7 +18,7 @@
             using (var rootContainer = new Container("root")
                 .Configure()
                 .DependsOn(new EventsConfiguration(true))
-                .Include())
+                .Finish())
             {
                 var eventRegistry = rootContainer.Resolve().Instance<IEventRegistry>();
                 eventRegistry.RegisterEvent<DateTimeOffset>();
@@ -38,10 +38,8 @@
             using (var rootContainer = new Container("root")
                 .Configure()
                 .DependsOn(Wellknown.Feature.Default)
-                .Register()
-                .Contract<ISimpleService>()
-                .ConfigureAsAutowiring<SimpleService>()
-                .Include())
+                .Register().Contract<ISimpleService>().AsAutowiring<SimpleService>()
+                .Finish())
             {
                 for (var i = 0; i < 10000; i++)
                 {
@@ -58,12 +56,10 @@
             ITrace trace;
             using (var container = new Container("root")
                 .Configure()
-                .Register()
-                .Contract<IReferenceDescriptionResolver>()
-                .ConfigureFactoryMethod<IReferenceDescriptionResolver>(ctx => new ReferenceDescriptionResolver())
+                .Register().Contract<IReferenceDescriptionResolver>().AsFactoryMethod<IReferenceDescriptionResolver>(ctx => new ReferenceDescriptionResolver())
                 .DependsOn(Wellknown.Feature.Default)
                 .DependsOn<JsonConfiguration>(json)
-                .Include())
+                .Finish())
             {
                 var eventRegistry = container.Resolve().Instance<IEventRegistry>();
                 eventRegistry.RegisterEvent<DateTimeOffset>();
@@ -84,7 +80,7 @@
             using (var rootResolver = new Container("root")
                 .Configure()
                 .DependsOn(Wellknown.Feature.Default)
-                .Include())
+                .Finish())
             {
                 PerformanceTest(rootResolver, 1000);
             }
@@ -96,7 +92,7 @@
             using (var rootResolver = new Container("root")
                 .Configure()
                 .DependsOn(Wellknown.Feature.Default)
-                .Include())
+                .Finish())
             {
                 for (var i = 0; i < 100; i++)
                 {
@@ -110,7 +106,7 @@
             using (var childContainer = rootResolver.CreateChild("child")
                 .Configure()
                 .DependsOn(new EventsConfiguration(false))
-                .Include())
+                .Finish())
             {
                 var eventRegistry = childContainer.Resolve().Instance<IEventRegistry>();
                 eventRegistry.RegisterEvent<DateTimeOffset>();

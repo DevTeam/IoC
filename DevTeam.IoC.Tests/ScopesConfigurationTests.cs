@@ -18,14 +18,14 @@
             var mock = new Mock<ISimpleService>();
             using (var container = CreateContainer())
             using (var childContainer = new Container("child", container))
-            using (container.Configure().DependsOn(Wellknown.Feature.Scopes).Include())
+            using (container.Configure().DependsOn(Wellknown.Feature.Scopes).Finish())
             {
                 // When
                 using (
                     childContainer.Register()
                     .Scope(Wellknown.Scope.Global)
                     .Contract<ISimpleService>()
-                    .AsFactoryMethod(ctx => mock.Object))
+                    .FactoryMethod(ctx => mock.Object))
                 {
                     var actualObj = container.Resolve().Instance<ISimpleService>();
 
@@ -42,14 +42,14 @@
             var mock = new Mock<ISimpleService>();
             using (var container = CreateContainer())
             using (var childContainer = new Container("child", container))
-            using (container.Configure().DependsOn(Wellknown.Feature.Scopes).Include())
+            using (container.Configure().DependsOn(Wellknown.Feature.Scopes).Finish())
             {
                 // When
                 var registration =
                     childContainer.Register()
                         .Scope(Wellknown.Scope.Global)
                         .Contract<ISimpleService>()
-                        .AsFactoryMethod(ctx => mock.Object);
+                        .FactoryMethod(ctx => mock.Object);
 
                 registration.Dispose();
 
@@ -72,14 +72,14 @@
             using (var container = CreateContainer())
             using (var childContainer1 = new Container("child1", container))
             using (var childContainer2 = new Container("child2", container))
-            using (container.Configure().DependsOn(Wellknown.Feature.Scopes).Include())
+            using (container.Configure().DependsOn(Wellknown.Feature.Scopes).Finish())
             {
                 // When
                 using (
                     childContainer1.Register()
                     .Scope(Wellknown.Scope.Internal)
                     .Contract<ISimpleService>()
-                    .AsFactoryMethod(ctx => mock.Object))
+                    .FactoryMethod(ctx => mock.Object))
                 {
                     ISimpleService actualObj;
 
@@ -97,14 +97,14 @@
             using (var container = CreateContainer())
             using (var childContainer1 = new Container("child1", container))
             using (var childContainer2 = new Container("child2", container))
-            using (container.Configure().DependsOn(Wellknown.Feature.Scopes).Include())
+            using (container.Configure().DependsOn(Wellknown.Feature.Scopes).Finish())
             {
                 // When
                 var registration =
                     childContainer1.Register()
                         .Scope(Wellknown.Scope.Internal)
                         .Contract<ISimpleService>()
-                        .AsFactoryMethod(ctx => mock.Object);
+                        .FactoryMethod(ctx => mock.Object);
 
                 registration.Dispose();
 
