@@ -13,33 +13,33 @@
         "tag": { "tag": "child", "tagType": "string"}, 
         "container": [
             {
-                "Register": [ { "scope": "Global" }, { "lifetime": "PerResolve" }, { "lifetime": "AutoDisposing" }, { "contract": [ "IEventRegistry" ] } ],
-                "AsAutowiring": "EventRegistry"
+                "register": [ { "scope": "Global" }, { "lifetime": "PerResolve" }, { "lifetime": "AutoDisposing" }, { "contract": [ "IEventRegistry" ] } ],
+                "asAutowiring": "EventRegistry"
             },
 
             {
-                "Register": [ { "scope": "Internal" }, { "lifetime": "PerResolve" }, { "lifetime": "AutoDisposing" }, { "contract": [ "IEventBroker" ] } ],
-                "AsAutowiring": "EventBroker"
+                "register": [ { "scope": "Internal" }, { "lifetime": "PerResolve" }, { "lifetime": "AutoDisposing" }, { "contract": [ "IEventBroker" ] } ],
+                "asAutowiring": "EventBroker"
             },
 
             {
-                "Register": [ { "scope": "Internal" }, { "lifetime": "PerResolve" }, { "lifetime": "AutoDisposing" }, { "contract": [ "IEvent<>" ] }, { "keyComparer": "AnyState" } ],
-                "AsAutowiring": "Event<>"
+                "register": [ { "scope": "Internal" }, { "lifetime": "PerResolve" }, { "lifetime": "AutoDisposing" }, { "contract": [ "IEvent<>" ] }, { "keyComparer": "AnyState" } ],
+                "asAutowiring": "Event<>"
             },
 
             {
-                "Register": [ { "scope": "Internal" }, { "contract": [ "long" ] }, { "tag": "IdGenerator" } ],
-                "AsFactoryMethod": "IdGenerator.GenerateId"
+                "register": [ { "scope": "Internal" }, { "contract": [ "long" ] }, { "tag": "IdGenerator" } ],
+                "asFactoryMethod": "IdGenerator.GenerateId"
             },
 
             {
-                "Register": [ { "scope": "Internal" }, { "lifetime": "PerResolve" }, { "lifetime": "AutoDisposing" }, { "contract": [ "IEventSource<DateTimeOffset>" ] } ],
-                "AsAutowiring": "TimerSource"
+                "register": [ { "scope": "Internal" }, { "lifetime": "PerResolve" }, { "lifetime": "AutoDisposing" }, { "contract": [ "IEventSource<DateTimeOffset>" ] } ],
+                "asAutowiring": "TimerSource"
             },
 
             {
-                "Register": [ { "scope": "Internal" }, { "lifetime": "PerResolve" }, { "lifetime": "AutoDisposing" }, { "contract": [ "IEventListener<>" ] } ],
-                "AsAutowiring": "ConsoleListener<>"
+                "register": [ { "scope": "Internal" }, { "lifetime": "PerResolve" }, { "lifetime": "AutoDisposing" }, { "contract": [ "IEventListener<>" ] } ],
+                "asAutowiring": "ConsoleListener<>"
             }
         ]
     }

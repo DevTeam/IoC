@@ -31,8 +31,8 @@ The **Json configuration** jsonConfigStr:
 
     { "using": "ClassLibrary" },
 
-    { "Register": [ { "contract": [ "IConsole" ] } ], "AsAutowiring": "Console" },
-    { "Register": [ { "contract": [ "IHelloWorld" ] } ], "AsAutowiring": "HelloWorld" }
+    { "register": [ { "contract": [ "IConsole" ] } ], "asAutowiring": "Console" },
+    { "register": [ { "contract": [ "IHelloWorld" ] } ], "asAutowiring": "HelloWorld" }
 ]
 ```
 

@@ -9,25 +9,25 @@
 
     { "dependency.feature": "Default" },
 
-    { "Register": [ { "contract": [ "IName<>" ] } ], "AsAutowiring": "Name<>" },
+    { "register": [ { "contract": [ "IName<>" ] } ], "asAutowiring": "Name<>" },
 
-    { "Register": [ { "contract": [ "ILogger<>" ] } ], "AsAutowiring": "Logger<>" },
+    { "register": [ { "contract": [ "ILogger<>" ] } ], "asAutowiring": "Logger<>" },
 
     {
-        "Register": [ { "stateType": "DateTimeOffset" }, { "contract": [ "Event<DateTimeOffset>" ] } ],
-        "AsAutowiring": "Event<DateTimeOffset>",
+        "register": [ { "stateType": "DateTimeOffset" }, { "contract": [ "Event<DateTimeOffset>" ] } ],
+        "asAutowiring": "Event<DateTimeOffset>",
         "constructor": [
             { "paramType": "ILogger<Event<DateTimeOffset>>" },
             { "paramType": "DateTimeOffset", "state": { "stateType": "DateTimeOffset" } }
         ]
     },
 
-    { "Register": [ { "contract": [ "IEventConsumer<Event<DateTimeOffset>>" ] } ], "AsAutowiring": "Chronometer" },
+    { "register": [ { "contract": [ "IEventConsumer<Event<DateTimeOffset>>" ] } ], "asAutowiring": "Chronometer" },
 
     {
-        "Register": [ { "contract": [ "IEventProducer<Event<DateTimeOffset>>" ] } ],
-        "AsAutowiring": "Timer",
-        "Constructor": [
+        "register": [ { "contract": [ "IEventProducer<Event<DateTimeOffset>>" ] } ],
+        "asAutowiring": "Timer",
+        "constructor": [
             { "paramType": "ILogger<Timer>" },
             { "paramType": "Func<DateTimeOffset, Event<DateTimeOffset>>" },
             { "paramType": "TimeSpan", "Value": "00:00:01" }
@@ -35,7 +35,7 @@
     },
 
     {
-        "Register": [ { "lifetime": "Singleton" }, { "lifetime": "AutoDisposing" }, { "contract": [ "IEventBroker" ] } ],
-        "AsAutowiring": "EventBroker<Event<DateTimeOffset>>"
+        "register": [ { "lifetime": "Singleton" }, { "lifetime": "AutoDisposing" }, { "contract": [ "IEventBroker" ] } ],
+        "asAutowiring": "EventBroker<Event<DateTimeOffset>>"
     }
 ]

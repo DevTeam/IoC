@@ -8,28 +8,28 @@
     { "dependency.feature": "Default" },
 
     {
-        "Register": [ { "lifetime": "Singleton" }, { "contract": [ "ITrace" ] } ],
-        "AsAutowiring": "Trace"
+        "register": [ { "lifetime": "Singleton" }, { "contract": [ "ITrace" ] } ],
+        "asAutowiring": "Trace"
     },
 
     {
-        "Register": [ { "lifetime": "Singleton" }, { "contract": [ "IConsole" ] } ],
-        "AsAutowiring": "Console",
+        "register": [ { "lifetime": "Singleton" }, { "contract": [ "IConsole" ] } ],
+        "asAutowiring": "Console",
         "constructor": [
             { "paramType": "IProvider<ITrace>" }
         ]
     },
 
     {
-        "Register": [ { "lifetime": "Singleton" }, { "contract": [ "ITimer" ] }, { "contract": [ "ITimerManager" ] } ],
-        "AsAutowiring": "Timer",
+        "register": [ { "lifetime": "Singleton" }, { "contract": [ "ITimer" ] }, { "contract": [ "ITimerManager" ] } ],
+        "asAutowiring": "Timer",
         "constructor": [
             { "paramType": "ILog", "dependency": [ { "stateType": "string", "index": "0", "value": { "valueType": "string", "data": "Abc" } } ] }
         ]
     },
 
     {
-        "AsAutowiring": "Log",
+        "asAutowiring": "Log",
         "constructor": [
             { "paramType": "IConsole", "dependency": [ { "contract": [] } ] },
             { "paramType": "string", "state": { "stateType": "string" } }
