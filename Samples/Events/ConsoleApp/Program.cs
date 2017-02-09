@@ -6,7 +6,7 @@
 
     public class Program
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
             using (var container = new Container())
             using (container.Configure().DependsOn<Configuration>().Apply())

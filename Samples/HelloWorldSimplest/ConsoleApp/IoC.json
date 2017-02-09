@@ -1,0 +1,10 @@
+﻿[
+    { "reference": "ClassLibrary" },
+    { "reference": "ConsoleApp" },
+    { "using": "ClassLibrary" },
+    { "using": "ConsoleApp" },
+
+    { "asAutowiring": "Console" },
+    { "asAutowiring": "HelloWorld" },
+    { "asAutowiring": "Program" }
+]

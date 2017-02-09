@@ -1,0 +1,31 @@
+{
+  "version": "1.0.0-*",
+  "buildOptions": {
+    "emitEntryPoint": true
+  },
+
+  "dependencies": {
+    "ClassLibrary": "1.0.0-*",
+    "Microsoft.NETCore.App": {
+        "type": "platform",
+        "version": "1.0.1"
+    }
+  },
+
+  "frameworks": {
+    "netcoreapp1.0": {
+        "dependencies": {
+            "DevTeam.IoC": {
+                "target": "project"
+            },
+            "DevTeam.IoC.Configurations.Json": {
+                "target": "project"
+            },
+            "DevTeam.IoC.Contracts": {
+                "target": "project"
+            }
+        },
+        "imports": "dnxcore50"
+    }
+  }
+}
