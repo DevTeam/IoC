@@ -44,6 +44,7 @@
     <Compile Include="ContainerExtensions.cs" />
     <Compile Include="ContractAttribute.cs" />
     <Compile Include="Dto\IConfigurationDto.cs" />
+    <Compile Include="Dto\IDependencyAssemblyDto.cs" />
     <Compile Include="Dto\IDependencyReferenceDto.cs" />
     <Compile Include="Dto\IConfigurationStatementDto.cs" />
     <Compile Include="Dto\IParameterDto.cs" />

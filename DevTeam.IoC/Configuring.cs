@@ -64,8 +64,13 @@
         {
             if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
             if (assemblies.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(assemblies));
-            DependsOn(assemblies.Distinct().Select(assembly => (IConfiguration)new ConfigurationFromAssembly(assembly)).ToArray());
+            DependsOn(assemblies.Distinct().Select(CreateConfigurationFromAssembly).ToArray());
             return this;
+        }
+
+        private IConfiguration CreateConfigurationFromAssembly(Assembly assembly)
+        {
+            return _resolver.Resolve().State<Assembly>(0).Instance<IConfiguration>(assembly);
         }
 
         IEnumerator IEnumerable.GetEnumerator()

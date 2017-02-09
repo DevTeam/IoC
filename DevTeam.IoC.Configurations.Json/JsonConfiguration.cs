@@ -19,6 +19,7 @@
                     typeof(ContainerDto),
                     typeof(DependencyReferenceDto),
                     typeof(DependencyConfigurationDto),
+                    typeof(DependencyAssemblyDto),
                     typeof(DependencyFeatureDto)),
                 new JsonEnumConverter<Wellknown.Feature>(),
                 new JsonEnumConverter<Wellknown.Lifetime>(),
@@ -53,16 +54,7 @@
                 .Tag(GetType())
                 .State<IConfigurationDescriptionDto>(0)
                 .Contract<IConfigurationDto>()
-                .FactoryMethod(ctx =>
-                {
-                    var configurationDescriptionDto = ctx.GetState<IConfigurationDescriptionDto>(0);
-                    if (configurationDescriptionDto == null)
-                    {
-                        throw new InvalidOperationException($"{nameof(configurationDescriptionDto)} should not be null.");
-                    }
-
-                    return JsonConvert.DeserializeObject<ConfigurationDto>(configurationDescriptionDto.Description, SerializerSettings);
-                });
+                .FactoryMethod(ctx => JsonConvert.DeserializeObject<ConfigurationDto>(ctx.GetState<IConfigurationDescriptionDto>(0).Description, SerializerSettings));
         }
     }
 }

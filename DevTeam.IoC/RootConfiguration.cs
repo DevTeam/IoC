@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Reflection;
     using Contracts;
 
     internal class RootConfiguration: IConfiguration
@@ -49,16 +50,7 @@
                     .Register()
                     .State<IEnumerable<IParameterMetadata>>(0)
                     .Contract<IMetadataProvider>()
-                    .FactoryMethod(ctx =>
-                    {
-                        var constructorParams = ctx.GetState<IEnumerable<IParameterMetadata>>(0);
-                        if (constructorParams == null)
-                        {
-                            throw new InvalidOperationException($"{nameof(constructorParams)} was not defined.");
-                        }
-
-                        return new ManualMetadataProvider(MetadataProvider, constructorParams);
-                    });
+                    .FactoryMethod(ctx => new ManualMetadataProvider(MetadataProvider, ctx.GetState<IEnumerable<IParameterMetadata>>(0)));
 
             yield return
                 container
@@ -88,6 +80,13 @@
 
                     return new MetadataFactory(implementationType, ExpressionInstanceFactoryProvider, MetadataProvider);
                 });
+
+            yield return
+               resolver
+               .Register()
+               .Contract<IConfiguration>()
+               .State<Assembly>(0)
+               .FactoryMethod(ctx => new ConfigurationFromAssembly(ctx.GetState<Assembly>(0)));
 
             yield return
                 container

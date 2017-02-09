@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigurationDto.cs" />
+    <Compile Include="DependencyAssemblyDto.cs" />
     <Compile Include="DependencyReferenceDto.cs" />
     <Compile Include="ParameterDto.cs" />
     <Compile Include="ContractDto.cs" />

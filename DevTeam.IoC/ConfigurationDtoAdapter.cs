@@ -65,6 +65,14 @@
                     continue;
                 }
 
+                var dependencyAssemblyDto = configurationStatement as IDependencyAssemblyDto;
+                if (dependencyAssemblyDto != null)
+                {
+                    var assembly = Assembly.Load(new AssemblyName(dependencyAssemblyDto.AssemblyName));
+                    yield return resolver.Resolve().State<Assembly>(0).Instance<IConfiguration>(assembly);
+                    continue;
+                }
+
                 var dependencyReferenceDto = configurationStatement as IDependencyReferenceDto;
                 if (dependencyReferenceDto != null)
                 {

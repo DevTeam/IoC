@@ -41,17 +41,7 @@
                 .Register()
                 .State<string>(0)
                 .Contract<IConfigurationDescriptionDto>()
-                .FactoryMethod(ctx =>
-                    {
-                        var description = ctx.GetState<string>(0);
-                        if (string.IsNullOrWhiteSpace(description))
-                        {
-                            throw new InvalidOperationException("Empty description is not allowed.");
-                        }
-
-                        // ReSharper disable once AssignNullToNotNullAttribute
-                        return new ConfigurationDescriptionDto(description);
-                    });
+                .FactoryMethod(ctx => new ConfigurationDescriptionDto(ctx.GetState<string>(0)));
         }
     }
 }

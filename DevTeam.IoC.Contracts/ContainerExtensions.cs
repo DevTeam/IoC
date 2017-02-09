@@ -65,7 +65,7 @@
         }
 
         [CanBeNull]
-        public static object GetState([NotNull] this IResolverContext ctx, int index, [NotNull] Type stateType)
+        public static object TryGetState([NotNull] this IResolverContext ctx, int index, [NotNull] Type stateType)
         {
             if (ctx == null) throw new ArgumentNullException(nameof(ctx));
             if (stateType == null) throw new ArgumentNullException(nameof(stateType));
@@ -73,12 +73,43 @@
             return ctx.StateProvider.GetState(ctx, ctx.Container.KeyFactory.CreateStateKey(index, stateType));
         }
 
+        [NotNull]
+        public static object GetState([NotNull] this IResolverContext ctx, int index, [NotNull] Type stateType)
+        {
+            if (ctx == null) throw new ArgumentNullException(nameof(ctx));
+            if (stateType == null) throw new ArgumentNullException(nameof(stateType));
+            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
+            if (ctx == null) throw new ArgumentNullException(nameof(ctx));
+            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
+            var value = TryGetState(ctx, index, stateType);
+            if (value == null)
+            {
+                throw new InvalidOperationException($"State {index} of type \"{stateType.FullName}\" can not be null.");
+            }
+
+            return value;
+        }
+
         [CanBeNull]
-        public static T GetState<T>([NotNull] this IResolverContext ctx, int index)
+        public static T TryGetState<T>([NotNull] this IResolverContext ctx, int index)
         {
             if (ctx == null) throw new ArgumentNullException(nameof(ctx));
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
             return (T)ctx.GetState(index, typeof(T));
+        }
+
+        [NotNull]
+        public static T GetState<T>([NotNull] this IResolverContext ctx, int index)
+        {
+            if (ctx == null) throw new ArgumentNullException(nameof(ctx));
+            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
+            var value = TryGetState<T>(ctx, index);
+            if (value == null)
+            {
+                throw new InvalidOperationException($"State {index} of type \"{typeof(T).FullName}\" can not be null.");
+            }
+
+            return value;
         }
 
         [NotNull]
