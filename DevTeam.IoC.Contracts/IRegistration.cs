@@ -3,7 +3,8 @@
     using System;
 
     [PublicAPI]
-    public interface IRegistration : IToken<IRegistration>
+    public interface IRegistration<T> : IToken<IRegistration<T>>
+         where T : IResolver
     {
         [NotNull]
         IDisposable AsFactoryMethod([NotNull] Func<IResolverContext, object> factoryMethod);
@@ -18,26 +19,26 @@
         IDisposable AsAutowiring<TImplementation>();
 
         [NotNull]
-        IRegistration Attributes([NotNull] Type implementationType);
+        IRegistration<T> Attributes([NotNull] Type implementationType);
 
         [NotNull]
-        IRegistration Attributes<TImplementation>();
+        IRegistration<T> Attributes<TImplementation>();
 
         [NotNull]
-        IRegistration Lifetime(Wellknown.Lifetime lifetime);
+        IRegistration<T> Lifetime(Wellknown.Lifetime lifetime);
 
         [NotNull]
-        IRegistration Lifetime([NotNull] ILifetime lifetime);
+        IRegistration<T> Lifetime([NotNull] ILifetime lifetime);
 
         [NotNull]
-        IRegistration KeyComparer(Wellknown.KeyComparer keyComparer);
+        IRegistration<T> KeyComparer(Wellknown.KeyComparer keyComparer);
 
         [NotNull]
-        IRegistration KeyComparer([NotNull] IKeyComparer keyComparer);
+        IRegistration<T> KeyComparer([NotNull] IKeyComparer keyComparer);
 
         [NotNull]
-        IRegistration Scope([NotNull] IScope scope);
+        IRegistration<T> Scope([NotNull] IScope scope);
 
-        IRegistration Scope(Wellknown.Scope scope);
+        IRegistration<T> Scope(Wellknown.Scope scope);
     }
 }

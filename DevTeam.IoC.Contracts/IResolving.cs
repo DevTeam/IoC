@@ -1,7 +1,8 @@
 ﻿namespace DevTeam.IoC.Contracts
 {
     [PublicAPI]
-    public interface IResolving : IToken<IResolving>
+    public interface IResolving<T> : IToken<IResolving<T>>
+         where T : IResolver
     {
         [NotNull]
         object Instance([NotNull][ItemCanBeNull] params object[] state);

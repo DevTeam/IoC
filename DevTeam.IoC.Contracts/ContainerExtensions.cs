@@ -28,7 +28,7 @@
             if (context == null) throw new ArgumentNullException(nameof(context));
             IRegistry registry;
             IDisposable registration;
-            if (!GetFluent(resolver).TryGetRegistry(out registry) || !registry.TryRegister(context, out registration))
+            if (!GetFluent(resolver).TryGetRegistry(resolver, out registry) || !registry.TryRegister(context, out registration))
             {
                 throw new InvalidOperationException($"Can't register {string.Join(Environment.NewLine, context.Keys)}.{Environment.NewLine}{Environment.NewLine}{registry}");
             }
@@ -37,10 +37,11 @@
         }
 
         [NotNull]
-        public static IRegistration Register([NotNull] this IResolver resolver)
+        public static IRegistration<T> Register<T>([NotNull] this T resolver)
+             where T : IResolver
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            return GetFluent(resolver).Register();
+            return GetFluent(resolver).Register(resolver);
         }
 
         [NotNull]
@@ -56,10 +57,11 @@
         }
 
         [NotNull]
-        public static IResolving Resolve([NotNull] this IResolver resolver)
+        public static IResolving<T> Resolve<T>([NotNull] this T resolver)
+             where T : IResolver
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            return GetFluent(resolver).Resolve();
+            return GetFluent(resolver).Resolve(resolver);
         }
 
         [CanBeNull]
@@ -80,7 +82,8 @@
         }
 
         [NotNull]
-        private static IFluent GetFluent([NotNull] IResolver resolver)
+        private static IFluent GetFluent<T>([NotNull] T resolver)
+            where T: IResolver
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             if (_fluentKey == null)

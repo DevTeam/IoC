@@ -5,34 +5,29 @@
 
     internal class Fluent : IFluent
     {
-        private readonly IResolver _resolver;
-
-        public Fluent(IResolver resolver)
+        public bool TryGetRegistry<T>(T resolver, out IRegistry registry)
+            where T : IResolver
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            _resolver = resolver;
-        }
-
-        public bool TryGetRegistry(out IRegistry registry)
-        {
-            return _resolver.TryResolve(out registry);
+            return resolver.TryResolve(out registry);
         }
 
         public IConfiguring<T> Configure<T>(T resolver)
-            where T : IResolver
+             where T : IResolver
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             return new Configuring<T>(resolver);
         }
 
-        public IRegistration Register()
+        public IRegistration<T> Register<T>(T resolver)
+             where T : IResolver
         {
-            return new Registration(this, _resolver);
+            return new Registration<T>(this, resolver);
         }
 
-        public IResolving Resolve()
+        public IResolving<T> Resolve<T>(T resolver)
+             where T : IResolver
         {
-            return new Resolving(this, _resolver);
+            return new Resolving<T>(this, resolver);
         }
     }
 }

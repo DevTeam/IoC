@@ -42,7 +42,7 @@
         {
             if (parameterMetadata.IsDependency)
             {
-                return resolverContext.RegistryContext.Container.Resolve().Key(parameterMetadata.Keys).Instance(parameterMetadata.State ?? EmptyState);
+                return resolverContext.RegistryContext.Container.Resolve<IResolver>().Key(parameterMetadata.Keys).Instance(parameterMetadata.State ?? EmptyState);
             }
 
             if(parameterMetadata.Value != null)

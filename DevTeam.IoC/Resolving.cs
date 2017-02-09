@@ -5,21 +5,22 @@
     using System.Linq;
     using Contracts;
 
-    internal class Resolving : Token<IResolving>, IResolving
+    internal class Resolving<T> : Token<T, IResolving<T>>, IResolving<T>
+         where T : IResolver
     {
         private readonly HashSet<IContractKey> _genericContractKeys = new HashSet<IContractKey>();
         private readonly HashSet<ITagKey> _tagKeys = new HashSet<ITagKey>();
         private readonly HashSet<IStateKey> _stateKeys = new HashSet<IStateKey>();
         private ICompositeKey _compositeKey;
 
-        public Resolving([NotNull] IFluent fluent, [NotNull] IResolver resolver)
+        public Resolving([NotNull] IFluent fluent, [NotNull] T resolver)
             : base(fluent, resolver)
         {
             if (fluent == null) throw new ArgumentNullException(nameof(fluent));
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
         }
 
-        public override IResolving Contract([NotNull] params Type[] contractTypes)
+        public override IResolving<T> Contract(params Type[] contractTypes)
         {
             if (contractTypes == null) throw new ArgumentNullException(nameof(contractTypes));
             AddContractKey(contractTypes.Select(type => KeyFactory.CreateContractKey(type, true)));

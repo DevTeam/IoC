@@ -1,19 +1,17 @@
 ﻿namespace DevTeam.IoC.Contracts
 {
-    using System;
-
     [PublicAPI]
     public interface IFluent
     {
-        bool TryGetRegistry(out IRegistry registry);
+        bool TryGetRegistry<T>([NotNull] T resolver, out IRegistry registry) where T : IResolver;
 
         [NotNull]
-        IConfiguring<T> Configure<T>([NotNull] T resolver) where T: IResolver;
+        IConfiguring<T> Configure<T>([NotNull] T resolver) where T : IResolver;
 
         [NotNull]
-        IRegistration Register();
+        IRegistration<T> Register<T>([NotNull] T resolver) where T : IResolver;
 
         [NotNull]
-        IResolving Resolve();
+        IResolving<T> Resolve<T>([NotNull] T resolver) where T : IResolver;
     }
 }

@@ -8,12 +8,12 @@
 
     internal class Resolver<TContract>: IResolver<TContract>, IProvider<TContract>, IFuncProvider
     {
-        private readonly IResolving _resolving;
+        private readonly IResolving<IResolver> _resolving;
 
         public Resolver(IResolverContext context)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
-            _resolving = context.Container.Resolve().Key(ExcludeContractKeys(context.Key)).Contract<TContract>();
+            _resolving = context.Container.Resolve<IResolver>().Key(ExcludeContractKeys(context.Key)).Contract<TContract>();
         }
 
         public TContract Resolve()
@@ -54,7 +54,7 @@
             return new Func<TContract>(Resolve);
         }
 
-        protected IResolving CreateResolving()
+        protected IResolving<IResolver> CreateResolving()
         {
             return _resolving;
         }

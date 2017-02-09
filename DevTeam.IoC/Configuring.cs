@@ -38,7 +38,7 @@
         {
             if (features == null) throw new ArgumentNullException(nameof(features));
             if (features.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(features));
-            _configurations.Add(new HashSet<IConfiguration>(features.Distinct().Select(wellknownConfiguration => _resolver.Resolve().Tag(wellknownConfiguration).Instance<IConfiguration>())));
+            _configurations.Add(new HashSet<IConfiguration>(features.Distinct().Select(wellknownConfiguration => _resolver.Resolve<IResolver>().Tag(wellknownConfiguration).Instance<IConfiguration>())));
             return this;
         }
 
@@ -88,14 +88,14 @@
 
         public T Include()
         {
-            _resolver.Resolve().Instance<IInternalResourceStore>().AddResource(Apply());
+            _resolver.Resolve<T>().Instance<IInternalResourceStore>().AddResource(Apply());
             return _resolver;
         }
 
-        public IConfiguring<T> Register(Func<IRegistration, IDisposable> registration)
+        public IConfiguring<T> Register(Func<IRegistration<T>, IDisposable> registration)
         {
             if (registration == null) throw new ArgumentNullException(nameof(registration));
-            _registrations.Add(registration(_resolver.Register()));
+            _registrations.Add(registration(_resolver.Register<T>()));
             return this;
         }
 

@@ -6,7 +6,8 @@
     using System.Reflection;
     using Contracts;
 
-    internal class Registration : Token<IRegistration>, IRegistration
+    internal class Registration<T> : Token<T, IRegistration<T>>, IRegistration<T>
+         where T : IResolver
     {
         private readonly List<HashSet<IContractKey>> _contractKeys = new List<HashSet<IContractKey>>();
         private readonly HashSet<ITagKey> _tagKeys = new HashSet<ITagKey>();
@@ -14,7 +15,7 @@
         private readonly HashSet<ICompositeKey> _compositeKeys = new HashSet<ICompositeKey>();
         private readonly Lazy<IInstanceFactoryProvider> _instanceFactoryProvider;
 
-        public Registration([NotNull] IFluent fluent, [NotNull] IResolver resolver)
+        public Registration([NotNull] IFluent fluent, [NotNull] T resolver)
             : base(fluent, resolver)
         {
             if (fluent == null) throw new ArgumentNullException(nameof(fluent));
@@ -24,51 +25,51 @@
 
         private List<IExtension> Extensions { get; } = new List<IExtension>();
 
-        public IRegistration Attributes(Type implementationType)
+        public IRegistration<T> Attributes(Type implementationType)
         {
             ExtractMetadata(implementationType);
             return this;
         }
 
-        public IRegistration Attributes<TImplementation>()
+        public IRegistration<T> Attributes<TImplementation>()
         {
             return Attributes(typeof(TImplementation));
         }
 
-        public override IRegistration Contract(params Type[] contractTypes)
+        public override IRegistration<T> Contract(params Type[] contractTypes)
         {
             if (contractTypes == null) throw new ArgumentNullException(nameof(contractTypes));
             AddContractKey(contractTypes.Select(type => KeyFactory.CreateContractKey(type, false)));
             return this;
         }
 
-        public IRegistration Lifetime(ILifetime lifetime)
+        public IRegistration<T> Lifetime(ILifetime lifetime)
         {
             if (lifetime == null) throw new ArgumentNullException(nameof(lifetime));
             Extensions.Add(lifetime);
             return this;
         }
 
-        public IRegistration Lifetime(Wellknown.Lifetime lifetime)
+        public IRegistration<T> Lifetime(Wellknown.Lifetime lifetime)
         {
-            Extensions.Add(Fluent.Resolve().Tag(lifetime).Instance<ILifetime>());
+            Extensions.Add(Fluent.Resolve(Resolver).Tag(lifetime).Instance<ILifetime>());
             return this;
         }
 
-        public IRegistration KeyComparer(IKeyComparer keyComparer)
+        public IRegistration<T> KeyComparer(IKeyComparer keyComparer)
         {
             if (keyComparer == null) throw new ArgumentNullException(nameof(keyComparer));
             Extensions.Add(keyComparer);
             return this;
         }
 
-        public IRegistration KeyComparer(Wellknown.KeyComparer keyComparer)
+        public IRegistration<T> KeyComparer(Wellknown.KeyComparer keyComparer)
         {
-            Extensions.Add(Fluent.Resolve().Tag(keyComparer).Instance<IKeyComparer>());
+            Extensions.Add(Fluent.Resolve(Resolver).Tag(keyComparer).Instance<IKeyComparer>());
             return this;
         }
 
-        public IRegistration Scope(IScope scope)
+        public IRegistration<T> Scope(IScope scope)
         {
             if (scope == null) throw new ArgumentNullException(nameof(scope));
             if (Extensions.OfType<IScope>().Any()) throw new InvalidOperationException();
@@ -76,9 +77,9 @@
             return this;
         }
 
-        public IRegistration Scope(Wellknown.Scope scope)
+        public IRegistration<T> Scope(Wellknown.Scope scope)
         {
-            Extensions.Add(Fluent.Resolve().Tag(scope).Instance<IScope>());
+            Extensions.Add(Fluent.Resolve(Resolver).Tag(scope).Instance<IScope>());
             return this;
         }
 
@@ -97,7 +98,7 @@
         public IDisposable AsAutowiring(Type implementationType, IMetadataProvider metadataProvider = null)
         {
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
-            metadataProvider = metadataProvider ?? Fluent.Resolve().Instance<IMetadataProvider>();
+            metadataProvider = metadataProvider ?? Fluent.Resolve(Resolver).Instance<IMetadataProvider>();
             return AsFactoryMethodInternal(ctx =>
                 {
                     var resolvedType = metadataProvider.ResolveImplementationType(ctx, implementationType);

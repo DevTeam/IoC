@@ -5,7 +5,7 @@
 
     internal class Resolver<TState1, TState2, TState3, TContract> : Resolver<TContract>, IResolver<TState1, TState2, TState3, TContract>, IProvider<TState1, TState2, TState3, TContract>
     {
-        private readonly IResolving _resolving;
+        private readonly IResolving<IResolver> _resolving;
 
         public Resolver(IResolverContext context)
             : base(context)

@@ -9,13 +9,26 @@
     {
         public static IEnumerable<ICompositeKey> CreateKeys<TContract>()
         {
-            var key = new CompositeKey(new[] { (IContractKey)new ContractKey(typeof(TContract), true), }, Enumerable.Empty<ITagKey>(), Enumerable.Empty<IStateKey>());
+            return CreateKeys(typeof(TContract));
+        }
+
+        public static IEnumerable<ICompositeKey> CreateKeys(Type contractType)
+        {
+            var key = new CompositeKey(new[] { (IContractKey)new ContractKey(contractType, true), }, Enumerable.Empty<ITagKey>(), Enumerable.Empty<IStateKey>());
             return Enumerable.Repeat(key, 1).ToArray();
         }
 
         public static IDisposable RawRegister<TContract>(IRegistry registry, IEnumerable<ICompositeKey> keys, Func<IResolverContext, TContract> factoryMethod)
         {
             var registryContext = registry.CreateContext(keys, new MethodFactory<TContract>(factoryMethod), Enumerable.Empty<IExtension>());
+            IDisposable disposable;
+            registry.TryRegister(registryContext, out disposable);
+            return disposable;
+        }
+
+        public static IDisposable RawRegister(Type contractType, IRegistry registry, IEnumerable<ICompositeKey> keys, Func<IResolverContext, object> factoryMethod)
+        {
+            var registryContext = registry.CreateContext(keys, new MethodFactory<object>(factoryMethod), Enumerable.Empty<IExtension>());
             IDisposable disposable;
             registry.TryRegister(registryContext, out disposable);
             return disposable;

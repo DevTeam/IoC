@@ -4,27 +4,27 @@
     using System.Collections.Generic;
 
     [PublicAPI]
-    public interface IToken<out T>
+    public interface IToken<out TToken>
     {
         [NotNull]
-        T Key([NotNull] IEnumerable<IKey> keys);
+        TToken Key([NotNull] IEnumerable<IKey> keys);
 
         [NotNull]
-        T Key([NotNull] params IKey[] keys);
+        TToken Key([NotNull] params IKey[] keys);
 
         [NotNull]
-        T Contract([NotNull] params Type[] contractTypes);
+        TToken Contract([NotNull] params Type[] contractTypes);
 
         [NotNull]
-        T Contract<TContract>();
+        TToken Contract<TContract>();
 
         [NotNull]
-        T State(int index, [NotNull] Type stateType);
+        TToken State(int index, [NotNull] Type stateType);
 
         [NotNull]
-        T State<TState>(int index);
+        TToken State<TState>(int index);
 
         [NotNull]
-        T Tag(params object[] tags);
+        TToken Tag(params object[] tags);
     }
 }
