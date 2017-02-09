@@ -29,9 +29,9 @@
         IConfiguring<T> Register([NotNull] Func<IRegistration, IDisposable> registration);
 
         [NotNull]
-        IDisposable Create();
+        IDisposable Apply();
 
         [NotNull]
-        T Apply();
+        T Include();
     }
 }

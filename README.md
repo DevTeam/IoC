@@ -21,7 +21,7 @@ Here is just one simplest example [_Hellow World Simplest_](https://github.com/D
                 .DependsOn(
                     Assembly.GetEntryAssembly(),
                     Assembly.Load(new AssemblyName("ClassLibrary"))
-                ).Apply())
+                ).Include())
             {
                 container.Resolve().Instance<Program>();
             }

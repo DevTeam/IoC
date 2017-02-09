@@ -78,7 +78,7 @@
             return _configurations.SelectMany(i => i).GetEnumerator();
         }
 
-        public IDisposable Create()
+        public IDisposable Apply()
         {
             _registrations.AddRange(_configurations.Select(Apply));
             var registration = new CompositeDisposable(_registrations);
@@ -86,9 +86,9 @@
             return registration;
         }
 
-        public T Apply()
+        public T Include()
         {
-            _resolver.Resolve().Instance<IInternalResourceStore>().AddResource(Create());
+            _resolver.Resolve().Instance<IInternalResourceStore>().AddResource(Apply());
             return _resolver;
         }
 
