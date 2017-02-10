@@ -91,7 +91,7 @@
 
         public IConfiguring<T> AsFactoryMethod<TImplementation>(Func<IResolverContext, TImplementation> factoryMethod)
         {
-            return Include(FactoryMethod(factoryMethod)).Configure();
+            return Own(FactoryMethod(factoryMethod)).Configure();
         }
 
         public IDisposable FactoryMethod<TImplementation>(Func<IResolverContext, TImplementation> factoryMethod)
@@ -102,7 +102,7 @@
 
         public IConfiguring<T> AsFactoryMethod(Func<IResolverContext, object> factoryMethod)
         {
-            return Include(FactoryMethod(factoryMethod)).Configure();
+            return Own(FactoryMethod(factoryMethod)).Configure();
         }
 
         public IDisposable Autowiring(Type implementationType, IMetadataProvider metadataProvider = null)
@@ -135,7 +135,7 @@
         public IConfiguring<T> AsAutowiring(Type implementationType, IMetadataProvider metadataProvider = null)
         {
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
-            return Include(Autowiring(implementationType, metadataProvider)).Configure();
+            return Own(Autowiring(implementationType, metadataProvider)).Configure();
         }
 
         public IDisposable Autowiring<TImplementation>()
@@ -145,7 +145,7 @@
 
         public IConfiguring<T> AsAutowiring<TImplementation>()
         {
-            return Include(Autowiring<TImplementation>()).Configure();
+            return Own(Autowiring<TImplementation>()).Configure();
         }
 
         protected override bool AddContractKey([NotNull] IEnumerable<IContractKey> keys)
@@ -169,7 +169,7 @@
             return _compositeKeys.Add(compositeKey);
         }
 
-        private T Include(IDisposable resource)
+        private T Own(IDisposable resource)
         {
             Resolver.Resolve().Instance<IInternalResourceStore>().AddResource(resource);
             return Resolver;

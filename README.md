@@ -16,12 +16,11 @@ Here is just one simplest example [_Hellow World Simplest_](https://github.com/D
     {
         public static void Main()
         {
-            using (var container = new Container()
+            using (
+                var container = new Container()
                 .Configure()
-                .DependsOn(
-                    Assembly.GetEntryAssembly(),
-                    Assembly.Load(new AssemblyName("ClassLibrary"))
-                ).Own())
+                .DependsOn(Assembly.GetEntryAssembly(), Assembly.Load(new AssemblyName("ClassLibrary")))
+                .Own())
             {
                 container.Resolve().Instance<Program>();
             }
