@@ -16,18 +16,18 @@
             if (assembly == null) throw new ArgumentNullException(nameof(assembly));
         }
 
-        public IEnumerable<IConfiguration> GetDependencies<T>(T resolver) where T : IResolver
+        public IEnumerable<IConfiguration> GetDependencies<T>(T container) where T : IResolver, IRegistry
         {
             yield break;
         }
 
-        public IEnumerable<IDisposable> Apply(IResolver resolver)
+        public IEnumerable<IDisposable> Apply<T>(T container) where T : IResolver, IRegistry
         {
             return 
                 from typeInfo in _assembly.DefinedTypes
                 where typeInfo.GetCustomAttributes<ContractAttribute>().Any()
                 let type = typeInfo.AsType()
-                select resolver.Register().Attributes(typeInfo.AsType()).Autowiring(type);
+                select container.Register().Attributes(typeInfo.AsType()).Autowiring(type);
         }
     }
 }

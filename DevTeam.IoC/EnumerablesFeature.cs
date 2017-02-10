@@ -18,17 +18,17 @@
         {
         }
 
-        public IEnumerable<IConfiguration> GetDependencies<T>(T resolver) where T : IResolver
+        public IEnumerable<IConfiguration> GetDependencies<T>(T container) where T : IResolver, IRegistry
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
+            if (container == null) throw new ArgumentNullException(nameof(container));
             yield break;
         }
 
-        public IEnumerable<IDisposable> Apply(IResolver resolver)
+        public IEnumerable<IDisposable> Apply<T>(T container) where T : IResolver, IRegistry
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
+            if (container == null) throw new ArgumentNullException(nameof(container));
             yield return
-                resolver
+                container
                 .Register()
                 .Contract(typeof(IEnumerable<>))
                 .FactoryMethod(ResolveEnumerable);

@@ -101,7 +101,7 @@
             }
         }
 
-        private static void PerformanceTest(IResolver rootResolver, int ticks)
+        private static void PerformanceTest(IContainer rootResolver, int ticks)
         {
             using (var childContainer = rootResolver.CreateChild("child")
                 .Configure()

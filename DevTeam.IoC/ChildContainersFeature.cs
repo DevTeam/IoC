@@ -13,24 +13,24 @@
         {
         }
 
-        public IEnumerable<IConfiguration> GetDependencies<T>(T resolver) where T : IResolver
+        public IEnumerable<IConfiguration> GetDependencies<T>(T container) where T : IResolver, IRegistry
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
+            if (container == null) throw new ArgumentNullException(nameof(container));
             yield return LifetimesFeature.Shared;
         }
 
-        public IEnumerable<IDisposable> Apply(IResolver resolver)
+        public IEnumerable<IDisposable> Apply<T>(T container) where T : IResolver, IRegistry
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
+            if (container == null) throw new ArgumentNullException(nameof(container));
             yield return 
-                resolver
+                container
                 .Register()
                 .Lifetime(Wellknown.Lifetime.AutoDisposing)
                 .Contract<IContainer>()
                 .FactoryMethod(ctx => new Container(null, ctx.Container));
 
             yield return
-                resolver
+                container
                 .Register()
                 .Lifetime(Wellknown.Lifetime.AutoDisposing)
                 .State(0, typeof(object))

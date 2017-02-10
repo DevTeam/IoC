@@ -14,17 +14,17 @@
         {
         }
 
-        public IEnumerable<IConfiguration> GetDependencies<T>(T resolver) where T : IResolver
+        public IEnumerable<IConfiguration> GetDependencies<T>(T container) where T : IResolver, IRegistry
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
+            if (container == null) throw new ArgumentNullException(nameof(container));
             yield return KeyComparersFeature.Shared;
         }
 
-        public IEnumerable<IDisposable> Apply(IResolver resolver)
+        public IEnumerable<IDisposable> Apply<T>(T container) where T : IResolver, IRegistry
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
+            if (container == null) throw new ArgumentNullException(nameof(container));
             yield return
-                resolver
+                container
                 .Register()
                 .Contract(typeof(IResolver<>))
                 .Contract(typeof(IProvider<>))
@@ -32,14 +32,14 @@
                 .FactoryMethod(ResolveResolver);
 
             yield return
-                resolver
+                container
                 .Register()
                 .Contract(typeof(Func<>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
                 .FactoryMethod(ResolveFunc);
 
             yield return
-                resolver
+                container
                 .Register()
                 .Contract(typeof(IResolver<,>))
                 .Contract(typeof(IProvider<,>))
@@ -47,14 +47,14 @@
                 .FactoryMethod(ResolveResolver);
 
             yield return
-                resolver
+                container
                 .Register()
                 .Contract(typeof(Func<,>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
                 .FactoryMethod(ResolveFunc);
 
             yield return
-                resolver
+                container
                 .Register()
                 .Contract(typeof(IResolver<,,>))
                 .Contract(typeof(IProvider<,,>))
@@ -62,14 +62,14 @@
                 .FactoryMethod(ResolveResolver);
 
             yield return
-                resolver
+                container
                 .Register()
                 .Contract(typeof(Func<,,>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
                 .FactoryMethod(ResolveFunc);
 
             yield return
-                resolver
+                container
                 .Register()
                 .Contract(typeof(IResolver<,,,>))
                 .Contract(typeof(IProvider<,,,>))
@@ -77,14 +77,14 @@
                 .FactoryMethod(ResolveResolver);
 
             yield return
-                resolver
+                container
                 .Register()
                 .Contract(typeof(Func<,,,>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
                 .FactoryMethod(ResolveFunc);
 
             yield return
-                resolver
+                container
                 .Register()
                 .Contract(typeof(IResolver<,,,,>))
                 .Contract(typeof(IProvider<,,,,>))
@@ -92,7 +92,7 @@
                 .FactoryMethod(ResolveResolver);
 
             yield return
-                resolver
+                container
                 .Register()
                 .Contract(typeof(Func<,,,,>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)

@@ -13,18 +13,16 @@
         {
         }
 
-        public IEnumerable<IConfiguration> GetDependencies<T>(T resolver) where T : IResolver
+        public IEnumerable<IConfiguration> GetDependencies<T>(T container) where T : IResolver, IRegistry
         {
             yield break;
         }
 
-        public IEnumerable<IDisposable> Apply(IResolver resolver)
+        public IEnumerable<IDisposable> Apply<T>(T container) where T : IResolver, IRegistry
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            var registry = resolver as IRegistry;
-            if (registry == null) throw new ArgumentException(nameof(registry));
+            if (container == null) throw new ArgumentNullException(nameof(container));
             var internalResourceStore = new InternalResourceStore();
-            yield return LowLevelRegistration.RawRegister(registry, InternalResourceStoreKeys, ctx => internalResourceStore);
+            yield return LowLevelRegistration.RawRegister(container, InternalResourceStoreKeys, ctx => internalResourceStore);
             yield return internalResourceStore;
         }
     }

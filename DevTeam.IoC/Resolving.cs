@@ -6,7 +6,7 @@
     using Contracts;
 
     internal class Resolving<T> : Token<T, IResolving<T>>, IResolving<T>
-         where T : IResolver
+          where T : IResolver
     {
         private readonly HashSet<IContractKey> _genericContractKeys = new HashSet<IContractKey>();
         private readonly HashSet<ITagKey> _tagKeys = new HashSet<ITagKey>();

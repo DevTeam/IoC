@@ -15,14 +15,14 @@
 
         [NotNull]
         public static IConfiguring<T> Configure<T>([NotNull] this T resolver)
-            where T: IResolver
+             where T : IResolver, IRegistry
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             return GetFluent(resolver).Configure(resolver);
         }
 
         [NotNull]
-        public static IDisposable Register([NotNull] this IResolver resolver, [NotNull] IRegistryContext context)
+        public static IDisposable Register([NotNull] this IContainer resolver, [NotNull] IRegistryContext context)
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             if (context == null) throw new ArgumentNullException(nameof(context));
@@ -38,7 +38,7 @@
 
         [NotNull]
         public static IRegistration<T> Register<T>([NotNull] this T resolver)
-             where T : IResolver
+              where T : IResolver, IRegistry
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             return GetFluent(resolver).Register(resolver);
@@ -46,7 +46,7 @@
 
         [NotNull]
         public static IContainer CreateChild<T>([NotNull] this T resolver, [CanBeNull] object tag = null)
-            where T: IResolver
+             where T : IResolver, IRegistry
         {
             if (tag == null)
             {
@@ -58,7 +58,7 @@
 
         [NotNull]
         public static IResolving<T> Resolve<T>([NotNull] this T resolver)
-             where T : IResolver
+              where T : IResolver
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             return GetFluent(resolver).Resolve(resolver);
@@ -108,7 +108,7 @@
 
         [NotNull]
         private static IFluent GetFluent<T>([NotNull] T resolver)
-            where T: IResolver
+             where T : IResolver
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             if (_fluentKey == null)

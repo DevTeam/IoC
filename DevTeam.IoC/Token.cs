@@ -8,7 +8,7 @@
 
     [SuppressMessage("ReSharper", "StaticMemberInGenericType")]
     internal abstract class Token<T, TToken> : IToken<TToken>
-        where T: IResolver
+         where T : IResolver
     {
         private readonly IKeyFactory _keyFactory;
         private readonly IRegistry _registry;

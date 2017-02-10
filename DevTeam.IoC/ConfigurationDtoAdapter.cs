@@ -20,10 +20,10 @@
             _configurationDto = configurationDto;
         }
 
-        public IEnumerable<IConfiguration> GetDependencies<T>(T resolver) where T : IResolver
+        public IEnumerable<IConfiguration> GetDependencies<T>(T container) where T : IResolver, IRegistry
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            var typeResolver = resolver.Resolve().Instance<ITypeResolver>();
+            if (container == null) throw new ArgumentNullException(nameof(container));
+            var typeResolver = container.Resolve().Instance<ITypeResolver>();
             foreach (var configurationStatement in _configurationDto)
             {
                 var referenceDto = configurationStatement as IReferenceDto;
@@ -43,7 +43,7 @@
                 var dependencyFeatureDto = configurationStatement as IDependencyFeatureDto;
                 if (dependencyFeatureDto != null)
                 {
-                    yield return resolver.Feature(dependencyFeatureDto.Feature);
+                    yield return container.Feature(dependencyFeatureDto.Feature);
                     continue;
                 }
 
@@ -56,7 +56,7 @@
                         throw new Exception($"Invalid configuration type {configurationType}");
                     }
 
-                    using (var childContainer = resolver.CreateChild())
+                    using (var childContainer = container.CreateChild())
                     {
                         childContainer.Register().Contract<IConfiguration>().Autowiring(configurationType);
                         yield return childContainer.Resolve().Instance<IConfiguration>();
@@ -69,7 +69,7 @@
                 if (dependencyAssemblyDto != null)
                 {
                     var assembly = Assembly.Load(new AssemblyName(dependencyAssemblyDto.AssemblyName));
-                    yield return resolver.Resolve().State<Assembly>(0).Instance<IConfiguration>(assembly);
+                    yield return container.Resolve().State<Assembly>(0).Instance<IConfiguration>(assembly);
                     continue;
                 }
 
@@ -82,7 +82,7 @@
                         throw new Exception($"Invalid configuration type {configurationType}");
                     }
 
-                    var childContainer = resolver.CreateChild();
+                    var childContainer = container.CreateChild();
                     var referenceDescriptionResolver = childContainer.Resolve().Instance<IReferenceDescriptionResolver>();
                     var reference = referenceDescriptionResolver.ResolveReference(dependencyReferenceDto.Reference);
                     var configurationDescriptionDto = childContainer.Resolve().State<string>(0).Instance<IConfigurationDescriptionDto>(reference);
@@ -92,15 +92,15 @@
             }
         }
 
-        public IEnumerable<IDisposable> Apply(IResolver resolver)
+        public IEnumerable<IDisposable> Apply<T>(T container) where T : IResolver, IRegistry
         {
-            return Apply(resolver, resolver.Resolve().Instance<ITypeResolver>(), _configurationDto);
+            return Apply(container, container.Resolve().Instance<ITypeResolver>(), _configurationDto);
         }
 
-        private IEnumerable<IDisposable> Apply(IResolver resolver, ITypeResolver typeResolver, IEnumerable<IConfigurationStatementDto> configurationStatemens)
+        private IEnumerable<IDisposable> Apply<T>(T resolver, ITypeResolver typeResolver, IEnumerable<IConfigurationStatementDto> configurationElements) where T : IResolver, IRegistry
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            foreach (var configurationStatement in configurationStatemens)
+            foreach (var configurationStatement in configurationElements)
             {
                 var referenceDto = configurationStatement as IReferenceDto;
                 if (referenceDto != null)
@@ -144,7 +144,7 @@
             }
         }
 
-        private void HandleRegisterDto(IResolver resolver, ITypeResolver typeResolver, IRegisterDto registerDto)
+        private void HandleRegisterDto<T>(T resolver, ITypeResolver typeResolver, IRegisterDto registerDto) where T : IResolver, IRegistry
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
@@ -279,7 +279,7 @@
                         {
                             if (ctorParam.Dependency != null)
                             {
-                                var resolving = new Resolving<IResolver>(resolver.Resolve().Instance<IFluent>(), resolver);
+                                var resolving = new Resolving<T>(resolver.Resolve().Instance<IFluent>(), resolver);
                                 var hasContractKey = false;
                                 foreach (var keyDto in ctorParam.Dependency)
                                 {

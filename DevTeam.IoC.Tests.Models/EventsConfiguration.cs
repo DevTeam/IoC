@@ -13,17 +13,17 @@
             _trace = trace;
         }
 
-        public IEnumerable<IConfiguration> GetDependencies<T>(T resolver) where T : IResolver
+        public IEnumerable<IConfiguration> GetDependencies<T>(T container) where T : IResolver, IRegistry
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            yield return resolver.Feature(Wellknown.Feature.Default);
+            if (container == null) throw new ArgumentNullException(nameof(container));
+            yield return container.Feature(Wellknown.Feature.Default);
             yield return new PlatformConfiguration(_trace);
         }
 
-        public IEnumerable<IDisposable> Apply(IResolver resolver)
+        public IEnumerable<IDisposable> Apply<T>(T container) where T : IResolver, IRegistry
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            var childContainer = resolver.CreateChild("child");
+            if (container == null) throw new ArgumentNullException(nameof(container));
+            var childContainer = container.CreateChild("child");
 
             yield return childContainer
                 .Register()

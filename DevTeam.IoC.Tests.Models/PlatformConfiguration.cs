@@ -19,38 +19,38 @@
         {
         }
 
-        public IEnumerable<IConfiguration> GetDependencies<T>(T resolver) where T : IResolver
+        public IEnumerable<IConfiguration> GetDependencies<T>(T container) where T : IResolver, IRegistry
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            yield return resolver.Feature(Wellknown.Feature.Default);
+            if (container == null) throw new ArgumentNullException(nameof(container));
+            yield return container.Feature(Wellknown.Feature.Default);
         }
 
-        public IEnumerable<IDisposable> Apply(IResolver resolver)
+        public IEnumerable<IDisposable> Apply<T>(T container) where T : IResolver, IRegistry
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
+            if (container == null) throw new ArgumentNullException(nameof(container));
             if (_trace)
             {
-                yield return resolver
+                yield return container
                     .Register()
                     .Lifetime(Wellknown.Lifetime.Singleton)
                     .Contract<ITrace>()
                     .Autowiring<Trace>();
             }
 
-            yield return resolver
+            yield return container
                 .Register()
                 .Lifetime(Wellknown.Lifetime.Singleton)
                 .Contract<IConsole>()
                 .Autowiring<Console>();
 
-            yield return resolver
+            yield return container
                 .Register()
                 .Lifetime(Wellknown.Lifetime.Singleton)
                 .Contract<ITimer>()
                 .Contract<ITimerManager>()
                 .Autowiring<Timer>();
 
-            yield return resolver
+            yield return container
                 .Register()
                 .Autowiring<Log>();
         }

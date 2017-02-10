@@ -7,7 +7,7 @@
     using Contracts;
 
     internal class Registration<T> : Token<T, IRegistration<T>>, IRegistration<T>
-         where T : IResolver
+          where T : IRegistry, IResolver
     {
         private readonly List<HashSet<IContractKey>> _contractKeys = new List<HashSet<IContractKey>>();
         private readonly HashSet<ITagKey> _tagKeys = new HashSet<ITagKey>();

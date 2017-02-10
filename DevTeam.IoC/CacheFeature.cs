@@ -12,23 +12,23 @@
         {
         }
 
-        public IEnumerable<IConfiguration> GetDependencies<T>(T resolver) where T : IResolver
+        public IEnumerable<IConfiguration> GetDependencies<T>(T container) where T : IResolver, IRegistry
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
+            if (container == null) throw new ArgumentNullException(nameof(container));
             yield return LifetimesFeature.Shared;
         }
 
-        public IEnumerable<IDisposable> Apply(IResolver resolver)
+        public IEnumerable<IDisposable> Apply<T>(T container) where T : IResolver, IRegistry
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
+            if (container == null) throw new ArgumentNullException(nameof(container));
             yield return
-                resolver.Register()
+                container.Register()
                     .Lifetime(Wellknown.Lifetime.PerContainer)
                     .Contract<ICache<Type, IResolverFactory>>()
                     .FactoryMethod(ctx => new Cache<Type, IResolverFactory>());
 
             yield return
-                resolver.Register()
+                container.Register()
                     .Lifetime(Wellknown.Lifetime.PerContainer)
                     .Contract<ICache<ICompositeKey, RegistrationItem>>()
                     .FactoryMethod(ctx => new Cache<ICompositeKey, RegistrationItem>());

@@ -9,20 +9,20 @@
 
     internal class Configuration: IConfiguration
     {
-        public IEnumerable<IConfiguration> GetDependencies<T>(T resolver) where T : IResolver
+        public IEnumerable<IConfiguration> GetDependencies<T>(T container) where T : IResolver, IRegistry
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            yield return resolver.Feature(Wellknown.Feature.Lifetimes);
-            foreach (var config in resolver.Configure().DependsOn<JsonConfiguration>(ReadConfiguration("ClassLibrary.configuration.json")))
+            if (container == null) throw new ArgumentNullException(nameof(container));
+            yield return container.Feature(Wellknown.Feature.Lifetimes);
+            foreach (var config in container.Configure().DependsOn<JsonConfiguration>(ReadConfiguration("ClassLibrary.configuration.json")))
             {
                 yield return config;
             }
         }
 
-        public IEnumerable<IDisposable> Apply(IResolver resolver)
+        public IEnumerable<IDisposable> Apply<T>(T container) where T : IResolver, IRegistry
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            yield return resolver.Register().Lifetime(Wellknown.Lifetime.Singleton).Contract<IConsole>().Autowiring<Console>();
+            if (container == null) throw new ArgumentNullException(nameof(container));
+            yield return container.Register().Lifetime(Wellknown.Lifetime.Singleton).Contract<IConsole>().Autowiring<Console>();
         }
 
         private string ReadConfiguration([NotNull] string jsonFileName)

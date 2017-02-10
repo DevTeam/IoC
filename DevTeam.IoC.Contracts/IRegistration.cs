@@ -4,7 +4,7 @@
 
     [PublicAPI]
     public interface IRegistration<T> : IToken<IRegistration<T>>
-         where T : IResolver
+          where T : IRegistry, IResolver
     {
         [NotNull]
         IDisposable FactoryMethod([NotNull] Func<IResolverContext, object> factoryMethod);

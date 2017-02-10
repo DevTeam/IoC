@@ -13,52 +13,52 @@
         {
         }
 
-        public IEnumerable<IConfiguration> GetDependencies<T>(T resolver) where T : IResolver
+        public IEnumerable<IConfiguration> GetDependencies<T>(T container) where T : IResolver, IRegistry
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
+            if (container == null) throw new ArgumentNullException(nameof(container));
             yield break;
         }
 
-        public IEnumerable<IDisposable> Apply(IResolver resolver)
+        public IEnumerable<IDisposable> Apply<T>(T container) where T : IResolver, IRegistry
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
+            if (container == null) throw new ArgumentNullException(nameof(container));
             yield return 
-                resolver
+                container
                 .Register()
                 .Tag(Wellknown.Lifetime.Singleton)
                 .Contract<ILifetime>()
                 .FactoryMethod(ctx => new SingletonLifetime());
 
             yield return
-                resolver
+                container
                 .Register()
                 .Tag(Wellknown.Lifetime.AutoDisposing)
                 .Contract<ILifetime>()
                 .FactoryMethod(ctx => new AutoDisposingLifetime());
 
             yield return
-                resolver
+                container
                 .Register()
                 .Tag(Wellknown.Lifetime.PerResolve)
                 .Contract<ILifetime>()
                 .FactoryMethod(ctx => new SingletonBasedLifetime<long>((lifetimeContext, resolverContext) => lifetimeContext.ResolveId));
 
             yield return
-                resolver
+                container
                 .Register()
                 .Tag(Wellknown.Lifetime.PerThread)
                 .Contract<ILifetime>()
                 .FactoryMethod(ctx => new SingletonBasedLifetime<long>((lifetimeContext, resolverContext) => lifetimeContext.ThreadId));
 
             yield return
-                resolver
+                container
                 .Register()
                 .Tag(Wellknown.Lifetime.PerContainer)
                 .Contract<ILifetime>()
                 .FactoryMethod(ctx => new SingletonBasedLifetime<IResolver>((lifetimeContext, resolverContext) => resolverContext.Container));
 
             yield return
-                resolver
+                container
                 .Register()
                 .Tag(Wellknown.Lifetime.PerState)
                 .Contract<ILifetime>()

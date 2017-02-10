@@ -24,19 +24,19 @@
             _configuration = new Lazy<IConfiguration>(() => CreateConfiguration(description));
         }
 
-        public IEnumerable<IConfiguration> GetDependencies<T>(T resolver) where T : IResolver
+        public IEnumerable<IConfiguration> GetDependencies<T>(T container) where T : IResolver, IRegistry
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            foreach (var dependency in _configuration.Value.GetDependencies(resolver))
+            if (container == null) throw new ArgumentNullException(nameof(container));
+            foreach (var dependency in _configuration.Value.GetDependencies(container))
             {
                 yield return dependency;
             }
         }
 
-        public IEnumerable<IDisposable> Apply(IResolver resolver)
+        public IEnumerable<IDisposable> Apply<T>(T container) where T : IResolver, IRegistry
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            return _configuration.Value.Apply(resolver);
+            if (container == null) throw new ArgumentNullException(nameof(container));
+            return _configuration.Value.Apply(container);
         }
 
         private IConfiguration CreateConfiguration([NotNull] string description)

@@ -40,16 +40,16 @@
             }
         };
 
-        public IEnumerable<IConfiguration> GetDependencies<T>(T resolver) where T : IResolver
+        public IEnumerable<IConfiguration> GetDependencies<T>(T container) where T : IResolver, IRegistry
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            yield return resolver.Feature(Wellknown.Feature.Dto);
+            if (container == null) throw new ArgumentNullException(nameof(container));
+            yield return container.Feature(Wellknown.Feature.Dto);
         }
 
-        public IEnumerable<IDisposable> Apply(IResolver resolver)
+        public IEnumerable<IDisposable> Apply<T>(T container) where T : IResolver, IRegistry
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            yield return resolver
+            if (container == null) throw new ArgumentNullException(nameof(container));
+            yield return container
                 .Register()
                 .Tag(GetType())
                 .State<IConfigurationDescriptionDto>(0)

@@ -2,7 +2,7 @@
 {
     [PublicAPI]
     public interface IResolving<T> : IToken<IResolving<T>>
-         where T : IResolver
+          where T : IResolver
     {
         [NotNull]
         object Instance([NotNull][ItemCanBeNull] params object[] state);
