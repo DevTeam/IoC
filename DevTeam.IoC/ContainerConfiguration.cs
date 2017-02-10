@@ -21,10 +21,10 @@
         public IEnumerable<IDisposable> Apply(IResolver resolver)
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            var container = resolver as Container;
-            if (container == null) throw new ArgumentException(nameof(resolver));
+            var registry = resolver as IRegistry;
+            if (registry == null) throw new ArgumentException(nameof(registry));
             var internalResourceStore = new InternalResourceStore();
-            yield return LowLevelRegistration.RawRegister(container, InternalResourceStoreKeys, ctx => internalResourceStore);
+            yield return LowLevelRegistration.RawRegister(registry, InternalResourceStoreKeys, ctx => internalResourceStore);
             yield return internalResourceStore;
         }
     }

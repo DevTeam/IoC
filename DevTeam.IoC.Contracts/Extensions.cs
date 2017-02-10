@@ -95,7 +95,7 @@
         {
             if (ctx == null) throw new ArgumentNullException(nameof(ctx));
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
-            return (T)ctx.GetState(index, typeof(T));
+            return (T)ctx.TryGetState(index, typeof(T));
         }
 
         [NotNull]
@@ -103,13 +103,7 @@
         {
             if (ctx == null) throw new ArgumentNullException(nameof(ctx));
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
-            var value = TryGetState<T>(ctx, index);
-            if (value == null)
-            {
-                throw new InvalidOperationException($"State {index} of type \"{typeof(T).FullName}\" can not be null.");
-            }
-
-            return value;
+            return (T)GetState(ctx, index, typeof(T));
         }
 
         [NotNull]

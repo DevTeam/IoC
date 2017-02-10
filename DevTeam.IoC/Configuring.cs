@@ -49,7 +49,7 @@
             if (configurationType == null) throw new ArgumentNullException(nameof(configurationType));
             if (string.IsNullOrWhiteSpace(description)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(description));
             _configurations.Add(new HashSet<IConfiguration> { DtoFeature.Shared, (IConfiguration)Activator.CreateInstance(configurationType) });
-            _configurations.Add(new HashSet<IConfiguration> { new ConfigurationFromDto(_resolver, configurationType, description) });
+            _configurations.Add(new HashSet<IConfiguration> { _resolver.Resolve().State<Type>(0).State<string>(1).Instance<IConfiguration>(configurationType, description) });
             return this;
         }
 
