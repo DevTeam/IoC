@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using Configurations.Json;
     using Contracts;
     using Contracts.Dto;
@@ -75,6 +76,22 @@
             // Then
             dependencies.Length.ShouldBe(1);
             dependencies[0].ShouldBeOfType<MyConfiguration>();
+        }
+
+        [Test]
+        public void ShouldGetDependenciesWhenDependencyAssembly()
+        {
+            // Given
+            var configurationDto = new ConfigurationDto();
+            var configuration = CreateInstance(configurationDto);
+
+            // When
+            configurationDto.Add(new DependencyAssemblyDto { AssemblyName = typeof(MyConfiguration).GetTypeInfo().Assembly.FullName });
+            var dependencies = configuration.GetDependencies(_container).ToArray();
+
+            // Then
+            dependencies.Length.ShouldBe(1);
+            dependencies[0].ShouldBeOfType<ConfigurationFromAssembly>();
         }
 
         [Test]
