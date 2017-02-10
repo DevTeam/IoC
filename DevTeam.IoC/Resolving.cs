@@ -23,7 +23,7 @@
         public override IResolving<T> Contract(params Type[] contractTypes)
         {
             if (contractTypes == null) throw new ArgumentNullException(nameof(contractTypes));
-            AddContractKey(contractTypes.Select(type => KeyFactory.CreateContractKey(type, true)));
+            AddContractKey(contractTypes.Select(type => Resolver.KeyFactory.CreateContractKey(type, true)));
             return this;
         }
 
@@ -175,7 +175,7 @@
         {
             if (_compositeKey == null)
             {
-                _compositeKey = KeyFactory.CreateCompositeKey(_genericContractKeys, _tagKeys, _stateKeys);
+                _compositeKey = Resolver.KeyFactory.CreateCompositeKey(_genericContractKeys, _tagKeys, _stateKeys);
             }
 
             return _compositeKey;

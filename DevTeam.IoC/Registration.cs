@@ -39,7 +39,7 @@
         public override IRegistration<T> Contract(params Type[] contractTypes)
         {
             if (contractTypes == null) throw new ArgumentNullException(nameof(contractTypes));
-            AddContractKey(contractTypes.Select(type => KeyFactory.CreateContractKey(type, false)));
+            AddContractKey(contractTypes.Select(type => Resolver.KeyFactory.CreateContractKey(type, false)));
             return this;
         }
 
@@ -210,7 +210,7 @@
             foreach (var contractKeys in _contractKeys)
             {
                 var generics = contractKeys.OrderBy(i => i.ContractType.FullName);
-                _compositeKeys.Add(KeyFactory.CreateCompositeKey(generics, _tagKeys, _stateKeys));
+                _compositeKeys.Add(Resolver.KeyFactory.CreateCompositeKey(generics, _tagKeys, _stateKeys));
             }
 
             _contractKeys.Clear();
@@ -230,10 +230,10 @@
             }
 
             IDisposable registration;
-            var context = Registry.CreateContext(_compositeKeys, new MethodFactory<TImplementation>(factoryMethod), Extensions);
-            if (!Registry.TryRegister(context, out registration))
+            var context = Resolver.CreateContext(_compositeKeys, new MethodFactory<TImplementation>(factoryMethod), Extensions);
+            if (!Resolver.TryRegister(context, out registration))
             {
-                throw new InvalidOperationException($"Can't register {string.Join(Environment.NewLine, context.Keys)}.{Environment.NewLine}{Environment.NewLine}{Registry}");
+                throw new InvalidOperationException($"Can't register {string.Join(Environment.NewLine, context.Keys)}.{Environment.NewLine}{Environment.NewLine}{Resolver}");
             }
 
             return registration;

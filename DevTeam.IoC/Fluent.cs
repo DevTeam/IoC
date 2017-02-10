@@ -5,12 +5,6 @@
 
     internal class Fluent : IFluent
     {
-        public bool TryGetRegistry<T>(T resolver, out IRegistry registry)
-             where T : IResolver, IRegistry
-        {
-            return resolver.TryResolve(out registry);
-        }
-
         public IConfiguring<T> Configure<T>(T resolver)
               where T : IResolver, IRegistry
         {

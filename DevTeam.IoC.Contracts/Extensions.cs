@@ -14,46 +14,47 @@
         }
 
         [NotNull]
-        public static IConfiguring<T> Configure<T>([NotNull] this T resolver)
-             where T : IResolver, IRegistry
+        public static IConfiguring<T> Configure<T>([NotNull] this T container)
+            where T : IResolver, IRegistry
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            return GetFluent(resolver).Configure(resolver);
+            if (container == null) throw new ArgumentNullException(nameof(container));
+            return GetFluent(container).Configure(container);
         }
 
         [NotNull]
-        public static IDisposable Register([NotNull] this IContainer resolver, [NotNull] IRegistryContext context)
+        public static IDisposable Register<T>([NotNull] this T registry, [NotNull] IRegistryContext context)
+            where T : IRegistry
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
+            if (registry == null) throw new ArgumentNullException(nameof(registry));
             if (context == null) throw new ArgumentNullException(nameof(context));
-            IRegistry registry;
+
             IDisposable registration;
-            if (!GetFluent(resolver).TryGetRegistry(resolver, out registry) || !registry.TryRegister(context, out registration))
+            if (!registry.TryRegister(context, out registration))
             {
-                throw new InvalidOperationException($"Can't register {string.Join(Environment.NewLine, context.Keys)}.{Environment.NewLine}{Environment.NewLine}{registry}");
+                throw new InvalidOperationException($"Can not register {string.Join(Environment.NewLine, context.Keys)}.{Environment.NewLine}{Environment.NewLine}{registry}");
             }
 
             return registration;
         }
 
         [NotNull]
-        public static IRegistration<T> Register<T>([NotNull] this T resolver)
+        public static IRegistration<T> Register<T>([NotNull] this T container)
               where T : IResolver, IRegistry
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            return GetFluent(resolver).Register(resolver);
+            if (container == null) throw new ArgumentNullException(nameof(container));
+            return GetFluent(container).Register(container);
         }
 
         [NotNull]
-        public static IContainer CreateChild<T>([NotNull] this T resolver, [CanBeNull] object tag = null)
+        public static IContainer CreateChild<T>([NotNull] this T container, [CanBeNull] object tag = null)
              where T : IResolver, IRegistry
         {
             if (tag == null)
             {
-                return resolver.Resolve().Instance<IContainer>();
+                return container.Resolve().Instance<IContainer>();
             }
 
-            return resolver.Resolve().State<object>(0).Instance<IContainer>(tag);
+            return container.Resolve().State<object>(0).Instance<IContainer>(tag);
         }
 
         [NotNull]

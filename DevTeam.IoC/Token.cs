@@ -10,8 +10,6 @@
     internal abstract class Token<T, TToken> : IToken<TToken>
          where T : IResolver
     {
-        private readonly IKeyFactory _keyFactory;
-        private readonly IRegistry _registry;
         protected static readonly IContractKey[] EmptyContractKeys = new IContractKey[0];
         protected static readonly ITagKey[] EmptyTagKeys = new ITagKey[0];
         protected static readonly IStateKey[] EmptyStateKeys = new IStateKey[0];
@@ -22,20 +20,11 @@
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             Fluent = fluent;
             Resolver = resolver;
-
-            if (!resolver.TryResolve(out _keyFactory) || !resolver.TryResolve(out _registry))
-            {
-                throw new InvalidOperationException();
-            }
         }
 
         protected IFluent Fluent { get; }
 
         protected T Resolver { get; }
-
-        internal IKeyFactory KeyFactory => _keyFactory;
-
-        protected IRegistry Registry => _registry;
 
         public TToken Key(IEnumerable<IKey> keys)
         {
@@ -88,7 +77,7 @@
         {
             if (stateType == null) throw new ArgumentNullException(nameof(stateType));
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
-            AddStateKey(KeyFactory.CreateStateKey(index, stateType));
+            AddStateKey(Resolver.KeyFactory.CreateStateKey(index, stateType));
             return (TToken)(object)this;
         }
 
@@ -103,7 +92,7 @@
             if (tags == null) throw new ArgumentNullException(nameof(tags));
             foreach (var tag in tags)
             {
-                AddTagKey(KeyFactory.CreateTagKey(tag));
+                AddTagKey(Resolver.KeyFactory.CreateTagKey(tag));
             }
 
             return (TToken)(object)this;
