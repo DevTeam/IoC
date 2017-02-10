@@ -68,11 +68,6 @@
             return this;
         }
 
-        private IConfiguration CreateConfigurationFromAssembly(Assembly assembly)
-        {
-            return _resolver.Resolve().State<Assembly>(0).Instance<IConfiguration>(assembly);
-        }
-
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
@@ -80,7 +75,7 @@
 
         public IRegistration<T> Register()
         {
-            Finish();
+            Own();
             return _resolver.Register();
         }
 
@@ -97,7 +92,7 @@
             return registration;
         }
 
-        public T Finish()
+        public T Own()
         {
             _resolver.Resolve().Instance<IInternalResourceStore>().AddResource(Apply());
             return _resolver;
@@ -132,6 +127,11 @@
                     }
                 }
             }
+        }
+
+        private IConfiguration CreateConfigurationFromAssembly(Assembly assembly)
+        {
+            return _resolver.Resolve().State<Assembly>(0).Instance<IConfiguration>(assembly);
         }
     }
 }

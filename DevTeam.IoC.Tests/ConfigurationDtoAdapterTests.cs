@@ -23,8 +23,8 @@
         {
             _typeResolver = new MyTypeResolver();
             var rootContainer = new Container();
-            rootContainer.Configure().DependsOn(Wellknown.Feature.Dto).Finish();
-            rootContainer.Configure().DependsOn(Wellknown.Feature.Scopes).Finish();
+            rootContainer.Configure().DependsOn(Wellknown.Feature.Dto).Own();
+            rootContainer.Configure().DependsOn(Wellknown.Feature.Scopes).Own();
             _container = rootContainer.CreateChild();
             _container.Register().Contract<ITypeResolver>().FactoryMethod(ctx => _typeResolver);
         }

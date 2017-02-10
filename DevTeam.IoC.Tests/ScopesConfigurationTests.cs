@@ -18,7 +18,7 @@
             var mock = new Mock<ISimpleService>();
             using (var container = CreateContainer())
             using (var childContainer = new Container("child", container))
-            using (container.Configure().DependsOn(Wellknown.Feature.Scopes).Finish())
+            using (container.Configure().DependsOn(Wellknown.Feature.Scopes).Own())
             {
                 // When
                 using (
@@ -42,7 +42,7 @@
             var mock = new Mock<ISimpleService>();
             using (var container = CreateContainer())
             using (var childContainer = new Container("child", container))
-            using (container.Configure().DependsOn(Wellknown.Feature.Scopes).Finish())
+            using (container.Configure().DependsOn(Wellknown.Feature.Scopes).Own())
             {
                 // When
                 var registration =
@@ -72,7 +72,7 @@
             using (var container = CreateContainer())
             using (var childContainer1 = new Container("child1", container))
             using (var childContainer2 = new Container("child2", container))
-            using (container.Configure().DependsOn(Wellknown.Feature.Scopes).Finish())
+            using (container.Configure().DependsOn(Wellknown.Feature.Scopes).Own())
             {
                 // When
                 using (
@@ -97,7 +97,7 @@
             using (var container = CreateContainer())
             using (var childContainer1 = new Container("child1", container))
             using (var childContainer2 = new Container("child2", container))
-            using (container.Configure().DependsOn(Wellknown.Feature.Scopes).Finish())
+            using (container.Configure().DependsOn(Wellknown.Feature.Scopes).Own())
             {
                 // When
                 var registration =

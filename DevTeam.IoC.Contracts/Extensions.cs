@@ -3,7 +3,7 @@
     using System;
 
     [PublicAPI]
-    public static class ContainerExtensions
+    public static class Extensions
     {
         private static ICompositeKey _fluentKey;
 

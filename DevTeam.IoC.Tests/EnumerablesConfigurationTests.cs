@@ -20,7 +20,7 @@
             var mock1 = new Mock<ISimpleService>();
             var mock2 = new Mock<ISimpleService>();
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Feature.Enumerables).Finish())
+            using (container.Configure().DependsOn(Wellknown.Feature.Enumerables).Own())
             {
                 // When
                 using (
@@ -49,7 +49,7 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Feature.Enumerables).Finish())
+            using (container.Configure().DependsOn(Wellknown.Feature.Enumerables).Own())
             {
                 // When
                 var listOfObj = container.Resolve().Instance<IEnumerable<ISimpleService>>().ToList();

@@ -18,7 +18,7 @@
             using (var rootContainer = new Container("root")
                 .Configure()
                 .DependsOn(new EventsConfiguration(true))
-                .Finish())
+                .Own())
             {
                 var eventRegistry = rootContainer.Resolve().Instance<IEventRegistry>();
                 eventRegistry.RegisterEvent<DateTimeOffset>();
@@ -39,7 +39,7 @@
                 .Configure()
                 .DependsOn(Wellknown.Feature.Default)
                 .Register().Contract<ISimpleService>().AsAutowiring<SimpleService>()
-                .Finish())
+                .Own())
             {
                 for (var i = 0; i < 10000; i++)
                 {
@@ -59,7 +59,7 @@
                 .Register().Contract<IReferenceDescriptionResolver>().AsFactoryMethod<IReferenceDescriptionResolver>(ctx => new ReferenceDescriptionResolver())
                 .DependsOn(Wellknown.Feature.Default)
                 .DependsOn<JsonConfiguration>(json)
-                .Finish())
+                .Own())
             {
                 var eventRegistry = container.Resolve().Instance<IEventRegistry>();
                 eventRegistry.RegisterEvent<DateTimeOffset>();
@@ -80,7 +80,7 @@
             using (var rootResolver = new Container("root")
                 .Configure()
                 .DependsOn(Wellknown.Feature.Default)
-                .Finish())
+                .Own())
             {
                 PerformanceTest(rootResolver, 1000);
             }
@@ -92,7 +92,7 @@
             using (var rootResolver = new Container("root")
                 .Configure()
                 .DependsOn(Wellknown.Feature.Default)
-                .Finish())
+                .Own())
             {
                 for (var i = 0; i < 100; i++)
                 {
@@ -106,7 +106,7 @@
             using (var childContainer = rootResolver.CreateChild("child")
                 .Configure()
                 .DependsOn(new EventsConfiguration(false))
-                .Finish())
+                .Own())
             {
                 var eventRegistry = childContainer.Resolve().Instance<IEventRegistry>();
                 eventRegistry.RegisterEvent<DateTimeOffset>();

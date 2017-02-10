@@ -33,6 +33,6 @@
         IDisposable Apply();
 
         [NotNull]
-        T Finish();
+        T Own();
     }
 }
