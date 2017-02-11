@@ -6,7 +6,7 @@
 
     using Contracts;
 
-    public class Container: IContainer, IRegistry
+    public class Container: IContainer
     {
         private static readonly ICompositeKey CacheKey = RootConfiguration.KeyFactory.CreateCompositeKey(Enumerable.Repeat(RootConfiguration.KeyFactory.CreateContractKey(typeof(ICache<ICompositeKey, RegistrationItem>), true), 1));
         private readonly IDisposable _rootConfigurationRegistration;
@@ -141,13 +141,7 @@
             if (context == null) throw new ArgumentNullException(nameof(context));
             if (context.Container == this)
             {
-                var instance = context.InstanceFactory.Create(context);
-                if (instance == null)
-                {
-                    throw new InvalidOperationException($"{nameof(instance)} can not be null");
-                }
-
-                return instance;
+                return context.InstanceFactory.Create(context);
             }
 
             if (_parentContainer != null)
