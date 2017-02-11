@@ -7,7 +7,7 @@
 
     internal class EventBroker<T>: IEventBroker, IDisposable
     {
-        private readonly IEnumerable<IDisposable> _subsriptions;
+        private readonly IEnumerable<IDisposable> _subscriptions;
         private readonly ILogger<EventBroker<T>> _logger;
 
         public EventBroker(
@@ -20,7 +20,7 @@
             if (eventConsumers == null) throw new ArgumentNullException(nameof(eventConsumers));
             _logger = logger;
             _logger.LogInfo("creating");
-            _subsriptions = new List<IDisposable>(
+            _subscriptions = new List<IDisposable>(
                 from eventConsumer in eventConsumers
                 from eventProducer in eventProducers
                 select CreateSubscription(eventProducer, eventConsumer)
@@ -31,9 +31,9 @@
         public void Dispose()
         {
             _logger.LogInfo("disposing");
-            foreach (var subsription in _subsriptions)
+            foreach (var subscription in _subscriptions)
             {
-                subsription.Dispose();
+                subscription.Dispose();
             }
 
             _logger.LogInfo("disposed");

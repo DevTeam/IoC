@@ -10,9 +10,7 @@
     { "dependency.feature": "Default" },
 
     { "register": [ { "contract": [ "IName<>" ] } ], "autowiring": "Name<>" },
-
     { "register": [ { "contract": [ "ILogger<>" ] } ], "autowiring": "Logger<>" },
-
     {
         "register": [ { "stateType": "DateTimeOffset" }, { "contract": [ "Event<DateTimeOffset>" ] } ],
         "autowiring": "Event<DateTimeOffset>",
@@ -21,9 +19,8 @@
             { "paramType": "DateTimeOffset", "state": { "stateType": "DateTimeOffset" } }
         ]
     },
-
     { "register": [ { "contract": [ "IEventConsumer<Event<DateTimeOffset>>" ] } ], "autowiring": "Chronometer" },
-
+    { "register": [ { "contract": [ "IEventConsumer<>" ] }, { "tag": "trace" }, { "lifetime" : "AutoDisposing" } ], "autowiring": "Tracer<>" },
     {
         "register": [ { "contract": [ "IEventProducer<Event<DateTimeOffset>>" ] } ],
         "autowiring": "Timer",
@@ -33,7 +30,6 @@
             { "paramType": "TimeSpan", "Value": "00:00:01" }
         ]
     },
-
     {
         "register": [ { "lifetime": "Singleton" }, { "lifetime": "AutoDisposing" }, { "contract": [ "IEventBroker" ] } ],
         "autowiring": "EventBroker<Event<DateTimeOffset>>"
