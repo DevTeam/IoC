@@ -16,6 +16,7 @@ namespace DevTeam.IoC
 
         public object Create(IResolverContext resolverContext)
         {
+            if (resolverContext == null) throw new ArgumentNullException(nameof(resolverContext));
             return _factoryMethod(resolverContext);
         }
     }

@@ -28,6 +28,7 @@
 
         public object Create(IResolverContext resolverContext)
         {
+            if (resolverContext == null) throw new ArgumentNullException(nameof(resolverContext));
             return _factory(resolverContext);
         }
 

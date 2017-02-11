@@ -3,6 +3,7 @@
     [PublicAPI]
     public interface IResolverFactory
     {
-        object Create(IResolverContext resolverContext);
+        [NotNull]
+        object Create([NotNull] IResolverContext resolverContext);
     }
 }

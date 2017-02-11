@@ -10,6 +10,7 @@
 
     internal class TypeResolver : ITypeResolver
     {
+        // ReSharper disable StringLiteralTypo
         private static readonly Dictionary<string, Type> PrimitiveTypes = new Dictionary<string, Type>
         {
             {"byte", typeof(byte)},
@@ -27,6 +28,7 @@
             {"string", typeof(string)},
             {"decimal", typeof(decimal)}
         };
+        // ReSharper restore StringLiteralTypo
 
         private readonly List<string> _usingStatements = new List<string>();
         private readonly List<Assembly> _references = new List<Assembly>();

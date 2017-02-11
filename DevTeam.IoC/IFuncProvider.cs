@@ -1,6 +1,6 @@
 ﻿namespace DevTeam.IoC
 {
-    interface IFuncProvider
+    internal interface IFuncProvider
     {
         object GetFunc();
     }

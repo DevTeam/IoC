@@ -3,6 +3,6 @@
     [PublicAPI]
     public interface ITagKey: IKey
     {
-        object Tag { get; }
+        object Tag { [NotNull] get; }
     }
 }

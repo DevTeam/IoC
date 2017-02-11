@@ -6,7 +6,7 @@
 
     internal struct TagKey : ITagKey
     {
-        public TagKey(object tag)
+        public TagKey([NotNull] object tag)
         {
             if (tag == null) throw new ArgumentNullException(nameof(tag));
             Tag = tag;
