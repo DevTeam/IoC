@@ -8,39 +8,54 @@
 
     internal class CompositeKey: ICompositeKey
     {
-        private readonly int _baseHashCode;
+        private readonly int _contractsHashCode;
+        private readonly int _tagsHashCode;
+        private readonly int _statesHashCode;
 
         public CompositeKey(
-            [NotNull] IEnumerable<IContractKey> contractKey,
+            [NotNull] IEnumerable<IContractKey> contractKeys,
             [NotNull] IEnumerable<ITagKey> tagKeys,
             [NotNull] IEnumerable<IStateKey> stateKeys)
         {
-            if (contractKey == null) throw new ArgumentNullException(nameof(contractKey));
+            if (contractKeys == null) throw new ArgumentNullException(nameof(contractKeys));
             if (tagKeys == null) throw new ArgumentNullException(nameof(tagKeys));
             if (stateKeys == null) throw new ArgumentNullException(nameof(stateKeys));
-            var tagKeysGroupedByType = (
-                from tagKey in tagKeys
-                group tagKey by tagKey.Tag.GetType()).OrderBy(i => i.Key.FullName);
-            TagKeys = tagKeysGroupedByType.Select(i => i.OrderBy(j => j.Tag)).SelectMany(i => i).ToArray();
-            StateKeys = stateKeys.OrderBy(i => i.Index).ToArray();
-            ContractKeys = contractKey.OrderBy(i => i.ContractType.FullName).ToArray();
+            TagKeys = new HashSet<ITagKey>(tagKeys);
+            StateKeys = new HashSet<IStateKey>(stateKeys);
+            ContractKeys = new HashSet<IContractKey>(contractKeys);
             unchecked
             {
-                _baseHashCode = ContractKeys.Aggregate(1, (code, key) =>
+                _contractsHashCode = ContractKeys.Aggregate(1, (code, key) =>
                 {
                     unchecked
                     {
-                        return (code*397) ^ key.GetHashCode();
+                        return code + key.GetHashCode();
                     }
-                });
+                }) * ContractKeys.Count;
+
+                _tagsHashCode = TagKeys.Aggregate(1, (code, key) =>
+                {
+                    unchecked
+                    {
+                        return code + key.GetHashCode();
+                    }
+                }) * TagKeys.Count;
+
+                _statesHashCode = StateKeys.Aggregate(1, (code, key) =>
+                {
+                    unchecked
+                    {
+                        return code + key.GetHashCode();
+                    }
+                }) * StateKeys.Count;
             }
         }
 
-        public IContractKey[] ContractKeys { get; }
+        public ISet<IContractKey> ContractKeys { get; }
 
-        public ITagKey[] TagKeys { get; }
+        public ISet<ITagKey> TagKeys { get; }
 
-        public IStateKey[] StateKeys { get; }
+        public ISet<IStateKey> StateKeys { get; }
 
         public override bool Equals(object obj)
         {
@@ -52,27 +67,18 @@
         public override int GetHashCode()
         {
             var filter = KeyFilterContext.Current;
-            var hashCode = _baseHashCode;
-            if (!filter.Filter(typeof(ITagKey)))
+            var hashCode = _contractsHashCode;
+            unchecked
             {
-                hashCode = TagKeys.Aggregate(hashCode, (code, key) =>
+                if (!filter.Filter(typeof(ITagKey)))
                 {
-                    unchecked
-                    {
-                        return (code*397) ^ key.GetHashCode();
-                    }
-                });
-            }
+                    hashCode = (hashCode*397) ^ _tagsHashCode;
+                }
 
-            if (!filter.Filter(typeof(IStateKey)))
-            {
-                hashCode = StateKeys.Aggregate(hashCode, (code, key) =>
+                if (!filter.Filter(typeof(IStateKey)))
                 {
-                    unchecked
-                    {
-                        return (code*397) ^ key.GetHashCode();
-                    }
-                });
+                    hashCode = (hashCode*397) ^ _statesHashCode;
+                }
             }
 
             return hashCode;
@@ -82,15 +88,14 @@
         {
             var filter = KeyFilterContext.Current;
             return
-                ContractKeys.Length == other.ContractKeys.Length
-                && ContractKeys.SequenceEqual(other.ContractKeys)
-                && (filter.Filter(typeof(ITagKey)) || TagKeys.SequenceEqual(other.TagKeys))
-                && (filter.Filter(typeof(IStateKey)) || StateKeys.SequenceEqual(other.StateKeys));
+                ContractKeys.SetEquals(other.ContractKeys)
+                && (filter.Filter(typeof(ITagKey)) || TagKeys.SetEquals(other.TagKeys))
+                && (filter.Filter(typeof(IStateKey)) || StateKeys.SetEquals(other.StateKeys));
         }
 
         public override string ToString()
         {
-            return $"{nameof(CompositeKey)} [Contracts: {string.Join(", ", (IEnumerable<IContractKey>)ContractKeys)}, Tags: {string.Join(", ", (IEnumerable<ITagKey>)TagKeys)}, States: {string.Join(", ", (IEnumerable<IStateKey>)StateKeys)}]";
+            return $"{nameof(CompositeKey)} [Contracts: {string.Join(", ", ContractKeys)}, Tags: {string.Join(", ", TagKeys)}, States: {string.Join(", ", StateKeys)}]";
         }
     }
 }

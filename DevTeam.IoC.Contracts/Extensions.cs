@@ -1,6 +1,7 @@
 ﻿namespace DevTeam.IoC.Contracts
 {
     using System;
+    using System.Linq;
 
     [PublicAPI]
     public static class Extensions
@@ -114,7 +115,7 @@
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             if (_fluentKey == null)
             {
-                _fluentKey = resolver.KeyFactory.CreateCompositeKey(new[] { resolver.KeyFactory.CreateContractKey(typeof(IFluent), true) });
+                _fluentKey = resolver.KeyFactory.CreateCompositeKey(Enumerable.Repeat(resolver.KeyFactory.CreateContractKey(typeof(IFluent), true), 1));
             }
 
             IResolverContext ctx;

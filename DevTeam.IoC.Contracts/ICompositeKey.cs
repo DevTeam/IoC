@@ -1,12 +1,14 @@
 ﻿namespace DevTeam.IoC.Contracts
 {
+    using System.Collections.Generic;
+
     [PublicAPI]
     public interface ICompositeKey: IKey
     {
-        IContractKey[] ContractKeys { [NotNull] get; }
+        ISet<IContractKey> ContractKeys { [NotNull] get; }
 
-        ITagKey[] TagKeys { [NotNull] get; }
+        ISet<ITagKey> TagKeys { [NotNull] get; }
 
-        IStateKey[] StateKeys { [NotNull] get; }
+        ISet<IStateKey> StateKeys { [NotNull] get; }
     }
 }

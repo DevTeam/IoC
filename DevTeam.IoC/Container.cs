@@ -8,7 +8,7 @@
 
     public class Container: IContainer, IRegistry
     {
-        private static readonly ICompositeKey CacheKey = RootConfiguration.KeyFactory.CreateCompositeKey(new [] { RootConfiguration.KeyFactory.CreateContractKey(typeof(ICache<ICompositeKey, RegistrationItem>), true) });
+        private static readonly ICompositeKey CacheKey = RootConfiguration.KeyFactory.CreateCompositeKey(Enumerable.Repeat(RootConfiguration.KeyFactory.CreateContractKey(typeof(ICache<ICompositeKey, RegistrationItem>), true), 1));
         private readonly IDisposable _rootConfigurationRegistration;
         private readonly IDisposable _configurationRegistration;
         private readonly IContainer _parentContainer;
