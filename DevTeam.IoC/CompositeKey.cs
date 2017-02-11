@@ -2,13 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-
     using Contracts;
 
     internal class CompositeKey: ICompositeKey
     {
-        private static readonly HashSet<IContractKey> EmptyContractKeys = new HashSet<IContractKey>();
+        private static readonly Cache<IContractKey, ISet<IContractKey>> ContractSetCache = new Cache<IContractKey, ISet<IContractKey>>();
         private static readonly HashSet<IStateKey> EmptyStateKeys = new HashSet<IStateKey>();
         private static readonly HashSet<ITagKey> EmptyTagKeys = new HashSet<ITagKey>();
         private readonly int _contractsHashCode;
@@ -17,15 +15,13 @@
 
         public CompositeKey(
             [NotNull] IEnumerable<IContractKey> contractKeys,
-            [NotNull] IEnumerable<ITagKey> tagKeys,
-            [NotNull] IEnumerable<IStateKey> stateKeys)
+            [CanBeNull] IEnumerable<ITagKey> tagKeys = null,
+            [CanBeNull] IEnumerable<IStateKey> stateKeys = null)
         {
             if (contractKeys == null) throw new ArgumentNullException(nameof(contractKeys));
-            if (tagKeys == null) throw new ArgumentNullException(nameof(tagKeys));
-            if (stateKeys == null) throw new ArgumentNullException(nameof(stateKeys));
-            ContractKeys = CreateSet(contractKeys, out _contractsHashCode) ?? EmptyContractKeys;
-            TagKeys = CreateSet(tagKeys, out _tagsHashCode) ?? EmptyTagKeys;
-            StateKeys = CreateSet(stateKeys, out _statesHashCode) ?? EmptyStateKeys;
+            ContractKeys = CreateSet(contractKeys, out _contractsHashCode);
+            TagKeys = tagKeys != null ? CreateSet(tagKeys, out _tagsHashCode) : EmptyTagKeys;
+            StateKeys = stateKeys != null ? CreateSet(stateKeys, out _statesHashCode) : EmptyStateKeys;
         }
 
         public ISet<IContractKey> ContractKeys { get; }
@@ -75,20 +71,14 @@
                 && (filter.Filter(typeof(IStateKey)) || StateKeys.SetEquals(other.StateKeys));
         }
 
-        [CanBeNull]
-        private HashSet<T> CreateSet<T>(IEnumerable<T> keys, out int hashCode)
+        [NotNull]
+        private ISet<T> CreateSet<T>([NotNull] IEnumerable<T> keys, out int hashCode)
         {
-            HashSet<T> set = null;
-            hashCode = 1;
+            var resultSet = new HashSet<T>(keys);
+            hashCode = 0;
             var cnt = 0;
-            foreach (var key in keys)
+            foreach (var key in resultSet)
             {
-                if (set == null)
-                {
-                    set = new HashSet<T>();
-                }
-
-                set.Add(key);
                 cnt++;
                 unchecked
                 {
@@ -101,7 +91,7 @@
                 hashCode *= cnt;
             }
 
-            return set;
+            return resultSet;
         }
     }
 }

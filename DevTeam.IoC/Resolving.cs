@@ -175,7 +175,7 @@
         {
             if (_compositeKey == null)
             {
-                _compositeKey = Resolver.KeyFactory.CreateCompositeKey(_genericContractKeys, _tagKeys, _stateKeys);
+                _compositeKey = Resolver.KeyFactory.CreateCompositeKey(_genericContractKeys, _tagKeys.Any() ? _tagKeys : null, _stateKeys.Any() ? _stateKeys : null);
             }
 
             return _compositeKey;

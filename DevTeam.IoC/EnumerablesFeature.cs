@@ -80,7 +80,7 @@
             {
                 if (key.ContractKeys.Contains(contractKey))
                 {
-                    yield return new CompositeKey(key.ContractKeys.Where(i => i.ContractType != contractKey.ContractType).Concat(Enumerable.Repeat(contractKey, 1)), key.TagKeys, key.StateKeys);
+                    yield return RootConfiguration.KeyFactory.CreateCompositeKey(key.ContractKeys.Where(i => i.ContractType != contractKey.ContractType).Concat(Enumerable.Repeat(contractKey, 1)), key.TagKeys, key.StateKeys);
                 }
             }
         }

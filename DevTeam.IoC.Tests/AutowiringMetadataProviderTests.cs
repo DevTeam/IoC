@@ -30,7 +30,7 @@
         {
             // Given
             var metadataProvider = CreateInstance();
-            var key = new CompositeKey((contractKeyType != null ? Enumerable.Repeat(contractKeyType, 1) : Enumerable.Empty<Type>()).Select(i => new ContractKey(i, true)).Cast<IContractKey>().ToArray(), new ITagKey[0], new IStateKey[0]);
+            var key = new CompositeKey((contractKeyType != null ? Enumerable.Repeat(contractKeyType, 1) : Enumerable.Empty<Type>()).Select(i => new ContractKey(i, true)).Cast<IContractKey>().ToArray());
             var resolverContext = new Mock<IResolverContext>();
             resolverContext.SetupGet(i => i.Key).Returns(key);
 

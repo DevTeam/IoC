@@ -209,7 +209,7 @@
         {
             foreach (var contractKeys in _contractKeys)
             {
-                _compositeKeys.Add(Resolver.KeyFactory.CreateCompositeKey(contractKeys, _tagKeys, _stateKeys));
+                _compositeKeys.Add(Resolver.KeyFactory.CreateCompositeKey(contractKeys, _tagKeys.Any() ? _tagKeys : null, _stateKeys.Any() ? _stateKeys : null));
             }
 
             _contractKeys.Clear();

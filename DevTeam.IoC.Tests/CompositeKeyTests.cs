@@ -102,9 +102,9 @@
         }
 
         private CompositeKey CreateInstance(
-            [NotNull] IContractKey[] contractKey,
-            [NotNull] ITagKey[] tagKeys,
-            [NotNull] IStateKey[] stateKeys)
+            [NotNull] IEnumerable<IContractKey> contractKey,
+            [NotNull] IEnumerable<ITagKey> tagKeys,
+            [NotNull] IEnumerable<IStateKey> stateKeys)
         {
             return new CompositeKey(contractKey, tagKeys, stateKeys);
         }

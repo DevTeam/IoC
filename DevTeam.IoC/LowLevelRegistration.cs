@@ -14,7 +14,7 @@
 
         public static IEnumerable<ICompositeKey> CreateKeys(Type contractType)
         {
-            var key = new CompositeKey(Enumerable.Repeat<IContractKey>(new ContractKey(contractType, true), 1), Enumerable.Empty<ITagKey>(), Enumerable.Empty<IStateKey>());
+            var key = RootConfiguration.KeyFactory.CreateCompositeKey(Enumerable.Repeat<IContractKey>(new ContractKey(contractType, true), 1));
             return Enumerable.Repeat(key, 1).ToArray();
         }
 

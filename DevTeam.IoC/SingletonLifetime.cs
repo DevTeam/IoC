@@ -32,7 +32,7 @@
             ITagKey registrationKey = new TagKey(resolverContext.RegistrationKey);
             var contractKeys = resolverContext.Key.ContractKeys.Select(i => i.GenericTypeArguments).SelectMany(i => i).Select(i => (IContractKey)new ContractKey(i, true));
             var tagKeys = Enumerable.Repeat(registrationKey, 1);
-            return new CompositeKey(contractKeys, tagKeys, Enumerable.Empty<IStateKey>());
+            return RootConfiguration.KeyFactory.CreateCompositeKey(contractKeys, tagKeys);
         }
 
         private class Lifetime: ILifetime

@@ -10,7 +10,7 @@
         public ICompositeKey CreateCompositeKey(IEnumerable<IContractKey> contractKey, IEnumerable<ITagKey> tagKeys = null, IEnumerable<IStateKey> stateKeys = null)
         {
             if (contractKey == null) throw new ArgumentNullException(nameof(contractKey));
-            return new CompositeKey(contractKey, tagKeys ?? Enumerable.Empty<ITagKey>(), stateKeys ?? Enumerable.Empty<IStateKey>());
+            return new CompositeKey(contractKey, tagKeys, stateKeys);
         }
 
         public IContractKey CreateContractKey(Type contractType, bool toResolve)
