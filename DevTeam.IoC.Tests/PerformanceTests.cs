@@ -49,6 +49,22 @@
         }
 
         [Test]
+        public void SimpleSingletonPerformanceTest()
+        {
+            using (var rootContainer = new Container("root")
+                .Configure()
+                .DependsOn(Wellknown.Feature.Default)
+                .Register().Lifetime(Wellknown.Lifetime.Singleton).Contract<ISimpleService>().AsAutowiring<SimpleService>()
+                .Own())
+            {
+                for (var i = 0; i < 100000; i++)
+                {
+                    rootContainer.Resolve().Instance<ISimpleService>();
+                }
+            }
+        }
+
+        [Test]
         public void TestWhenJsonConfiguration()
         {
             var eventsConfigurationFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "EventsConfiguration.json");
