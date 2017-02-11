@@ -5,7 +5,7 @@
     using System.Linq;
     using Contracts;
 
-    internal class SingletonLifetime: KeyBasedLifetime<ICompositeKey>
+    internal class SingletonLifetime: KeyBasedLifetime<SingletonLifetime.Key>
     {
         private static readonly ILifetime TransientLifetime = new TransientLifetime();
         private readonly Dictionary<ICompositeKey, object> _instances = new Dictionary<ICompositeKey, object>();
@@ -25,14 +25,48 @@
             return new Lifetime(lifetimeEnumerator.Current);
         }
 
-        private static ICompositeKey KeySelector(ILifetimeContext lifetimeContext, IResolverContext resolverContext)
+        private static Key KeySelector(ILifetimeContext lifetimeContext, IResolverContext resolverContext)
         {
             if (lifetimeContext == null) throw new ArgumentNullException(nameof(lifetimeContext));
             if (resolverContext == null) throw new ArgumentNullException(nameof(resolverContext));
-            ITagKey registrationKey = new TagKey(resolverContext.RegistrationKey);
-            var contractKeys = resolverContext.Key.ContractKeys.Select(i => i.GenericTypeArguments).SelectMany(i => i).Select(i => (IContractKey)new ContractKey(i, true));
-            var tagKeys = Enumerable.Repeat(registrationKey, 1);
-            return RootConfiguration.KeyFactory.CreateCompositeKey(contractKeys, tagKeys);
+            return new Key(resolverContext.Key.ContractKeys.Count == 1 ? resolverContext.Key.ContractKeys.Single().GenericTypeArguments : resolverContext.Key.ContractKeys.Select(i => i.GenericTypeArguments).SelectMany(i => i).ToArray());
+        }
+
+        internal class Key
+        {
+            private readonly Type[] _types;
+            private readonly int _hashCode;
+
+            public Key(Type[] types)
+            {
+                _types = types;
+                _hashCode = 1;
+                foreach (var type in _types)
+                {
+                    unchecked
+                    {
+                        _hashCode = (type.GetHashCode() * 397) ^ _hashCode;
+                    }
+                }
+            }
+
+            public override int GetHashCode()
+            {
+                return _hashCode;
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != GetType()) return false;
+                return Equals((Key) obj);
+            }
+
+            protected bool Equals(Key other)
+            {
+                return _types.SequenceEqual(other._types);
+            }
         }
 
         private class Lifetime: ILifetime
