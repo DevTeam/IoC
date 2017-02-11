@@ -8,7 +8,7 @@
         public void WriteLine(string line, Color color)
         {
             if (line == null) throw new ArgumentNullException(nameof(line));
-            var prevForegroundColor = System.Console.ForegroundColor;
+            var previousForegroundColor = System.Console.ForegroundColor;
             try
             {
                 switch (color)
@@ -26,7 +26,7 @@
             }
             finally
             {
-                System.Console.ForegroundColor = prevForegroundColor;
+                System.Console.ForegroundColor = previousForegroundColor;
             }
         }
     }

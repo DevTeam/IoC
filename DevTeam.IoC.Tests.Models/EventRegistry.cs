@@ -39,9 +39,9 @@
         {
             _log.Method($"RegisterEvent<{typeof(TEvent).Name}>()");
             var sources = _resolver.Resolve().Instance<IEnumerable<IEventSource<TEvent>>>();
-            var listners = _resolver.Resolve().Instance<IEnumerable<IEventListener<TEvent>>>();
+            var listeners = _resolver.Resolve().Instance<IEnumerable<IEventListener<TEvent>>>();
             var tokens = 
-                listners.Select(i => _eventBroker.RegisterListener(i))
+                listeners.Select(i => _eventBroker.RegisterListener(i))
                 .Concat(sources.Select(i => _eventBroker.RegisterSource(i)))
                 .ToList();
 

@@ -96,6 +96,7 @@
             var mock = new Mock<ISimpleService>();
             using (var container = CreateContainer())
             using (var childContainer1 = new Container("child1", container))
+            // ReSharper disable once UnusedVariable
             using (var childContainer2 = new Container("child2", container))
             using (container.Configure().DependsOn(Wellknown.Feature.Scopes).Own())
             {

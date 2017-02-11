@@ -6,7 +6,7 @@
     {
         private static readonly KeyFilterContext DefaultContext = new KeyFilterContext(key => false);
         [ThreadStatic] private static KeyFilterContext _current;
-        private KeyFilterContext _prevContext;
+        private KeyFilterContext _previousContext;
 
         public static KeyFilterContext Current
         {
@@ -24,13 +24,13 @@
 
         public void Activate()
         {
-            _prevContext = Current;
+            _previousContext = Current;
             Current = this;
         }
 
         public void Deactivate()
         {
-            Current = _prevContext;
+            Current = _previousContext;
         }
     }
 }

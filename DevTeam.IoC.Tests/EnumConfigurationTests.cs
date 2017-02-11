@@ -11,7 +11,7 @@
 
     using Shouldly;
 
-    public class EnumerablesConfigurationTests
+    public class EnumConfigurationTests
     {
         [Test]
         public void ContainerShouldResolveAllInstancesWhenResolveEnumerable()

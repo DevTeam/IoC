@@ -89,11 +89,12 @@
             {
                 lock (_lockObject)
                 {
-                    if (_instance == null)
+                    if (_instance != null)
                     {
-                        _instance = _baseLifetime.Create(lifetimeContext, resolverContext, lifetimeEnumerator);
+                        return _instance;
                     }
 
+                    _instance = _baseLifetime.Create(lifetimeContext, resolverContext, lifetimeEnumerator);
                     return _instance;
                 }
             }

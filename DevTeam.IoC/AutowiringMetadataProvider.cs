@@ -81,6 +81,7 @@
                 else
                 {
                     IEnumerable<IContractKey> contractKeys;
+                    // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
                     if (contractAttributes.Length > 0)
                     {
                         contractKeys = contractAttributes.SelectMany(i => i.ContractTypes).Select(type => (IContractKey)new ContractKey(type, true)).DefaultIfEmpty(new ContractKey(info.ParameterType, true));

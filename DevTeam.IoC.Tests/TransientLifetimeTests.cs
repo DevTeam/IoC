@@ -12,7 +12,6 @@
     public class TransientLifetimeTests
     {
         private Mock<IEnumerator<ILifetime>> _lifetimeEnumerator;
-        private Mock<ILifetime> _baseLifetime;
         private Mock<ILifetimeContext> _lifetimeContext;
         private Mock<IResolverContext> _resolverContext;
         private Mock<IResolverFactory> _instanceFactory;
@@ -22,7 +21,6 @@
         public void SetUp()
         {
             _lifetimeEnumerator = new Mock<IEnumerator<ILifetime>>();
-            _baseLifetime = new Mock<ILifetime>();
             _lifetimeContext = new Mock<ILifetimeContext>();
             _resolverContext = new Mock<IResolverContext>();
             _registryContext = new Mock<IRegistryContext>();

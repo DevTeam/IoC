@@ -77,7 +77,7 @@
     <Compile Include="ResolversConfigurationTests.cs" />
     <Compile Include="IDisposableService.cs" />
     <Compile Include="IGenericService.cs" />
-    <Compile Include="EnumerablesConfigurationTests.cs" />
+    <Compile Include="EnumConfigurationTests.cs" />
     <Compile Include="IMultService.cs" />
     <Compile Include="KeyComparersConfigurationTests.cs" />
     <Compile Include="ScopesConfigurationTests.cs" />

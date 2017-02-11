@@ -237,9 +237,9 @@
 
             public bool IsValid { get; }
 
-            public IList<TypeDescription> GenericTypeArgs { get; }
+            private IList<TypeDescription> GenericTypeArgs { get; }
 
-            public bool IsUndefined { get; private set; }
+            private bool IsUndefined { get; }
 
             public Type Type { get; private set; }
 

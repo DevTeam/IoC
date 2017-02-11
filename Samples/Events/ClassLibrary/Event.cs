@@ -15,7 +15,7 @@
             Data = data;
         }
 
-        public T Data { get; private set; }
+        public T Data { get; }
 
         public override string ToString()
         {

@@ -11,6 +11,7 @@
 
     [TestFixture]
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
+    [SuppressMessage("ReSharper", "UnusedMember.Local")]
     public class ResolversConfigurationTests
     {
         [Test]
@@ -88,6 +89,7 @@
             }
         }
 
+        // ReSharper disable once ClassNeverInstantiated.Local
         private class StateClass: ISimpleService
         {
             public StateClass([State] string arg1, [State] int arg2)

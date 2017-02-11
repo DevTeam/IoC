@@ -88,10 +88,10 @@
                 yield break;
             }
 
-            var сompositeKey = key as ICompositeKey;
-            if (сompositeKey != null)
+            var compositeKey = key as ICompositeKey;
+            if (compositeKey != null)
             {
-                foreach (var subKey in ((IEnumerable<IKey>)сompositeKey.StateKeys).Concat(сompositeKey.TagKeys))
+                foreach (var subKey in ((IEnumerable<IKey>)compositeKey.StateKeys).Concat(compositeKey.TagKeys))
                 {
                     yield return subKey;
                 }

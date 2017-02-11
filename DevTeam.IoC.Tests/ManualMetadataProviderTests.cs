@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Reflection;
     using Contracts;
@@ -12,6 +13,7 @@
     using Shouldly;
 
     [TestFixture]
+    [SuppressMessage("ReSharper", "UnusedParameter.Local")]
     public class ManualMetadataProviderTests
     {
         private Mock<IMetadataProvider> _defaultMetadataProvider;

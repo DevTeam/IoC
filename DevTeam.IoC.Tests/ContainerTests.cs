@@ -81,11 +81,10 @@
             using (var container = CreateContainer())
             {
                 // When
-                var registryContext =
-                    container.CreateContext(
-                        CreateCompositeKeys(container, false, new[] { typeof(IResolver) }, new object[0]),
-                        _factory.Object,
-                        new IExtension[0]);
+                container.CreateContext(
+                    CreateCompositeKeys(container, false, new[] { typeof(IResolver) }, new object[0]),
+                    _factory.Object,
+                    new IExtension[0]);
 
                 var resolverContext = container.CreateContext(CreateCompositeKey(container, true, new[] { typeof(IResolver) }));
                 var resolver = container.Resolve(resolverContext);
@@ -215,7 +214,6 @@
             using (var container = CreateContainer())
             {
                 var ex = new Exception("test");
-                object obj = new object();
                 _factory.Setup(i => i.Create(It.IsAny<IResolverContext>())).Throws(ex);
 
                 // When

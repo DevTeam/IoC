@@ -12,7 +12,7 @@
 
         internal int Count => _lifetimes.Count;
 
-        public KeyBasedLifetime(
+        protected KeyBasedLifetime(
             [NotNull] Func<ILifetimeContext, IResolverContext, TKey> keySelector)
         {
             if (keySelector == null) throw new ArgumentNullException(nameof(keySelector));

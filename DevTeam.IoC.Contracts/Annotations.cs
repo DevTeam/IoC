@@ -1,4 +1,5 @@
-﻿namespace DevTeam.IoC.Contracts
+﻿// ReSharper disable All
+namespace DevTeam.IoC.Contracts
 {
     /* MIT License
 
@@ -23,6 +24,7 @@
     SOFTWARE. */
 
     using System;
+    using System.Diagnostics.CodeAnalysis;
 
 #pragma warning disable 1591
     // ReSharper disable UnusedMember.Global
@@ -191,6 +193,7 @@
     /// </list>
     /// </example>
     [AttributeUsage(AttributeTargets.Method)]
+    [SuppressMessage("ReSharper", "CommentTypo")]
     public sealed class NotifyPropertyChangedInvocatorAttribute : Attribute
     {
         public NotifyPropertyChangedInvocatorAttribute() { }

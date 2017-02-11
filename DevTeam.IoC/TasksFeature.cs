@@ -68,8 +68,8 @@
             {
                 return () => ctx.Container
                     .Resolve()
-                    .Key(ctx.Key.TagKeys.Cast<IKey>())
-                    .Key(ctx.Key.StateKeys.Cast<IKey>())
+                    .Key(ctx.Key.TagKeys)
+                    .Key(ctx.Key.StateKeys)
                     .Instance<T>();
             }
         }

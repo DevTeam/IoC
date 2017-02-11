@@ -32,7 +32,7 @@
         }
 
         [Test]
-        public void ContainerShouldRegisterUsigClassMetadataWhensFactoryMethod()
+        public void ContainerShouldRegisterUsingClassMetadataWhensFactoryMethod()
         {
             // Given
             using (var container = CreateContainer())
@@ -49,7 +49,7 @@
         }
 
         [Test]
-        public void ContainerShouldRegisterUsigClassMetadataAutomaticallyWhenAutowiring()
+        public void ContainerShouldRegisterUsingClassMetadataAutomaticallyWhenAutowiring()
         {
             // Given
             using (var container = CreateContainer())
@@ -161,11 +161,12 @@
                 stateKeys);
         }
 
+        // ReSharper disable once UnusedMember.Local
         private class Stub<T>: IMultService<T>
         {
             public void Dispose()
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
         }
 
@@ -179,7 +180,7 @@
                 Str = str;
             }
 
-            public string Str { get; private set; }
+            public string Str { get; }
         }
     }
 }

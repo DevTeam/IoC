@@ -27,7 +27,7 @@
         [TestCase("DevTeam.IoC.Tests.Models", "DevTeam.IoC.Tests.Models", "ITimer", true, typeof(ITimer))]
         public void ShouldTryResolveType(
             string references,
-            string usings,
+            string usingStatements,
             string typeName,
             bool expectedResult,
             Type expectedType)
@@ -39,7 +39,7 @@
                 typeResolver.AddReference(reference);
             }
 
-            foreach (var usingItem in usings.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (var usingItem in usingStatements.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 typeResolver.AddUsingStatement(usingItem);
             }

@@ -77,6 +77,7 @@
             var obj1 = new object();
             var obj2 = new object();
             var registrationKey = new object();
+            // ReSharper disable once AccessToModifiedClosure
             var lifetime = CreateInstance((lifetimeContext, resolverContext) => key);
             _resolverContext.SetupGet(i => i.RegistrationKey).Returns(registrationKey);
             _lifetimeEnumerator.Setup(i => i.MoveNext()).Returns(true);
@@ -105,6 +106,7 @@
             var key = 0;
             var obj = new object();
             var registrationKey = new object();
+            // ReSharper disable once AccessToModifiedClosure
             var lifetime = CreateInstance((lifetimeContext, resolverContext) => key);
             _resolverContext.SetupGet(i => i.RegistrationKey).Returns(registrationKey);
             _lifetimeEnumerator.Setup(i => i.MoveNext()).Returns(true);

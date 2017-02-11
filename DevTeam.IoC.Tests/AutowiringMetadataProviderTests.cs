@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Reflection;
     using System.Text.RegularExpressions;
@@ -13,6 +14,9 @@
     using Shouldly;
 
     [TestFixture]
+    [SuppressMessage("ReSharper", "EmptyConstructor")]
+    [SuppressMessage("ReSharper", "UnusedParameter.Local")]
+    [SuppressMessage("ReSharper", "UnusedMember.Local")]
     public class AutowiringMetadataProviderTests
     {
         [SetUp]
@@ -48,7 +52,7 @@
         [TestCase(typeof(OneCtorClass), true, ".ctor()", null)]
         // One ctor with arg
         [TestCase(typeof(OneCtorClassWithArg), true, ".ctor(System.String)", null)]
-        // Сtor with AutowiringAttribute
+        // Constructor with AutowiringAttribute
         [TestCase(typeof(CtorClassWithAutowiringAttribute), true, ".ctor(System.Int32)", null)]
         // Several ctor with AutowiringAttribute
         [TestCase(typeof(SeveralCtorClassWithAutowiringAttribute), false, null, "Too many resolving constructors")]
@@ -92,7 +96,7 @@
                 new ParameterMetadata(null, 0, new object[0], null, new StateKey(0, typeof(int))),
                 new ParameterMetadata(new IKey[] { new ContractKey(typeof(IEnumerable<string>), true) },0, new object[0], null, null ),
                 new ParameterMetadata(new IKey[] { new ContractKey(typeof(IDisposable), true) }, 0, new object[0], null, null ),
-                new ParameterMetadata(new IKey[] { new ContractKey(typeof(string), true), new StateKey(1, typeof(int)), }, 0, new object[1] { null }, null, null ),
+                new ParameterMetadata(new IKey[] { new ContractKey(typeof(string), true), new StateKey(1, typeof(int)), }, 0, new object[] { null }, null, null ),
                 new ParameterMetadata(new IKey[] { new ContractKey(typeof(string), true), new TagKey("abc"), }, 0, new object[0], null, null ),
                 new ParameterMetadata(null, 0, new object[0], null, new StateKey(1, typeof(string))),
             };

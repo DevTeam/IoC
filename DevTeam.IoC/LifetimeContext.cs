@@ -9,7 +9,7 @@
         private static long _curId;
         private static LifetimeContext _current;
         [ThreadStatic] private static long? _threadId;
-        private readonly LifetimeContext _prev;
+        private readonly LifetimeContext _previous;
 
         public LifetimeContext()
         {
@@ -19,7 +19,7 @@
                 _threadId = GenerateId();
             }
 
-            _prev = _current;
+            _previous = _current;
             _current = this;
         }
 
@@ -30,7 +30,7 @@
 
         public void Dispose()
         {
-            _current = _prev;
+            _current = _previous;
         }
 
         private static long GenerateId()

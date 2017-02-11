@@ -1,6 +1,5 @@
 ﻿namespace DevTeam.IoC.Tests
 {
-    using System;
     using Contracts;
 
     using Moq;
@@ -37,13 +36,13 @@
         public void ShouldCreateObjectWhenDefaultCtorAndStaticInitializer()
         {
             // Given
-            var factory = CreateFactory<SimpleClassWithStatitcInitializer>();
+            var factory = CreateFactory<SimpleClassWithStaticInitializer>();
 
             // When
             var instance = factory.Create(CreateContext());
 
             // Then
-            instance.ShouldBeOfType<SimpleClassWithStatitcInitializer>();
+            instance.ShouldBeOfType<SimpleClassWithStaticInitializer>();
         }
 
         [Test]
@@ -110,11 +109,13 @@
             return resolverContext.Object;
         }
 
+        // ReSharper disable once ClassNeverInstantiated.Local
         private class SimpleClass
         {
         }
 
-        private class SimpleClassWithStatitcInitializer
+        // ReSharper disable once ClassNeverInstantiated.Local
+        private class SimpleClassWithStaticInitializer
         {
 #pragma warning disable 169
             public static readonly int Num = 99;
@@ -134,6 +135,7 @@
             public int Arg2 { get; }
         }
 
+        // ReSharper disable once ClassNeverInstantiated.Local
         private class DependencyClass
         {
             public DependencyClass(
@@ -153,6 +155,7 @@
             public int Arg2 { get; }
         }
 
+        // ReSharper disable once ClassNeverInstantiated.Local
         private class DependencyWithValuesClass
         {
             public DependencyWithValuesClass(
