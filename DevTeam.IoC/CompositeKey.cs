@@ -8,6 +8,9 @@
 
     internal class CompositeKey: ICompositeKey
     {
+        private static readonly HashSet<IContractKey> EmptyContractKeys = new HashSet<IContractKey>();
+        private static readonly HashSet<IStateKey> EmptyStateKeys = new HashSet<IStateKey>();
+        private static readonly HashSet<ITagKey> EmptyTagKeys = new HashSet<ITagKey>();
         private readonly int _contractsHashCode;
         private readonly int _tagsHashCode;
         private readonly int _statesHashCode;
@@ -20,35 +23,9 @@
             if (contractKeys == null) throw new ArgumentNullException(nameof(contractKeys));
             if (tagKeys == null) throw new ArgumentNullException(nameof(tagKeys));
             if (stateKeys == null) throw new ArgumentNullException(nameof(stateKeys));
-            TagKeys = new HashSet<ITagKey>(tagKeys);
-            StateKeys = new HashSet<IStateKey>(stateKeys);
-            ContractKeys = new HashSet<IContractKey>(contractKeys);
-            unchecked
-            {
-                _contractsHashCode = ContractKeys.Aggregate(1, (code, key) =>
-                {
-                    unchecked
-                    {
-                        return code + key.GetHashCode();
-                    }
-                }) * ContractKeys.Count;
-
-                _tagsHashCode = TagKeys.Aggregate(1, (code, key) =>
-                {
-                    unchecked
-                    {
-                        return code + key.GetHashCode();
-                    }
-                }) * TagKeys.Count;
-
-                _statesHashCode = StateKeys.Aggregate(1, (code, key) =>
-                {
-                    unchecked
-                    {
-                        return code + key.GetHashCode();
-                    }
-                }) * StateKeys.Count;
-            }
+            ContractKeys = CreateSet(contractKeys, out _contractsHashCode) ?? EmptyContractKeys;
+            TagKeys = CreateSet(tagKeys, out _tagsHashCode) ?? EmptyTagKeys;
+            StateKeys = CreateSet(stateKeys, out _statesHashCode) ?? EmptyStateKeys;
         }
 
         public ISet<IContractKey> ContractKeys { get; }
@@ -84,6 +61,11 @@
             return hashCode;
         }
 
+        public override string ToString()
+        {
+            return $"{nameof(CompositeKey)} [Contracts: {string.Join(", ", ContractKeys)}, Tags: {string.Join(", ", TagKeys)}, States: {string.Join(", ", StateKeys)}]";
+        }
+
         private bool Equals(CompositeKey other)
         {
             var filter = KeyFilterContext.Current;
@@ -93,9 +75,33 @@
                 && (filter.Filter(typeof(IStateKey)) || StateKeys.SetEquals(other.StateKeys));
         }
 
-        public override string ToString()
+        [CanBeNull]
+        private HashSet<T> CreateSet<T>(IEnumerable<T> keys, out int hashCode)
         {
-            return $"{nameof(CompositeKey)} [Contracts: {string.Join(", ", ContractKeys)}, Tags: {string.Join(", ", TagKeys)}, States: {string.Join(", ", StateKeys)}]";
+            HashSet<T> set = null;
+            hashCode = 1;
+            var cnt = 0;
+            foreach (var key in keys)
+            {
+                if (set == null)
+                {
+                    set = new HashSet<T>();
+                }
+
+                set.Add(key);
+                cnt++;
+                unchecked
+                {
+                    hashCode += key.GetHashCode();
+                }
+            }
+
+            unchecked
+            {
+                hashCode *= cnt;
+            }
+
+            return set;
         }
     }
 }
