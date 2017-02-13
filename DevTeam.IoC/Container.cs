@@ -12,7 +12,7 @@
         private readonly IContainer _parentContainer;
         private readonly Dictionary<IEqualityComparer<ICompositeKey>, Dictionary<ICompositeKey, RegistrationItem>> _registrations = new Dictionary<IEqualityComparer<ICompositeKey>, Dictionary<ICompositeKey, RegistrationItem>>();
         private readonly Subject<IEventRegistration> _eventRegistrationSubject = new Subject<IEventRegistration>();
-        private ICache<ICompositeKey, RegistrationItem> _cache;
+        private ICache<ICompositeKey, IResolverContext> _cache;
 
         public Container([CanBeNull] object tag = null)
         {
@@ -199,27 +199,21 @@
             return $"{nameof(Container)} [Tag: {Tag ?? "null"}]{Environment.NewLine}{string.Join(Environment.NewLine, Registrations)}";
         }
 
-        private bool TryCreateContextInternal(ICompositeKey key, out IResolverContext resolverContext, IStateProvider stateProvider = null)
+        private bool TryCreateContextInternal(
+            ICompositeKey key,
+            out IResolverContext resolverContext,
+            IStateProvider stateProvider = null)
         {
             if (key == null) throw new ArgumentNullException(nameof(key));
 
-            RegistrationItem registrationItem;
-            if (_cache != null && _cache.TryGet(key, out registrationItem))
+            if (_cache != null && _cache.TryGet(key, out resolverContext))
             {
-                resolverContext = new ResolverContext(
-                    this,
-                    _parentContainer,
-                    registrationItem.RegistryContext,
-                    registrationItem.InstanceFactory,
-                    key,
-                    registrationItem.Key,
-                    stateProvider);
-
                 return true;
             }
 
             foreach (var registrations in _registrations)
             {
+                RegistrationItem registrationItem;
                 if (!registrations.Value.TryGetValue(key, out registrationItem))
                 {
                     continue;
@@ -237,7 +231,7 @@
                 IScope scope;
                 if (!TryGetExtension(resolverContext.RegistryContext.Extensions, out scope) || scope.AllowsResolving(resolverContext))
                 {
-                    _cache?.Set(key, registrationItem);
+                    _cache?.Set(key, resolverContext);
                     return true;
                 }
             }
@@ -265,33 +259,6 @@
         {
             instance = extensions.OfType<TContract>().SingleOrDefault();
             return instance != default(TContract);
-        }
-
-        private class CacheTracker: IObserver<IEventRegistration>
-        {
-            private readonly ICache<ICompositeKey, RegistrationItem> _cache;
-
-            public CacheTracker([NotNull] ICache<ICompositeKey, RegistrationItem> cache)
-            {
-                if (cache == null) throw new ArgumentNullException(nameof(cache));
-                _cache = cache;
-            }
-
-            public void OnNext(IEventRegistration value)
-            {
-                if (value.Stage == EventStage.After && value.Action == RegistrationAction.Remove)
-                {
-                    _cache.TryRemove(value.Key);
-                }
-            }
-
-            public void OnError(Exception error)
-            {
-            }
-
-            public void OnCompleted()
-            {
-            }
         }
     }
 }
