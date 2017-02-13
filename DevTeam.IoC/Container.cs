@@ -247,6 +247,7 @@
                     resolverContext.RegistrationKey,
                     resolverContext.StateProvider);
 
+                _cache?.Set(key, resolverContext);
                 return true;
             }
 
