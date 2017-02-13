@@ -47,6 +47,7 @@
     <Compile Include="ConfigurationFromAssembly.cs" />
     <Compile Include="ConfigurationFromDto.cs" />
     <Compile Include="ContainerConfiguration.cs" />
+    <Compile Include="EventRegistration.cs" />
     <Compile Include="IInternalResourceStore.cs" />
     <Compile Include="InternalResourceStore.cs" />
     <Compile Include="IWeakReference.cs" />
@@ -59,6 +60,7 @@
     <Compile Include="Disposable.cs" />
     <Compile Include="DtoFeature.cs" />
     <Compile Include="SingletonBasedLifetime.cs" />
+    <Compile Include="Subject.cs" />
     <Compile Include="TasksFeature.cs" />
     <Compile Include="FilteredKeyComparer.cs" />
     <Compile Include="CompositeDisposable.cs" />

@@ -6,13 +6,14 @@
 
     using Contracts;
 
-    public class Container: IContainer
+    public class Container : IContainer
     {
         private static readonly ICompositeKey CacheKey = RootConfiguration.KeyFactory.CreateCompositeKey(Enumerable.Repeat(RootConfiguration.KeyFactory.CreateContractKey(typeof(ICache<ICompositeKey, RegistrationItem>), true), 1));
         private readonly IDisposable _rootConfigurationRegistration;
         private readonly IDisposable _configurationRegistration;
         private readonly IContainer _parentContainer;
         private readonly Dictionary<IEqualityComparer<ICompositeKey>, Dictionary<ICompositeKey, RegistrationItem>> _registrations = new Dictionary<IEqualityComparer<ICompositeKey>, Dictionary<ICompositeKey, RegistrationItem>>();
+        private readonly Dictionary<Type, object> _subjects = new Dictionary<Type, object>();
         private ICache<ICompositeKey, RegistrationItem> _cache;
 
         public Container([CanBeNull] object tag = null, [CanBeNull] IContainer parentContainer = null)
@@ -33,6 +34,11 @@
         public IEnumerable<ICompositeKey> Registrations => _parentContainer == null ? _registrations.SelectMany(i => i.Value).Select(i => i.Key): _registrations.SelectMany(i => i.Value).Select(i => i.Key).Concat(_parentContainer.Registrations);
 
         private object LockObject => _registrations;
+
+        public IObservable<T> GetEventSource<T>() where T : IEvent
+        {
+            return GetOrCreateSubject<T>();
+        }
 
         public IRegistryContext CreateContext(IEnumerable<ICompositeKey> keys, IResolverFactory factory, IEnumerable<IExtension> extensions)
         {
@@ -93,14 +99,43 @@
                 {
                     ICache<ICompositeKey, RegistrationItem> cache;
                     var hasCache = TryGetCache(out cache);
+                    Subject<IEventRegistration> eventRegistrationSubject;
+                    var hasEventRegistrationSubject = TryGetSubject(out eventRegistrationSubject);
                     foreach (var key in context.Keys)
                     {
-                        registrations.Add(key, newRegistration);
-                        resources.Add(new Disposable(() => { registrations.Remove(key); }, this));
+                        var currentRegistration = newRegistration;
+
+                        if (hasEventRegistrationSubject)
+                        {
+                            eventRegistrationSubject.OnNext(new EventRegistration(EventStage.Before, RegistrationAction.Add, key, currentRegistration.RegistryContext));
+                        }
+
+                        registrations.Add(key, currentRegistration);
+                        resources.Add(
+                            new Disposable(() =>
+                            {
+                                if (hasEventRegistrationSubject)
+                                {
+                                    eventRegistrationSubject.OnNext(new EventRegistration(EventStage.Before, RegistrationAction.Remove, key, currentRegistration.RegistryContext));
+                                }
+
+                                registrations.Remove(key);
+
+                                if (hasEventRegistrationSubject)
+                                {
+                                    eventRegistrationSubject.OnNext(new EventRegistration(EventStage.After, RegistrationAction.Remove, key, currentRegistration.RegistryContext));
+                                }
+                            },
+                            this));
 
                         if (hasCache)
                         {
                             cache.TryRemove(key);
+                        }
+
+                        if (hasEventRegistrationSubject)
+                        {
+                            eventRegistrationSubject.OnNext(new EventRegistration(EventStage.After, RegistrationAction.Add, key, currentRegistration.RegistryContext));
                         }
                     }
                 }
@@ -154,19 +189,79 @@
 
         public void Dispose()
         {
+            Subject<IEventRegistration> eventRegistrationSubject;
+            var hasEventRegistrationSubject = TryGetSubject(out eventRegistrationSubject);
             foreach (var registration in _registrations.ToList().SelectMany(i => i.Value).ToList())
             {
+                if (hasEventRegistrationSubject)
+                {
+                    eventRegistrationSubject.OnNext(new EventRegistration(EventStage.Before, RegistrationAction.Remove, registration.Key, registration.Value.RegistryContext));
+                }
+
                 registration.Value.Dispose();
+
+                if (hasEventRegistrationSubject)
+                {
+                    eventRegistrationSubject.OnNext(new EventRegistration(EventStage.After, RegistrationAction.Remove, registration.Key, registration.Value.RegistryContext));
+                }
             }
 
             _registrations.Clear();
             _configurationRegistration.Dispose();
             _rootConfigurationRegistration?.Dispose();
+            if (hasEventRegistrationSubject)
+            {
+                eventRegistrationSubject.OnCompleted();
+            }
         }
 
         public override string ToString()
         {
             return $"{nameof(Container)} [Tag: {Tag ?? "null"}]{Environment.NewLine}{string.Join(Environment.NewLine, Registrations)}";
+        }
+
+        private bool TryGetSubject<T>(out Subject<T> subject) where T : IEvent
+        {
+            object subjectObj;
+            if (_subjects.TryGetValue(typeof(T), out subjectObj))
+            {
+                subject = (Subject<T>)subjectObj;
+                return true;
+            }
+
+            subject = default(Subject<T>);
+            return false;
+        }
+
+        private Subject<T> GetOrCreateSubject<T>() where T : IEvent
+        {
+            Subject<T> subject;
+            if (TryGetSubject(out subject))
+            {
+                return subject;
+            }
+
+            Subject<T> newSubject;
+            if (_parentContainer != null)
+            {
+                var parentSubscription = new IDisposable[1];
+                newSubject = new Subject<T>(subscriptionCount =>
+                {
+                    if (subscriptionCount == 0)
+                    {
+                        parentSubscription[0].Dispose();
+                    }
+                });
+
+                parentSubscription[0] = _parentContainer.GetEventSource<T>().Subscribe(newSubject);
+            }
+            else
+            {
+                newSubject = new Subject<T>();
+            }
+
+            _subjects.Add(typeof(T), newSubject);
+            return newSubject;
         }
 
         private bool TryCreateContextInternal(ICompositeKey key, out IResolverContext resolverContext, ICache<ICompositeKey, RegistrationItem> cache, IStateProvider stateProvider = null)

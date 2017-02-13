@@ -41,6 +41,8 @@
   <ItemGroup>
     <Compile Include="Annotations.cs" />
     <Compile Include="AutowiringAttribute.cs" />
+    <Compile Include="EventStage.cs" />
+    <Compile Include="RegistrationAction.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="ContractAttribute.cs" />
     <Compile Include="Dto\IConfigurationDto.cs" />
@@ -62,6 +64,8 @@
     <Compile Include="Dto\IDependencyConfigurationDto.cs" />
     <Compile Include="Dto\IValueDto.cs" />
     <Compile Include="Dto\IDependencyFeatureDto.cs" />
+    <Compile Include="IEvent.cs" />
+    <Compile Include="IEventRegistration.cs" />
     <Compile Include="IParameterMetadata.cs" />
     <Compile Include="ICache.cs" />
     <Compile Include="ICompositeKey.cs" />

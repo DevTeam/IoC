@@ -9,5 +9,8 @@
         object Tag { [CanBeNull] get; }
 
         IEnumerable<ICompositeKey> Registrations { [NotNull] get; }
+
+        [NotNull]
+        IObservable<T> GetEventSource<T>() where T: IEvent;
     }
 }

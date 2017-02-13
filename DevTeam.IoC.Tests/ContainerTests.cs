@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Contracts;
 
@@ -48,6 +49,116 @@
                     actualObj.ShouldBe(obj);
                 }
             }
+        }
+
+        [Test]
+        [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
+        public void ContainerShouldRaiseEvents()
+        {
+            // Given
+            var eventObserver = new EventObserver<IEventRegistration>();
+            ICompositeKey[] keys;
+            using (var container = CreateContainer())
+            using (container.GetEventSource<IEventRegistration>().Subscribe(eventObserver))
+            {
+                object obj = new object();
+                _factory.Setup(i => i.Create(It.IsAny<IResolverContext>())).Returns(obj);
+                keys = CreateCompositeKeys(container, false, new[] {typeof(string) }).ToArray();
+                // When
+                var registryContext =
+                    container.CreateContext(
+                        keys,
+                        _factory.Object,
+                        new IExtension[0]);
+
+                using (container.Register(registryContext))
+                {
+                    var resolverContext = container.CreateContext(CreateCompositeKey(container, true, new[] { typeof(string) }));
+                    container.Resolve(resolverContext);
+                }
+            }
+
+            eventObserver.Events.Count.ShouldBe(4);
+
+            var event0 = eventObserver.Events[0];
+            event0.EventType.ShouldBe(EventObserver<IEventRegistration>.EventType.OnNext);
+            event0.Value.Stage.ShouldBe(EventStage.Before);
+            event0.Value.Action.ShouldBe(RegistrationAction.Add);
+            event0.Value.Key.ShouldBe(keys[0]);
+
+            var event1 = eventObserver.Events[1];
+            event1.EventType.ShouldBe(EventObserver<IEventRegistration>.EventType.OnNext);
+            event1.Value.Stage.ShouldBe(EventStage.After);
+            event1.Value.Action.ShouldBe(RegistrationAction.Add);
+            event1.Value.Key.ShouldBe(keys[0]);
+
+            var event2 = eventObserver.Events[2];
+            event2.EventType.ShouldBe(EventObserver<IEventRegistration>.EventType.OnNext);
+            event2.Value.Stage.ShouldBe(EventStage.Before);
+            event2.Value.Action.ShouldBe(RegistrationAction.Remove);
+            event2.Value.Key.ShouldBe(keys[0]);
+
+            var event3 = eventObserver.Events[3];
+            event3.EventType.ShouldBe(EventObserver<IEventRegistration>.EventType.OnNext);
+            event3.Value.Stage.ShouldBe(EventStage.After);
+            event3.Value.Action.ShouldBe(RegistrationAction.Remove);
+            event3.Value.Key.ShouldBe(keys[0]);
+        }
+
+        [Test]
+        [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
+        public void ContainerShouldRaiseEventsWhenHasChildContainer()
+        {
+            // Given
+            var eventObserver = new EventObserver<IEventRegistration>();
+            ICompositeKey[] keys;
+            using (var container = CreateContainer())
+            using (var childContainer1 = new Container("child1", container))
+            using (var childContainer2 = new Container("child2", childContainer1))
+            using (childContainer2.GetEventSource<IEventRegistration>().Subscribe(eventObserver))
+            {
+                object obj = new object();
+                _factory.Setup(i => i.Create(It.IsAny<IResolverContext>())).Returns(obj);
+                keys = CreateCompositeKeys(container, false, new[] { typeof(string) }).ToArray();
+                // When
+                var registryContext =
+                    container.CreateContext(
+                        keys,
+                        _factory.Object,
+                        new IExtension[0]);
+
+                using (container.Register(registryContext))
+                {
+                    var resolverContext = container.CreateContext(CreateCompositeKey(container, true, new[] { typeof(string) }));
+                    container.Resolve(resolverContext);
+                }
+            }
+
+            eventObserver.Events.Count.ShouldBe(4);
+
+            var event0 = eventObserver.Events[0];
+            event0.EventType.ShouldBe(EventObserver<IEventRegistration>.EventType.OnNext);
+            event0.Value.Stage.ShouldBe(EventStage.Before);
+            event0.Value.Action.ShouldBe(RegistrationAction.Add);
+            event0.Value.Key.ShouldBe(keys[0]);
+
+            var event1 = eventObserver.Events[1];
+            event1.EventType.ShouldBe(EventObserver<IEventRegistration>.EventType.OnNext);
+            event1.Value.Stage.ShouldBe(EventStage.After);
+            event1.Value.Action.ShouldBe(RegistrationAction.Add);
+            event1.Value.Key.ShouldBe(keys[0]);
+
+            var event2 = eventObserver.Events[2];
+            event2.EventType.ShouldBe(EventObserver<IEventRegistration>.EventType.OnNext);
+            event2.Value.Stage.ShouldBe(EventStage.Before);
+            event2.Value.Action.ShouldBe(RegistrationAction.Remove);
+            event2.Value.Key.ShouldBe(keys[0]);
+
+            var event3 = eventObserver.Events[3];
+            event3.EventType.ShouldBe(EventObserver<IEventRegistration>.EventType.OnNext);
+            event3.Value.Stage.ShouldBe(EventStage.After);
+            event3.Value.Action.ShouldBe(RegistrationAction.Remove);
+            event3.Value.Key.ShouldBe(keys[0]);
         }
 
         [Test]

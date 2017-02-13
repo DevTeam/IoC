@@ -8,7 +8,7 @@
 
     internal class RegistrationItem : IDisposable
     {
-        private readonly IEnumerable<IDisposable> _resources;
+        private IEnumerable<IDisposable> _resources;
 
         public RegistrationItem(IRegistryContext registryContext, LifetimesFactory factory, IEnumerable<IDisposable> resources)
         {
@@ -35,7 +35,7 @@
             {
                 disposable.Dispose();
             }
-
+            _resources = Enumerable.Empty<IDisposable>();
             InstanceFactory.Dispose();
         }
     }

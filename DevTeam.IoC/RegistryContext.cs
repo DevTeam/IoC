@@ -9,11 +9,11 @@
     internal class RegistryContext : IRegistryContext
     {
         public RegistryContext(
-            IContainer container,
-            IContainer parentContainer,
-            ICompositeKey[] keys,
-            IResolverFactory factory,
-            IEnumerable<IExtension> extensionPoints)
+            [NotNull] IContainer container,
+            [CanBeNull] IContainer parentContainer,
+            [NotNull] ICompositeKey[] keys,
+            [NotNull] IResolverFactory factory,
+            [NotNull] IEnumerable<IExtension> extensionPoints)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
             if (keys == null) throw new ArgumentNullException(nameof(keys));
@@ -36,5 +36,10 @@
         public IResolverFactory InstanceFactory { get; }
 
         public IEnumerable<IExtension> Extensions { get; }
+
+        public override string ToString()
+        {
+            return $"{nameof(RegistryContext)} [Container: {Container.ToString() ?? "null"}, ParentContainer: {ParentContainer.ToString() ?? "null"}, Keys: {string.Join(", ", Keys)}, InstanceFactory: {InstanceFactory} , Extensions: {string.Join(", ", Extensions)}]";
+        }
     }
 }

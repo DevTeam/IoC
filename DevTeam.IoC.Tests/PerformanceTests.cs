@@ -65,6 +65,28 @@
         }
 
         [Test]
+        public void SimpleHierarchyPerformanceTest()
+        {
+            using (var rootContainer = new Container("root")
+                .Configure()
+                .DependsOn(Wellknown.Feature.Default)
+                .Register().Contract<ISimpleService>().AsAutowiring<SimpleService>()
+                .Own())
+            {
+                IContainer container = rootContainer;
+                for (var i = 0; i < 1000; i++)
+                {
+                    container = container.CreateChild(i);
+                }
+
+                for (var i = 0; i < 1000; i++)
+                {
+                    container.Resolve().Instance<ISimpleService>();
+                }
+            }
+        }
+
+        [Test]
         public void TestWhenJsonConfiguration()
         {
             var eventsConfigurationFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "EventsConfiguration.json");

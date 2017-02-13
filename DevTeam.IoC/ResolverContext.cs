@@ -43,5 +43,10 @@
         public IStateProvider StateProvider { get; }
 
         public IRegistryContext RegistryContext { get; }
+
+        public override string ToString()
+        {
+            return $"{nameof(RegistryContext)} [Container: {Container}, ParentContainer: {ParentContainer.ToString() ?? "null"}, Key: {Key}, RegistrationKey: {RegistrationKey}, InstanceFactory: {InstanceFactory}, StateProvider: {StateProvider} , RegistryContext: {RegistryContext}]";
+        }
     }
 }
