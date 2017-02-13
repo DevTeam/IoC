@@ -19,7 +19,11 @@
             Tag = tag;
             _resources.Add(new CompositeDisposable(RootConfiguration.Shared.Apply(this)));
             _resources.Add(new CompositeDisposable(ContainerConfiguration.Shared.Apply(this)));
-            this.TryResolve(out _cache);
+
+            if (this.TryResolve(out _cache))
+            {
+                _resources.Add(_eventRegistrationSubject.Subscribe(new CacheTracker(_cache)));
+            }
         }
 
         internal Container([NotNull] IContainer parentContainer, [CanBeNull] object tag = null, [CanBeNull] IResolverContext resolverContext = null)
@@ -27,12 +31,15 @@
             Tag = tag;
             _parentContainer = parentContainer;
             _resources.Add(new CompositeDisposable(ContainerConfiguration.Shared.Apply(this)));
-            this.TryResolve(out _cache);
-
             var parentRegistrationObserver = parentContainer as IObservable<IEventRegistration>;
             if (parentRegistrationObserver != null)
             {
                 _resources.Add(parentRegistrationObserver.Subscribe(_eventRegistrationSubject));
+            }
+
+            if (this.TryResolve(out _cache))
+            {
+                _resources.Add(_eventRegistrationSubject.Subscribe(new CacheTracker(_cache)));
             }
         }
 
@@ -112,7 +119,7 @@
                                 _eventRegistrationSubject.OnNextLazy(() => new EventRegistration(EventStage.After, RegistrationAction.Remove, key, currentRegistration.RegistryContext));
                             },
                             this));
-                        _cache?.TryRemove(key);
+
                         _eventRegistrationSubject.OnNextLazy(() => new EventRegistration(EventStage.After, RegistrationAction.Add, key, currentRegistration.RegistryContext));
                     }
                 }
@@ -258,6 +265,33 @@
         {
             instance = extensions.OfType<TContract>().SingleOrDefault();
             return instance != default(TContract);
+        }
+
+        private class CacheTracker: IObserver<IEventRegistration>
+        {
+            private readonly ICache<ICompositeKey, RegistrationItem> _cache;
+
+            public CacheTracker([NotNull] ICache<ICompositeKey, RegistrationItem> cache)
+            {
+                if (cache == null) throw new ArgumentNullException(nameof(cache));
+                _cache = cache;
+            }
+
+            public void OnNext(IEventRegistration value)
+            {
+                if (value.Stage == EventStage.After && value.Action == RegistrationAction.Remove)
+                {
+                    _cache.TryRemove(value.Key);
+                }
+            }
+
+            public void OnError(Exception error)
+            {
+            }
+
+            public void OnCompleted()
+            {
+            }
         }
     }
 }
