@@ -42,6 +42,8 @@
     <Compile Include="Annotations.cs" />
     <Compile Include="AutowiringAttribute.cs" />
     <Compile Include="EventStage.cs" />
+    <Compile Include="IEvent.cs" />
+    <Compile Include="IEventRegistration.cs" />
     <Compile Include="RegistrationAction.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="ContractAttribute.cs" />

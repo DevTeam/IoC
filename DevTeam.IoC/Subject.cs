@@ -9,6 +9,8 @@
         private readonly Action<int> _onChange;
         private readonly List<IObserver<T>> _observers = new List<IObserver<T>>();
 
+        public int ObserversCount => _observers.Count;
+
         public Subject([CanBeNull] Action<int> onChange = null)
         {
             _onChange = onChange;

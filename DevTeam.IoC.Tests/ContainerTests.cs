@@ -59,7 +59,7 @@
             var eventObserver = new EventObserver<IEventRegistration>();
             ICompositeKey[] keys;
             using (var container = CreateContainer())
-            using (container.GetEventSource<IEventRegistration>().Subscribe(eventObserver))
+            using (container.Subscribe(eventObserver))
             {
                 object obj = new object();
                 _factory.Setup(i => i.Create(It.IsAny<IResolverContext>())).Returns(obj);
@@ -115,7 +115,7 @@
             using (var container = CreateContainer())
             using (var childContainer1 = new Container(container, "child1"))
             using (var childContainer2 = new Container(childContainer1, "child2"))
-            using (childContainer2.GetEventSource<IEventRegistration>().Subscribe(eventObserver))
+            using (childContainer2.Subscribe(eventObserver))
             {
                 object obj = new object();
                 _factory.Setup(i => i.Create(It.IsAny<IResolverContext>())).Returns(obj);

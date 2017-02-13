@@ -1,7 +1,5 @@
-﻿namespace DevTeam.IoC
+﻿namespace DevTeam.IoC.Contracts
 {
-    using Contracts;
-
     public interface IEvent
     {
         EventStage Stage { [NotNull] get; }
