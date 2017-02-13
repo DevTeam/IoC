@@ -102,18 +102,18 @@
                     foreach (var key in context.Keys)
                     {
                         var currentRegistration = newRegistration;
-                        _eventRegistrationSubject.OnNext(new EventRegistration(EventStage.Before, RegistrationAction.Add, key, currentRegistration.RegistryContext));
+                        _eventRegistrationSubject.OnNextLazy(() => new EventRegistration(EventStage.Before, RegistrationAction.Add, key, currentRegistration.RegistryContext));
                         registrations.Add(key, currentRegistration);
                         resources.Add(
                             new Disposable(() =>
                             {
-                                _eventRegistrationSubject.OnNext(new EventRegistration(EventStage.Before, RegistrationAction.Remove, key, currentRegistration.RegistryContext));
+                                _eventRegistrationSubject.OnNextLazy(() => new EventRegistration(EventStage.Before, RegistrationAction.Remove, key, currentRegistration.RegistryContext));
                                 registrations.Remove(key);
-                                _eventRegistrationSubject.OnNext(new EventRegistration(EventStage.After, RegistrationAction.Remove, key, currentRegistration.RegistryContext));
+                                _eventRegistrationSubject.OnNextLazy(() => new EventRegistration(EventStage.After, RegistrationAction.Remove, key, currentRegistration.RegistryContext));
                             },
                             this));
                         _cache?.TryRemove(key);
-                        _eventRegistrationSubject.OnNext(new EventRegistration(EventStage.After, RegistrationAction.Add, key, currentRegistration.RegistryContext));
+                        _eventRegistrationSubject.OnNextLazy(() => new EventRegistration(EventStage.After, RegistrationAction.Add, key, currentRegistration.RegistryContext));
                     }
                 }
                 catch
@@ -166,9 +166,10 @@
         {
             foreach (var registration in _registrations.ToList().SelectMany(i => i.Value).ToList())
             {
-                _eventRegistrationSubject.OnNext(new EventRegistration(EventStage.Before, RegistrationAction.Remove, registration.Key, registration.Value.RegistryContext));
+                var registryContext = registration.Value.RegistryContext;
+                _eventRegistrationSubject.OnNextLazy(() => new EventRegistration(EventStage.Before, RegistrationAction.Remove, registration.Key, registryContext));
                 registration.Value.Dispose();
-                _eventRegistrationSubject.OnNext(new EventRegistration(EventStage.After, RegistrationAction.Remove, registration.Key, registration.Value.RegistryContext));
+                _eventRegistrationSubject.OnNextLazy(() => new EventRegistration(EventStage.After, RegistrationAction.Remove, registration.Key, registryContext));
             }
 
             _registrations.Clear();
