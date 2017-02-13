@@ -48,6 +48,9 @@
     <Compile Include="ConfigurationFromDto.cs" />
     <Compile Include="ContainerConfiguration.cs" />
     <Compile Include="EventRegistration.cs" />
+    <Compile Include="IEvent.cs" />
+    <Compile Include="IEventRegistration.cs" />
+    <Compile Include="IEventSource.cs" />
     <Compile Include="IInternalResourceStore.cs" />
     <Compile Include="InternalResourceStore.cs" />
     <Compile Include="IWeakReference.cs" />

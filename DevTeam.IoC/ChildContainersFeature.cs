@@ -27,7 +27,7 @@
                 .Register()
                 .Lifetime(Wellknown.Lifetime.AutoDisposing)
                 .Contract<IContainer>()
-                .FactoryMethod(ctx => new Container(null, ctx.Container));
+                .FactoryMethod(ctx => new Container(ctx.Container, null, ctx));
 
             yield return
                 container
@@ -35,7 +35,7 @@
                 .Lifetime(Wellknown.Lifetime.AutoDisposing)
                 .State(0, typeof(object))
                 .Contract<IContainer>()
-                .FactoryMethod(ctx => new Container(ctx.GetState<object>(0), ctx.Container));
+                .FactoryMethod(ctx => new Container(ctx.Container, ctx.GetState<object>(0), ctx));
         }
 
         public override int GetHashCode()

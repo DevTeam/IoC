@@ -6,7 +6,7 @@
 
     using Contracts;
 
-    public class Container : IContainer
+    public class Container : IContainer, IObservable
     {
         private static readonly ICompositeKey CacheKey = RootConfiguration.KeyFactory.CreateCompositeKey(Enumerable.Repeat(RootConfiguration.KeyFactory.CreateContractKey(typeof(ICache<ICompositeKey, RegistrationItem>), true), 1));
         private readonly IDisposable _rootConfigurationRegistration;
@@ -16,16 +16,17 @@
         private readonly Dictionary<Type, object> _subjects = new Dictionary<Type, object>();
         private ICache<ICompositeKey, RegistrationItem> _cache;
 
-        public Container([CanBeNull] object tag = null, [CanBeNull] IContainer parentContainer = null)
+        public Container([CanBeNull] object tag = null)
         {
-            _parentContainer = parentContainer;
             Tag = tag;
+            _rootConfigurationRegistration = new CompositeDisposable(RootConfiguration.Shared.Apply(this));
+            _configurationRegistration = new CompositeDisposable(ContainerConfiguration.Shared.Apply(this));
+        }
 
-            if (_parentContainer == null)
-            {
-                _rootConfigurationRegistration = new CompositeDisposable(RootConfiguration.Shared.Apply(this));
-            }
-
+        internal Container([NotNull] IContainer parentContainer, [CanBeNull] object tag = null, [CanBeNull] IResolverContext resolverContext = null)
+        {
+            Tag = tag;
+            _parentContainer = parentContainer;
             _configurationRegistration = new CompositeDisposable(ContainerConfiguration.Shared.Apply(this));
         }
 
@@ -244,16 +245,23 @@
             Subject<T> newSubject;
             if (_parentContainer != null)
             {
-                var parentSubscription = new IDisposable[1];
+                var parentSubscription = new List<IDisposable>();
                 newSubject = new Subject<T>(subscriptionCount =>
                 {
                     if (subscriptionCount == 0)
                     {
-                        parentSubscription[0].Dispose();
+                        foreach (var disposable in parentSubscription)
+                        {
+                            disposable.Dispose();
+                        }
                     }
                 });
 
-                parentSubscription[0] = _parentContainer.GetEventSource<T>().Subscribe(newSubject);
+                var observableParent = _parentContainer as IObservable;
+                if (observableParent != null)
+                {
+                    parentSubscription.Add(observableParent.GetEventSource<T>().Subscribe(newSubject));
+                }
             }
             else
             {

@@ -64,8 +64,6 @@
     <Compile Include="Dto\IDependencyConfigurationDto.cs" />
     <Compile Include="Dto\IValueDto.cs" />
     <Compile Include="Dto\IDependencyFeatureDto.cs" />
-    <Compile Include="IEvent.cs" />
-    <Compile Include="IEventRegistration.cs" />
     <Compile Include="IParameterMetadata.cs" />
     <Compile Include="ICache.cs" />
     <Compile Include="ICompositeKey.cs" />

@@ -1,5 +1,7 @@
-﻿namespace DevTeam.IoC.Contracts
+﻿namespace DevTeam.IoC
 {
+    using Contracts;
+
     public interface IEventRegistration : IEvent
     {
         RegistrationAction Action { [NotNull] get; }
