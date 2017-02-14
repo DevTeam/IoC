@@ -33,6 +33,14 @@
                 return true;
             }
 
+            constructorInfos = implementationTypeInfo.DeclaredConstructors.ToArray();
+            if (constructorInfos.Length == 1)
+            {
+                constructor = implementationTypeInfo.DeclaredConstructors.First();
+                error = default(Exception);
+                return true;
+            }
+
             try
             {
                 var autowiringConstructor = (
