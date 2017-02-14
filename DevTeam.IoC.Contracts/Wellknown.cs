@@ -93,12 +93,7 @@
             /// <summary>
             /// Registration is be visible for whole hierarchy of containers.
             /// </summary>
-            Global,
-
-            /// <summary>
-            /// Registration is be invisible via Registrations.
-            /// </summary>
-            Private
+            Global
         }
     }
 }

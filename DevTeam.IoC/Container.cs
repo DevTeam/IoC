@@ -13,7 +13,6 @@
         private readonly Subject<IRegistrationEvent> _registrationSubject = new Subject<IRegistrationEvent>();
         private readonly IKeyFactory _keyFactory;
         private ICache<ICompositeKey, IResolverContext> _cache;
-        [CanBeNull] private IContainer _actualParent;
 
         public Container([CanBeNull] object tag = null)
         {
@@ -48,37 +47,13 @@
 
         public object Tag { get; }
 
-        public IEnumerable<ICompositeKey> Registrations => _registrations.SelectMany(i => i.Value).Where(i => i.Value.Scope?.IsVisible ?? true).Select(i => i.Key);
+        public IEnumerable<ICompositeKey> Registrations => _registrations.SelectMany(i => i.Value).Select(i => i.Key);
 
         public IContainer Parent { get; }
 
         public IKeyFactory KeyFactory => _keyFactory ?? RootContainerConfiguration.KeyFactory;
 
         private object LockObject => _registrations;
-
-        private IContainer ActualParent
-        {
-            [CanBeNull] get
-            {
-                if (Parent == null)
-                {
-                    return Parent;
-                }
-
-                if (_actualParent != null)
-                {
-                    return _actualParent;
-                }
-
-                _actualParent = Parent;
-                while (_actualParent != null && !_actualParent.Registrations.Any())
-                {
-                    _actualParent = _actualParent.Parent;
-                }
-
-                return _actualParent;
-            }
-        }
 
         public IRegistryContext CreateContext(IEnumerable<ICompositeKey> keys, IResolverFactory factory, IEnumerable<IExtension> extensions)
         {
@@ -105,10 +80,10 @@
                 IScope scope;
                 if (TryGetExtension(context.Extensions, out scope) && !scope.AllowsRegistration(context))
                 {
-                    if (ActualParent != null)
+                    if (Parent != null)
                     {
                         IResolverContext resolverContext;
-                        if (ActualParent.TryCreateContext(StaticContractKey<IRegistry>.Shared, out resolverContext, EmptyStateProvider.Shared))
+                        if (Parent.TryCreateContext(StaticContractKey<IRegistry>.Shared, out resolverContext, EmptyStateProvider.Shared))
                         {
                             var parentRegistry = (IRegistry) Parent.Resolve(resolverContext);
                             return parentRegistry.TryRegister(context, out registration);
@@ -189,9 +164,9 @@
                 return context.InstanceFactory.Create(context);
             }
 
-            if (ActualParent != null)
+            if (Parent != null)
             {
-                return ActualParent.Resolve(context);
+                return Parent.Resolve(context);
             }
 
             throw new InvalidOperationException("Invalid resolver context.");
@@ -262,7 +237,7 @@
                 }
             }
 
-            if (ActualParent != null && ActualParent.TryCreateContext(key, out resolverContext, stateProvider))
+            if (Parent != null && Parent.TryCreateContext(key, out resolverContext, stateProvider))
             {
                 resolverContext = new ResolverContext(
                     this,
@@ -301,7 +276,6 @@
                 if (value.Stage == EventStage.After)
                 {
                     _container._cache?.TryRemove(value.Key);
-                    _container._actualParent = null;
                 }
             }
 

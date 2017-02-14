@@ -6,8 +6,6 @@
 
     internal class GlobalScope: IScope
     {
-        public bool IsVisible => true;
-
         public bool AllowsRegistration(IRegistryContext context)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));

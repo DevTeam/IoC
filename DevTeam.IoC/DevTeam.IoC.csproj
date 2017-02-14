@@ -48,7 +48,6 @@
     <Compile Include="ConfigurationFromAssembly.cs" />
     <Compile Include="ConfigurationFromDto.cs" />
     <Compile Include="ContainerConfiguration.cs" />
-    <Compile Include="PrivateScope.cs" />
     <Compile Include="RegistrationEvent.cs" />
     <Compile Include="IInternalResourceStore.cs" />
     <Compile Include="InternalResourceStore.cs" />

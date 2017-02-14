@@ -11,7 +11,6 @@
 
         private readonly InternalScope _internalScope = new InternalScope();
         private readonly GlobalScope _globalScope = new GlobalScope();
-        private readonly PrivateScope _privateScope = new PrivateScope();
 
         private ScopesFeature()
         {
@@ -39,13 +38,6 @@
                 .Tag(Wellknown.Scope.Global)
                 .Contract<IScope>()
                 .FactoryMethod(ctx => _globalScope);
-
-            yield return
-                container
-                .Register()
-                .Tag(Wellknown.Scope.Private)
-                .Contract<IScope>()
-                .FactoryMethod(ctx => _privateScope);
         }
 
         public override int GetHashCode()
