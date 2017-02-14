@@ -19,7 +19,6 @@
             Tag = tag;
             _resources.Add(new CompositeDisposable(RootContainerConfiguration.Shared.Apply(this)));
             _resources.Add(new CompositeDisposable(ContainerConfiguration.Shared.Apply(this)));
-
             this.TryResolve(out _keyFactory);
             this.TryResolve(out _cache);
             var cacheTracker = new CacheTracker(this);
@@ -31,7 +30,6 @@
             Tag = tag;
             Parent = parentContainer;
             _resources.Add(new CompositeDisposable(ContainerConfiguration.Shared.Apply(this)));
-
             this.TryResolve(out _keyFactory);
             this.TryResolve(out _cache);
             var cacheTracker = new CacheTracker(this);
