@@ -10,11 +10,15 @@
     {
         private IEnumerable<IDisposable> _resources;
 
-        public RegistrationItem(IRegistryContext registryContext, LifetimesFactory factory, IEnumerable<IDisposable> resources)
+        public RegistrationItem(
+            [NotNull] IRegistryContext registryContext,
+            [NotNull] LifetimesFactory factory,
+            [NotNull] IEnumerable<IDisposable> resources)
         {
-            _resources = resources;
             if (registryContext == null) throw new ArgumentNullException(nameof(registryContext));
             if (factory == null) throw new ArgumentNullException(nameof(factory));
+            if (resources == null) throw new ArgumentNullException(nameof(resources));
+            _resources = resources;
             RegistryContext = registryContext;
             InstanceFactory = factory;
             Scope = registryContext.Extensions.OfType<IScope>().SingleOrDefault();
@@ -25,7 +29,7 @@
 
         public LifetimesFactory InstanceFactory { get; }
 
-        public IScope Scope { get; }
+        public IScope Scope { [CanBeNull] get; }
 
         public object Key { get; }
 

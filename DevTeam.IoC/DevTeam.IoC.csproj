@@ -48,6 +48,7 @@
     <Compile Include="ConfigurationFromAssembly.cs" />
     <Compile Include="ConfigurationFromDto.cs" />
     <Compile Include="ContainerConfiguration.cs" />
+    <Compile Include="PrivateScope.cs" />
     <Compile Include="RegistrationEvent.cs" />
     <Compile Include="IInternalResourceStore.cs" />
     <Compile Include="InternalResourceStore.cs" />
@@ -96,7 +97,7 @@
     <Compile Include="Resolver`3.cs" />
     <Compile Include="Resolver`2.cs" />
     <Compile Include="Resolving.cs" />
-    <Compile Include="RootConfiguration.cs" />
+    <Compile Include="RootContainerConfiguration.cs" />
     <Compile Include="ScopesFeature.cs" />
     <Compile Include="SingletonLifetime.cs" />
     <Compile Include="StateKey.cs" />

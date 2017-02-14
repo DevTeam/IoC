@@ -4,14 +4,14 @@
 
     using Contracts;
 
-    internal class GlobalScope: IScope
+    internal class PrivateScope: IScope
     {
-        public bool IsVisible => true;
+        public bool IsVisible => false;
 
         public bool AllowsRegistration(IRegistryContext context)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
-            return context.Container.Parent == null;
+            return true;
         }
 
         public bool AllowsResolving(IResolverContext context)

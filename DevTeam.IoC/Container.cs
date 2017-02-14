@@ -11,13 +11,17 @@
         private readonly List<IDisposable> _resources = new List<IDisposable>();
         private readonly Dictionary<IEqualityComparer<ICompositeKey>, Dictionary<ICompositeKey, RegistrationItem>> _registrations = new Dictionary<IEqualityComparer<ICompositeKey>, Dictionary<ICompositeKey, RegistrationItem>>();
         private readonly Subject<IRegistrationEvent> _registrationSubject = new Subject<IRegistrationEvent>();
+        private readonly IKeyFactory _keyFactory;
         private ICache<ICompositeKey, IResolverContext> _cache;
 
         public Container([CanBeNull] object tag = null)
         {
             Tag = tag;
-            _resources.Add(new CompositeDisposable(RootConfiguration.Shared.Apply(this)));
+            _resources.Add(new CompositeDisposable(RootContainerConfiguration.Shared.Apply(this)));
             _resources.Add(new CompositeDisposable(ContainerConfiguration.Shared.Apply(this)));
+
+            this.TryResolve(out _keyFactory);
+
             if (this.TryResolve(out _cache))
             {
                 _resources.Add(Subscribe(new CacheTracker(_cache)));
@@ -29,6 +33,9 @@
             Tag = tag;
             Parent = parentContainer;
             _resources.Add(new CompositeDisposable(ContainerConfiguration.Shared.Apply(this)));
+
+            this.TryResolve(out _keyFactory);
+
             if (this.TryResolve(out _cache))
             {
                 _resources.Add(Subscribe(new CacheTracker(_cache)));
@@ -45,9 +52,11 @@
 
         public object Tag { get; }
 
-        public IEnumerable<ICompositeKey> Registrations => _registrations.SelectMany(i => i.Value).Select(i => i.Key);
+        public IEnumerable<ICompositeKey> Registrations => _registrations.SelectMany(i => i.Value).Where(i => i.Value.Scope?.IsVisible ?? true).Select(i => i.Key);
 
         public IContainer Parent { get; }
+
+        public IKeyFactory KeyFactory => _keyFactory ?? RootContainerConfiguration.KeyFactory;
 
         private object LockObject => _registrations;
 
@@ -136,8 +145,6 @@
                 return true;
             }
         }
-
-        public IKeyFactory KeyFactory => RootConfiguration.KeyFactory;
 
         public bool TryCreateContext(ICompositeKey key, out IResolverContext resolverContext, IStateProvider stateProvider = null)
         {

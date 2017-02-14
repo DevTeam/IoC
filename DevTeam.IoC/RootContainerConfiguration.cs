@@ -5,9 +5,9 @@
     using System.Reflection;
     using Contracts;
 
-    internal class RootConfiguration: IConfiguration
+    internal class RootContainerConfiguration: IConfiguration
     {
-        public static readonly IConfiguration Shared = new RootConfiguration();
+        public static readonly IConfiguration Shared = new RootContainerConfiguration();
         public static readonly KeyFactory KeyFactory = new KeyFactory();
         public static readonly Fluent Fluent = new Fluent();
         public static readonly IMetadataProvider MetadataProvider = new AutowiringMetadataProvider();
@@ -21,7 +21,7 @@
         private static readonly IEnumerable<ICompositeKey> RegistrationKeys = LowLevelRegistration.CreateKeys<IRegistration<IContainer>>();
         private static readonly IEnumerable<ICompositeKey> MetadataProviderKeys = LowLevelRegistration.CreateKeys<IMetadataProvider>();
 
-        private RootConfiguration()
+        private RootContainerConfiguration()
         {
         }
 
