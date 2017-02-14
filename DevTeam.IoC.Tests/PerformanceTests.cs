@@ -18,7 +18,7 @@
             using (var rootContainer = new Container("root")
                 .Configure()
                 .DependsOn(new EventsConfiguration(true))
-                .Own())
+                .ToSelf())
             {
                 var eventRegistry = rootContainer.Resolve().Instance<IEventRegistry>();
                 eventRegistry.RegisterEvent<DateTimeOffset>();
@@ -39,7 +39,7 @@
                 .Configure()
                 .DependsOn(Wellknown.Feature.Default)
                 .Register().Contract<ISimpleService>().AsAutowiring<SimpleService>()
-                .Own())
+                .ToSelf())
             {
                 for (var i = 0; i < 100000; i++)
                 {
@@ -55,7 +55,7 @@
                 .Configure()
                 .DependsOn(Wellknown.Feature.Default)
                 .Register().Lifetime(Wellknown.Lifetime.Singleton).Contract<ISimpleService>().AsAutowiring<SimpleService>()
-                .Own())
+                .ToSelf())
             {
                 for (var i = 0; i < 100000; i++)
                 {
@@ -71,7 +71,7 @@
                 .Configure()
                 .DependsOn(Wellknown.Feature.Default)
                 .Register().Contract<ISimpleService>().AsAutowiring<SimpleService>()
-                .Own())
+                .ToSelf())
             {
                 IContainer container = rootContainer;
                 for (var i = 0; i < 1000; i++)
@@ -97,7 +97,7 @@
                 .Register().Contract<IReferenceDescriptionResolver>().AsFactoryMethod<IReferenceDescriptionResolver>(ctx => new ReferenceDescriptionResolver())
                 .DependsOn(Wellknown.Feature.Default)
                 .DependsOn<JsonConfiguration>(json)
-                .Own())
+                .ToSelf())
             {
                 var eventRegistry = container.Resolve().Instance<IEventRegistry>();
                 eventRegistry.RegisterEvent<DateTimeOffset>();
@@ -118,7 +118,7 @@
             using (var rootResolver = new Container("root")
                 .Configure()
                 .DependsOn(Wellknown.Feature.Default)
-                .Own())
+                .ToSelf())
             {
                 PerformanceTest(rootResolver, 1000);
             }
@@ -130,7 +130,7 @@
             using (var rootResolver = new Container("root")
                 .Configure()
                 .DependsOn(Wellknown.Feature.Default)
-                .Own())
+                .ToSelf())
             {
                 for (var i = 0; i < 100; i++)
                 {
@@ -144,7 +144,7 @@
             using (var childContainer = rootResolver.CreateChild("child")
                 .Configure()
                 .DependsOn(new EventsConfiguration(false))
-                .Own())
+                .ToSelf())
             {
                 var eventRegistry = childContainer.Resolve().Instance<IEventRegistry>();
                 eventRegistry.RegisterEvent<DateTimeOffset>();

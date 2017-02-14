@@ -11,7 +11,7 @@
             using (var container = new Container()
                 .Configure()
                 .DependsOn<Configuration>()
-                .Own())
+                .ToSelf())
             {
                 container.Resolve().Instance<IEventBroker>();
                 System.Console.ReadLine();

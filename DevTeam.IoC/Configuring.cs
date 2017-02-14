@@ -75,7 +75,7 @@
 
         public IRegistration<T> Register()
         {
-            Own();
+            ToSelf();
             return _resolver.Register();
         }
 
@@ -92,7 +92,7 @@
             return registration;
         }
 
-        public T Own()
+        public T ToSelf()
         {
             _resolver.Resolve().Instance<IInternalResourceStore>().AddResource(Apply());
             return _resolver;

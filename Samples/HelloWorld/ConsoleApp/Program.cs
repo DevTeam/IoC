@@ -19,7 +19,7 @@
                 .Configure()
                 .DependsOn<JsonConfiguration>(jsonConfigStr)
                 .Register().AsAutowiring(typeof(Program))
-                .Own())
+                .ToSelf())
             {
                 container.Resolve().Instance<Program>();
             }

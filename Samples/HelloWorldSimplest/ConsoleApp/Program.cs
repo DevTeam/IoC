@@ -14,7 +14,7 @@
                 var container = new Container()
                 .Configure()
                 .DependsOn(Assembly.GetEntryAssembly(), Assembly.Load(new AssemblyName("ClassLibrary")))
-                .Own())
+                .ToSelf())
             {
                 container.Resolve().Instance<Program>();
             }
