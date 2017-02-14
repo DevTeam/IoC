@@ -10,7 +10,7 @@
     {
         private readonly List<IDisposable> _resources = new List<IDisposable>();
         private readonly Dictionary<IEqualityComparer<ICompositeKey>, Dictionary<ICompositeKey, RegistrationItem>> _registrations = new Dictionary<IEqualityComparer<ICompositeKey>, Dictionary<ICompositeKey, RegistrationItem>>();
-        private readonly Subject<IRegistrationEvent> _eventRegistrationSubject = new Subject<IRegistrationEvent>();
+        private readonly Subject<IRegistrationEvent> _registrationSubject = new Subject<IRegistrationEvent>();
         private ICache<ICompositeKey, IResolverContext> _cache;
 
         public Container([CanBeNull] object tag = null)
@@ -18,10 +18,9 @@
             Tag = tag;
             _resources.Add(new CompositeDisposable(RootConfiguration.Shared.Apply(this)));
             _resources.Add(new CompositeDisposable(ContainerConfiguration.Shared.Apply(this)));
-
             if (this.TryResolve(out _cache))
             {
-                _resources.Add(_eventRegistrationSubject.Subscribe(new CacheTracker(_cache)));
+                _resources.Add(Subscribe(new CacheTracker(_cache)));
             }
         }
 
@@ -30,15 +29,17 @@
             Tag = tag;
             Parent = parentContainer;
             _resources.Add(new CompositeDisposable(ContainerConfiguration.Shared.Apply(this)));
-            var parentRegistrationObserver = parentContainer as IObservable<IRegistrationEvent>;
-            if (parentRegistrationObserver != null)
-            {
-                _resources.Add(parentRegistrationObserver.Subscribe(_eventRegistrationSubject));
-            }
-
             if (this.TryResolve(out _cache))
             {
-                _resources.Add(_eventRegistrationSubject.Subscribe(new CacheTracker(_cache)));
+                _resources.Add(Subscribe(new CacheTracker(_cache)));
+
+                var parent = Parent;
+                do
+                {
+                    _resources.Add(parent.Subscribe(new CacheTracker(_cache)));
+                    parent = parent.Parent;
+                }
+                while (parent != null);
             }
         }
 
@@ -110,18 +111,18 @@
                     foreach (var key in context.Keys)
                     {
                         var currentRegistration = newRegistration;
-                        _eventRegistrationSubject.OnNext(new RegistrationEvent(EventStage.Before, EventAction.Add, key, currentRegistration.RegistryContext));
+                        _registrationSubject.OnNext(new RegistrationEvent(EventStage.Before, EventAction.Add, key, currentRegistration.RegistryContext));
                         registrations.Add(key, currentRegistration);
                         resources.Add(
                             new Disposable(() =>
                             {
-                                _eventRegistrationSubject.OnNext(new RegistrationEvent(EventStage.Before, EventAction.Remove, key, currentRegistration.RegistryContext));
+                                _registrationSubject.OnNext(new RegistrationEvent(EventStage.Before, EventAction.Remove, key, currentRegistration.RegistryContext));
                                 registrations.Remove(key);
-                                _eventRegistrationSubject.OnNext(new RegistrationEvent(EventStage.After, EventAction.Remove, key, currentRegistration.RegistryContext));
+                                _registrationSubject.OnNext(new RegistrationEvent(EventStage.After, EventAction.Remove, key, currentRegistration.RegistryContext));
                             },
                             this));
 
-                        _eventRegistrationSubject.OnNext(new RegistrationEvent(EventStage.After, EventAction.Add, key, currentRegistration.RegistryContext));
+                        _registrationSubject.OnNext(new RegistrationEvent(EventStage.After, EventAction.Add, key, currentRegistration.RegistryContext));
                     }
                 }
                 catch
@@ -175,13 +176,13 @@
             foreach (var registration in _registrations.ToList().SelectMany(i => i.Value).ToList())
             {
                 var registryContext = registration.Value.RegistryContext;
-                _eventRegistrationSubject.OnNext(new RegistrationEvent(EventStage.Before, EventAction.Remove, registration.Key, registryContext));
+                _registrationSubject.OnNext(new RegistrationEvent(EventStage.Before, EventAction.Remove, registration.Key, registryContext));
                 registration.Value.Dispose();
-                _eventRegistrationSubject.OnNext(new RegistrationEvent(EventStage.After, EventAction.Remove, registration.Key, registryContext));
+                _registrationSubject.OnNext(new RegistrationEvent(EventStage.After, EventAction.Remove, registration.Key, registryContext));
             }
 
             _registrations.Clear();
-            _eventRegistrationSubject.OnCompleted();
+            _registrationSubject.OnCompleted();
 
             foreach (var resource in _resources)
             {
@@ -191,13 +192,7 @@
 
         public IDisposable Subscribe([NotNull] IObserver<IRegistrationEvent> observer)
         {
-            if (observer == null) throw new ArgumentNullException(nameof(observer));
-            return _eventRegistrationSubject.Subscribe(observer);
-        }
-
-        public IDisposable Subscribe(IObserver<IContainerEvent> observer)
-        {
-            throw new NotImplementedException();
+            return _registrationSubject.Subscribe(observer);
         }
 
         public override string ToString()
@@ -241,7 +236,13 @@
                 }
             }
 
-            if (Parent != null && Parent.TryCreateContext(key, out resolverContext, stateProvider))
+            var parent = Parent;
+            while (parent != null && !parent.Registrations.Any())
+            {
+                parent = parent.Parent;
+            }
+
+            if (parent != null && parent.TryCreateContext(key, out resolverContext, stateProvider))
             {
                 resolverContext = new ResolverContext(
                     this,

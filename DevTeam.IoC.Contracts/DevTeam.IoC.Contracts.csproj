@@ -43,7 +43,6 @@
     <Compile Include="AutowiringAttribute.cs" />
     <Compile Include="EventStage.cs" />
     <Compile Include="IEvent.cs" />
-    <Compile Include="IContainerEvent.cs" />
     <Compile Include="IRegistrationEvent.cs" />
     <Compile Include="EventAction.cs" />
     <Compile Include="Extensions.cs" />
