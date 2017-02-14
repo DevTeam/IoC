@@ -5,8 +5,6 @@
     {
         IContainer Container { [NotNull] get; }
 
-        IContainer ParentContainer { [CanBeNull] get; }
-
         ICompositeKey Key { [NotNull] get; }
 
         object RegistrationKey { [NotNull] get; }

@@ -4,10 +4,12 @@
     using System.Collections.Generic;
 
     [PublicAPI]
-    public interface IContainer: IResolver, IRegistry, IDisposable
+    public interface IContainer: IResolver, IRegistry, IDisposable, IObservable<IRegistrationEvent>, IObservable<IContainerEvent>
     {
         object Tag { [CanBeNull] get; }
 
         IEnumerable<ICompositeKey> Registrations { [NotNull] get; }
+
+        IContainer Parent { [CanBeNull] get; }
     }
 }

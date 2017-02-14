@@ -3,11 +3,11 @@
     using System;
     using Contracts;
 
-    internal struct EventRegistration : IEventRegistration
+    internal struct RegistrationEvent : IRegistrationEvent
     {
-        public EventRegistration(
+        public RegistrationEvent(
             EventStage stage,
-            RegistrationAction action,
+            EventAction action,
             [NotNull] ICompositeKey key,
             [NotNull] IRegistryContext registryContext)
         {
@@ -21,7 +21,7 @@
 
         public EventStage Stage { get; }
 
-        public RegistrationAction Action { get; }
+        public EventAction Action { get; }
 
         public ICompositeKey Key { get; }
 
@@ -29,7 +29,7 @@
 
         public override string ToString()
         {
-            return $"{nameof(EventRegistration)} [Stage: {Stage}, Action: {Action}, Key: {Key}, RegistryContext: {RegistryContext}]";
+            return $"{nameof(RegistrationEvent)} [Stage: {Stage}, Action: {Action}, Key: {Key}, RegistryContext: {RegistryContext}]";
         }
     }
 }

@@ -79,7 +79,7 @@
                     container = container.CreateChild(i);
                 }
 
-                for (var i = 0; i < 100; i++)
+                for (var i = 0; i < 100000; i++)
                 {
                     container.Resolve().Instance<ISimpleService>();
                 }

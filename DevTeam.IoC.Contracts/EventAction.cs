@@ -1,6 +1,6 @@
 ﻿namespace DevTeam.IoC.Contracts
 {
-    public enum RegistrationAction
+    public enum EventAction
     {
         Add,
 

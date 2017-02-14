@@ -2,15 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using Contracts;
 
     internal class Subject<T>: IObservable<T>, IObserver<T>
     {
         private readonly Action<int> _onChange;
         private readonly List<IObserver<T>> _observers = new List<IObserver<T>>();
-
-        public int ObserversCount => _observers.Count;
 
         public Subject([CanBeNull] Action<int> onChange = null)
         {
@@ -49,21 +46,6 @@
         public void OnNext([NotNull] T value)
         {
             if (value == null) throw new ArgumentNullException(nameof(value));
-            foreach (var observer in _observers)
-            {
-                observer.OnNext(value);
-            }
-        }
-
-        public void OnNextLazy([NotNull] Func<T> valueGetter)
-        {
-            if (valueGetter == null) throw new ArgumentNullException(nameof(valueGetter));
-            if (_observers.Count == 0)
-            {
-                return;
-            }
-
-            var value = valueGetter();
             foreach (var observer in _observers)
             {
                 observer.OnNext(value);

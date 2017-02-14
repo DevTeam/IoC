@@ -119,7 +119,11 @@
             }
 
             IResolverContext ctx;
-            resolver.TryCreateContext(_fluentKey, out ctx);
+            if (!resolver.TryCreateContext(_fluentKey, out ctx))
+            {
+                throw new InvalidOperationException($"{typeof(IFluent)} is not supported");
+            }
+
             return (IFluent)resolver.Resolve(ctx);
         }
     }

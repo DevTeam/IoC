@@ -7,8 +7,6 @@
     {
         IContainer Container { [NotNull] get; }
 
-        IContainer ParentContainer { [CanBeNull] get; }
-
         IEnumerable<ICompositeKey> Keys { [NotNull] get; }
 
         IResolverFactory InstanceFactory { [NotNull] get; }

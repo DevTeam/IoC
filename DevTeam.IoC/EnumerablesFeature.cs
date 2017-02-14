@@ -62,7 +62,7 @@
 
             var keys = (
                 from contractKey in contractKeys
-                from key in FilterByContract(ctx.Container.Registrations, contractKey)
+                from key in FilterByContract(GetAllRegistrations(ctx.Container), contractKey)
                 select key).Distinct();
 
             var source =
@@ -72,6 +72,24 @@
             var factory = ctx.Container.Resolve().Instance<IInstanceFactoryProvider>(ctx.StateProvider);
             var ctor = enumType.GetTypeInfo().DeclaredConstructors.Single(i => i.GetParameters().Length == 1);
             return factory.GetFactory(ctor).Create(source);
+        }
+
+        private static IEnumerable<ICompositeKey> GetAllRegistrations(IContainer container)
+        {
+            foreach (var registration in container.Registrations)
+            {
+                yield return registration;
+            }
+
+            if (container.Parent == null)
+            {
+                yield break;
+            }
+
+            foreach (var registration in GetAllRegistrations(container.Parent))
+            {
+                yield return registration;
+            }
         }
 
         private static IEnumerable<IKey> FilterByContract(IEnumerable<ICompositeKey> keys, IContractKey contractKey)

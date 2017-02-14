@@ -10,7 +10,6 @@
     {
         public RegistryContext(
             [NotNull] IContainer container,
-            [CanBeNull] IContainer parentContainer,
             [NotNull] ICompositeKey[] keys,
             [NotNull] IResolverFactory factory,
             [NotNull] IEnumerable<IExtension> extensionPoints)
@@ -21,15 +20,12 @@
             if (extensionPoints == null) throw new ArgumentNullException(nameof(extensionPoints));
 
             Container = container;
-            ParentContainer = parentContainer;
             Keys = keys;
             InstanceFactory = factory;
             Extensions = extensionPoints.ToArray();
         }
 
         public IContainer Container { get; }
-
-        public IContainer ParentContainer { get; }
 
         public IEnumerable<ICompositeKey> Keys { get; }
 
@@ -39,7 +35,7 @@
 
         public override string ToString()
         {
-            return $"{nameof(RegistryContext)} [Container: {Container.ToString() ?? "null"}, ParentContainer: {ParentContainer.ToString() ?? "null"}, Keys: {string.Join(", ", Keys)}, InstanceFactory: {InstanceFactory} , Extensions: {string.Join(", ", Extensions)}]";
+            return $"{nameof(RegistryContext)} [Container: {Container.ToString() ?? "null"}, Keys: {string.Join(", ", Keys)}, InstanceFactory: {InstanceFactory} , Extensions: {string.Join(", ", Extensions)}]";
         }
     }
 }

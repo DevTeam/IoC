@@ -56,7 +56,7 @@
         public void ContainerShouldRaiseEvents()
         {
             // Given
-            var eventObserver = new EventObserver<IEventRegistration>();
+            var eventObserver = new EventObserver<IRegistrationEvent>();
             ICompositeKey[] keys;
             using (var container = CreateContainer())
             using (container.Subscribe(eventObserver))
@@ -81,27 +81,27 @@
             eventObserver.Events.Count.ShouldBe(4);
 
             var event0 = eventObserver.Events[0];
-            event0.EventType.ShouldBe(EventObserver<IEventRegistration>.EventType.OnNext);
+            event0.EventType.ShouldBe(EventObserver<IRegistrationEvent>.EventType.OnNext);
             event0.Value.Stage.ShouldBe(EventStage.Before);
-            event0.Value.Action.ShouldBe(RegistrationAction.Add);
+            event0.Value.Action.ShouldBe(EventAction.Add);
             event0.Value.Key.ShouldBe(keys[0]);
 
             var event1 = eventObserver.Events[1];
-            event1.EventType.ShouldBe(EventObserver<IEventRegistration>.EventType.OnNext);
+            event1.EventType.ShouldBe(EventObserver<IRegistrationEvent>.EventType.OnNext);
             event1.Value.Stage.ShouldBe(EventStage.After);
-            event1.Value.Action.ShouldBe(RegistrationAction.Add);
+            event1.Value.Action.ShouldBe(EventAction.Add);
             event1.Value.Key.ShouldBe(keys[0]);
 
             var event2 = eventObserver.Events[2];
-            event2.EventType.ShouldBe(EventObserver<IEventRegistration>.EventType.OnNext);
+            event2.EventType.ShouldBe(EventObserver<IRegistrationEvent>.EventType.OnNext);
             event2.Value.Stage.ShouldBe(EventStage.Before);
-            event2.Value.Action.ShouldBe(RegistrationAction.Remove);
+            event2.Value.Action.ShouldBe(EventAction.Remove);
             event2.Value.Key.ShouldBe(keys[0]);
 
             var event3 = eventObserver.Events[3];
-            event3.EventType.ShouldBe(EventObserver<IEventRegistration>.EventType.OnNext);
+            event3.EventType.ShouldBe(EventObserver<IRegistrationEvent>.EventType.OnNext);
             event3.Value.Stage.ShouldBe(EventStage.After);
-            event3.Value.Action.ShouldBe(RegistrationAction.Remove);
+            event3.Value.Action.ShouldBe(EventAction.Remove);
             event3.Value.Key.ShouldBe(keys[0]);
         }
 
@@ -110,7 +110,7 @@
         public void ContainerShouldRaiseEventsWhenHasChildContainer()
         {
             // Given
-            var eventObserver = new EventObserver<IEventRegistration>();
+            var eventObserver = new EventObserver<IRegistrationEvent>();
             ICompositeKey[] keys;
             using (var container = CreateContainer())
             using (var childContainer1 = new Container(container, "child1"))
@@ -137,27 +137,27 @@
             eventObserver.Events.Count.ShouldBe(4);
 
             var event0 = eventObserver.Events[0];
-            event0.EventType.ShouldBe(EventObserver<IEventRegistration>.EventType.OnNext);
+            event0.EventType.ShouldBe(EventObserver<IRegistrationEvent>.EventType.OnNext);
             event0.Value.Stage.ShouldBe(EventStage.Before);
-            event0.Value.Action.ShouldBe(RegistrationAction.Add);
+            event0.Value.Action.ShouldBe(EventAction.Add);
             event0.Value.Key.ShouldBe(keys[0]);
 
             var event1 = eventObserver.Events[1];
-            event1.EventType.ShouldBe(EventObserver<IEventRegistration>.EventType.OnNext);
+            event1.EventType.ShouldBe(EventObserver<IRegistrationEvent>.EventType.OnNext);
             event1.Value.Stage.ShouldBe(EventStage.After);
-            event1.Value.Action.ShouldBe(RegistrationAction.Add);
+            event1.Value.Action.ShouldBe(EventAction.Add);
             event1.Value.Key.ShouldBe(keys[0]);
 
             var event2 = eventObserver.Events[2];
-            event2.EventType.ShouldBe(EventObserver<IEventRegistration>.EventType.OnNext);
+            event2.EventType.ShouldBe(EventObserver<IRegistrationEvent>.EventType.OnNext);
             event2.Value.Stage.ShouldBe(EventStage.Before);
-            event2.Value.Action.ShouldBe(RegistrationAction.Remove);
+            event2.Value.Action.ShouldBe(EventAction.Remove);
             event2.Value.Key.ShouldBe(keys[0]);
 
             var event3 = eventObserver.Events[3];
-            event3.EventType.ShouldBe(EventObserver<IEventRegistration>.EventType.OnNext);
+            event3.EventType.ShouldBe(EventObserver<IRegistrationEvent>.EventType.OnNext);
             event3.Value.Stage.ShouldBe(EventStage.After);
-            event3.Value.Action.ShouldBe(RegistrationAction.Remove);
+            event3.Value.Action.ShouldBe(EventAction.Remove);
             event3.Value.Key.ShouldBe(keys[0]);
         }
 
@@ -229,7 +229,6 @@
                     var actualObj = childContainer2.Resolve(resolverContext);
 
                     // Then
-                    childContainer2.Registrations.ShouldContain(CreateCompositeKey(container, false, new[] { typeof(string) }));
                     actualObj.ShouldBe(obj);
                 }
             }

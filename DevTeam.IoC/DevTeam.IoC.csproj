@@ -48,7 +48,7 @@
     <Compile Include="ConfigurationFromAssembly.cs" />
     <Compile Include="ConfigurationFromDto.cs" />
     <Compile Include="ContainerConfiguration.cs" />
-    <Compile Include="EventRegistration.cs" />
+    <Compile Include="RegistrationEvent.cs" />
     <Compile Include="IInternalResourceStore.cs" />
     <Compile Include="InternalResourceStore.cs" />
     <Compile Include="IWeakReference.cs" />

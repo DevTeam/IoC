@@ -43,8 +43,9 @@
     <Compile Include="AutowiringAttribute.cs" />
     <Compile Include="EventStage.cs" />
     <Compile Include="IEvent.cs" />
-    <Compile Include="IEventRegistration.cs" />
-    <Compile Include="RegistrationAction.cs" />
+    <Compile Include="IContainerEvent.cs" />
+    <Compile Include="IRegistrationEvent.cs" />
+    <Compile Include="EventAction.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="ContractAttribute.cs" />
     <Compile Include="Dto\IConfigurationDto.cs" />

@@ -6,12 +6,11 @@
 
     using Contracts;
 
-    public class Container : IContainer, IObservable<IEventRegistration>
+    public class Container : IContainer
     {
         private readonly List<IDisposable> _resources = new List<IDisposable>();
-        private readonly IContainer _parentContainer;
         private readonly Dictionary<IEqualityComparer<ICompositeKey>, Dictionary<ICompositeKey, RegistrationItem>> _registrations = new Dictionary<IEqualityComparer<ICompositeKey>, Dictionary<ICompositeKey, RegistrationItem>>();
-        private readonly Subject<IEventRegistration> _eventRegistrationSubject = new Subject<IEventRegistration>();
+        private readonly Subject<IRegistrationEvent> _eventRegistrationSubject = new Subject<IRegistrationEvent>();
         private ICache<ICompositeKey, IResolverContext> _cache;
 
         public Container([CanBeNull] object tag = null)
@@ -29,9 +28,9 @@
         internal Container([NotNull] IContainer parentContainer, [CanBeNull] object tag = null, [CanBeNull] IResolverContext resolverContext = null)
         {
             Tag = tag;
-            _parentContainer = parentContainer;
+            Parent = parentContainer;
             _resources.Add(new CompositeDisposable(ContainerConfiguration.Shared.Apply(this)));
-            var parentRegistrationObserver = parentContainer as IObservable<IEventRegistration>;
+            var parentRegistrationObserver = parentContainer as IObservable<IRegistrationEvent>;
             if (parentRegistrationObserver != null)
             {
                 _resources.Add(parentRegistrationObserver.Subscribe(_eventRegistrationSubject));
@@ -45,7 +44,9 @@
 
         public object Tag { get; }
 
-        public IEnumerable<ICompositeKey> Registrations => _parentContainer == null ? _registrations.SelectMany(i => i.Value).Select(i => i.Key): _registrations.SelectMany(i => i.Value).Select(i => i.Key).Concat(_parentContainer.Registrations);
+        public IEnumerable<ICompositeKey> Registrations => _registrations.SelectMany(i => i.Value).Select(i => i.Key);
+
+        public IContainer Parent { get; }
 
         private object LockObject => _registrations;
 
@@ -59,7 +60,7 @@
 
             lock (LockObject)
             {
-                return new RegistryContext(this, _parentContainer, keysArr, factory, extensions);
+                return new RegistryContext(this, keysArr, factory, extensions);
             }
         }
 
@@ -74,13 +75,13 @@
                 IScope scope;
                 if (TryGetExtension(context.Extensions, out scope) && !scope.AllowsRegistration(context))
                 {
-                    if (_parentContainer != null)
+                    if (Parent != null)
                     {
                         IResolverContext resolverContext;
-                        if (_parentContainer.TryCreateContext(StaticContractKey<IRegistry>.Shared, out resolverContext,
+                        if (Parent.TryCreateContext(StaticContractKey<IRegistry>.Shared, out resolverContext,
                             EmptyStateProvider.Shared))
                         {
-                            var parentRegistry = (IRegistry) _parentContainer.Resolve(resolverContext);
+                            var parentRegistry = (IRegistry) Parent.Resolve(resolverContext);
                             return parentRegistry.TryRegister(context, out registration);
                         }
                     }
@@ -109,18 +110,18 @@
                     foreach (var key in context.Keys)
                     {
                         var currentRegistration = newRegistration;
-                        _eventRegistrationSubject.OnNextLazy(() => new EventRegistration(EventStage.Before, RegistrationAction.Add, key, currentRegistration.RegistryContext));
+                        _eventRegistrationSubject.OnNext(new RegistrationEvent(EventStage.Before, EventAction.Add, key, currentRegistration.RegistryContext));
                         registrations.Add(key, currentRegistration);
                         resources.Add(
                             new Disposable(() =>
                             {
-                                _eventRegistrationSubject.OnNextLazy(() => new EventRegistration(EventStage.Before, RegistrationAction.Remove, key, currentRegistration.RegistryContext));
+                                _eventRegistrationSubject.OnNext(new RegistrationEvent(EventStage.Before, EventAction.Remove, key, currentRegistration.RegistryContext));
                                 registrations.Remove(key);
-                                _eventRegistrationSubject.OnNextLazy(() => new EventRegistration(EventStage.After, RegistrationAction.Remove, key, currentRegistration.RegistryContext));
+                                _eventRegistrationSubject.OnNext(new RegistrationEvent(EventStage.After, EventAction.Remove, key, currentRegistration.RegistryContext));
                             },
                             this));
 
-                        _eventRegistrationSubject.OnNextLazy(() => new EventRegistration(EventStage.After, RegistrationAction.Add, key, currentRegistration.RegistryContext));
+                        _eventRegistrationSubject.OnNext(new RegistrationEvent(EventStage.After, EventAction.Add, key, currentRegistration.RegistryContext));
                     }
                 }
                 catch
@@ -161,9 +162,9 @@
                 return context.InstanceFactory.Create(context);
             }
 
-            if (_parentContainer != null)
+            if (Parent != null)
             {
-                return _parentContainer.Resolve(context);
+                return Parent.Resolve(context);
             }
 
             throw new InvalidOperationException("Invalid resolver context.");
@@ -174,9 +175,9 @@
             foreach (var registration in _registrations.ToList().SelectMany(i => i.Value).ToList())
             {
                 var registryContext = registration.Value.RegistryContext;
-                _eventRegistrationSubject.OnNextLazy(() => new EventRegistration(EventStage.Before, RegistrationAction.Remove, registration.Key, registryContext));
+                _eventRegistrationSubject.OnNext(new RegistrationEvent(EventStage.Before, EventAction.Remove, registration.Key, registryContext));
                 registration.Value.Dispose();
-                _eventRegistrationSubject.OnNextLazy(() => new EventRegistration(EventStage.After, RegistrationAction.Remove, registration.Key, registryContext));
+                _eventRegistrationSubject.OnNext(new RegistrationEvent(EventStage.After, EventAction.Remove, registration.Key, registryContext));
             }
 
             _registrations.Clear();
@@ -188,10 +189,15 @@
             }
         }
 
-        public IDisposable Subscribe([NotNull] IObserver<IEventRegistration> observer)
+        public IDisposable Subscribe([NotNull] IObserver<IRegistrationEvent> observer)
         {
             if (observer == null) throw new ArgumentNullException(nameof(observer));
             return _eventRegistrationSubject.Subscribe(observer);
+        }
+
+        public IDisposable Subscribe(IObserver<IContainerEvent> observer)
+        {
+            throw new NotImplementedException();
         }
 
         public override string ToString()
@@ -221,7 +227,6 @@
 
                 resolverContext = new ResolverContext(
                     this,
-                    _parentContainer,
                     registrationItem.RegistryContext,
                     registrationItem.InstanceFactory,
                     key,
@@ -236,11 +241,10 @@
                 }
             }
 
-            if (_parentContainer != null && _parentContainer.TryCreateContext(key, out resolverContext, stateProvider))
+            if (Parent != null && Parent.TryCreateContext(key, out resolverContext, stateProvider))
             {
                 resolverContext = new ResolverContext(
                     this,
-                    _parentContainer,
                     resolverContext.RegistryContext,
                     resolverContext.InstanceFactory,
                     resolverContext.Key,

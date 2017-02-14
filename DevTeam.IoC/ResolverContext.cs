@@ -8,7 +8,6 @@
     {
         public ResolverContext(
             [NotNull] IContainer container,
-            [CanBeNull] IContainer parentContainer,
             [NotNull] IRegistryContext registryContext,
             [NotNull] IResolverFactory factory,
             [NotNull] ICompositeKey key,
@@ -22,7 +21,6 @@
             if (registrationKey == null) throw new ArgumentNullException(nameof(registrationKey));
 
             Container = container;
-            ParentContainer = parentContainer;
             RegistryContext = registryContext;
             InstanceFactory = factory;
             Key = key;
@@ -31,8 +29,6 @@
         }
 
         public IContainer Container { get; }
-
-        public IContainer ParentContainer { get; }
 
         public ICompositeKey Key { get; }
 
@@ -46,7 +42,7 @@
 
         public override string ToString()
         {
-            return $"{nameof(RegistryContext)} [Container: {Container}, ParentContainer: {ParentContainer.ToString() ?? "null"}, Key: {Key}, RegistrationKey: {RegistrationKey}, InstanceFactory: {InstanceFactory}, StateProvider: {StateProvider} , RegistryContext: {RegistryContext}]";
+            return $"{nameof(RegistryContext)} [Container: {Container}, Key: {Key}, RegistrationKey: {RegistrationKey}, InstanceFactory: {InstanceFactory}, StateProvider: {StateProvider} , RegistryContext: {RegistryContext}]";
         }
     }
 }

@@ -3,7 +3,7 @@
     using System;
     using Contracts;
 
-    internal class CacheTracker: IObserver<IEventRegistration>
+    internal class CacheTracker: IObserver<IRegistrationEvent>
     {
         private readonly ICache<ICompositeKey, IResolverContext> _cache;
 
@@ -13,9 +13,9 @@
             _cache = cache;
         }
 
-        public void OnNext(IEventRegistration value)
+        public void OnNext(IRegistrationEvent value)
         {
-            if (value.Stage == EventStage.After && value.Action == RegistrationAction.Remove)
+            if (value.Stage == EventStage.After && value.Action == EventAction.Remove)
             {
                 _cache.TryRemove(value.Key);
             }
