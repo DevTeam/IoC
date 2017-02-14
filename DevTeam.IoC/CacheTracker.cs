@@ -15,7 +15,7 @@
 
         public void OnNext(IRegistrationEvent value)
         {
-            if (value.Stage == EventStage.After && value.Action == EventAction.Remove)
+            if (value.Stage == EventStage.After)
             {
                 _cache.TryRemove(value.Key);
             }
