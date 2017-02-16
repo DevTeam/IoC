@@ -9,26 +9,25 @@
         public ResolverContext(
             [NotNull] IContainer container,
             [NotNull] IRegistryContext registryContext,
-            [NotNull] IResolverFactory factory,
+            [NotNull] IResolverFactory instanceFactory,
             [NotNull] ICompositeKey key,
             [NotNull] object registrationKey,
             [CanBeNull] IStateProvider stateProvider = null)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
-            if (registryContext == null) throw new ArgumentNullException(nameof(registryContext));
-            if (factory == null) throw new ArgumentNullException(nameof(factory));
             if (key == null) throw new ArgumentNullException(nameof(key));
             if (registrationKey == null) throw new ArgumentNullException(nameof(registrationKey));
-
+            if (instanceFactory == null) throw new ArgumentNullException(nameof(instanceFactory));
+            if (registryContext == null) throw new ArgumentNullException(nameof(registryContext));
             Container = container;
             RegistryContext = registryContext;
-            InstanceFactory = factory;
+            InstanceFactory = instanceFactory;
             Key = key;
             RegistrationKey = registrationKey;
             StateProvider = stateProvider ?? EmptyStateProvider.Shared;
         }
 
-        public IContainer Container { get; }
+        public IContainer Container { get; set; }
 
         public ICompositeKey Key { get; }
 

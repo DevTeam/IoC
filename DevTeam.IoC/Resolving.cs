@@ -32,7 +32,7 @@
             if (stateProvider == null) throw new ArgumentNullException(nameof(stateProvider));
             IResolverContext ctx;
             var key = CreateCompositeKey();
-            if (!TryCreateContext(Resolver, key, stateProvider, out ctx))
+            if (!Resolver.TryCreateResolverContext(key, out ctx, stateProvider))
             {
                 throw new InvalidOperationException(GetCantResolveErrorMessage(key));
             }
@@ -45,7 +45,7 @@
             if (stateProvider == null) throw new ArgumentNullException(nameof(stateProvider));
             IResolverContext ctx;
             var key = CreateCompositeKey();
-            if (!TryCreateContext(Resolver, key, stateProvider, out ctx))
+            if (!Resolver.TryCreateResolverContext(key, out ctx, stateProvider))
             {
                 instance = default(object);
                 return false;
@@ -61,7 +61,7 @@
             Contract<TContract>();
             IResolverContext ctx;
             var key = CreateCompositeKey();
-            if (!TryCreateContext(Resolver, key, stateProvider, out ctx))
+            if (!Resolver.TryCreateResolverContext(key, out ctx, stateProvider))
             {
                 throw new InvalidOperationException(GetCantResolveErrorMessage(key));
             }
@@ -75,7 +75,7 @@
             Contract<TContract>();
             IResolverContext ctx;
             var key = CreateCompositeKey();
-            if (!TryCreateContext(Resolver, key, stateProvider, out ctx))
+            if (!Resolver.TryCreateResolverContext(key, out ctx, stateProvider))
             {
                 instance = default(TContract);
                 return false;
@@ -185,15 +185,6 @@
         private void OnCompositeKeyChanged()
         {
             _compositeKey = null;
-        }
-
-        private bool TryCreateContext(IResolver resolver, ICompositeKey key, IStateProvider stateProvider, out IResolverContext resolverContext)
-        {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            if (key == null) throw new ArgumentNullException(nameof(key));
-            if (stateProvider == null) throw new ArgumentNullException(nameof(stateProvider));
-
-            return resolver.TryCreateResolverContext(key, out resolverContext, stateProvider);
         }
 
         private string GetCantResolveErrorMessage(ICompositeKey key)
