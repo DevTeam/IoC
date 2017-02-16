@@ -14,8 +14,7 @@
         {
             var jsonConfigStr = ReadConfiguration<IHelloWorld>("ClassLibrary.configuration.json");
 
-            using (
-                var container = new Container()
+            using (var container = new Container()
                 .Configure().DependsOn<JsonConfiguration>(jsonConfigStr).ToSelf()
                 .Register().Autowiring(typeof(Program)).ToSelf())
             {

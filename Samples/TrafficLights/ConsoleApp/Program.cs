@@ -9,8 +9,7 @@
     {
         public static void Main()
         {
-            using (
-                var container = new Container()
+            using (var container = new Container()
                     .Configure()
                         .DependsOn(Wellknown.Feature.Enumerables)
                     .ToSelf()
