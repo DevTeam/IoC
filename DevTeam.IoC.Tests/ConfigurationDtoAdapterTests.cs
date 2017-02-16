@@ -369,12 +369,12 @@
 
         private class MyConfiguration : IConfiguration
         {
-            public IEnumerable<IConfiguration> GetDependencies<T>(T container) where T : IContainer
+            public IEnumerable<IConfiguration> GetDependencies(IContainer container)
             {
                 throw new NotImplementedException();
             }
 
-            public IEnumerable<IDisposable> Apply<T>(T container) where T : IContainer
+            public IEnumerable<IDisposable> Apply(IContainer container)
             {
                 throw new NotImplementedException();
             }

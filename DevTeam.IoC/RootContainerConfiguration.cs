@@ -25,13 +25,13 @@
         {
         }
 
-        public IEnumerable<IConfiguration> GetDependencies<T>(T container) where T : IContainer
+        public IEnumerable<IConfiguration> GetDependencies(IContainer container)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
             yield break;
         }
 
-        public IEnumerable<IDisposable> Apply<T>(T container) where T : IContainer
+        public IEnumerable<IDisposable> Apply(IContainer container)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
             yield return LowLevelRegistration.RawRegister<IResolver>(container, ResolverKeys, ctx => ctx.Container);
@@ -40,7 +40,7 @@
             yield return LowLevelRegistration.RawRegister<IFluent>(container, FluentKeys, ctx => Fluent);
             yield return LowLevelRegistration.RawRegister(container, InstanceFactoryProviderKeys, ctx => ExpressionInstanceFactoryProvider);
             yield return LowLevelRegistration.RawRegister(typeof(IResolving<>), container, ResolvingKeys, ctx => new Resolving<IResolver>(Fluent, container));
-            yield return LowLevelRegistration.RawRegister(typeof(IRegistration<>), container, RegistrationKeys, ctx => new Registration<T>(Fluent, container));
+            yield return LowLevelRegistration.RawRegister(typeof(IRegistration<>), container, RegistrationKeys, ctx => new Registration<IContainer>(Fluent, container));
             yield return LowLevelRegistration.RawRegister(container, MetadataProviderKeys, ctx => MetadataProvider);
 
             yield return

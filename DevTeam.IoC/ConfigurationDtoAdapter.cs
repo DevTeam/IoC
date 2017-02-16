@@ -20,7 +20,7 @@
             _configurationDto = configurationDto;
         }
 
-        public IEnumerable<IConfiguration> GetDependencies<T>(T container) where T : IContainer
+        public IEnumerable<IConfiguration> GetDependencies(IContainer container)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
             var typeResolver = container.Resolve().Instance<ITypeResolver>();
@@ -92,14 +92,14 @@
             }
         }
 
-        public IEnumerable<IDisposable> Apply<T>(T container) where T : IContainer
+        public IEnumerable<IDisposable> Apply(IContainer container)
         {
             return Apply(container, container.Resolve().Instance<ITypeResolver>(), _configurationDto);
         }
 
-        private IEnumerable<IDisposable> Apply<T>(T resolver, ITypeResolver typeResolver, IEnumerable<IConfigurationStatementDto> configurationElements) where T : IContainer
+        private IEnumerable<IDisposable> Apply(IContainer container, ITypeResolver typeResolver, IEnumerable<IConfigurationStatementDto> configurationElements)
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
+            if (container == null) throw new ArgumentNullException(nameof(container));
             foreach (var configurationStatement in configurationElements)
             {
                 var referenceDto = configurationStatement as IReferenceDto;
@@ -128,7 +128,7 @@
                         }
                     }
 
-                    foreach(var registration in Apply(resolver.CreateChild(containerTag), typeResolver, containerDto.Statements))
+                    foreach(var registration in Apply(container.CreateChild(containerTag), typeResolver, containerDto.Statements))
                     {
                         yield return registration;
                     }
@@ -139,17 +139,17 @@
                 var registerDto = configurationStatement as IRegisterDto;
                 if (registerDto != null)
                 {
-                    HandleRegisterDto(resolver, typeResolver, registerDto);
+                    HandleRegisterDto(container, typeResolver, registerDto);
                 }
             }
         }
 
-        private void HandleRegisterDto<T>(T resolver, ITypeResolver typeResolver, IRegisterDto registerDto) where T : IContainer
+        private void HandleRegisterDto(IContainer container, ITypeResolver typeResolver, IRegisterDto registerDto)
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
+            if (container == null) throw new ArgumentNullException(nameof(container));
             if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
             if (registerDto == null) throw new ArgumentNullException(nameof(registerDto));
-            var registration = resolver.Register();
+            var registration = container.Register();
             foreach (var registerStatementDto in registerDto.Keys ?? Enumerable.Empty<IRegisterStatementDto>())
             {
                 var contractDto = registerStatementDto as IContractDto;
@@ -279,7 +279,7 @@
                         {
                             if (ctorParam.Dependency != null)
                             {
-                                var resolving = new Resolving<T>(resolver.Resolve().Instance<IFluent>(), resolver);
+                                var resolving = new Resolving<IContainer>(container.Resolve().Instance<IFluent>(), container);
                                 var hasContractKey = false;
                                 foreach (var keyDto in ctorParam.Dependency)
                                 {
@@ -364,7 +364,7 @@
                         }
                     }
 
-                    metadataProvider = resolver.Resolve().State<IEnumerable<IParameterMetadata>>(0).Instance<IMetadataProvider>(constructorParameters);
+                    metadataProvider = container.Resolve().State<IEnumerable<IParameterMetadata>>(0).Instance<IMetadataProvider>(constructorParameters);
                 }
 
                 registration.Autowiring(autowiringType, metadataProvider);

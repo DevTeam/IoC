@@ -14,12 +14,12 @@
             _configurations = configurations;
         }
 
-        public IEnumerable<IConfiguration> GetDependencies<T>(T container) where T : IContainer
+        public IEnumerable<IConfiguration> GetDependencies(IContainer container)
         {
             return _configurations;
         }
 
-        public IEnumerable<IDisposable> Apply<T>(T container) where T : IContainer
+        public IEnumerable<IDisposable> Apply(IContainer container)
         {
             yield break;
         }
