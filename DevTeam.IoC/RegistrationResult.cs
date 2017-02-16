@@ -18,7 +18,7 @@
             _registrationFactory = registrationFactory;
         }
 
-        public IDisposable Create()
+        public IDisposable Apply()
         {
             return _registrationFactory();
         }

@@ -32,7 +32,7 @@
                 .Register()
                 .Contract(typeof(IEnumerable<>))
                 .FactoryMethod(ResolveEnumerable)
-                .Create();
+                .Apply();
         }
 
         public override int GetHashCode()

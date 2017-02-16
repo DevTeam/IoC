@@ -30,7 +30,7 @@
                 .Contract(typeof(Task<>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
                 .FactoryMethod(ResolveTask)
-                .Create();
+                .Apply();
         }
 
         public override int GetHashCode()

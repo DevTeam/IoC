@@ -103,8 +103,8 @@
             var referenceDescriptionResolver = new Mock<IReferenceDescriptionResolver>();
             referenceDescriptionResolver.Setup(i => i.ResolveReference("ref")).Returns("ref data");
             var configurationDepDto = Mock.Of<IConfigurationDto>();
-            using (_container.Register().Contract<IReferenceDescriptionResolver>().FactoryMethod(ctx => referenceDescriptionResolver.Object).Create())
-            using (_container.Register().Contract<IConfigurationDto>().Tag(typeof(MyConfiguration)).State<IConfigurationDescriptionDto>(0).FactoryMethod(ctx => configurationDepDto).Create())
+            using (_container.Register().Contract<IReferenceDescriptionResolver>().FactoryMethod(ctx => referenceDescriptionResolver.Object).Apply())
+            using (_container.Register().Contract<IConfigurationDto>().Tag(typeof(MyConfiguration)).State<IConfigurationDescriptionDto>(0).FactoryMethod(ctx => configurationDepDto).Apply())
             {
 
                 // When

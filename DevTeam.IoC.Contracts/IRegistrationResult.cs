@@ -5,7 +5,7 @@
     public interface IRegistrationResult<T> where T : IContainer
     {
         [NotNull]
-        IDisposable Create();
+        IDisposable Apply();
 
         [NotNull]
         T ToSelf();

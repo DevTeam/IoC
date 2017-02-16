@@ -371,7 +371,7 @@
                     metadataProvider = container.Resolve().State<IEnumerable<IParameterMetadata>>(0).Instance<IMetadataProvider>(constructorParameters);
                 }
 
-                yield return registration.Autowiring(autowiringType, metadataProvider).Create();
+                yield return registration.Autowiring(autowiringType, metadataProvider).Apply();
             }
 
             if (!string.IsNullOrWhiteSpace(registerDto.FactoryMethodName))
@@ -396,7 +396,7 @@
                     throw new Exception($"Factory method {registerDto.FactoryMethodName} was not found");
                 }
 
-                yield return registration.FactoryMethod(ctx => factoryMethod.Invoke(null, new object[] { ctx })).Create();
+                yield return registration.FactoryMethod(ctx => factoryMethod.Invoke(null, new object[] { ctx })).Apply();
             }
         }
 

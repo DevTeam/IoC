@@ -31,7 +31,7 @@
                 .Tag(Wellknown.Scope.Internal)
                 .Contract<IScope>()
                 .FactoryMethod(ctx => _internalScope)
-                .Create();
+                .Apply();
 
             yield return
                 container
@@ -39,7 +39,7 @@
                 .Tag(Wellknown.Scope.Global)
                 .Contract<IScope>()
                 .FactoryMethod(ctx => _globalScope)
-                .Create();
+                .Apply();
         }
 
         public override int GetHashCode()

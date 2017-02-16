@@ -32,7 +32,7 @@
                 .Lifetime(Wellknown.Lifetime.AutoDisposing)
                 .Contract<IEventRegistry>()
                 .Autowiring<EventRegistry>()
-                .Create();
+                .Apply();
 
             yield return childContainer
                 .Register()
@@ -41,7 +41,7 @@
                 .Lifetime(Wellknown.Lifetime.AutoDisposing)
                 .Contract<IEventBroker>()
                 .Autowiring<EventBroker>()
-                .Create();
+                .Apply();
 
             yield return childContainer
                 .Register()
@@ -49,7 +49,7 @@
                 .Contract(typeof(IEvent<>))
                 .KeyComparer(Wellknown.KeyComparer.AnyState)
                 .Autowiring(typeof(Event<>))
-                .Create();
+                .Apply();
 
             yield return childContainer
                 .Register()
@@ -57,7 +57,7 @@
                 .Contract<long>()
                 .Tag("IdGenerator")
                 .FactoryMethod(IdGenerator.GenerateId)
-                .Create();
+                .Apply();
 
             yield return childContainer
                 .Register()
@@ -66,7 +66,7 @@
                 .Lifetime(Wellknown.Lifetime.AutoDisposing)
                 .Contract<IEventSource<DateTimeOffset>>()
                 .Autowiring<TimerSource>()
-                .Create();
+                .Apply();
 
             yield return childContainer
                 .Register()
@@ -74,7 +74,7 @@
                 .Lifetime(Wellknown.Lifetime.PerResolve)
                 .Contract(typeof(IEventListener<>))
                 .Autowiring(typeof(ConsoleListener<>))
-                .Create();
+                .Apply();
 
             yield return childContainer;
         }

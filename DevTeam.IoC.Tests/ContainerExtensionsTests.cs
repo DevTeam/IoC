@@ -21,7 +21,7 @@
             using (var container = CreateContainer())
             {
                 // When
-                using (container.Register().Contract<ISimpleService>().FactoryMethod(ctx => simpleService.Object).Create())
+                using (container.Register().Contract<ISimpleService>().FactoryMethod(ctx => simpleService.Object).Apply())
                 {
                     var actualObj = container.Resolve().Contract<ISimpleService>().Instance();
 
@@ -38,7 +38,7 @@
             using (var container = CreateContainer())
             {
                 // When
-                using (container.Register().FactoryMethod(ctx => new ClassWithMetadata(ctx.GetState<string>(0))).Create())
+                using (container.Register().FactoryMethod(ctx => new ClassWithMetadata(ctx.GetState<string>(0))).Apply())
                 {
                     var actualObj = (ClassWithMetadata)container.Resolve().Contract<ISimpleService>().Tag("abc").State(0, typeof(string)).Instance("xyz");
 
@@ -55,7 +55,7 @@
             using (var container = CreateContainer())
             {
                 // When
-                using (container.Register().Autowiring<ClassWithMetadata>().Create())
+                using (container.Register().Autowiring<ClassWithMetadata>().Apply())
                 {
                     var actualObj = (ClassWithMetadata)container.Resolve().Contract<ISimpleService>().Tag("abc").State(0, typeof(string)).Instance("xyz");
 
@@ -73,7 +73,7 @@
             using (var container = CreateContainer())
             {
                 // When
-                using (container.Register().Contract<ISimpleService>().Tag("abc").FactoryMethod(ctx => simpleService.Object).Create())
+                using (container.Register().Contract<ISimpleService>().Tag("abc").FactoryMethod(ctx => simpleService.Object).Apply())
                 {
                     var actualObj = container.Resolve().Contract<ISimpleService>().Tag("abc").Instance();
 
@@ -93,7 +93,7 @@
             using (var container = CreateContainer())
             {
                 // When
-                using (container.Register().Contract(typeof(IGenericService<>)).Tag("abc").FactoryMethod(ctx => genericService.Object).Create())
+                using (container.Register().Contract(typeof(IGenericService<>)).Tag("abc").FactoryMethod(ctx => genericService.Object).Apply())
                 {
                     var actualObj = container.Resolve().Contract<IGenericService<string>>().Tag("abc").Instance();
 
@@ -113,7 +113,7 @@
             using (var container = CreateContainer())
             {
                 // When
-                using (container.Register().Contract(typeof(IGenericService<string>)).Tag("abc").FactoryMethod(ctx => genericService.Object).Create())
+                using (container.Register().Contract(typeof(IGenericService<string>)).Tag("abc").FactoryMethod(ctx => genericService.Object).Apply())
                 {
                     var actualObj = container.Resolve().Contract<IGenericService<string>>().Tag("abc").Instance();
 
@@ -132,7 +132,7 @@
             using (var container = CreateContainer())
             {
                 // When
-                using (container.Register().Contract(typeof(IGenericService<>)).Tag("abc").FactoryMethod(ctx => genericService.Object).Create())
+                using (container.Register().Contract(typeof(IGenericService<>)).Tag("abc").FactoryMethod(ctx => genericService.Object).Apply())
                 {
                     var actualObj = container.Resolve().Contract<IGenericService<string>>().Tag("abc").Instance();
 

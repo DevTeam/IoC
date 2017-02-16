@@ -27,12 +27,12 @@
                     container.Register()
                     .Tag("a")
                     .Contract<ISimpleService>()
-                    .FactoryMethod(ctx => mock1.Object).Create())
+                    .FactoryMethod(ctx => mock1.Object).Apply())
                 using (
                     container.Register()
                     .Tag("b")
                     .Contract<ISimpleService>()
-                    .FactoryMethod(ctx => mock2.Object).Create())
+                    .FactoryMethod(ctx => mock2.Object).Apply())
                 {
                     var listOfObj = container.Resolve().Instance<IEnumerable<ISimpleService>>().ToList();
 

@@ -49,7 +49,7 @@
                     .State<IEnumerable<IParameterMetadata>>(0)
                     .Contract<IMetadataProvider>()
                     .FactoryMethod(ctx => new ManualMetadataProvider(MetadataProvider, ctx.GetState<IEnumerable<IParameterMetadata>>(0)))
-                    .Create();
+                    .Apply();
 
             yield return
                 container
@@ -79,7 +79,7 @@
 
                     return new MetadataFactory(implementationType, ExpressionInstanceFactoryProvider, MetadataProvider);
                 })
-                .Create();
+                .Apply();
 
             yield return
                container
@@ -87,7 +87,7 @@
                .Contract<IConfiguration>()
                .State<Assembly>(0)
                .FactoryMethod(ctx => new ConfigurationFromAssembly(ctx.GetState<Assembly>(0)))
-               .Create();
+               .Apply();
 
             yield return
                 container
@@ -96,7 +96,7 @@
                 .State<string>(1)
                 .Contract<IConfiguration>()
                 .FactoryMethod(ctx => new ConfigurationFromDto(ctx.Container, ctx.GetState<Type>(0), ctx.GetState<string>(1)))
-                .Create();
+                .Apply();
 
             yield return
                 container
@@ -104,7 +104,7 @@
                 .Tag(Wellknown.Feature.Default)
                 .Contract<IConfiguration>()
                 .FactoryMethod(ctx => DefaultFeatures.Shared)
-                .Create();
+                .Apply();
 
             yield return
                 container
@@ -112,7 +112,7 @@
                 .Tag(Wellknown.Feature.ChildContainers)
                 .Contract<IConfiguration>()
                 .FactoryMethod(ctx => ChildContainersFeature.Shared)
-                .Create();
+                .Apply();
 
             yield return
                 container
@@ -120,7 +120,7 @@
                 .Tag(Wellknown.Feature.Lifetimes)
                 .Contract<IConfiguration>()
                 .FactoryMethod(ctx => LifetimesFeature.Shared)
-                .Create();
+                .Apply();
 
             yield return
                 container
@@ -128,7 +128,7 @@
                 .Tag(Wellknown.Feature.Scopes)
                 .Contract<IConfiguration>()
                 .FactoryMethod(ctx => ScopesFeature.Shared)
-                .Create();
+                .Apply();
 
             yield return
                 container
@@ -136,7 +136,7 @@
                 .Tag(Wellknown.Feature.KeyComaprers)
                 .Contract<IConfiguration>()
                 .FactoryMethod(ctx => KeyComparersFeature.Shared)
-                .Create();
+                .Apply();
 
             yield return
                 container
@@ -144,7 +144,7 @@
                 .Tag(Wellknown.Feature.Enumerables)
                 .Contract<IConfiguration>()
                 .FactoryMethod(ctx => EnumerablesFeature.Shared)
-                .Create();
+                .Apply();
 
             yield return
                 container
@@ -152,7 +152,7 @@
                 .Tag(Wellknown.Feature.Resolvers)
                 .Contract<IConfiguration>()
                 .FactoryMethod(ctx => ResolversFeature.Shared)
-                .Create();
+                .Apply();
 
             yield return
                 container
@@ -160,7 +160,7 @@
                 .Tag(Wellknown.Feature.Cache)
                 .Contract<IConfiguration>()
                 .FactoryMethod(ctx => CacheFeature.Shared)
-                .Create();
+                .Apply();
 
             yield return
                 container
@@ -168,7 +168,7 @@
                 .Tag(Wellknown.Feature.Dto)
                 .Contract<IConfiguration>()
                 .FactoryMethod(ctx => DtoFeature.Shared)
-                .Create();
+                .Apply();
 
             yield return
                 container
@@ -176,7 +176,7 @@
                 .Tag(Wellknown.Feature.Tasks)
                 .Contract<IConfiguration>()
                 .FactoryMethod(ctx => TasksFeature.Shared)
-                .Create();
+                .Apply();
         }
 
         public override int GetHashCode()

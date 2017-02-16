@@ -32,7 +32,7 @@
                 .Tag(Wellknown.KeyComparer.AnyTag)
                 .Contract<IKeyComparer>()
                 .FactoryMethod(ctx => AnyTagKeyComparer)
-                .Create();
+                .Apply();
 
             yield return
                 container
@@ -40,7 +40,7 @@
                 .Tag(Wellknown.KeyComparer.AnyState)
                 .Contract<IKeyComparer>()
                 .FactoryMethod(ctx => AnyStateKeyComparer)
-                .Create();
+                .Apply();
 
             yield return
                 container
@@ -48,7 +48,7 @@
                 .Tag(Wellknown.KeyComparer.AnyTagAnyState)
                 .Contract<IKeyComparer>()
                 .FactoryMethod(ctx => AnyTagAnyStateKeyComparer)
-                .Create();
+                .Apply();
         }
 
         public override int GetHashCode()

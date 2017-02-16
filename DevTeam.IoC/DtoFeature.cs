@@ -28,7 +28,7 @@
                 .Register()
                 .Contract<ITypeResolver>()
                 .Autowiring<TypeResolver>()
-                .Create();
+                .Apply();
 
             yield return
                 container
@@ -36,7 +36,7 @@
                 .Contract<IConfiguration>()
                 .State<IConfigurationDto>(0)
                 .Autowiring<ConfigurationDtoAdapter>()
-                .Create();
+                .Apply();
 
             yield return
                 container
@@ -44,7 +44,7 @@
                 .State<string>(0)
                 .Contract<IConfigurationDescriptionDto>()
                 .FactoryMethod(ctx => new ConfigurationDescriptionDto(ctx.GetState<string>(0)))
-                .Create();
+                .Apply();
         }
     }
 }
