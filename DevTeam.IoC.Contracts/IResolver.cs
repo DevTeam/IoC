@@ -5,7 +5,7 @@
     {
         IKeyFactory KeyFactory { [NotNull] get; }
 
-        bool TryCreateContext([NotNull] ICompositeKey key, out IResolverContext resolverContext, IStateProvider stateProvider = null);
+        bool TryCreateResolverContext([NotNull] ICompositeKey key, out IResolverContext resolverContext, IStateProvider stateProvider = null);
 
         [NotNull]
         object Resolve([NotNull] IResolverContext context);

@@ -7,7 +7,7 @@
     public interface IRegistry
     {
         [NotNull]
-        IRegistryContext CreateContext(
+        IRegistryContext CreateRegistryContext(
             [NotNull] IEnumerable<ICompositeKey> keys,
             [NotNull] IResolverFactory factory,
             [NotNull] IEnumerable<IExtension> extensions);

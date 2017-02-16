@@ -18,7 +18,7 @@
             if (key == null) throw new ArgumentNullException(nameof(key));
 
             IResolverContext context;
-            if (resolver.TryCreateContext(key, out context, stateProvider))
+            if (resolver.TryCreateResolverContext(key, out context, stateProvider))
             {
                 return context;
             }

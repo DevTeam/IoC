@@ -10,7 +10,7 @@
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             IResolverContext resolverContext;
-            if (!resolver.TryCreateContext(StaticContractKey<TContract>.Shared, out resolverContext))
+            if (!resolver.TryCreateResolverContext(StaticContractKey<TContract>.Shared, out resolverContext))
             {
                 instance = default(TContract);
                 return false;

@@ -34,7 +34,7 @@
 
                 // When
                 var registryContext =
-                    container.CreateContext(
+                    container.CreateRegistryContext(
                         CreateCompositeKeys(container, false, new []{ typeof(string) }),
                         _factory.Object,
                         new IExtension[0]);
@@ -66,7 +66,7 @@
                 keys = CreateCompositeKeys(container, false, new[] {typeof(string) }).ToArray();
                 // When
                 var registryContext =
-                    container.CreateContext(
+                    container.CreateRegistryContext(
                         keys,
                         _factory.Object,
                         new IExtension[0]);
@@ -116,7 +116,7 @@
 
                 // When
                 var registryContext =
-                    container.CreateContext(
+                    container.CreateRegistryContext(
                         CreateCompositeKeys(container, false, new[] { typeof(string) }),
                         _factory.Object,
                         new IExtension[0]);
@@ -136,7 +136,7 @@
             using (var container = CreateContainer())
             {
                 // When
-                container.CreateContext(
+                container.CreateRegistryContext(
                     CreateCompositeKeys(container, false, new[] { typeof(IResolver) }, new object[0]),
                     _factory.Object,
                     new IExtension[0]);
@@ -162,7 +162,7 @@
 
                 // When
                 var registryContext =
-                    container.CreateContext(
+                    container.CreateRegistryContext(
                         CreateCompositeKeys(container, false, new[] { typeof(string) }, new object[0]),
                         _factory.Object,
                         new IExtension[0]);
@@ -189,7 +189,7 @@
 
                 // When
                 var registryContext =
-                    container.CreateContext(
+                    container.CreateRegistryContext(
                         CreateCompositeKeys(container, false, new[] { typeof(IGenericService<>) }),
                         _factory.Object,
                         new IExtension[0]);
@@ -217,7 +217,7 @@
 
                 // When
                 var registryContext =
-                    container.CreateContext(
+                    container.CreateRegistryContext(
                         CreateCompositeKeys(container, false, new[] { typeof(IGenericService<string>) }),
                         _factory.Object,
                         new IExtension[0]);
@@ -245,7 +245,7 @@
 
                 // When
                 var registryContext =
-                    container.CreateContext(
+                    container.CreateRegistryContext(
                         CreateCompositeKeys(container, false, new[] { typeof(IGenericService<string>) }),
                         _factory.Object,
                         new IExtension[0]);
@@ -253,7 +253,7 @@
                 using (container.Register(registryContext))
                 {
                     IResolverContext resolverContext;
-                    var contextCreated = container.TryCreateContext(CreateCompositeKey(container, true, new[] { typeof(IGenericService<int>) }), out resolverContext);
+                    var contextCreated = container.TryCreateResolverContext(CreateCompositeKey(container, true, new[] { typeof(IGenericService<int>) }), out resolverContext);
 
                     // Then
                     contextCreated.ShouldBe(false);
@@ -272,7 +272,7 @@
 
                 // When
                 var registryContext =
-                    container.CreateContext(
+                    container.CreateRegistryContext(
                         CreateCompositeKeys(container, false, new[] { typeof(string) }),
                         _factory.Object,
                         new IExtension[0]);

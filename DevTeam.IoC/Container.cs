@@ -58,7 +58,7 @@
 
         private object LockObject => _registrations;
 
-        public IRegistryContext CreateContext(IEnumerable<ICompositeKey> keys, IResolverFactory factory, IEnumerable<IExtension> extensions)
+        public IRegistryContext CreateRegistryContext(IEnumerable<ICompositeKey> keys, IResolverFactory factory, IEnumerable<IExtension> extensions)
         {
             if (keys == null) throw new ArgumentNullException(nameof(keys));
             if (factory == null) throw new ArgumentNullException(nameof(factory));
@@ -135,14 +135,51 @@
             }
         }
 
-        public bool TryCreateContext(ICompositeKey key, out IResolverContext resolverContext, IStateProvider stateProvider = null)
+        public bool TryCreateResolverContext(ICompositeKey key, out IResolverContext resolverContext, IStateProvider stateProvider = null)
         {
             if (key == null) throw new ArgumentNullException(nameof(key));
-
             lock (LockObject)
             {
-                if (TryCreateContextInternal(key, out resolverContext, stateProvider))
+                if (_cache != null && _cache.TryGet(key, out resolverContext))
                 {
+                    return true;
+                }
+
+                foreach (var registrations in _registrations)
+                {
+                    RegistrationItem registrationItem;
+                    if (!registrations.Value.TryGetValue(key, out registrationItem))
+                    {
+                        continue;
+                    }
+
+                    resolverContext = new ResolverContext(
+                        this,
+                        registrationItem.RegistryContext,
+                        registrationItem.InstanceFactory,
+                        key,
+                        registrationItem.Key,
+                        stateProvider);
+
+                    IScope scope;
+                    if (!TryGetExtension(resolverContext.RegistryContext.Extensions, out scope) || scope.AllowsResolving(resolverContext))
+                    {
+                        _cache?.Set(key, resolverContext);
+                        return true;
+                    }
+                }
+
+                if (Parent != null && Parent.TryCreateResolverContext(key, out resolverContext, stateProvider))
+                {
+                    resolverContext = new ResolverContext(
+                        this,
+                        resolverContext.RegistryContext,
+                        resolverContext.InstanceFactory,
+                        resolverContext.Key,
+                        resolverContext.RegistrationKey,
+                        resolverContext.StateProvider);
+
+                    _cache?.Set(key, resolverContext);
                     return true;
                 }
 
@@ -196,62 +233,8 @@
             return $"{nameof(Container)} [Tag: {Tag ?? "null"}]{Environment.NewLine}{string.Join(Environment.NewLine, Registrations)}";
         }
 
-        private bool TryCreateContextInternal(
-            ICompositeKey key,
-            out IResolverContext resolverContext,
-            IStateProvider stateProvider = null)
-        {
-            if (key == null) throw new ArgumentNullException(nameof(key));
-
-            if (_cache != null && _cache.TryGet(key, out resolverContext))
-            {
-                return true;
-            }
-
-            foreach (var registrations in _registrations)
-            {
-                RegistrationItem registrationItem;
-                if (!registrations.Value.TryGetValue(key, out registrationItem))
-                {
-                    continue;
-                }
-
-                resolverContext = new ResolverContext(
-                    this,
-                    registrationItem.RegistryContext,
-                    registrationItem.InstanceFactory,
-                    key,
-                    registrationItem.Key,
-                    stateProvider);
-
-                IScope scope;
-                if (!TryGetExtension(resolverContext.RegistryContext.Extensions, out scope) || scope.AllowsResolving(resolverContext))
-                {
-                    _cache?.Set(key, resolverContext);
-                    return true;
-                }
-            }
-
-            if (Parent != null && Parent.TryCreateContext(key, out resolverContext, stateProvider))
-            {
-                resolverContext = new ResolverContext(
-                    this,
-                    resolverContext.RegistryContext,
-                    resolverContext.InstanceFactory,
-                    resolverContext.Key,
-                    resolverContext.RegistrationKey,
-                    resolverContext.StateProvider);
-
-                _cache?.Set(key, resolverContext);
-                return true;
-            }
-
-            resolverContext = default(IResolverContext);
-            return false;
-        }
-
         private static bool TryGetExtension<TContract>(IEnumerable<IExtension> extensions, out TContract instance)
-            where TContract: class, IExtension
+            where TContract : class, IExtension
         {
             instance = extensions.OfType<TContract>().SingleOrDefault();
             return instance != default(TContract);

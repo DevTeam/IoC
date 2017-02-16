@@ -119,7 +119,7 @@
             }
 
             IResolverContext ctx;
-            if (!resolver.TryCreateContext(_fluentKey, out ctx))
+            if (!resolver.TryCreateResolverContext(_fluentKey, out ctx))
             {
                 throw new InvalidOperationException($"{typeof(IFluent)} is not supported");
             }

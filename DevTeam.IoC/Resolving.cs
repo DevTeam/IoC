@@ -193,7 +193,7 @@
             if (key == null) throw new ArgumentNullException(nameof(key));
             if (stateProvider == null) throw new ArgumentNullException(nameof(stateProvider));
 
-            return resolver.TryCreateContext(key, out resolverContext, stateProvider);
+            return resolver.TryCreateResolverContext(key, out resolverContext, stateProvider);
         }
 
         private string GetCantResolveErrorMessage(ICompositeKey key)

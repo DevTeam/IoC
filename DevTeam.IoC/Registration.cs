@@ -213,7 +213,7 @@
             }
 
             IDisposable registration;
-            var context = Resolver.CreateContext(_compositeKeys, new MethodFactory<TImplementation>(factoryMethod), Extensions);
+            var context = Resolver.CreateRegistryContext(_compositeKeys, new MethodFactory<TImplementation>(factoryMethod), Extensions);
             if (!Resolver.TryRegister(context, out registration))
             {
                 throw new InvalidOperationException($"Can't register {string.Join(Environment.NewLine, context.Keys)}.{Environment.NewLine}{Environment.NewLine}{Resolver}");
