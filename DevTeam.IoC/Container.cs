@@ -81,17 +81,9 @@
             lock (LockObject)
             {
                 IScope scope;
-                if (TryGetExtension(context.Extensions, out scope) && !scope.AllowsRegistration(context))
+                if (TryGetExtension(context.Extensions, out scope) && !scope.AllowsRegistration(context) && Parent != null)
                 {
-                    if (Parent != null)
-                    {
-                        IResolverContext resolverContext;
-                        if (Parent.TryCreateContext(StaticContractKey<IRegistry>.Shared, out resolverContext, EmptyStateProvider.Shared))
-                        {
-                            var parentRegistry = (IRegistry) Parent.Resolve(resolverContext);
-                            return parentRegistry.TryRegister(context, out registration);
-                        }
-                    }
+                    return Parent.TryRegister(context, out registration);
                 }
 
                 IKeyComparer keyComparer;
