@@ -13,11 +13,11 @@
         private readonly HashSet<IStateKey> _stateKeys = new HashSet<IStateKey>();
         private ICompositeKey _compositeKey;
 
-        public Resolving([NotNull] IFluent fluent, [NotNull] T resolver)
-            : base(fluent, resolver)
+        public Resolving([NotNull] IFluent fluent, [NotNull] T container)
+            : base(fluent, container)
         {
             if (fluent == null) throw new ArgumentNullException(nameof(fluent));
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
+            if (container == null) throw new ArgumentNullException(nameof(container));
         }
 
         public override IResolving<T> Contract(params Type[] contractTypes)

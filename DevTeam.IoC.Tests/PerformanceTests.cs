@@ -38,7 +38,7 @@
             using (var rootContainer = new Container("root")
                 .Configure()
                 .DependsOn(Wellknown.Feature.Default)
-                .Register().Contract<ISimpleService>().AsAutowiring<SimpleService>()
+                .Register().Contract<ISimpleService>().Autowiring<SimpleService>()
                 .ToSelf())
             {
                 for (var i = 0; i < 100000; i++)
@@ -54,7 +54,7 @@
             using (var rootContainer = new Container("root")
                 .Configure()
                 .DependsOn(Wellknown.Feature.Default)
-                .Register().Lifetime(Wellknown.Lifetime.Singleton).Contract<ISimpleService>().AsAutowiring<SimpleService>()
+                .Register().Lifetime(Wellknown.Lifetime.Singleton).Contract<ISimpleService>().Autowiring<SimpleService>()
                 .ToSelf())
             {
                 for (var i = 0; i < 100000; i++)
@@ -70,8 +70,7 @@
             using (var rootContainer = new Container("root")
                 .Configure()
                 .DependsOn(Wellknown.Feature.Default)
-                .Register().Contract<ISimpleService>().AsAutowiring<SimpleService>()
-                .ToSelf())
+                .Register().Contract<ISimpleService>().Autowiring<SimpleService>().ToSelf())
             {
                 IContainer container = rootContainer;
                 for (var i = 0; i < 1000; i++)
@@ -93,8 +92,9 @@
             var json = File.ReadAllText(eventsConfigurationFile);
             ITrace trace;
             using (var container = new Container("root")
+                .Register().Contract<IReferenceDescriptionResolver>().FactoryMethod<IReferenceDescriptionResolver>(ctx => new ReferenceDescriptionResolver())
+                .ToSelf()
                 .Configure()
-                .Register().Contract<IReferenceDescriptionResolver>().AsFactoryMethod<IReferenceDescriptionResolver>(ctx => new ReferenceDescriptionResolver())
                 .DependsOn(Wellknown.Feature.Default)
                 .DependsOn<JsonConfiguration>(json)
                 .ToSelf())

@@ -15,11 +15,11 @@
         private readonly HashSet<ICompositeKey> _compositeKeys = new HashSet<ICompositeKey>();
         private readonly Lazy<IInstanceFactoryProvider> _instanceFactoryProvider;
 
-        public Registration([NotNull] IFluent fluent, [NotNull] T resolver)
-            : base(fluent, resolver)
+        public Registration([NotNull] IFluent fluent, [NotNull] T container)
+            : base(fluent, container)
         {
             if (fluent == null) throw new ArgumentNullException(nameof(fluent));
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
+            if (container == null) throw new ArgumentNullException(nameof(container));
             _instanceFactoryProvider = new Lazy<IInstanceFactoryProvider>(GetInstanceFactoryProvider);
         }
 
@@ -83,29 +83,19 @@
             return this;
         }
 
-        public IDisposable FactoryMethod(Func<IResolverContext, object> factoryMethod)
+        public IRegistrationResult<T> FactoryMethod(Func<IResolverContext, object> factoryMethod)
         {
             if (factoryMethod == null) throw new ArgumentNullException(nameof(factoryMethod));
             return AsFactoryMethodInternal(factoryMethod);
         }
 
-        public IConfiguring<T> AsFactoryMethod<TImplementation>(Func<IResolverContext, TImplementation> factoryMethod)
-        {
-            return ToSelf(FactoryMethod(factoryMethod)).Configure();
-        }
-
-        public IDisposable FactoryMethod<TImplementation>(Func<IResolverContext, TImplementation> factoryMethod)
+        public IRegistrationResult<T> FactoryMethod<TImplementation>(Func<IResolverContext, TImplementation> factoryMethod)
         {
             if (factoryMethod == null) throw new ArgumentNullException(nameof(factoryMethod));
             return AsFactoryMethodInternal(factoryMethod, typeof(TImplementation));
         }
 
-        public IConfiguring<T> AsFactoryMethod(Func<IResolverContext, object> factoryMethod)
-        {
-            return ToSelf(FactoryMethod(factoryMethod)).Configure();
-        }
-
-        public IDisposable Autowiring(Type implementationType, IMetadataProvider metadataProvider = null)
+        public IRegistrationResult<T> Autowiring(Type implementationType, IMetadataProvider metadataProvider = null)
         {
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
             metadataProvider = metadataProvider ?? Fluent.Resolve(Resolver).Instance<IMetadataProvider>();
@@ -132,20 +122,9 @@
                 implementationType);
         }
 
-        public IConfiguring<T> AsAutowiring(Type implementationType, IMetadataProvider metadataProvider = null)
-        {
-            if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
-            return ToSelf(Autowiring(implementationType, metadataProvider)).Configure();
-        }
-
-        public IDisposable Autowiring<TImplementation>()
+        public IRegistrationResult<T> Autowiring<TImplementation>()
         {
             return Autowiring(typeof(TImplementation));
-        }
-
-        public IConfiguring<T> AsAutowiring<TImplementation>()
-        {
-            return ToSelf(Autowiring<TImplementation>()).Configure();
         }
 
         protected override bool AddContractKey([NotNull] IEnumerable<IContractKey> keys)
@@ -169,9 +148,10 @@
             return _compositeKeys.Add(compositeKey);
         }
 
-        private T ToSelf(IDisposable resource)
+        public T ToSelf(params IDisposable[] resource)
         {
-            Resolver.Resolve().Instance<IInternalResourceStore>().AddResource(resource);
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
+            Resolver.Resolve().Instance<IInternalResourceStore>().AddResource(new CompositeDisposable(resource));
             return Resolver;
         }
 
@@ -217,7 +197,7 @@
             _tagKeys.Clear();
         }
 
-        private IDisposable AsFactoryMethodInternal<TImplementation>(
+        private IRegistrationResult<T> AsFactoryMethodInternal<TImplementation>(
             Func<IResolverContext,
             TImplementation> factoryMethod,
             Type implementationType = null)
@@ -230,12 +210,17 @@
 
             IDisposable registration;
             var context = Resolver.CreateContext(_compositeKeys, new MethodFactory<TImplementation>(factoryMethod), Extensions);
-            if (!Resolver.TryRegister(context, out registration))
-            {
-                throw new InvalidOperationException($"Can't register {string.Join(Environment.NewLine, context.Keys)}.{Environment.NewLine}{Environment.NewLine}{Resolver}");
-            }
+            return new RegistrationResult<T>(
+                this,
+                () => {
+                    if (!Resolver.TryRegister(context, out registration))
+                    {
+                        throw new InvalidOperationException(
+                            $"Can't register {string.Join(Environment.NewLine, context.Keys)}.{Environment.NewLine}{Environment.NewLine}{Resolver}");
+                    }
 
-            return registration;
+                    return registration;
+                });
         }
 
         private IInstanceFactoryProvider GetInstanceFactoryProvider()

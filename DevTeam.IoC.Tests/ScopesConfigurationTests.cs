@@ -25,7 +25,8 @@
                     childContainer.Register()
                     .Scope(Wellknown.Scope.Global)
                     .Contract<ISimpleService>()
-                    .FactoryMethod(ctx => mock.Object))
+                    .FactoryMethod(ctx => mock.Object)
+                    .Create())
                 {
                     var actualObj = container.Resolve().Instance<ISimpleService>();
 
@@ -49,7 +50,8 @@
                     childContainer.Register()
                         .Scope(Wellknown.Scope.Global)
                         .Contract<ISimpleService>()
-                        .FactoryMethod(ctx => mock.Object);
+                        .FactoryMethod(ctx => mock.Object)
+                        .Create();
 
                 registration.Dispose();
 
@@ -79,7 +81,7 @@
                     childContainer1.Register()
                     .Scope(Wellknown.Scope.Internal)
                     .Contract<ISimpleService>()
-                    .FactoryMethod(ctx => mock.Object))
+                    .FactoryMethod(ctx => mock.Object).Create())
                 {
                     ISimpleService actualObj;
 
@@ -105,7 +107,8 @@
                     childContainer1.Register()
                         .Scope(Wellknown.Scope.Internal)
                         .Contract<ISimpleService>()
-                        .FactoryMethod(ctx => mock.Object);
+                        .FactoryMethod(ctx => mock.Object)
+                        .Create();
 
                 registration.Dispose();
 

@@ -88,6 +88,7 @@
     <Compile Include="IReferenceDescriptionResolver.cs" />
     <Compile Include="IRegistration.cs" />
     <Compile Include="IProvider`1.cs" />
+    <Compile Include="IRegistrationResult.cs" />
     <Compile Include="IResolver`3.cs" />
     <Compile Include="IResolver`4.cs" />
     <Compile Include="IResolver`5.cs" />

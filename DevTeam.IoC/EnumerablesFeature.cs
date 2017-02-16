@@ -31,7 +31,8 @@
                 container
                 .Register()
                 .Contract(typeof(IEnumerable<>))
-                .FactoryMethod(ResolveEnumerable);
+                .FactoryMethod(ResolveEnumerable)
+                .Create();
         }
 
         public override int GetHashCode()

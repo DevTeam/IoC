@@ -24,7 +24,7 @@
                     .KeyComparer(Wellknown.KeyComparer.AnyTag)
                     .Tag("abc")
                     .Contract<ISimpleService>()
-                    .FactoryMethod(ctx => mock.Object))
+                    .FactoryMethod(ctx => mock.Object).Create())
                 {
                     var actualObj = container.Resolve().Tag("xyz").Instance<ISimpleService>();
 

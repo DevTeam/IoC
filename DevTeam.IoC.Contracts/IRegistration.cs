@@ -7,28 +7,16 @@
           where T : IContainer
     {
         [NotNull]
-        IDisposable FactoryMethod([NotNull] Func<IResolverContext, object> factoryMethod);
+        IRegistrationResult<T> FactoryMethod([NotNull] Func<IResolverContext, object> factoryMethod);
 
         [NotNull]
-        IConfiguring<T> AsFactoryMethod([NotNull] Func<IResolverContext, object> factoryMethod);
+        IRegistrationResult<T> FactoryMethod<TImplementation>([NotNull] Func<IResolverContext, TImplementation> factoryMethod);
 
         [NotNull]
-        IDisposable FactoryMethod<TImplementation>([NotNull] Func<IResolverContext, TImplementation> factoryMethod);
+        IRegistrationResult<T> Autowiring([NotNull] Type implementationType, [CanBeNull] IMetadataProvider metadataProvider = null);
 
         [NotNull]
-        IConfiguring<T> AsFactoryMethod<TImplementation>([NotNull] Func<IResolverContext, TImplementation> factoryMethod);
-
-        [NotNull]
-        IDisposable Autowiring([NotNull] Type implementationType, [CanBeNull] IMetadataProvider metadataProvider = null);
-
-        [NotNull]
-        IConfiguring<T> AsAutowiring([NotNull] Type implementationType, [CanBeNull] IMetadataProvider metadataProvider = null);
-
-        [NotNull]
-        IDisposable Autowiring<TImplementation>();
-
-        [NotNull]
-        IConfiguring<T> AsAutowiring<TImplementation>();
+        IRegistrationResult<T> Autowiring<TImplementation>();
 
         [NotNull]
         IRegistration<T> Attributes([NotNull] Type implementationType);
@@ -52,5 +40,8 @@
         IRegistration<T> Scope([NotNull] IScope scope);
 
         IRegistration<T> Scope(Wellknown.Scope scope);
+
+        [NotNull]
+        T ToSelf([NotNull] params IDisposable[] resource);
     }
 }

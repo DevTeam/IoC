@@ -27,7 +27,7 @@
             rootContainer.Configure().DependsOn(Wellknown.Feature.Dto).ToSelf();
             rootContainer.Configure().DependsOn(Wellknown.Feature.Scopes).ToSelf();
             _container = rootContainer.CreateChild();
-            _container.Register().Contract<ITypeResolver>().FactoryMethod(ctx => _typeResolver);
+            _container.Register().Contract<ITypeResolver>().FactoryMethod(ctx => _typeResolver).ToSelf();
         }
 
         [Test]
@@ -103,8 +103,8 @@
             var referenceDescriptionResolver = new Mock<IReferenceDescriptionResolver>();
             referenceDescriptionResolver.Setup(i => i.ResolveReference("ref")).Returns("ref data");
             var configurationDepDto = Mock.Of<IConfigurationDto>();
-            using (_container.Register().Contract<IReferenceDescriptionResolver>().FactoryMethod(ctx => referenceDescriptionResolver.Object))
-            using (_container.Register().Contract<IConfigurationDto>().Tag(typeof(MyConfiguration)).State<IConfigurationDescriptionDto>(0).FactoryMethod(ctx => configurationDepDto))
+            using (_container.Register().Contract<IReferenceDescriptionResolver>().FactoryMethod(ctx => referenceDescriptionResolver.Object).Create())
+            using (_container.Register().Contract<IConfigurationDto>().Tag(typeof(MyConfiguration)).State<IConfigurationDescriptionDto>(0).FactoryMethod(ctx => configurationDepDto).Create())
             {
 
                 // When

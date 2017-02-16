@@ -61,6 +61,7 @@
     <Compile Include="Configuring.cs" />
     <Compile Include="Disposable.cs" />
     <Compile Include="DtoFeature.cs" />
+    <Compile Include="RegistrationResult.cs" />
     <Compile Include="SingletonBasedLifetime.cs" />
     <Compile Include="Subject.cs" />
     <Compile Include="TasksFeature.cs" />

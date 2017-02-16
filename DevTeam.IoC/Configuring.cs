@@ -84,7 +84,7 @@
             return _configurations.SelectMany(i => i).GetEnumerator();
         }
 
-        public IDisposable Apply()
+        private IDisposable Apply()
         {
             _registrations.AddRange(_configurations.Select(Apply));
             var registration = new CompositeDisposable(_registrations);

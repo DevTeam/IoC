@@ -56,9 +56,10 @@
                         throw new Exception($"Invalid configuration type {configurationType}");
                     }
 
-                    using (var childContainer = container.CreateChild())
+                    using (
+                        var childContainer = container.CreateChild()
+                        .Register().Contract<IConfiguration>().Autowiring(configurationType).ToSelf())
                     {
-                        childContainer.Register().Contract<IConfiguration>().Autowiring(configurationType);
                         yield return childContainer.Resolve().Instance<IConfiguration>();
                     }
 
@@ -139,12 +140,15 @@
                 var registerDto = configurationStatement as IRegisterDto;
                 if (registerDto != null)
                 {
-                    HandleRegisterDto(container, typeResolver, registerDto);
+                    foreach (var registration in HandleRegisterDto(container, typeResolver, registerDto))
+                    {
+                        yield return registration;
+                    }
                 }
             }
         }
 
-        private void HandleRegisterDto(IContainer container, ITypeResolver typeResolver, IRegisterDto registerDto)
+        private IEnumerable<IDisposable> HandleRegisterDto(IContainer container, ITypeResolver typeResolver, IRegisterDto registerDto)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
             if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
@@ -367,8 +371,7 @@
                     metadataProvider = container.Resolve().State<IEnumerable<IParameterMetadata>>(0).Instance<IMetadataProvider>(constructorParameters);
                 }
 
-                registration.Autowiring(autowiringType, metadataProvider);
-                return;
+                yield return registration.Autowiring(autowiringType, metadataProvider).Create();
             }
 
             if (!string.IsNullOrWhiteSpace(registerDto.FactoryMethodName))
@@ -393,7 +396,7 @@
                     throw new Exception($"Factory method {registerDto.FactoryMethodName} was not found");
                 }
 
-                registration.FactoryMethod(ctx => factoryMethod.Invoke(null, new object[] { ctx }));
+                yield return registration.FactoryMethod(ctx => factoryMethod.Invoke(null, new object[] { ctx })).Create();
             }
         }
 

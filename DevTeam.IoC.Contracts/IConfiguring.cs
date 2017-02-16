@@ -30,9 +30,6 @@
         IRegistration<T> Register();
 
         [NotNull]
-        IDisposable Apply();
-
-        [NotNull]
         T ToSelf();
 
         IConfiguration Create();

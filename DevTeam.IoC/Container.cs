@@ -172,7 +172,7 @@
                 return Parent.Resolve(context);
             }
 
-            throw new InvalidOperationException("Invalid resolver context.");
+            throw new InvalidOperationException("Invalid container context.");
         }
 
         public void Dispose()

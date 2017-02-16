@@ -31,21 +31,24 @@
                 .Register()
                 .Tag(Wellknown.KeyComparer.AnyTag)
                 .Contract<IKeyComparer>()
-                .FactoryMethod(ctx => AnyTagKeyComparer);
+                .FactoryMethod(ctx => AnyTagKeyComparer)
+                .Create();
 
             yield return
                 container
                 .Register()
                 .Tag(Wellknown.KeyComparer.AnyState)
                 .Contract<IKeyComparer>()
-                .FactoryMethod(ctx => AnyStateKeyComparer);
+                .FactoryMethod(ctx => AnyStateKeyComparer)
+                .Create();
 
             yield return
                 container
                 .Register()
                 .Tag(Wellknown.KeyComparer.AnyTagAnyState)
                 .Contract<IKeyComparer>()
-                .FactoryMethod(ctx => AnyTagAnyStateKeyComparer);
+                .FactoryMethod(ctx => AnyTagAnyStateKeyComparer)
+                .Create();
         }
 
         public override int GetHashCode()

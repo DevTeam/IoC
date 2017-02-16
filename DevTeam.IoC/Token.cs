@@ -14,12 +14,12 @@
         protected static readonly ITagKey[] EmptyTagKeys = new ITagKey[0];
         protected static readonly IStateKey[] EmptyStateKeys = new IStateKey[0];
 
-        protected Token(IFluent fluent, T resolver)
+        protected Token(IFluent fluent, T container)
         {
             if (fluent == null) throw new ArgumentNullException(nameof(fluent));
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
+            if (container == null) throw new ArgumentNullException(nameof(container));
             Fluent = fluent;
-            Resolver = resolver;
+            Resolver = container;
         }
 
         protected IFluent Fluent { get; }

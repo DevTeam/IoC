@@ -29,14 +29,16 @@
                 .Contract(typeof(IResolver<>))
                 .Contract(typeof(IProvider<>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .FactoryMethod(ResolveResolver);
+                .FactoryMethod(ResolveResolver)
+                .Create();
 
             yield return
                 container
                 .Register()
                 .Contract(typeof(Func<>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .FactoryMethod(ResolveFunc);
+                .FactoryMethod(ResolveFunc)
+                .Create();
 
             yield return
                 container
@@ -44,14 +46,16 @@
                 .Contract(typeof(IResolver<,>))
                 .Contract(typeof(IProvider<,>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .FactoryMethod(ResolveResolver);
+                .FactoryMethod(ResolveResolver)
+                .Create();
 
             yield return
                 container
                 .Register()
                 .Contract(typeof(Func<,>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .FactoryMethod(ResolveFunc);
+                .FactoryMethod(ResolveFunc)
+                .Create();
 
             yield return
                 container
@@ -59,14 +63,16 @@
                 .Contract(typeof(IResolver<,,>))
                 .Contract(typeof(IProvider<,,>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .FactoryMethod(ResolveResolver);
+                .FactoryMethod(ResolveResolver)
+                .Create();
 
             yield return
                 container
                 .Register()
                 .Contract(typeof(Func<,,>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .FactoryMethod(ResolveFunc);
+                .FactoryMethod(ResolveFunc)
+                .Create();
 
             yield return
                 container
@@ -74,14 +80,16 @@
                 .Contract(typeof(IResolver<,,,>))
                 .Contract(typeof(IProvider<,,,>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .FactoryMethod(ResolveResolver);
+                .FactoryMethod(ResolveResolver)
+                .Create();
 
             yield return
                 container
                 .Register()
                 .Contract(typeof(Func<,,,>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .FactoryMethod(ResolveFunc);
+                .FactoryMethod(ResolveFunc)
+                .Create();
 
             yield return
                 container
@@ -89,14 +97,16 @@
                 .Contract(typeof(IResolver<,,,,>))
                 .Contract(typeof(IProvider<,,,,>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .FactoryMethod(ResolveResolver);
+                .FactoryMethod(ResolveResolver)
+                .Create();
 
             yield return
                 container
                 .Register()
                 .Contract(typeof(Func<,,,,>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .FactoryMethod(ResolveFunc);
+                .FactoryMethod(ResolveFunc)
+                .Create();
         }
 
         public override int GetHashCode()

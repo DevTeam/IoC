@@ -25,13 +25,15 @@
                 container.Register()
                     .Lifetime(Wellknown.Lifetime.PerContainer)
                     .Contract<ICache<Type, IResolverFactory>>()
-                    .FactoryMethod(ctx => new Cache<Type, IResolverFactory>());
+                    .FactoryMethod(ctx => new Cache<Type, IResolverFactory>())
+                    .Create();
 
             yield return
                 container.Register()
                     .Lifetime(Wellknown.Lifetime.PerContainer)
                     .Contract<ICache<ICompositeKey, IResolverContext>>()
-                    .FactoryMethod(ctx => new Cache<ICompositeKey, IResolverContext>());
+                    .FactoryMethod(ctx => new Cache<ICompositeKey, IResolverContext>())
+                    .Create();
         }
     }
 }

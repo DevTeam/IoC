@@ -27,42 +27,48 @@
                 .Register()
                 .Tag(Wellknown.Lifetime.Singleton)
                 .Contract<ILifetime>()
-                .FactoryMethod(ctx => new SingletonLifetime());
+                .FactoryMethod(ctx => new SingletonLifetime())
+                .Create();
 
             yield return
                 container
                 .Register()
                 .Tag(Wellknown.Lifetime.AutoDisposing)
                 .Contract<ILifetime>()
-                .FactoryMethod(ctx => new AutoDisposingLifetime());
+                .FactoryMethod(ctx => new AutoDisposingLifetime())
+                .Create();
 
             yield return
                 container
                 .Register()
                 .Tag(Wellknown.Lifetime.PerResolve)
                 .Contract<ILifetime>()
-                .FactoryMethod(ctx => new SingletonBasedLifetime<long>((lifetimeContext, resolverContext) => lifetimeContext.ResolveId));
+                .FactoryMethod(ctx => new SingletonBasedLifetime<long>((lifetimeContext, resolverContext) => lifetimeContext.ResolveId))
+                .Create();
 
             yield return
                 container
                 .Register()
                 .Tag(Wellknown.Lifetime.PerThread)
                 .Contract<ILifetime>()
-                .FactoryMethod(ctx => new SingletonBasedLifetime<long>((lifetimeContext, resolverContext) => lifetimeContext.ThreadId));
+                .FactoryMethod(ctx => new SingletonBasedLifetime<long>((lifetimeContext, resolverContext) => lifetimeContext.ThreadId))
+                .Create();
 
             yield return
                 container
                 .Register()
                 .Tag(Wellknown.Lifetime.PerContainer)
                 .Contract<ILifetime>()
-                .FactoryMethod(ctx => new SingletonBasedLifetime<IResolver>((lifetimeContext, resolverContext) => resolverContext.Container));
+                .FactoryMethod(ctx => new SingletonBasedLifetime<IResolver>((lifetimeContext, resolverContext) => resolverContext.Container))
+                .Create();
 
             yield return
                 container
                 .Register()
                 .Tag(Wellknown.Lifetime.PerState)
                 .Contract<ILifetime>()
-                .FactoryMethod(ctx => new SingletonBasedLifetime<object>((lifetimeContext, resolverContext) => resolverContext.StateProvider.GetKey(resolverContext)));
+                .FactoryMethod(ctx => new SingletonBasedLifetime<object>((lifetimeContext, resolverContext) => resolverContext.StateProvider.GetKey(resolverContext)))
+                .Create();
         }
 
         public override int GetHashCode()

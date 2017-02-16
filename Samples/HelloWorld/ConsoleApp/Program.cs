@@ -18,7 +18,7 @@
                 var container = new Container()
                 .Configure()
                 .DependsOn<JsonConfiguration>(jsonConfigStr)
-                .Register().AsAutowiring(typeof(Program))
+                .Register().Autowiring(typeof(Program))
                 .ToSelf())
             {
                 container.Resolve().Instance<Program>();

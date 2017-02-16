@@ -27,7 +27,7 @@
                 from typeInfo in _assembly.DefinedTypes
                 where typeInfo.GetCustomAttributes<ContractAttribute>().Any()
                 let type = typeInfo.AsType()
-                select container.Register().Attributes(typeInfo.AsType()).Autowiring(type);
+                select container.Register().Attributes(typeInfo.AsType()).Autowiring(type).Create();
         }
     }
 }

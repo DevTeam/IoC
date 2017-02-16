@@ -23,7 +23,7 @@
             using (container.Configure().DependsOn(Wellknown.Feature.Resolvers).ToSelf())
             {
                 // When
-                using (container.Register().Contract<ISimpleService>().Tag("abc").FactoryMethod(ctx => simpleService.Object))
+                using (container.Register().Contract<ISimpleService>().Tag("abc").FactoryMethod(ctx => simpleService.Object).Create())
                 {
                     var resolver = container.Resolve().Tag("abc").Instance<IResolver<ISimpleService>>();
                     var actualObj = resolver.Resolve();
@@ -42,7 +42,7 @@
             using (container.Configure().DependsOn(Wellknown.Feature.Resolvers).ToSelf())
             {
                 // When
-                using (container.Register().Contract<ISimpleService>().Tag("abc").State<string>(0).State<int>(1).Autowiring<StateClass>())
+                using (container.Register().Contract<ISimpleService>().Tag("abc").State<string>(0).State<int>(1).Autowiring<StateClass>().Create())
                 {
                     var resolver = container.Resolve().Tag("abc").Instance<IResolver<string, int, ISimpleService>>();
                     var actualObj = resolver.Resolve("text", 33) as StateClass;
@@ -63,7 +63,7 @@
             using (container.Configure().DependsOn(Wellknown.Feature.Resolvers).ToSelf())
             {
                 // When
-                using (container.Register().Contract<ISimpleService>().Tag("abc").State<string>(0).State<int>(1).Autowiring<StateClass>())
+                using (container.Register().Contract<ISimpleService>().Tag("abc").State<string>(0).State<int>(1).Autowiring<StateClass>().Create())
                 {
                     var resolver = container.Resolve().Tag("abc").Instance<IResolver<string, int, ISimpleService>>();
                     var actualObj = resolver.Resolve("text", 33) as StateClass;

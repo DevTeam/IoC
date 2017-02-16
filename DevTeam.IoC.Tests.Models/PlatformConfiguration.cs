@@ -34,25 +34,29 @@
                     .Register()
                     .Lifetime(Wellknown.Lifetime.Singleton)
                     .Contract<ITrace>()
-                    .Autowiring<Trace>();
+                    .Autowiring<Trace>()
+                    .Create();
             }
 
             yield return container
                 .Register()
                 .Lifetime(Wellknown.Lifetime.Singleton)
                 .Contract<IConsole>()
-                .Autowiring<Console>();
+                .Autowiring<Console>()
+                .Create();
 
             yield return container
                 .Register()
                 .Lifetime(Wellknown.Lifetime.Singleton)
                 .Contract<ITimer>()
                 .Contract<ITimerManager>()
-                .Autowiring<Timer>();
+                .Autowiring<Timer>()
+                .Create();
 
             yield return container
                 .Register()
-                .Autowiring<Log>();
+                .Autowiring<Log>()
+                .Create();
         }
     }
 }
