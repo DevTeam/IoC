@@ -18,8 +18,9 @@
             {
                 var color = Console.BackgroundColor;
                 Console.BackgroundColor = value ? _color : ConsoleColor.Black;
-                Console.WriteLine('O');
+                Console.Write('O');
                 Console.BackgroundColor = color;
+                Console.WriteLine();
             }
         }
     }
