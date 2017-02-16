@@ -10,8 +10,8 @@
         public static void Main()
         {
             using (
-                var container = new Container().Configure()
-                    .DependsOn(Wellknown.Feature.Enumerables)
+                var container = new Container()
+                    .Configure().Dependency(Wellknown.Feature.Enumerables).ToSelf()
                     .Register().Contract<ILamp>().State<ConsoleColor>(0).Autowiring<LedLamp>().ToSelf()
                     .Register().Contract<ITrafficLight>().Tag("pedestrian").Autowiring<PedestrianTrafficLight>().ToSelf()
                     .Register().Contract<ITrafficLight>().Tag("standard").Autowiring<StandardTrafficLight>().ToSelf()

@@ -127,6 +127,13 @@
             return Autowiring(typeof(TImplementation));
         }
 
+        internal T ToSelf(params IDisposable[] resource)
+        {
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
+            Resolver.Resolve().Instance<IInternalResourceStore>().AddResource(new CompositeDisposable(resource));
+            return Resolver;
+        }
+
         protected override bool AddContractKey([NotNull] IEnumerable<IContractKey> keys)
         {
             _contractKeys.Add(new HashSet<IContractKey>(keys));
@@ -146,13 +153,6 @@
         protected override bool AddCompositeKey(ICompositeKey compositeKey)
         {
             return _compositeKeys.Add(compositeKey);
-        }
-
-        public T ToSelf(params IDisposable[] resource)
-        {
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
-            Resolver.Resolve().Instance<IInternalResourceStore>().AddResource(new CompositeDisposable(resource));
-            return Resolver;
         }
 
         private bool ExtractMetadata(Type metadataType)

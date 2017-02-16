@@ -16,7 +16,7 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).ToSelf())
+            using (container.Configure().Dependency(Wellknown.Feature.Lifetimes).ToSelf())
             {
                 // When
                 using (
@@ -39,7 +39,7 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).ToSelf())
+            using (container.Configure().Dependency(Wellknown.Feature.Lifetimes).ToSelf())
             {
                 // When
                 using (
@@ -63,7 +63,7 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).ToSelf())
+            using (container.Configure().Dependency(Wellknown.Feature.Lifetimes).ToSelf())
             {
                 // When
                 using (
@@ -89,7 +89,7 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).ToSelf())
+            using (container.Configure().Dependency(Wellknown.Feature.Lifetimes).ToSelf())
             {
                 // When
                 using (
@@ -119,7 +119,7 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).ToSelf())
+            using (container.Configure().Dependency(Wellknown.Feature.Lifetimes).ToSelf())
             {
                 var mock = new Mock<IDisposableService>();
 
@@ -145,7 +145,7 @@
             var mock = new Mock<IDisposableService>();
 
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).ToSelf())
+            using (container.Configure().Dependency(Wellknown.Feature.Lifetimes).ToSelf())
             {
                 // When
                 container.Register()
@@ -166,7 +166,7 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).ToSelf())
+            using (container.Configure().Dependency(Wellknown.Feature.Lifetimes).ToSelf())
             {
                 var mock = new Mock<IDisposableService>();
 
@@ -194,7 +194,7 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).ToSelf())
+            using (container.Configure().Dependency(Wellknown.Feature.Lifetimes).ToSelf())
             {
                 // When
                 using (
@@ -220,7 +220,7 @@
         {
             // Given
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Feature.Lifetimes).ToSelf())
+            using (container.Configure().Dependency(Wellknown.Feature.Lifetimes).ToSelf())
             {
                 // When
                 using (

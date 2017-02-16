@@ -3,7 +3,7 @@
     using System;
 
     [PublicAPI]
-    public interface IRegistration<T> : IToken<IRegistration<T>>
+    public interface IRegistration<out T> : IToken<IRegistration<T>>
           where T : IContainer
     {
         [NotNull]
@@ -40,8 +40,5 @@
         IRegistration<T> Scope([NotNull] IScope scope);
 
         IRegistration<T> Scope(Wellknown.Scope scope);
-
-        [NotNull]
-        T ToSelf([NotNull] params IDisposable[] resource);
     }
 }

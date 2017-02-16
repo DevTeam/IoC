@@ -1,7 +1,6 @@
 ﻿namespace DevTeam.IoC
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
@@ -21,7 +20,7 @@
             _resolver = resolver;
         }
 
-        public IConfiguring<T> DependsOn(params IConfiguration[] configurations)
+        public IConfiguring<T> Dependency(params IConfiguration[] configurations)
         {
             if (configurations == null) throw new ArgumentNullException(nameof(configurations));
             if (configurations.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(configurations));
@@ -29,12 +28,12 @@
             return this;
         }
 
-        public IConfiguring<T> DependsOn<TConfiguration>() where TConfiguration : IConfiguration, new()
+        public IConfiguring<T> Dependency<TConfiguration>() where TConfiguration : IConfiguration, new()
         {
-            return DependsOn(new TConfiguration());
+            return Dependency(new TConfiguration());
         }
 
-        public IConfiguring<T> DependsOn(params Wellknown.Feature[] features)
+        public IConfiguring<T> Dependency(params Wellknown.Feature[] features)
         {
             if (features == null) throw new ArgumentNullException(nameof(features));
             if (features.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(features));
@@ -42,7 +41,7 @@
             return this;
         }
 
-        public IConfiguring<T> DependsOn(Type configurationType, string description)
+        public IConfiguring<T> Dependency(Type configurationType, string description)
         {
             if (configurationType == null) throw new ArgumentNullException(nameof(configurationType));
             if (description == null) throw new ArgumentNullException(nameof(description));
@@ -53,35 +52,19 @@
             return this;
         }
 
-        public IConfiguring<T> DependsOn<TConfiguration>(string description) where TConfiguration : IConfiguration, new()
+        public IConfiguring<T> Dependency<TConfiguration>(string description) where TConfiguration : IConfiguration, new()
         {
             if (description == null) throw new ArgumentNullException(nameof(description));
             if (string.IsNullOrWhiteSpace(description)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(description));
-            return DependsOn(typeof(TConfiguration), description);
+            return Dependency(typeof(TConfiguration), description);
         }
 
-        public IConfiguring<T> DependsOn([NotNull] params Assembly[] assemblies)
+        public IConfiguring<T> Dependency([NotNull] params Assembly[] assemblies)
         {
             if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
             if (assemblies.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(assemblies));
-            DependsOn(assemblies.Distinct().Select(CreateConfigurationFromAssembly).ToArray());
+            Dependency(assemblies.Distinct().Select(CreateConfigurationFromAssembly).ToArray());
             return this;
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        public IRegistration<T> Register()
-        {
-            ToSelf();
-            return _resolver.Register();
-        }
-
-        public IEnumerator<IConfiguration> GetEnumerator()
-        {
-            return _configurations.SelectMany(i => i).GetEnumerator();
         }
 
         private IDisposable Apply()
@@ -100,7 +83,9 @@
 
         public IConfiguration Create()
         {
-            return new CompositeConfiguration(_configurations.SelectMany(i => i));
+            var configuration = new CompositeConfiguration(_configurations.SelectMany(i => i).Distinct().ToList());
+            _configurations.Clear();
+            return configuration;
         }
 
         private IDisposable Apply([NotNull] IEnumerable<IConfiguration> configuration)

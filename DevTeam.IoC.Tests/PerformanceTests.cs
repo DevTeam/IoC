@@ -17,7 +17,7 @@
             ITrace trace;
             using (var rootContainer = new Container("root")
                 .Configure()
-                .DependsOn(new EventsConfiguration(true))
+                .Dependency(new EventsConfiguration(true))
                 .ToSelf())
             {
                 var eventRegistry = rootContainer.Resolve().Instance<IEventRegistry>();
@@ -36,10 +36,8 @@
         public void SimplePerformanceTest()
         {
             using (var rootContainer = new Container("root")
-                .Configure()
-                .DependsOn(Wellknown.Feature.Default)
-                .Register().Contract<ISimpleService>().Autowiring<SimpleService>()
-                .ToSelf())
+                .Configure().Dependency(Wellknown.Feature.Default).ToSelf()
+                .Register().Contract<ISimpleService>().Autowiring<SimpleService>().ToSelf())
             {
                 for (var i = 0; i < 100000; i++)
                 {
@@ -52,10 +50,8 @@
         public void SimpleSingletonPerformanceTest()
         {
             using (var rootContainer = new Container("root")
-                .Configure()
-                .DependsOn(Wellknown.Feature.Default)
-                .Register().Lifetime(Wellknown.Lifetime.Singleton).Contract<ISimpleService>().Autowiring<SimpleService>()
-                .ToSelf())
+                .Configure().Dependency(Wellknown.Feature.Default).ToSelf()
+                .Register().Lifetime(Wellknown.Lifetime.Singleton).Contract<ISimpleService>().Autowiring<SimpleService>().ToSelf())
             {
                 for (var i = 0; i < 100000; i++)
                 {
@@ -68,8 +64,7 @@
         public void SimpleHierarchyPerformanceTest()
         {
             using (var rootContainer = new Container("root")
-                .Configure()
-                .DependsOn(Wellknown.Feature.Default)
+                .Configure().Dependency(Wellknown.Feature.Default).ToSelf()
                 .Register().Contract<ISimpleService>().Autowiring<SimpleService>().ToSelf())
             {
                 IContainer container = rootContainer;
@@ -95,8 +90,8 @@
                 .Register().Contract<IReferenceDescriptionResolver>().FactoryMethod<IReferenceDescriptionResolver>(ctx => new ReferenceDescriptionResolver())
                 .ToSelf()
                 .Configure()
-                .DependsOn(Wellknown.Feature.Default)
-                .DependsOn<JsonConfiguration>(json)
+                .Dependency(Wellknown.Feature.Default)
+                .Dependency<JsonConfiguration>(json)
                 .ToSelf())
             {
                 var eventRegistry = container.Resolve().Instance<IEventRegistry>();
@@ -117,7 +112,7 @@
         {
             using (var rootResolver = new Container("root")
                 .Configure()
-                .DependsOn(Wellknown.Feature.Default)
+                .Dependency(Wellknown.Feature.Default)
                 .ToSelf())
             {
                 PerformanceTest(rootResolver, 1000);
@@ -129,7 +124,7 @@
         {
             using (var rootResolver = new Container("root")
                 .Configure()
-                .DependsOn(Wellknown.Feature.Default)
+                .Dependency(Wellknown.Feature.Default)
                 .ToSelf())
             {
                 for (var i = 0; i < 100; i++)
@@ -143,7 +138,7 @@
         {
             using (var childContainer = rootResolver.CreateChild("child")
                 .Configure()
-                .DependsOn(new EventsConfiguration(false))
+                .Dependency(new EventsConfiguration(false))
                 .ToSelf())
             {
                 var eventRegistry = childContainer.Resolve().Instance<IEventRegistry>();

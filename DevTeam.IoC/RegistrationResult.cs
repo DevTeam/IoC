@@ -3,13 +3,13 @@
     using System;
     using Contracts;
 
-    public class RegistrationResult<T> : IRegistrationResult<T> where T : IContainer
+    internal class RegistrationResult<T> : IRegistrationResult<T> where T : IContainer
     {
-        private readonly IRegistration<T> _registration;
+        private readonly Registration<T> _registration;
         private readonly Func<IDisposable> _registrationFactory;
 
         public RegistrationResult(
-            [NotNull] IRegistration<T> registration,
+            [NotNull] Registration<T> registration,
             [NotNull] Func<IDisposable> registrationFactory)
         {
             if (registration == null) throw new ArgumentNullException(nameof(registration));

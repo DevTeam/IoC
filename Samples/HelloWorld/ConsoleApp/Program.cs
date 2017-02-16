@@ -16,10 +16,8 @@
 
             using (
                 var container = new Container()
-                .Configure()
-                .DependsOn<JsonConfiguration>(jsonConfigStr)
-                .Register().Autowiring(typeof(Program))
-                .ToSelf())
+                .Configure().Dependency<JsonConfiguration>(jsonConfigStr).ToSelf()
+                .Register().Autowiring(typeof(Program)).ToSelf())
             {
                 container.Resolve().Instance<Program>();
             }

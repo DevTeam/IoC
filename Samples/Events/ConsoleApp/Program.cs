@@ -11,8 +11,7 @@
         public static void Main()
         {
             using (var container = new Container()
-                .Configure().DependsOn<JsonConfiguration>(File.ReadAllText("configuration.json"))
-                .ToSelf())
+                .Configure().Dependency<JsonConfiguration>(File.ReadAllText("configuration.json")).ToSelf())
             {
                 container.Resolve().Instance<IEventBroker>();
                 System.Console.ReadLine();
