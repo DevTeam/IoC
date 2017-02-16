@@ -6,7 +6,7 @@
 
     using Contracts;
 
-    public class Container : IContainer
+    public class Container : IContainer, IObservable<IRegistrationEvent>
     {
         private readonly List<IDisposable> _resources = new List<IDisposable>();
         private readonly Dictionary<IEqualityComparer<ICompositeKey>, Dictionary<ICompositeKey, RegistrationItem>> _registrations = new Dictionary<IEqualityComparer<ICompositeKey>, Dictionary<ICompositeKey, RegistrationItem>>();
@@ -37,7 +37,12 @@
             var parent = Parent;
             do
             {
-                _resources.Add(parent.Subscribe(cacheTracker));
+                var observableParent = parent as IObservable<IRegistrationEvent>;
+                if (observableParent != null)
+                {
+                    _resources.Add(observableParent.Subscribe(cacheTracker));
+                }
+
                 parent = parent.Parent;
             }
             while (parent != null);

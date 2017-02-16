@@ -4,7 +4,7 @@
     using System.Collections.Generic;
 
     [PublicAPI]
-    public interface IContainer: IResolver, IRegistry, IDisposable, IObservable<IRegistrationEvent>
+    public interface IContainer: IResolver, IRegistry, IDisposable
     {
         object Tag { [CanBeNull] get; }
 
