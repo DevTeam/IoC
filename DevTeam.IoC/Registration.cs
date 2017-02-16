@@ -14,6 +14,7 @@
         private readonly HashSet<IStateKey> _stateKeys = new HashSet<IStateKey>();
         private readonly HashSet<ICompositeKey> _compositeKeys = new HashSet<ICompositeKey>();
         private readonly Lazy<IInstanceFactoryProvider> _instanceFactoryProvider;
+        private readonly RegistrationResult<T> _result;
 
         public Registration([NotNull] IFluent fluent, [NotNull] T container)
             : base(fluent, container)
@@ -21,6 +22,7 @@
             if (fluent == null) throw new ArgumentNullException(nameof(fluent));
             if (container == null) throw new ArgumentNullException(nameof(container));
             _instanceFactoryProvider = new Lazy<IInstanceFactoryProvider>(GetInstanceFactoryProvider);
+            _result = new RegistrationResult<T>(this);
         }
 
         private List<IExtension> Extensions { get; } = new List<IExtension>();
@@ -86,20 +88,22 @@
         public IRegistrationResult<T> FactoryMethod(Func<IResolverContext, object> factoryMethod)
         {
             if (factoryMethod == null) throw new ArgumentNullException(nameof(factoryMethod));
-            return AsFactoryMethodInternal(factoryMethod);
+            AsFactoryMethodInternal(factoryMethod);
+            return _result;
         }
 
         public IRegistrationResult<T> FactoryMethod<TImplementation>(Func<IResolverContext, TImplementation> factoryMethod)
         {
             if (factoryMethod == null) throw new ArgumentNullException(nameof(factoryMethod));
-            return AsFactoryMethodInternal(factoryMethod, typeof(TImplementation));
+            AsFactoryMethodInternal(factoryMethod, typeof(TImplementation));
+            return _result;
         }
 
         public IRegistrationResult<T> Autowiring(Type implementationType, IMetadataProvider metadataProvider = null)
         {
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
             metadataProvider = metadataProvider ?? Fluent.Resolve(Resolver).Instance<IMetadataProvider>();
-            return AsFactoryMethodInternal(ctx =>
+            AsFactoryMethodInternal(ctx =>
                 {
                     var resolvedType = metadataProvider.ResolveImplementationType(ctx, implementationType);
                     ICache<Type, IResolverFactory> factoryCache;
@@ -120,6 +124,7 @@
                     return factory.Create(ctx);
                 },
                 implementationType);
+            return _result;
         }
 
         public IRegistrationResult<T> Autowiring<TImplementation>()
@@ -197,9 +202,8 @@
             _tagKeys.Clear();
         }
 
-        private IRegistrationResult<T> AsFactoryMethodInternal<TImplementation>(
-            Func<IResolverContext,
-            TImplementation> factoryMethod,
+        private void AsFactoryMethodInternal<TImplementation>(
+            Func<IResolverContext, TImplementation> factoryMethod,
             Type implementationType = null)
         {
             AppendCompositeKeys();
@@ -210,17 +214,13 @@
 
             IDisposable registration;
             var context = Resolver.CreateContext(_compositeKeys, new MethodFactory<TImplementation>(factoryMethod), Extensions);
-            return new RegistrationResult<T>(
-                this,
-                () => {
-                    if (!Resolver.TryRegister(context, out registration))
-                    {
-                        throw new InvalidOperationException(
-                            $"Can't register {string.Join(Environment.NewLine, context.Keys)}.{Environment.NewLine}{Environment.NewLine}{Resolver}");
-                    }
+            if (!Resolver.TryRegister(context, out registration))
+            {
+                throw new InvalidOperationException($"Can't register {string.Join(Environment.NewLine, context.Keys)}.{Environment.NewLine}{Environment.NewLine}{Resolver}");
+            }
 
-                    return registration;
-                });
+            _compositeKeys.Clear();
+            _result.AddResource(registration);
         }
 
         private IInstanceFactoryProvider GetInstanceFactoryProvider()

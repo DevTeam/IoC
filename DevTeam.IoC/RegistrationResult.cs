@@ -1,31 +1,38 @@
 ﻿namespace DevTeam.IoC
 {
     using System;
+    using System.Collections.Generic;
     using Contracts;
 
     internal class RegistrationResult<T> : IRegistrationResult<T> where T : IContainer
     {
         private readonly Registration<T> _registration;
-        private readonly Func<IDisposable> _registrationFactory;
+        private readonly List<IDisposable> _resources = new List<IDisposable>();
 
-        public RegistrationResult(
-            [NotNull] Registration<T> registration,
-            [NotNull] Func<IDisposable> registrationFactory)
+        public RegistrationResult([NotNull] Registration<T> registration)
         {
             if (registration == null) throw new ArgumentNullException(nameof(registration));
-            if (registrationFactory == null) throw new ArgumentNullException(nameof(registrationFactory));
             _registration = registration;
-            _registrationFactory = registrationFactory;
+        }
+
+        public void AddResource(IDisposable resource)
+        {
+            _resources.Add(resource);
+        }
+
+        public IRegistration<T> And()
+        {
+            return _registration;
         }
 
         public IDisposable Apply()
         {
-            return _registrationFactory();
+            return new CompositeDisposable(_resources);
         }
 
         public T ToSelf()
         {
-            return _registration.ToSelf(_registrationFactory());
+            return _registration.ToSelf(Apply());
         }
     }
 }

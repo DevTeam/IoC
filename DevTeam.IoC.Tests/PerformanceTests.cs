@@ -16,9 +16,7 @@
         {
             ITrace trace;
             using (var rootContainer = new Container("root")
-                .Configure()
-                .Dependency(new EventsConfiguration(true))
-                .ToSelf())
+                .Configure().DependsOn(new EventsConfiguration(true)).ToSelf())
             {
                 var eventRegistry = rootContainer.Resolve().Instance<IEventRegistry>();
                 eventRegistry.RegisterEvent<DateTimeOffset>();
@@ -36,7 +34,7 @@
         public void SimplePerformanceTest()
         {
             using (var rootContainer = new Container("root")
-                .Configure().Dependency(Wellknown.Feature.Default).ToSelf()
+                .Configure().DependsOn(Wellknown.Feature.Default).ToSelf()
                 .Register().Contract<ISimpleService>().Autowiring<SimpleService>().ToSelf())
             {
                 for (var i = 0; i < 100000; i++)
@@ -50,7 +48,7 @@
         public void SimpleSingletonPerformanceTest()
         {
             using (var rootContainer = new Container("root")
-                .Configure().Dependency(Wellknown.Feature.Default).ToSelf()
+                .Configure().DependsOn(Wellknown.Feature.Default).ToSelf()
                 .Register().Lifetime(Wellknown.Lifetime.Singleton).Contract<ISimpleService>().Autowiring<SimpleService>().ToSelf())
             {
                 for (var i = 0; i < 100000; i++)
@@ -64,7 +62,7 @@
         public void SimpleHierarchyPerformanceTest()
         {
             using (var rootContainer = new Container("root")
-                .Configure().Dependency(Wellknown.Feature.Default).ToSelf()
+                .Configure().DependsOn(Wellknown.Feature.Default).ToSelf()
                 .Register().Contract<ISimpleService>().Autowiring<SimpleService>().ToSelf())
             {
                 IContainer container = rootContainer;
@@ -87,11 +85,10 @@
             var json = File.ReadAllText(eventsConfigurationFile);
             ITrace trace;
             using (var container = new Container("root")
-                .Register().Contract<IReferenceDescriptionResolver>().FactoryMethod<IReferenceDescriptionResolver>(ctx => new ReferenceDescriptionResolver())
-                .ToSelf()
+                .Register().Contract<IReferenceDescriptionResolver>().FactoryMethod<IReferenceDescriptionResolver>(ctx => new ReferenceDescriptionResolver()).ToSelf()
                 .Configure()
-                .Dependency(Wellknown.Feature.Default)
-                .Dependency<JsonConfiguration>(json)
+                    .DependsOn(Wellknown.Feature.Default)
+                    .DependsOn<JsonConfiguration>(json)
                 .ToSelf())
             {
                 var eventRegistry = container.Resolve().Instance<IEventRegistry>();
@@ -111,9 +108,7 @@
         public void ResolvePerformanceTest()
         {
             using (var rootResolver = new Container("root")
-                .Configure()
-                .Dependency(Wellknown.Feature.Default)
-                .ToSelf())
+                .Configure().DependsOn(Wellknown.Feature.Default).ToSelf())
             {
                 PerformanceTest(rootResolver, 1000);
             }
@@ -123,9 +118,7 @@
         public void ConfigurePerformanceTest()
         {
             using (var rootResolver = new Container("root")
-                .Configure()
-                .Dependency(Wellknown.Feature.Default)
-                .ToSelf())
+                .Configure().DependsOn(Wellknown.Feature.Default).ToSelf())
             {
                 for (var i = 0; i < 100; i++)
                 {
@@ -137,9 +130,7 @@
         private static void PerformanceTest(IContainer rootResolver, int ticks)
         {
             using (var childContainer = rootResolver.CreateChild("child")
-                .Configure()
-                .Dependency(new EventsConfiguration(false))
-                .ToSelf())
+                .Configure().DependsOn(new EventsConfiguration(false)).ToSelf())
             {
                 var eventRegistry = childContainer.Resolve().Instance<IEventRegistry>();
                 eventRegistry.RegisterEvent<DateTimeOffset>();

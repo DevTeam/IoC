@@ -5,6 +5,9 @@
     public interface IRegistrationResult<out T> where T : IContainer
     {
         [NotNull]
+        IRegistration<T> And();
+
+        [NotNull]
         IDisposable Apply();
 
         [NotNull]

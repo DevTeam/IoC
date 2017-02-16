@@ -20,7 +20,7 @@
             _resolver = resolver;
         }
 
-        public IConfiguring<T> Dependency(params IConfiguration[] configurations)
+        public IConfiguring<T> DependsOn(params IConfiguration[] configurations)
         {
             if (configurations == null) throw new ArgumentNullException(nameof(configurations));
             if (configurations.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(configurations));
@@ -28,12 +28,12 @@
             return this;
         }
 
-        public IConfiguring<T> Dependency<TConfiguration>() where TConfiguration : IConfiguration, new()
+        public IConfiguring<T> DependsOn<TConfiguration>() where TConfiguration : IConfiguration, new()
         {
-            return Dependency(new TConfiguration());
+            return DependsOn(new TConfiguration());
         }
 
-        public IConfiguring<T> Dependency(params Wellknown.Feature[] features)
+        public IConfiguring<T> DependsOn(params Wellknown.Feature[] features)
         {
             if (features == null) throw new ArgumentNullException(nameof(features));
             if (features.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(features));
@@ -41,7 +41,7 @@
             return this;
         }
 
-        public IConfiguring<T> Dependency(Type configurationType, string description)
+        public IConfiguring<T> DependsOn(Type configurationType, string description)
         {
             if (configurationType == null) throw new ArgumentNullException(nameof(configurationType));
             if (description == null) throw new ArgumentNullException(nameof(description));
@@ -52,18 +52,18 @@
             return this;
         }
 
-        public IConfiguring<T> Dependency<TConfiguration>(string description) where TConfiguration : IConfiguration, new()
+        public IConfiguring<T> DependsOn<TConfiguration>(string description) where TConfiguration : IConfiguration, new()
         {
             if (description == null) throw new ArgumentNullException(nameof(description));
             if (string.IsNullOrWhiteSpace(description)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(description));
-            return Dependency(typeof(TConfiguration), description);
+            return DependsOn(typeof(TConfiguration), description);
         }
 
-        public IConfiguring<T> Dependency([NotNull] params Assembly[] assemblies)
+        public IConfiguring<T> DependsOn([NotNull] params Assembly[] assemblies)
         {
             if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
             if (assemblies.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(assemblies));
-            Dependency(assemblies.Distinct().Select(CreateConfigurationFromAssembly).ToArray());
+            DependsOn(assemblies.Distinct().Select(CreateConfigurationFromAssembly).ToArray());
             return this;
         }
 
