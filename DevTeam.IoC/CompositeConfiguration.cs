@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using Contracts;
 
-    internal class CompositeConfiguration<T> : IConfiguration where T : IResolver, IRegistry
+    internal class CompositeConfiguration : IConfiguration
     {
         private readonly IEnumerable<IConfiguration> _configurations;
 
@@ -14,12 +14,12 @@
             _configurations = configurations;
         }
 
-        public IEnumerable<IConfiguration> GetDependencies<T1>(T1 container) where T1 : IResolver, IRegistry
+        public IEnumerable<IConfiguration> GetDependencies<T>(T container) where T : IResolver, IRegistry
         {
             return _configurations;
         }
 
-        public IEnumerable<IDisposable> Apply<T1>(T1 container) where T1 : IResolver, IRegistry
+        public IEnumerable<IDisposable> Apply<T>(T container) where T : IResolver, IRegistry
         {
             yield break;
         }

@@ -100,7 +100,7 @@
 
         public IConfiguration Create()
         {
-            return new CompositeConfiguration<T>(_configurations.SelectMany(i => i));
+            return new CompositeConfiguration(_configurations.SelectMany(i => i));
         }
 
         private IDisposable Apply([NotNull] IEnumerable<IConfiguration> configuration)
