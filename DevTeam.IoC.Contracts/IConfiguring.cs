@@ -6,7 +6,7 @@
 
     [PublicAPI]
     public interface IConfiguring<T> : IEnumerable<IConfiguration>
-         where T : IResolver, IRegistry
+         where T : IContainer
     {
         [NotNull]
         IConfiguring<T> DependsOn([NotNull][ItemNotNull] params IConfiguration[] configurations);

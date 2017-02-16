@@ -13,14 +13,14 @@
             _trace = trace;
         }
 
-        public IEnumerable<IConfiguration> GetDependencies<T>(T container) where T : IResolver, IRegistry
+        public IEnumerable<IConfiguration> GetDependencies<T>(T container) where T : IContainer
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
             yield return container.Feature(Wellknown.Feature.Default);
             yield return new PlatformConfiguration(_trace);
         }
 
-        public IEnumerable<IDisposable> Apply<T>(T container) where T : IResolver, IRegistry
+        public IEnumerable<IDisposable> Apply<T>(T container) where T : IContainer
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
             var childContainer = container.CreateChild("child");

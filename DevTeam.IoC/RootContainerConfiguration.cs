@@ -25,13 +25,13 @@
         {
         }
 
-        public IEnumerable<IConfiguration> GetDependencies<T>(T container) where T : IResolver, IRegistry
+        public IEnumerable<IConfiguration> GetDependencies<T>(T container) where T : IContainer
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
             yield break;
         }
 
-        public IEnumerable<IDisposable> Apply<T>(T container) where T : IResolver, IRegistry
+        public IEnumerable<IDisposable> Apply<T>(T container) where T : IContainer
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
             yield return LowLevelRegistration.RawRegister<IResolver>(container, ResolverKeys, ctx => ctx.Container);

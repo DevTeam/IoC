@@ -7,7 +7,7 @@
     using Contracts;
 
     internal class Registration<T> : Token<T, IRegistration<T>>, IRegistration<T>
-          where T : IRegistry, IResolver
+          where T : IContainer
     {
         private readonly List<HashSet<IContractKey>> _contractKeys = new List<HashSet<IContractKey>>();
         private readonly HashSet<ITagKey> _tagKeys = new HashSet<ITagKey>();
@@ -91,7 +91,7 @@
 
         public IConfiguring<T> AsFactoryMethod<TImplementation>(Func<IResolverContext, TImplementation> factoryMethod)
         {
-            return Own(FactoryMethod(factoryMethod)).Configure();
+            return ToSelf(FactoryMethod(factoryMethod)).Configure();
         }
 
         public IDisposable FactoryMethod<TImplementation>(Func<IResolverContext, TImplementation> factoryMethod)
@@ -102,7 +102,7 @@
 
         public IConfiguring<T> AsFactoryMethod(Func<IResolverContext, object> factoryMethod)
         {
-            return Own(FactoryMethod(factoryMethod)).Configure();
+            return ToSelf(FactoryMethod(factoryMethod)).Configure();
         }
 
         public IDisposable Autowiring(Type implementationType, IMetadataProvider metadataProvider = null)
@@ -135,7 +135,7 @@
         public IConfiguring<T> AsAutowiring(Type implementationType, IMetadataProvider metadataProvider = null)
         {
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
-            return Own(Autowiring(implementationType, metadataProvider)).Configure();
+            return ToSelf(Autowiring(implementationType, metadataProvider)).Configure();
         }
 
         public IDisposable Autowiring<TImplementation>()
@@ -145,7 +145,7 @@
 
         public IConfiguring<T> AsAutowiring<TImplementation>()
         {
-            return Own(Autowiring<TImplementation>()).Configure();
+            return ToSelf(Autowiring<TImplementation>()).Configure();
         }
 
         protected override bool AddContractKey([NotNull] IEnumerable<IContractKey> keys)
@@ -169,7 +169,7 @@
             return _compositeKeys.Add(compositeKey);
         }
 
-        private T Own(IDisposable resource)
+        private T ToSelf(IDisposable resource)
         {
             Resolver.Resolve().Instance<IInternalResourceStore>().AddResource(resource);
             return Resolver;

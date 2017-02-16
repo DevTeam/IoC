@@ -6,14 +6,14 @@
     internal class Fluent : IFluent
     {
         public IConfiguring<T> Configure<T>(T resolver)
-              where T : IResolver, IRegistry
+              where T : IContainer
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             return new Configuring<T>(resolver);
         }
 
         public IRegistration<T> Register<T>(T resolver)
-              where T : IResolver, IRegistry
+              where T : IContainer
         {
             return new Registration<T>(this, resolver);
         }

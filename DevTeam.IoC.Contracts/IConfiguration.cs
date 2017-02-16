@@ -7,9 +7,9 @@
     public interface IConfiguration
     {
         [NotNull]
-        IEnumerable<IConfiguration> GetDependencies<T>([NotNull] T container) where T : IResolver, IRegistry;
+        IEnumerable<IConfiguration> GetDependencies<T>([NotNull] T container) where T : IContainer;
 
         [NotNull]
-        IEnumerable<IDisposable> Apply<T>([NotNull] T container) where T : IResolver, IRegistry;
+        IEnumerable<IDisposable> Apply<T>([NotNull] T container) where T : IContainer;
     }
 }

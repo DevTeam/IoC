@@ -24,7 +24,7 @@
             _configuration = new Lazy<IConfiguration>(() => CreateConfiguration(description));
         }
 
-        public IEnumerable<IConfiguration> GetDependencies<T>(T container) where T : IResolver, IRegistry
+        public IEnumerable<IConfiguration> GetDependencies<T>(T container) where T : IContainer
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
             foreach (var dependency in _configuration.Value.GetDependencies(container))
@@ -33,7 +33,7 @@
             }
         }
 
-        public IEnumerable<IDisposable> Apply<T>(T container) where T : IResolver, IRegistry
+        public IEnumerable<IDisposable> Apply<T>(T container) where T : IContainer
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
             return _configuration.Value.Apply(container);

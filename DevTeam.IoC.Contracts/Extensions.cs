@@ -16,7 +16,7 @@
 
         [NotNull]
         public static IConfiguring<T> Configure<T>([NotNull] this T container)
-            where T : IResolver, IRegistry
+            where T : IContainer
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
             return GetFluent(container).Configure(container);
@@ -40,7 +40,7 @@
 
         [NotNull]
         public static IRegistration<T> Register<T>([NotNull] this T container)
-              where T : IResolver, IRegistry
+              where T : IContainer
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
             return GetFluent(container).Register(container);
@@ -48,7 +48,7 @@
 
         [NotNull]
         public static IContainer CreateChild<T>([NotNull] this T container, [CanBeNull] object tag = null)
-             where T : IResolver, IRegistry
+             where T : IContainer
         {
             if (tag == null)
             {

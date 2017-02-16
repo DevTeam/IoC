@@ -16,12 +16,12 @@
             if (assembly == null) throw new ArgumentNullException(nameof(assembly));
         }
 
-        public IEnumerable<IConfiguration> GetDependencies<T>(T container) where T : IResolver, IRegistry
+        public IEnumerable<IConfiguration> GetDependencies<T>(T container) where T : IContainer
         {
             yield break;
         }
 
-        public IEnumerable<IDisposable> Apply<T>(T container) where T : IResolver, IRegistry
+        public IEnumerable<IDisposable> Apply<T>(T container) where T : IContainer
         {
             return 
                 from typeInfo in _assembly.DefinedTypes

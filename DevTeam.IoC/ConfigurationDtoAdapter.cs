@@ -20,7 +20,7 @@
             _configurationDto = configurationDto;
         }
 
-        public IEnumerable<IConfiguration> GetDependencies<T>(T container) where T : IResolver, IRegistry
+        public IEnumerable<IConfiguration> GetDependencies<T>(T container) where T : IContainer
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
             var typeResolver = container.Resolve().Instance<ITypeResolver>();
@@ -92,12 +92,12 @@
             }
         }
 
-        public IEnumerable<IDisposable> Apply<T>(T container) where T : IResolver, IRegistry
+        public IEnumerable<IDisposable> Apply<T>(T container) where T : IContainer
         {
             return Apply(container, container.Resolve().Instance<ITypeResolver>(), _configurationDto);
         }
 
-        private IEnumerable<IDisposable> Apply<T>(T resolver, ITypeResolver typeResolver, IEnumerable<IConfigurationStatementDto> configurationElements) where T : IResolver, IRegistry
+        private IEnumerable<IDisposable> Apply<T>(T resolver, ITypeResolver typeResolver, IEnumerable<IConfigurationStatementDto> configurationElements) where T : IContainer
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             foreach (var configurationStatement in configurationElements)
@@ -144,7 +144,7 @@
             }
         }
 
-        private void HandleRegisterDto<T>(T resolver, ITypeResolver typeResolver, IRegisterDto registerDto) where T : IResolver, IRegistry
+        private void HandleRegisterDto<T>(T resolver, ITypeResolver typeResolver, IRegisterDto registerDto) where T : IContainer
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));

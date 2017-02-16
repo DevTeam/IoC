@@ -8,7 +8,7 @@
     using Contracts;
 
     internal class Configuring<T> : IConfiguring<T>
-        where T : IResolver, IRegistry
+        where T : IContainer
     {
         private readonly T _resolver;
         private readonly List<HashSet<IConfiguration>> _configurations = new List<HashSet<IConfiguration>>();
