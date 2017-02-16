@@ -2,7 +2,6 @@
 {
     using System;
 
-    // Has no any dependencies
     internal class Console : IConsole
     {
         public void WriteLine(string line)

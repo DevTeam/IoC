@@ -1,7 +1,9 @@
 ﻿namespace ConsoleApp
 {
+    using System.IO;
     using Contracts;
     using DevTeam.IoC;
+    using DevTeam.IoC.Configurations.Json;
     using DevTeam.IoC.Contracts;
 
     public class Program
@@ -9,8 +11,7 @@
         public static void Main()
         {
             using (var container = new Container()
-                .Configure()
-                .DependsOn<Configuration>()
+                .Configure().DependsOn<JsonConfiguration>(File.ReadAllText("configuration.json"))
                 .ToSelf())
             {
                 container.Resolve().Instance<IEventBroker>();

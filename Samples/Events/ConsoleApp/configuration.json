@@ -1,0 +1,37 @@
+﻿[
+    { "reference": "Contracts" },
+    { "reference": "ClassLibrary" },
+    { "reference": "ConsoleApp" },
+
+    { "using": "System" },
+    { "using": "System.Collections.Generic" },
+    { "using": "Contracts" },
+    { "using": "ClassLibrary" },
+    { "using": "ConsoleApp" },
+
+    { "dependency.feature": "Default" },
+
+    { "register": [ { "contract": [ "IConsole" ] } ], "autowiring": "ConsoleApp.Console" },
+    { "register": [ { "contract": [ "IName<>" ] } ], "autowiring": "Name<>" },
+    { "register": [ { "contract": [ "ILogger<>" ] } ], "autowiring": "Logger<>" },
+    {
+        "register": [ { "contract": [ "IEventConsumer<>" ] }, { "tag": "trace" }, { "lifetime": "AutoDisposing" } ],
+        "autowiring": "Tracer<>"
+    },
+    { "register": [ { "contract": [ "IEventConsumer<DateTimeOffset>" ] } ], "autowiring": "Chronometer" },
+    {
+        "register": [ { "contract": [ "IEventProducer<DateTimeOffset>" ] } ],
+        "autowiring": "Timer",
+        "constructor": [
+            { "paramType": "ILogger<Timer>" },
+            {
+                "paramType": "TimeSpan",
+                "Value": "00:00:01"
+            }
+        ]
+    },
+    {
+        "register": [ { "lifetime": "Singleton" }, { "lifetime": "AutoDisposing" }, { "contract": [ "IEventBroker" ] } ],
+        "autowiring": "EventBroker<DateTimeOffset>"
+    }
+]

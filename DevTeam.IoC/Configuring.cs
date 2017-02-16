@@ -98,6 +98,11 @@
             return _resolver;
         }
 
+        public IConfiguration Create()
+        {
+            return new CompositeConfiguration<T>(_configurations.SelectMany(i => i));
+        }
+
         private IDisposable Apply([NotNull] IEnumerable<IConfiguration> configuration)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));

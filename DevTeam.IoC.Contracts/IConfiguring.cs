@@ -34,5 +34,7 @@
 
         [NotNull]
         T ToSelf();
+
+        IConfiguration Create();
     }
 }

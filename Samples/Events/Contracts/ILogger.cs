@@ -1,7 +1,7 @@
-﻿namespace ClassLibrary
+﻿namespace Contracts
 {
     // ReSharper disable once UnusedTypeParameter
-    internal interface ILogger<T>
+    public interface ILogger<T>
     {
         string InstanceName { get; }
 

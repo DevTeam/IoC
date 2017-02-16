@@ -3,7 +3,7 @@
     using System;
     using Contracts;
 
-    internal class Chronometer: IEventConsumer<Event<DateTimeOffset>>
+    internal class Chronometer: IEventConsumer<DateTimeOffset>
     {
         private readonly IConsole _console;
         private readonly ILogger<Chronometer> _logger;
@@ -30,7 +30,7 @@
             _console.WriteLine($"Error {error}", Color.Error);
         }
 
-        public void OnNext(Event<DateTimeOffset> value)
+        public void OnNext(DateTimeOffset value)
         {
             _tickCount++;
             _console.WriteLine($"Time {value}", Color.Normal);
