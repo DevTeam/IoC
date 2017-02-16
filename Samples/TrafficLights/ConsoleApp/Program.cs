@@ -12,11 +12,10 @@
             using (
                 var container = new Container().Configure()
                     .DependsOn(Wellknown.Feature.Enumerables)
-                    .Register().Contract<ILamp>().State<ConsoleColor>(0).Autowiring<LedLamp>()
-                    .And().Contract<ITrafficLight>().Tag("pedestrian").Autowiring<PedestrianTrafficLight>()
-                    .And().Contract<ITrafficLight>().Tag("standard").Autowiring<StandardTrafficLight>()
-                    .And().Contract<Program>().Autowiring<Program>()
-                    .ToSelf())
+                    .Register().Contract<ILamp>().State<ConsoleColor>(0).Autowiring<LedLamp>().ToSelf()
+                    .Register().Contract<ITrafficLight>().Tag("pedestrian").Autowiring<PedestrianTrafficLight>().ToSelf()
+                    .Register().Contract<ITrafficLight>().Tag("standard").Autowiring<StandardTrafficLight>().ToSelf()
+                    .Register().Contract<Program>().Autowiring<Program>().ToSelf())
             {
                 container.Resolve().Instance<Program>();
             }

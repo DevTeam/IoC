@@ -27,10 +27,5 @@
         {
             return _registration.ToSelf(_registrationFactory());
         }
-
-        public IRegistration<T> And()
-        {
-            return _registration;
-        }
     }
 }
