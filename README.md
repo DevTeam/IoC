@@ -16,6 +16,7 @@ public class Program
         using (var container = new Container().Configure().DependsOn(new Glue()).ToSelf())
         {
             var box = container.Resolve().Instance<IBox<ICat>>();
+            Console.WriteLine(box.Content.IsAlive);
         }
     }
 }
@@ -25,7 +26,7 @@ public class Program
 ```csharp
 interface IBox<T> { T Content { get; } }
 
-interface ICat { }
+interface ICat { bool IsAlive { get; } }
 ```
 
 **Implementations**:
@@ -39,10 +40,11 @@ class CardboardBox<T> : IBox<T>
 
 class ShroedingersCat : ICat
 {
+    public bool IsAlive => true;
 }
 ```
 
-**Glue it together**:
+Let's glue them together:
 ```csharp
 class Glue: IConfiguration
 {

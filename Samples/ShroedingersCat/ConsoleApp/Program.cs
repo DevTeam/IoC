@@ -13,11 +13,28 @@ namespace ConsoleApp
             using (var container = new Container().Configure().DependsOn(new Glue()).ToSelf())
             {
                 var box = container.Resolve().Instance<IBox<ICat>>();
+                Console.WriteLine(box.Content.IsAlive);
             }
         }
     }
 
-    class Glue: IConfiguration
+    interface IBox<T> { T Content { get; } }
+
+    interface ICat { bool IsAlive { get; } }
+
+    class CardboardBox<T> : IBox<T>
+    {
+        public CardboardBox(T content) { Content = content; }
+
+        public T Content { get; }
+    }
+
+    class ShroedingersCat : ICat
+    {
+        public bool IsAlive => true;
+    }
+
+    class Glue : IConfiguration
     {
         public IEnumerable<IConfiguration> GetDependencies(IContainer container)
         {
@@ -31,20 +48,5 @@ namespace ConsoleApp
                 .And().Contract<ICat>().Autowiring<ShroedingersCat>()
                 .Apply();
         }
-    }
-
-    interface IBox<T> { T Content { get; } }
-
-    interface ICat { }
-
-    class CardboardBox<T> : IBox<T>
-    {
-        public CardboardBox(T content) { Content = content; }
-
-        public T Content { get; }
-    }
-
-    class ShroedingersCat : ICat
-    {
     }
 }
