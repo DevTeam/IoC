@@ -49,11 +49,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DevTeam.IoC.Contracts\DevTeam.IoC.Contracts.csproj">
+    <ProjectReference Include="..\..\..\DevTeam.IoC.Contracts\DevTeam.IoC.Contracts.csproj">
       <Project>{6492c3b0-fb09-4c85-aff8-98cbde7c518e}</Project>
       <Name>DevTeam.IoC.Contracts</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DevTeam.IoC\DevTeam.IoC.csproj">
+    <ProjectReference Include="..\..\..\DevTeam.IoC\DevTeam.IoC.csproj">
       <Project>{7c83c5c6-83cf-4348-9269-e2351e00b5a9}</Project>
       <Name>DevTeam.IoC</Name>
     </ProjectReference>
