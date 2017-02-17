@@ -10,7 +10,7 @@ namespace ConsoleApp
     {
         public static void Main()
         {
-            using (var container = new Container().Configure().DependsOn(new Glue()).ToSelf())
+            using (var container = new Container().Configure().DependsOn<Glue>().ToSelf())
             {
                 var box = container.Resolve().Instance<IBox<ICat>>();
                 Console.WriteLine(box.Content.IsAlive);
