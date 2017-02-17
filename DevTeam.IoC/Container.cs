@@ -76,7 +76,7 @@
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
             var resources = new List<IDisposable>();
-            var registrationItem = new RegistrationItem(context, new LifetimesFactory(context.Extensions.OfType<ILifetime>()), resources);
+            var registrationItem = new RegistrationItem(context, resources);
 
             lock (LockObject)
             {

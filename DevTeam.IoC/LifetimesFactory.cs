@@ -2,19 +2,18 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
 
     using Contracts;
 
     internal class LifetimesFactory: IResolverFactory, IDisposable
     {
-        private readonly List<ILifetime> _lifetimes;
+        private readonly IList<ILifetime> _lifetimes;
         private readonly Func<IResolverContext, object> _factory;
 
-        public LifetimesFactory(IEnumerable<ILifetime> lifetimes)
+        public LifetimesFactory(IList<ILifetime> lifetimes)
         {
             if (lifetimes == null) throw new ArgumentNullException(nameof(lifetimes));
-            _lifetimes = lifetimes.ToList();
+            _lifetimes = lifetimes;
             if (_lifetimes.Count > 0)
             {
                 _lifetimes.Add(TransientLifetime.Shared);

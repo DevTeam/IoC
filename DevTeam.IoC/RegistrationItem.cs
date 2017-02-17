@@ -14,15 +14,13 @@
 
         public RegistrationItem(
             [NotNull] IRegistryContext registryContext,
-            [NotNull] LifetimesFactory factory,
             [NotNull] IEnumerable<IDisposable> resources)
         {
             if (registryContext == null) throw new ArgumentNullException(nameof(registryContext));
-            if (factory == null) throw new ArgumentNullException(nameof(factory));
             if (resources == null) throw new ArgumentNullException(nameof(resources));
             _resources = resources;
             RegistryContext = registryContext;
-            InstanceFactory = factory;
+            InstanceFactory = new LifetimesFactory(registryContext.Extensions.OfType<ILifetime>().ToList());
             Key = new object();
             TryGetExtension(out _scope);
             TryGetExtension(out _keyComparer);

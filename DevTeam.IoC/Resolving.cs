@@ -58,7 +58,11 @@
         public TContract Instance<TContract>(IStateProvider stateProvider)
         {
             if (stateProvider == null) throw new ArgumentNullException(nameof(stateProvider));
-            Contract<TContract>();
+            if (_genericContractKeys.Count == 0)
+            {
+                Contract<TContract>();
+            }
+
             IResolverContext ctx;
             var key = CreateCompositeKey();
             if (!Resolver.TryCreateResolverContext(key, out ctx, stateProvider))
@@ -72,7 +76,11 @@
         public bool TryInstance<TContract>(out TContract instance, IStateProvider stateProvider)
         {
             if (stateProvider == null) throw new ArgumentNullException(nameof(stateProvider));
-            Contract<TContract>();
+            if (_genericContractKeys.Count == 0)
+            {
+                Contract<TContract>();
+            }
+
             IResolverContext ctx;
             var key = CreateCompositeKey();
             if (!Resolver.TryCreateResolverContext(key, out ctx, stateProvider))

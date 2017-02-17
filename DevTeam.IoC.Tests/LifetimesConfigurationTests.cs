@@ -104,7 +104,7 @@
                     object actualObj1 = container.Resolve().Instance<ISimpleService>();
                     object actualObj2 = container.Resolve().Instance<IDisposableService>();
                     object actualObj3 = container.Resolve().Instance<IGenericService<string>>();
-                    object actualObj4 = container.Resolve().Contract<ISimpleService>().Instance<IGenericService<string>>();
+                    object actualObj4 = container.Resolve().Contract<ISimpleService>().Contract(typeof(IGenericService<string>)).Instance();
 
                     // Then
                     actualObj1.ShouldBe(actualObj2);

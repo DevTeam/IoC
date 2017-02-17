@@ -37,9 +37,10 @@
                 .Configure().DependsOn(Wellknown.Feature.Default).ToSelf()
                 .Register().Contract<ISimpleService>().Autowiring<SimpleService>().ToSelf())
             {
+                var resolving = rootContainer.Resolve().Contract<ISimpleService>();
                 for (var i = 0; i < 100000; i++)
                 {
-                    rootContainer.Resolve().Instance<ISimpleService>();
+                    resolving.Instance<ISimpleService>();
                 }
             }
         }
@@ -51,9 +52,10 @@
                 .Configure().DependsOn(Wellknown.Feature.Default).ToSelf()
                 .Register().Contract<ISimpleService>().FactoryMethod(ctx => new SimpleService()).ToSelf())
             {
-                for (var i = 0; i < 100000; i++)
+                var resolving = rootContainer.Resolve().Contract<ISimpleService>();
+                for (var i = 0; i < 1000000; i++)
                 {
-                    rootContainer.Resolve().Instance<ISimpleService>();
+                    resolving.Instance<ISimpleService>();
                 }
             }
         }
@@ -65,9 +67,10 @@
                 .Configure().DependsOn(Wellknown.Feature.Default).ToSelf()
                 .Register().Lifetime(Wellknown.Lifetime.Singleton).Contract<ISimpleService>().Autowiring<SimpleService>().ToSelf())
             {
+                var resolving = rootContainer.Resolve().Contract<ISimpleService>();
                 for (var i = 0; i < 100000; i++)
                 {
-                    rootContainer.Resolve().Instance<ISimpleService>();
+                    resolving.Instance<ISimpleService>();
                 }
             }
         }
