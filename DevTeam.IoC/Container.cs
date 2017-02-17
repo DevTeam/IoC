@@ -135,9 +135,16 @@
             }
         }
 
-        public bool TryCreateResolverContext(ICompositeKey key, out IResolverContext resolverContext, IStateProvider stateProvider = null)
+        public bool TryCreateResolverContext(ICompositeKey key, out IResolverContext resolverContext, IStateProvider stateProvider = null, IContainer container = null)
         {
             if (key == null) throw new ArgumentNullException(nameof(key));
+            var isRootResolver = false;
+            if (container == null)
+            {
+                container = this;
+                isRootResolver = true;
+            }
+
             lock (LockObject)
             {
                 if (_cache != null && _cache.TryGet(key, out resolverContext))
@@ -154,7 +161,7 @@
                     }
 
                     resolverContext = new ResolverContext(
-                        this,
+                        container,
                         registrationItem.RegistryContext,
                         registrationItem.InstanceFactory,
                         key,
@@ -164,22 +171,22 @@
                     IScope scope;
                     if (!TryGetExtension(resolverContext.RegistryContext.Extensions, out scope) || scope.AllowsResolving(resolverContext))
                     {
-                        _cache?.Set(key, resolverContext);
+                        if (isRootResolver)
+                        {
+                            _cache?.Set(key, resolverContext);
+                        }
+
                         return true;
                     }
                 }
 
-                if (Parent != null && Parent.TryCreateResolverContext(key, out resolverContext, stateProvider))
+                if (Parent != null && Parent.TryCreateResolverContext(key, out resolverContext, stateProvider, container))
                 {
-                    resolverContext = new ResolverContext(
-                        this,
-                        resolverContext.RegistryContext,
-                        resolverContext.InstanceFactory,
-                        resolverContext.Key,
-                        resolverContext.RegistrationKey,
-                        resolverContext.StateProvider);
+                    if (isRootResolver)
+                    {
+                        _cache?.Set(key, resolverContext);
+                    }
 
-                    _cache?.Set(key, resolverContext);
                     return true;
                 }
 

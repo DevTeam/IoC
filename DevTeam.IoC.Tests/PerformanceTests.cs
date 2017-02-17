@@ -45,6 +45,20 @@
         }
 
         [Test]
+        public void SimplePerformanceTest1()
+        {
+            using (var rootContainer = new Container("root")
+                .Configure().DependsOn(Wellknown.Feature.Default).ToSelf()
+                .Register().Contract<ISimpleService>().FactoryMethod(ctx => new SimpleService()).ToSelf())
+            {
+                for (var i = 0; i < 100000; i++)
+                {
+                    rootContainer.Resolve().Instance<ISimpleService>();
+                }
+            }
+        }
+
+        [Test]
         public void SimpleSingletonPerformanceTest()
         {
             using (var rootContainer = new Container("root")
