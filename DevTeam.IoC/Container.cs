@@ -76,27 +76,17 @@
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
             var resources = new List<IDisposable>();
-            var newRegistration = new RegistrationItem(context, new LifetimesFactory(context.Extensions.OfType<ILifetime>()), resources);
+            var registrationItem = new RegistrationItem(context, new LifetimesFactory(context.Extensions.OfType<ILifetime>()), resources);
 
             lock (LockObject)
             {
-                IScope scope;
-                if (TryGetExtension(context.Extensions, out scope) && !scope.AllowsRegistration(context) && Parent != null)
+                var scope = registrationItem.Scope;
+                if (scope!= null && !scope.AllowsRegistration(context) && Parent != null)
                 {
                     return Parent.TryRegister(context, out registration);
                 }
 
-                IKeyComparer keyComparer;
-                IEqualityComparer<ICompositeKey> comparer;
-                if (TryGetExtension(context.Extensions, out keyComparer))
-                {
-                    comparer = keyComparer;
-                }
-                else
-                {
-                    comparer = EqualityComparer<IKey>.Default;
-                }
-
+                var comparer = registrationItem.KeyComparer != null ? (IEqualityComparer<ICompositeKey>)registrationItem.KeyComparer : EqualityComparer<IKey>.Default;
                 Dictionary<ICompositeKey, RegistrationItem> registrations;
                 if (!_registrations.TryGetValue(comparer, out registrations))
                 {
@@ -108,7 +98,7 @@
                 {
                     foreach (var key in context.Keys)
                     {
-                        var currentRegistration = newRegistration;
+                        var currentRegistration = registrationItem;
                         _registrationSubject.OnNext(new RegistrationEvent(EventStage.Before, EventAction.Add, key, currentRegistration.RegistryContext));
                         registrations.Add(key, currentRegistration);
                         resources.Add(
@@ -125,12 +115,12 @@
                 }
                 catch
                 {
-                    newRegistration.Dispose();
+                    registrationItem.Dispose();
                     registration = default(IDisposable);
                     return false;
                 }
 
-                registration = newRegistration;
+                registration = registrationItem;
                 return true;
             }
         }
@@ -168,8 +158,8 @@
                         registrationItem.Key,
                         stateProvider);
 
-                    IScope scope;
-                    if (!TryGetExtension(resolverContext.RegistryContext.Extensions, out scope) || scope.AllowsResolving(resolverContext))
+                    var scope = registrationItem.Scope;
+                    if (scope == null || scope.AllowsResolving(resolverContext))
                     {
                         if (isRootResolver)
                         {
@@ -238,13 +228,6 @@
         public override string ToString()
         {
             return $"{nameof(Container)} [Tag: {Tag ?? "null"}]{Environment.NewLine}{string.Join(Environment.NewLine, Registrations)}";
-        }
-
-        private static bool TryGetExtension<TContract>(IEnumerable<IExtension> extensions, out TContract instance)
-            where TContract : class, IExtension
-        {
-            instance = extensions.OfType<TContract>().SingleOrDefault();
-            return instance != default(TContract);
         }
 
         private class CacheTracker : IObserver<IRegistrationEvent>

@@ -45,7 +45,7 @@
         }
 
         [Test]
-        public void SimplePerformanceTest1()
+        public void SimpleFactoryMethodPerformanceTest()
         {
             using (var rootContainer = new Container("root")
                 .Configure().DependsOn(Wellknown.Feature.Default).ToSelf()
