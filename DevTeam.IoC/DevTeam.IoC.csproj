@@ -47,7 +47,7 @@
     <Compile Include="ConfigurationDescriptionDto.cs" />
     <Compile Include="ConfigurationDtoAdapter.cs" />
     <Compile Include="ConfigurationFromAssembly.cs" />
-    <Compile Include="ConfigurationFromDto.cs" />
+    <Compile Include="ConfigurationFromSringData.cs" />
     <Compile Include="ContainerConfiguration.cs" />
     <Compile Include="RegistrationEvent.cs" />
     <Compile Include="IInternalResourceStore.cs" />

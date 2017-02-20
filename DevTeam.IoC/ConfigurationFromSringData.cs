@@ -5,13 +5,13 @@
     using Contracts;
     using Contracts.Dto;
 
-    internal class ConfigurationFromDto: IConfiguration
+    internal class ConfigurationFromSringData: IConfiguration
     {
         private readonly IResolver _resolver;
         private readonly Type _configurationType;
         private readonly Lazy<IConfiguration> _configuration;
 
-        public ConfigurationFromDto(
+        public ConfigurationFromSringData(
             [NotNull] IResolver resolver,
             [NotNull] Type configurationType,
             [NotNull] string description)

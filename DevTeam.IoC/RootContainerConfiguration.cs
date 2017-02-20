@@ -95,7 +95,7 @@
                 .State<Type>(0)
                 .State<string>(1)
                 .Contract<IConfiguration>()
-                .FactoryMethod(ctx => new ConfigurationFromDto(ctx.Container, ctx.GetState<Type>(0), ctx.GetState<string>(1)))
+                .FactoryMethod(ctx => new ConfigurationFromSringData(ctx.Container, ctx.GetState<Type>(0), ctx.GetState<string>(1)))
                 .Apply();
 
             yield return
