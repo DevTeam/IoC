@@ -17,6 +17,9 @@
         "DevTeam.IoC": {
           "target": "project"
         },
+        "DevTeam.IoC.Configurations.CSharp": {
+          "target": "project"
+        },
         "DevTeam.IoC.Contracts": {
           "target": "project"
         }

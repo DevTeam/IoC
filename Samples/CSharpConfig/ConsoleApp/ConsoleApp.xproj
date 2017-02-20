@@ -6,7 +6,7 @@
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\DotNet\Microsoft.DotNet.Props" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>16f5973e-cc38-447b-b822-8cbc278a44b6</ProjectGuid>
+    <ProjectGuid>697e8a22-0027-4267-9006-5f7499a6b4dc</ProjectGuid>
     <RootNamespace>ConsoleApp</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">.\obj</BaseIntermediateOutputPath>
     <OutputPath Condition="'$(OutputPath)'=='' ">.\bin\</OutputPath>
@@ -16,6 +16,7 @@
     <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\DevTeam.IoC.Configurations.CSharp\DevTeam.IoC.Configurations.CSharp.csproj" />
     <ProjectReference Include="..\..\..\DevTeam.IoC.Contracts\DevTeam.IoC.Contracts.csproj" />
     <ProjectReference Include="..\..\..\DevTeam.IoC\DevTeam.IoC.csproj" />
   </ItemGroup>

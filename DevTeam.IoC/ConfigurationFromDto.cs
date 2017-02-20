@@ -43,6 +43,12 @@
         {
             if (string.IsNullOrWhiteSpace(description)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(description));
             var configurationDescriptionDto = _resolver.Resolve().State<string>(0).Instance<IConfigurationDescriptionDto>(description);
+            IConfiguration configuration;
+            if(_resolver.Resolve().Tag(_configurationType).State<IConfigurationDescriptionDto>(0).TryInstance(out configuration, configurationDescriptionDto))
+            {
+                return configuration;
+            }
+
             var configurationDto = _resolver.Resolve().Tag(_configurationType).State<IConfigurationDescriptionDto>(0).Instance<IConfigurationDto>(configurationDescriptionDto);
             return _resolver.Resolve().State<IConfigurationDto>(0).Instance<IConfiguration>(configurationDto);
         }

@@ -105,6 +105,12 @@
             return TryInstance(out instance, new ParamsStateProvider(state));
         }
 
+        public bool TryInstance<TContract>(out TContract instance, params object[] state)
+        {
+            if (state == null) throw new ArgumentNullException(nameof(state));
+            return TryInstance(out instance, new ParamsStateProvider(state));
+        }
+
         public TContract Instance<TContract>(params object[] state)
         {
             if (state == null) throw new ArgumentNullException(nameof(state));
