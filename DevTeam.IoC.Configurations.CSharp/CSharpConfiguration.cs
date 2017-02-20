@@ -9,6 +9,7 @@
     using Contracts.Dto;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
+    using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     public class CSharpConfiguration : IConfiguration
     {
@@ -45,12 +46,28 @@
         private IConfiguration CreateConfiguration(string description)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(description);
+            var commentsTrivia = (
+                from trivia in syntaxTree.GetRoot().DescendantTrivia()
+                where trivia.Kind() == SyntaxKind.SingleLineCommentTrivia || trivia.Kind() == SyntaxKind.MultiLineCommentTrivia
+                select trivia).ToList();
+            var refs = new List<MetadataReference>(References);
+            foreach (var syntaxTrivia in commentsTrivia)
+            {
+                var comment = syntaxTrivia.ToFullString().Replace("/", string.Empty).Trim();
+                if (!comment.StartsWith("@"))
+                {
+                    continue;
+                }
+
+                var additionalAssemblyName = comment.Replace("@", "");
+                refs.Add(MetadataReference.CreateFromFile(Assembly.Load(new AssemblyName(additionalAssemblyName)).Location));
+            }
 
             var assemblyName = Path.GetRandomFileName();
             var compilation = CSharpCompilation.Create(
                 assemblyName,
                 new[] { syntaxTree },
-                References,
+                refs,
                 new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
             Assembly assembly;

@@ -1,6 +1,7 @@
 ﻿namespace ConsoleApp
 {
     using System.IO;
+    using ClassLibrary;
     using DevTeam.IoC;
     using DevTeam.IoC.Configurations.CSharp;
     using DevTeam.IoC.Contracts;
@@ -13,7 +14,7 @@
                 .Configure().DependsOn<CSharpConfiguration>(File.ReadAllText("Config.cs.txt")).ToSelf()
                 .Register().Contract<Program>().Autowiring(typeof(Program)).ToSelf())
             {
-                container.Resolve().Instance<Program>();
+                container.Resolve().Instance<IHelloWorld>().SayHello();
             }
         }
     }
