@@ -63,3 +63,11 @@ class Glue: IConfiguration
     }
 }
 ```
+
+Or another way to glue via [Json file](https://github.com/DevTeam/IoC/blob/master/Samples/ShroedingersCat/ConsoleApp/configuration.json):
+```json
+[
+  { "register": [ { "contract": [ "IBox<>" ] } ], "autowiring": "CardboardBox<>" },
+  { "register": [ { "contract": [ "ICat" ] } ], "autowiring": "ShroedingersCat" }
+]
+```
