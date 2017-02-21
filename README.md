@@ -28,6 +28,9 @@ interface ICat { bool IsAlive { get; } }
 ```
 
 **Implementations**:
+
+![Cat](https://github.com/DevTeam/IoC/blob/master/Samples/ShroedingersCat/cat.jpg)
+
 ```csharp
 class CardboardBox<T> : IBox<T>
 {
