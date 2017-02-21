@@ -1,0 +1,8 @@
+﻿[
+  { "reference": "ConsoleApp" },
+
+  { "using": "ConsoleApp" },
+
+  { "register": [ { "contract": [ "IBox<>" ] } ], "autowiring": "CardboardBox<>" },
+  { "register": [ { "contract": [ "ICat" ] } ], "autowiring": "ShroedingersCat" }
+]

@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <Content Include="configuration.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\DevTeam.IoC.Contracts\DevTeam.IoC.Contracts.csproj">
