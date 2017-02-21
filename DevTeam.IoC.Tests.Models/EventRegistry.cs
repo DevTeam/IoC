@@ -25,13 +25,11 @@
             logResolver.Start();
             resolver.Start();
             eventBroker.Start();
+            Task.WaitAll(resolver, eventBroker, logResolver);
 
-            logResolver.Wait();
             _log = logResolver.Result.Resolve(nameof(EventRegistry));
             _log.Method("Ctor()");
-            resolver.Wait();
             _resolver = resolver.Result;
-            eventBroker.Wait();
             _eventBroker = eventBroker.Result;
         }
 
