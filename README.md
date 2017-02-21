@@ -43,7 +43,7 @@ class ShroedingersCat : ICat
 }
 ```
 
-Let's glue them together:
+Let's glue it together:
 ```csharp
 class Glue: IConfiguration
 {
