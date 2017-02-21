@@ -149,6 +149,14 @@
             yield return
                 container
                 .Register()
+                .Tag(Wellknown.Feature.Observables)
+                .Contract<IConfiguration>()
+                .FactoryMethod(ctx => ObservablesFeature.Shared)
+                .Apply();
+
+            yield return
+                container
+                .Register()
                 .Tag(Wellknown.Feature.Resolvers)
                 .Contract<IConfiguration>()
                 .FactoryMethod(ctx => ResolversFeature.Shared)

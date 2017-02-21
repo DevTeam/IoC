@@ -1,7 +1,6 @@
 ﻿namespace DevTeam.IoC.Tests
 {
     using System;
-    using System.Linq;
     using Contracts;
 
     using Moq;
@@ -78,7 +77,7 @@
                     var actualObj = container.Resolve().Contract<ISimpleService>().Tag("abc").Instance();
 
                     // Then
-                    var resolvingKey = CreateCompositeKey(container, true, new[] {typeof(ISimpleService)}, new object[]{ "abc" });
+                    var resolvingKey = KeyUtils.CreateCompositeKey(container, true, new[] {typeof(ISimpleService)}, new object[]{ "abc" });
                     container.Registrations.ShouldContain(resolvingKey);
                     actualObj.ShouldBe(simpleService.Object);
                 }
@@ -98,7 +97,7 @@
                     var actualObj = container.Resolve().Contract<IGenericService<string>>().Tag("abc").Instance();
 
                     // Then
-                    var resolvingKey = CreateCompositeKey(container, true, new [] { typeof(IGenericService<>) }, new object[] { "abc" });
+                    var resolvingKey = KeyUtils.CreateCompositeKey(container, true, new [] { typeof(IGenericService<>) }, new object[] { "abc" });
                     container.Registrations.ShouldContain(resolvingKey);
                     actualObj.ShouldBe(genericService.Object);
                 }
@@ -118,7 +117,7 @@
                     var actualObj = container.Resolve().Contract<IGenericService<string>>().Tag("abc").Instance();
 
                     // Then
-                    var resolvingKey = CreateCompositeKey(container, true, new[] { typeof(IGenericService<string>) }, new object[] { "abc" });
+                    var resolvingKey = KeyUtils.CreateCompositeKey(container, true, new[] { typeof(IGenericService<string>) }, new object[] { "abc" });
                     container.Registrations.ShouldContain(resolvingKey);
                     actualObj.ShouldBe(genericService.Object);
                 }
@@ -137,7 +136,7 @@
                     var actualObj = container.Resolve().Contract<IGenericService<string>>().Tag("abc").Instance();
 
                     // Then
-                    var resolvingKey = CreateCompositeKey(container, true, new[] { typeof(IGenericService<>) }, new object[] { "abc" });
+                    var resolvingKey = KeyUtils.CreateCompositeKey(container, true, new[] { typeof(IGenericService<>) }, new object[] { "abc" });
                     container.Registrations.ShouldContain(resolvingKey);
                     actualObj.ShouldBe(genericService.Object);
                 }
@@ -147,18 +146,6 @@
         private IContainer CreateContainer()
         {
             return new Container();
-        }
-
-        private ICompositeKey CreateCompositeKey(IContainer container, bool toResolve, Type[] genericTypes, object[] tags)
-        {
-            var keyFactory = container.GetKeyFactory();
-            var genericKeys = genericTypes.Select(i => keyFactory.CreateContractKey(i, toResolve)).ToArray();
-            var tagKeys = tags.Select(i => keyFactory.CreateTagKey(i)).ToArray();
-            var stateKeys = new IStateKey[0];
-            return keyFactory.CreateCompositeKey(
-                genericKeys,
-                tagKeys,
-                stateKeys);
         }
 
         // ReSharper disable once UnusedMember.Local

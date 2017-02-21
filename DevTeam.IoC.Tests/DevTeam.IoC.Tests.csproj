@@ -64,8 +64,11 @@
     <Compile Include="CompositeDisposableTests.cs" />
     <Compile Include="CompositeKeyTests.cs" />
     <Compile Include="ConfigurationDtoAdapterTests.cs" />
+    <Compile Include="ObservablesFeatureTests.cs" />
+    <Compile Include="EnumerablesFeatureTests.cs" />
     <Compile Include="ContractKeyTests.cs" />
     <Compile Include="EventObserver.cs" />
+    <Compile Include="KeyUtils.cs" />
     <Compile Include="PerformanceTests.cs" />
     <Compile Include="JsonConfigurationTests.cs" />
     <Compile Include="ManualMetadataProviderTests.cs" />

@@ -67,7 +67,7 @@
             return this;
         }
 
-        private IDisposable Apply()
+        public IDisposable Apply()
         {
             _registrations.AddRange(_configurations.Select(Apply));
             var registration = new CompositeDisposable(_registrations);

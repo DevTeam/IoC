@@ -26,6 +26,9 @@
         IConfiguring<T> DependsOn(params Assembly[] assemblies);
 
         [NotNull]
+        IDisposable Apply();
+
+        [NotNull]
         T ToSelf();
 
         IConfiguration Create();

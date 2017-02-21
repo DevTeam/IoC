@@ -21,9 +21,13 @@
             // ReSharper disable once IdentifierTypo
             KeyComaprers,
 
-            // Support resolving via IEnumerable<>.
+            // Support resolving via IEnumerable<>. Resolve all elements of specified contract.
             // ReSharper disable once IdentifierTypo
             Enumerables,
+
+            // Support resolving via IObservable<>. Resolve all elements of specified contract.
+            // ReSharper disable once IdentifierTypo
+            Observables,
 
             // Support injection via Task.
             Tasks,
