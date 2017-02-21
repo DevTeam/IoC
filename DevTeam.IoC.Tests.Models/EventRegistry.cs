@@ -14,18 +14,25 @@
         private readonly ILog _log;
 
         public EventRegistry(
-            IResolver resolver,
-            IEventBroker eventBroker,
-            [State(0, typeof(string))] IResolver<string, ILog> logResolver)
+             Task<IResolver> resolver,
+             Task<IEventBroker> eventBroker,
+             [State(0, typeof(string))] Task<IResolver<string, ILog>> logResolver)
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             if (eventBroker == null) throw new ArgumentNullException(nameof(eventBroker));
             if (logResolver == null) throw new ArgumentNullException(nameof(logResolver));
-           
-            _log = logResolver.Resolve(nameof(EventRegistry));
+
+            logResolver.Start();
+            resolver.Start();
+            eventBroker.Start();
+
+            logResolver.Wait();
+            _log = logResolver.Result.Resolve(nameof(EventRegistry));
             _log.Method("Ctor()");
-            _resolver = resolver;
-            _eventBroker = eventBroker;
+            resolver.Wait();
+            _resolver = resolver.Result;
+            eventBroker.Wait();
+            _eventBroker = eventBroker.Result;
         }
 
         public void RegisterEvent<TEvent>()
