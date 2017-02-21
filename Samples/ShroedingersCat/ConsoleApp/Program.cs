@@ -31,7 +31,7 @@ namespace ConsoleApp
 
     class ShroedingersCat : ICat
     {
-        public bool IsAlive => true;
+        public bool IsAlive => true; // for humanitarian reasons
     }
 
     class Glue : IConfiguration
