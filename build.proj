@@ -11,6 +11,7 @@
 		<Package Include="DevTeam.IoC.Contracts"/>
 		<Package Include="DevTeam.IoC"/>
 		<Package Include="DevTeam.IoC.Configurations.Json"/>
+		<Package Include="DevTeam.IoC.Configurations.CSharp"/>
 	</ItemGroup>
 
 	<UsingTask TaskName="DownloadFile" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">

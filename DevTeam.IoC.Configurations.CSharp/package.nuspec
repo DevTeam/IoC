@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
-		<id>DevTeam.IoC.Configurations.Json</id>
-		<title>DevTeam IoC Json configuration</title>
+		<id>DevTeam.IoC.Configurations.CSharp</id>
+		<title>DevTeam IoC CSharp configuration</title>
 		<language>en-us</language>
 		<version>$version$</version>
 		<authors>NikolayP</authors>
@@ -11,14 +11,15 @@
 		<projectUrl>https://github.com/DevTeam/IoC/</projectUrl>
 		<iconUrl>https://avatars0.githubusercontent.com/u/12184234?v=3&amp;s=200</iconUrl>
 		<!--requireLicenseAcceptance>false</requireLicenseAcceptance-->
-		<description>Provides configuration of IoC using Json files.</description>
+		<description>Provides configuration of IoC using CSharp files.</description>
 		<tags>.NETStandard NETCore Core Portable DevTeam Pattern IoC Container DI dependencyinjection Inversion Control State Bind Factory</tags>
 		<dependencies>
 			<dependency id="DevTeam.IoC.Contracts" version="[$version$]" />
-			<dependency id="Newtonsoft.Json" version="9.0.1" />			
+			<dependency id="Microsoft.CodeAnalysis.CSharp" version="1.3.2" />
+			<dependency id="System.Runtime.Loader" version="4.3.0" />
 		</dependencies>
 	</metadata>
 	<files>
-  		<file src="bin\Release\DevTeam.IoC.Configurations.Json.dll" target="lib\portable-net45+win8+wp8+wpa81+MonoAndroid10+xamarinios10+MonoTouch10+Xamarin.iOS+monoandroid+monotouch+netstandard1.0+netcoreapp" />
+  		<file src="bin\Release\DevTeam.IoC.Configurations.CSharp.dll" target="lib\portable-net45+win8+wp8+wpa81+MonoAndroid10+xamarinios10+MonoTouch10+Xamarin.iOS+monoandroid+monotouch+netstandard1.5+netcoreapp" />
 	</files>
 </package>
