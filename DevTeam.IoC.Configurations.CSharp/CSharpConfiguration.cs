@@ -9,7 +9,6 @@
     using Contracts.Dto;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     public class CSharpConfiguration : IConfiguration
     {
@@ -28,7 +27,7 @@
         public IEnumerable<IConfiguration> GetDependencies(IContainer container)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
-            yield return container.Feature(Wellknown.Feature.Dto);
+            yield break;
         }
 
         public IEnumerable<IDisposable> Apply(IContainer container)
