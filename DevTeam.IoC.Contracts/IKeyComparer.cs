@@ -3,7 +3,7 @@
     using System.Collections.Generic;
 
     [PublicAPI]
-    public interface IKeyComparer: IEqualityComparer<ICompositeKey>, IExtension
+    public interface IKeyComparer: IEqualityComparer<IKey>, IExtension
     {
     }
 }

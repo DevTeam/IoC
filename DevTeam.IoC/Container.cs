@@ -9,7 +9,7 @@
     public class Container : IContainer, IObservable<IRegistrationEvent>
     {
         private readonly List<IDisposable> _resources = new List<IDisposable>();
-        private readonly Dictionary<IEqualityComparer<ICompositeKey>, Dictionary<ICompositeKey, RegistrationItem>> _registrations = new Dictionary<IEqualityComparer<ICompositeKey>, Dictionary<ICompositeKey, RegistrationItem>>();
+        private readonly Dictionary<IEqualityComparer<IKey>, Dictionary<ICompositeKey, RegistrationItem>> _registrations = new Dictionary<IEqualityComparer<IKey>, Dictionary<ICompositeKey, RegistrationItem>>();
         private readonly Subject<IRegistrationEvent> _registrationSubject = new Subject<IRegistrationEvent>();
         private readonly IKeyFactory _keyFactory;
         private ICache<ICompositeKey, IResolverContext> _cache;
@@ -86,7 +86,7 @@
                     return Parent.TryRegister(context, out registration);
                 }
 
-                var comparer = registrationItem.KeyComparer != null ? (IEqualityComparer<ICompositeKey>)registrationItem.KeyComparer : EqualityComparer<IKey>.Default;
+                var comparer = registrationItem.KeyComparer != null ? (IEqualityComparer<IKey>)registrationItem.KeyComparer : EqualityComparer<IKey>.Default;
                 Dictionary<ICompositeKey, RegistrationItem> registrations;
                 if (!_registrations.TryGetValue(comparer, out registrations))
                 {

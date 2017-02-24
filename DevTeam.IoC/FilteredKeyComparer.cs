@@ -13,7 +13,7 @@
             _keyFilterContext = keyFilterContext;
         }
 
-        public bool Equals(ICompositeKey x, ICompositeKey y)
+        public bool Equals(IKey x, IKey y)
         {
             _keyFilterContext.Activate();
             try
@@ -26,7 +26,7 @@
             }
         }
 
-        public int GetHashCode(ICompositeKey obj)
+        public int GetHashCode(IKey obj)
         {
             _keyFilterContext.Activate();
             try
