@@ -5,7 +5,7 @@
     {
         IContainer Container { [NotNull] get; }
 
-        ICompositeKey Key { [NotNull] get; }
+        IKey Key { [NotNull] get; }
 
         object RegistrationKey { [NotNull] get; }
 

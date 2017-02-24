@@ -47,7 +47,7 @@
 
         private static object ResolveEnumerable(IResolverContext ctx)
         {
-            var genericContractKey = ctx.Key?.ContractKeys.SingleOrDefault();
+            var genericContractKey = ctx.Key as IContractKey ?? (ctx.Key as ICompositeKey)?.ContractKeys.SingleOrDefault();
             if (genericContractKey == null)
             {
                 throw new InvalidOperationException();
@@ -75,7 +75,7 @@
             return factory.GetFactory(ctor).Create(source);
         }
 
-        private static IEnumerable<ICompositeKey> GetAllRegistrations(IContainer container)
+        private static IEnumerable<IKey> GetAllRegistrations(IContainer container)
         {
             foreach (var registration in container.Registrations)
             {
@@ -93,13 +93,24 @@
             }
         }
 
-        private static IEnumerable<IKey> FilterByContract(IEnumerable<ICompositeKey> keys, IContractKey contractKey)
+        private static IEnumerable<IKey> FilterByContract(IEnumerable<IKey> keys, IContractKey contractKey)
         {
             foreach (var key in keys)
             {
-                if (key.ContractKeys.Contains(contractKey))
+                var curContractKey = key as IContractKey;
+                if (curContractKey != null && curContractKey.ContractType == contractKey.ContractType)
                 {
-                    yield return RootContainerConfiguration.KeyFactory.CreateCompositeKey(key.ContractKeys.Where(i => i.ContractType != contractKey.ContractType).Concat(Enumerable.Repeat(contractKey, 1)), key.TagKeys, key.StateKeys);
+                    yield return curContractKey;
+                    continue;
+                }
+
+                var compositeKey = key as ICompositeKey;
+                if (compositeKey != null)
+                {
+                    if (compositeKey.ContractKeys.Contains(contractKey))
+                    {
+                        yield return RootContainerConfiguration.KeyFactory.CreateCompositeKey(compositeKey.ContractKeys.Where(i => i.ContractType != contractKey.ContractType).Concat(Enumerable.Repeat(contractKey, 1)), compositeKey.TagKeys, compositeKey.StateKeys);
+                    }
                 }
             }
         }

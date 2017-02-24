@@ -10,7 +10,7 @@
     {
         public RegistryContext(
             [NotNull] IContainer container,
-            [NotNull] ICompositeKey[] keys,
+            [NotNull] IKey[] keys,
             [NotNull] IResolverFactory factory,
             [NotNull] IEnumerable<IExtension> extensionPoints)
         {
@@ -27,7 +27,7 @@
 
         public IContainer Container { get; }
 
-        public IEnumerable<ICompositeKey> Keys { get; }
+        public IEnumerable<IKey> Keys { get; }
 
         public IResolverFactory InstanceFactory { get; }
 

@@ -10,7 +10,7 @@
             [NotNull] IContainer container,
             [NotNull] IRegistryContext registryContext,
             [NotNull] IResolverFactory instanceFactory,
-            [NotNull] ICompositeKey key,
+            [NotNull] IKey key,
             [NotNull] object registrationKey,
             [CanBeNull] IStateProvider stateProvider = null)
         {
@@ -29,7 +29,7 @@
 
         public IContainer Container { get; set; }
 
-        public ICompositeKey Key { get; }
+        public IKey Key { get; }
 
         public object RegistrationKey { get; }
 

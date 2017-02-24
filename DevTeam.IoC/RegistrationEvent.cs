@@ -8,7 +8,7 @@
         public RegistrationEvent(
             EventStage stage,
             EventAction action,
-            [NotNull] ICompositeKey key,
+            [NotNull] IKey key,
             [NotNull] IRegistryContext registryContext)
         {
             if (key == null) throw new ArgumentNullException(nameof(key));
@@ -23,7 +23,7 @@
 
         public EventAction Action { get; }
 
-        public ICompositeKey Key { get; }
+        public IKey Key { get; }
 
         public IRegistryContext RegistryContext { get; }
 

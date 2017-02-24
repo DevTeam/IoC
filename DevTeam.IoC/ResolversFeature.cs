@@ -126,7 +126,7 @@
 
         private static object ResolveResolver(IResolverContext ctx)
         {
-            var genericContractKey = ctx.Key.ContractKeys.SingleOrDefault();
+            var genericContractKey = ctx.Key as IContractKey ?? (ctx.Key as ICompositeKey)?.ContractKeys.SingleOrDefault();
             if (genericContractKey == null)
             {
                 throw new InvalidOperationException();

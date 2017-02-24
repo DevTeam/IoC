@@ -8,7 +8,7 @@
     {
         object Tag { [CanBeNull] get; }
 
-        IEnumerable<ICompositeKey> Registrations { [NotNull] get; }
+        IEnumerable<IKey> Registrations { [NotNull] get; }
 
         IContainer Parent { [CanBeNull] get; }
     }

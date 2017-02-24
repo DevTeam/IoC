@@ -2,7 +2,7 @@
 {
     public interface IRegistrationEvent : IEvent
     {
-        ICompositeKey Key { [NotNull] get; }
+        IKey Key { [NotNull] get; }
 
         IRegistryContext RegistryContext { [NotNull] get; }
     }

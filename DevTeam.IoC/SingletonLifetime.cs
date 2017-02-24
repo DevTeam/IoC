@@ -29,7 +29,8 @@
         {
             if (lifetimeContext == null) throw new ArgumentNullException(nameof(lifetimeContext));
             if (resolverContext == null) throw new ArgumentNullException(nameof(resolverContext));
-            return new Key(resolverContext.Key.ContractKeys.Count == 1 ? resolverContext.Key.ContractKeys.Single().GenericTypeArguments : resolverContext.Key.ContractKeys.Select(i => i.GenericTypeArguments).SelectMany(i => i).ToArray());
+            var genericTypes = (resolverContext.Key as IContractKey)?.GenericTypeArguments ?? (resolverContext.Key as ICompositeKey)?.ContractKeys?.Select(i => i.GenericTypeArguments).SelectMany(i => i).ToArray();
+            return new Key(genericTypes);
         }
 
         internal class Key

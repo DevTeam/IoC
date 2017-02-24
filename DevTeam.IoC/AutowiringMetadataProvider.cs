@@ -12,7 +12,7 @@
         {
             if (resolverContext == null) throw new ArgumentNullException(nameof(resolverContext));
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
-            var contractKey = resolverContext.Key.ContractKeys.FirstOrDefault();
+            var contractKey = resolverContext.Key as IContractKey ?? (resolverContext.Key as ICompositeKey)?.ContractKeys.FirstOrDefault();
             if (contractKey != null && contractKey.GenericTypeArguments.Length > 0 && implementationType.GetTypeInfo().GenericTypeParameters.Length == contractKey.GenericTypeArguments.Length)
             {
                 return implementationType.MakeGenericType(contractKey.GenericTypeArguments);

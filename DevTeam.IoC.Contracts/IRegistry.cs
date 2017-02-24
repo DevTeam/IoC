@@ -8,7 +8,7 @@
     {
         [NotNull]
         IRegistryContext CreateRegistryContext(
-            [NotNull] IEnumerable<ICompositeKey> keys,
+            [NotNull] IEnumerable<IKey> keys,
             [NotNull] IResolverFactory factory,
             [NotNull] IEnumerable<IExtension> extensions);
 

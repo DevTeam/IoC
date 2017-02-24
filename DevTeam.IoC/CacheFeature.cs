@@ -31,8 +31,8 @@
             yield return
                 container.Register()
                     .Lifetime(Wellknown.Lifetime.PerContainer)
-                    .Contract<ICache<ICompositeKey, IResolverContext>>()
-                    .FactoryMethod(ctx => new Cache<ICompositeKey, IResolverContext>())
+                    .Contract<ICache<IKey, IResolverContext>>()
+                    .FactoryMethod(ctx => new Cache<IKey, IResolverContext>())
                     .Apply();
         }
     }

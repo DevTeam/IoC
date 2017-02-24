@@ -57,7 +57,8 @@
 
                 var hasRegistration = (
                     from reg in container.Registrations
-                    from contract in reg.ContractKeys
+                    let key = reg as ICompositeKey
+                    from contract in key.ContractKeys
                     where contract.ContractType == typeof(ISimpleService)
                     select contract).Any();
 
@@ -114,7 +115,8 @@
 
                 var hasRegistration = (
                    from reg in container.Registrations
-                   from contract in reg.ContractKeys
+                   let key = reg as ICompositeKey
+                   from contract in key.ContractKeys
                    where contract.ContractType == typeof(ISimpleService)
                    select contract).Any();
 

@@ -45,7 +45,7 @@
 
         private static object ResolveTask(IResolverContext ctx)
         {
-            var genericContractKey = ctx.Key?.ContractKeys.SingleOrDefault();
+            var genericContractKey = ctx.Key as IContractKey ?? (ctx.Key as ICompositeKey)?.ContractKeys.SingleOrDefault();
             if (genericContractKey == null)
             {
                 throw new InvalidOperationException();
@@ -67,11 +67,14 @@
 
             private static Func<T> CreateFunction(IResolverContext ctx)
             {
-                return () => ctx.Container
-                    .Resolve()
-                    .Key(ctx.Key.TagKeys)
-                    .Key(ctx.Key.StateKeys)
-                    .Instance<T>();
+                var compositeKey = ctx.Key as ICompositeKey;
+                var resolver = ctx.Container.Resolve();
+                if (compositeKey != null)
+                {
+                    resolver.Key(compositeKey.TagKeys).Key(compositeKey.StateKeys);
+                }
+
+                return () => resolver.Instance<T>();
             }
         }
     }

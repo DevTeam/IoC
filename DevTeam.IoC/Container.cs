@@ -9,10 +9,10 @@
     public class Container : IContainer, IObservable<IRegistrationEvent>
     {
         private readonly List<IDisposable> _resources = new List<IDisposable>();
-        private readonly Dictionary<IEqualityComparer<IKey>, Dictionary<ICompositeKey, RegistrationItem>> _registrations = new Dictionary<IEqualityComparer<IKey>, Dictionary<ICompositeKey, RegistrationItem>>();
+        private readonly Dictionary<IEqualityComparer<IKey>, Dictionary<IKey, RegistrationItem>> _registrations = new Dictionary<IEqualityComparer<IKey>, Dictionary<IKey, RegistrationItem>>();
         private readonly Subject<IRegistrationEvent> _registrationSubject = new Subject<IRegistrationEvent>();
         private readonly IKeyFactory _keyFactory;
-        private ICache<ICompositeKey, IResolverContext> _cache;
+        private ICache<IKey, IResolverContext> _cache;
 
         public Container([CanBeNull] object tag = null)
         {
@@ -50,7 +50,7 @@
 
         public object Tag { get; }
 
-        public IEnumerable<ICompositeKey> Registrations => _registrations.SelectMany(i => i.Value).Select(i => i.Key);
+        public IEnumerable<IKey> Registrations => _registrations.SelectMany(i => i.Value).Select(i => i.Key);
 
         public IContainer Parent { get; }
 
@@ -58,7 +58,7 @@
 
         private object LockObject => _registrations;
 
-        public IRegistryContext CreateRegistryContext(IEnumerable<ICompositeKey> keys, IResolverFactory factory, IEnumerable<IExtension> extensions)
+        public IRegistryContext CreateRegistryContext(IEnumerable<IKey> keys, IResolverFactory factory, IEnumerable<IExtension> extensions)
         {
             if (keys == null) throw new ArgumentNullException(nameof(keys));
             if (factory == null) throw new ArgumentNullException(nameof(factory));
@@ -87,10 +87,10 @@
                 }
 
                 var comparer = registrationItem.KeyComparer != null ? (IEqualityComparer<IKey>)registrationItem.KeyComparer : EqualityComparer<IKey>.Default;
-                Dictionary<ICompositeKey, RegistrationItem> registrations;
+                Dictionary<IKey, RegistrationItem> registrations;
                 if (!_registrations.TryGetValue(comparer, out registrations))
                 {
-                    registrations = new Dictionary<ICompositeKey, RegistrationItem>(comparer);
+                    registrations = new Dictionary<IKey, RegistrationItem>(comparer);
                     _registrations.Add(comparer, registrations);
                 }
 
@@ -125,7 +125,7 @@
             }
         }
 
-        public bool TryCreateResolverContext(ICompositeKey key, out IResolverContext resolverContext, IStateProvider stateProvider = null, IContainer container = null)
+        public bool TryCreateResolverContext(IKey key, out IResolverContext resolverContext, IStateProvider stateProvider = null, IContainer container = null)
         {
             if (key == null) throw new ArgumentNullException(nameof(key));
             var isRootResolver = false;
