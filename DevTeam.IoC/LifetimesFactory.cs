@@ -41,10 +41,7 @@
 
         private static object CreateSimple(IResolverContext resolverContext)
         {
-            using (new LifetimeContext())
-            {
-                return resolverContext.RegistryContext.InstanceFactory.Create(resolverContext);
-            }
+            return resolverContext.RegistryContext.InstanceFactory.Create(resolverContext);
         }
 
         private object CreateUsingLifetimes(IResolverContext resolverContext)

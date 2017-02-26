@@ -110,10 +110,13 @@
                 {
                     var resolvedType = metadataProvider.ResolveImplementationType(ctx, implementationType);
                     IResolverFactory factory;
-                    if (_resolverFactoryCache != null && !_resolverFactoryCache.TryGet(resolvedType, out factory))
+                    if (_resolverFactoryCache != null)
                     {
-                        factory = new MetadataFactory(resolvedType, _instanceFactoryProvider.Value, metadataProvider);
-                        _resolverFactoryCache.Set(resolvedType, factory);
+                        if (!_resolverFactoryCache.TryGet(resolvedType, out factory))
+                        {
+                            factory = new MetadataFactory(resolvedType, _instanceFactoryProvider.Value, metadataProvider);
+                            _resolverFactoryCache.Set(resolvedType, factory);
+                        }
                     }
                     else
                     {
