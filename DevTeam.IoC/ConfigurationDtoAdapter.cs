@@ -83,12 +83,14 @@
                         throw new Exception($"Invalid configuration type {configurationType}");
                     }
 
-                    var childContainer = container.CreateChild();
-                    var referenceDescriptionResolver = childContainer.Resolve().Instance<IReferenceDescriptionResolver>();
-                    var reference = referenceDescriptionResolver.ResolveReference(dependencyReferenceDto.Reference);
-                    var configurationDescriptionDto = childContainer.Resolve().State<string>(0).Instance<IConfigurationDescriptionDto>(reference);
-                    var configurationDto = childContainer.Resolve().Tag(configurationType).State<IConfigurationDescriptionDto>(0).Instance<IConfigurationDto>(configurationDescriptionDto);
-                    yield return new ConfigurationDtoAdapter(configurationDto);
+                    using (var childContainer = container.CreateChild())
+                    {
+                        var referenceDescriptionResolver = childContainer.Resolve().Instance<IReferenceDescriptionResolver>();
+                        var reference = referenceDescriptionResolver.ResolveReference(dependencyReferenceDto.Reference);
+                        var configurationDescriptionDto = childContainer.Resolve().State<string>(0).Instance<IConfigurationDescriptionDto>(reference);
+                        var configurationDto = childContainer.Resolve().Tag(configurationType).State<IConfigurationDescriptionDto>(0).Instance<IConfigurationDto>(configurationDescriptionDto);
+                        yield return new ConfigurationDtoAdapter(configurationDto);
+                    }
                 }
             }
         }
