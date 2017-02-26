@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Contracts;
 
     internal class CompositeKey: ICompositeKey
@@ -33,8 +34,14 @@
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            var key = obj as CompositeKey;
-            return key != null && Equals(key);
+            var contractKey = obj as IContractKey;
+            if (contractKey != null)
+            {
+                return Equals(contractKey);
+            }
+
+            var compositeKey = obj as ICompositeKey;
+            return compositeKey != null && Equals(compositeKey);
         }
 
         public override int GetHashCode()
@@ -43,12 +50,12 @@
             var hashCode = _contractsHashCode;
             unchecked
             {
-                if (!filter.Filter(typeof(ITagKey)))
+                if (_tagsHashCode != 0 && !filter.Filter(typeof(ITagKey)))
                 {
                     hashCode = (hashCode*397) ^ _tagsHashCode;
                 }
 
-                if (!filter.Filter(typeof(IStateKey)))
+                if (_statesHashCode != 0 && !filter.Filter(typeof(IStateKey)))
                 {
                     hashCode = (hashCode*397) ^ _statesHashCode;
                 }
@@ -62,13 +69,22 @@
             return $"{nameof(CompositeKey)} [Contracts: {string.Join(", ", ContractKeys)}, Tags: {string.Join(", ", TagKeys)}, States: {string.Join(", ", StateKeys)}]";
         }
 
-        private bool Equals(CompositeKey other)
+        private bool Equals(ICompositeKey other)
         {
             var filter = KeyFilterContext.Current;
             return
                 ContractKeys.SetEquals(other.ContractKeys)
-                && (filter.Filter(typeof(ITagKey)) || TagKeys.SetEquals(other.TagKeys))
-                && (filter.Filter(typeof(IStateKey)) || StateKeys.SetEquals(other.StateKeys));
+                && (TagKeys.Count == 0 || filter.Filter(typeof(ITagKey)) || TagKeys.SetEquals(other.TagKeys))
+                && (StateKeys.Count == 0 || filter.Filter(typeof(IStateKey)) || StateKeys.SetEquals(other.StateKeys));
+        }
+
+        private bool Equals(IContractKey other)
+        {
+            var filter = KeyFilterContext.Current;
+            return
+                ContractKeys.Count == 1 && ContractKeys.Single().Equals(other)
+                && (TagKeys.Count == 0 || filter.Filter(typeof(ITagKey)))
+                && (StateKeys.Count == 0 || filter.Filter(typeof(IStateKey)));
         }
 
         [NotNull]
@@ -76,19 +92,12 @@
         {
             var resultSet = new HashSet<T>(keys);
             hashCode = 0;
-            var cnt = 0;
             foreach (var key in resultSet)
             {
-                cnt++;
                 unchecked
                 {
                     hashCode += key.GetHashCode();
                 }
-            }
-
-            unchecked
-            {
-                hashCode *= cnt;
             }
 
             return resultSet;

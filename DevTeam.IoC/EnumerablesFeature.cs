@@ -56,10 +56,6 @@
             var enumItemType = genericContractKey.GenericTypeArguments.First();
             var enumType = typeof(Enumerable<>).MakeGenericType(enumItemType);
             var contractKeys = new List<IContractKey> { new ContractKey(enumItemType, true) };
-            if (enumItemType.IsConstructedGenericType)
-            {
-                contractKeys.Add(new ContractKey(enumItemType, true));
-            }
 
             var keys = (
                 from contractKey in contractKeys
@@ -100,7 +96,7 @@
                 var curContractKey = key as IContractKey;
                 if (curContractKey != null && curContractKey.ContractType == contractKey.ContractType)
                 {
-                    yield return curContractKey;
+                    yield return contractKey;
                     continue;
                 }
 

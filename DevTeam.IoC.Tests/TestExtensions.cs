@@ -12,7 +12,7 @@
             return container.Resolve().Instance<IKeyFactory>();
         }
 
-        public static IResolverContext CreateContext(this IResolver resolver, ICompositeKey key, IStateProvider stateProvider = null)
+        public static IResolverContext CreateContext(this IResolver resolver, IKey key, IStateProvider stateProvider = null)
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             if (key == null) throw new ArgumentNullException(nameof(key));

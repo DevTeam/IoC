@@ -34,8 +34,15 @@
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            var key = obj as IContractKey;
-            return key != null && Equals(key);
+            var compositeKey = obj as ICompositeKey;
+            if (compositeKey != null)
+            {
+                // ReSharper disable once SuspiciousTypeConversion.Global
+                return compositeKey.Equals(this);
+            }
+
+            var contractKey = obj as IContractKey;
+            return contractKey != null && Equals(contractKey);
         }
 
         public override int GetHashCode()

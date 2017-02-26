@@ -12,7 +12,7 @@
         private readonly List<HashSet<IContractKey>> _contractKeys = new List<HashSet<IContractKey>>();
         private readonly HashSet<ITagKey> _tagKeys = new HashSet<ITagKey>();
         private readonly HashSet<IStateKey> _stateKeys = new HashSet<IStateKey>();
-        private readonly HashSet<ICompositeKey> _compositeKeys = new HashSet<ICompositeKey>();
+        private readonly HashSet<IKey> _registrationKeys = new HashSet<IKey>();
         private readonly Lazy<IInstanceFactoryProvider> _instanceFactoryProvider;
         private readonly RegistrationResult<T> _result;
 
@@ -157,7 +157,7 @@
 
         protected override bool AddCompositeKey(ICompositeKey compositeKey)
         {
-            return _compositeKeys.Add(compositeKey);
+            return _registrationKeys.Add(compositeKey);
         }
 
         private bool ExtractMetadata(Type metadataType)
@@ -190,11 +190,20 @@
             return hasMetadata;
         }
 
-        private void AppendCompositeKeys()
+        private void AppendRegistryKeys()
         {
             foreach (var contractKeys in _contractKeys)
             {
-                _compositeKeys.Add(Resolver.KeyFactory.CreateCompositeKey(contractKeys, _tagKeys.Any() ? _tagKeys : null, _stateKeys.Any() ? _stateKeys : null));
+                var tagKeys = _tagKeys.Any() ? _tagKeys : null;
+                var stateKeys = _stateKeys.Any() ? _stateKeys : null;
+                if (contractKeys.Count == 1 && tagKeys == null && stateKeys == null)
+                {
+                    _registrationKeys.Add(contractKeys.Single());
+                }
+                else
+                {
+                    _registrationKeys.Add(Resolver.KeyFactory.CreateCompositeKey(contractKeys, tagKeys, stateKeys));
+                }
             }
 
             _contractKeys.Clear();
@@ -206,20 +215,20 @@
             Func<IResolverContext, TImplementation> factoryMethod,
             Type implementationType = null)
         {
-            AppendCompositeKeys();
+            AppendRegistryKeys();
             if (ExtractMetadata(implementationType ?? typeof(TImplementation)))
             {
-                AppendCompositeKeys();
+                AppendRegistryKeys();
             }
 
             IDisposable registration;
-            var context = Resolver.CreateRegistryContext(_compositeKeys, new MethodFactory<TImplementation>(factoryMethod), Extensions);
+            var context = Resolver.CreateRegistryContext(_registrationKeys, new MethodFactory<TImplementation>(factoryMethod), Extensions);
             if (!Resolver.TryRegister(context, out registration))
             {
                 throw new InvalidOperationException($"Can't register {string.Join(Environment.NewLine, context.Keys)}.{Environment.NewLine}{Environment.NewLine}{Resolver}");
             }
 
-            _compositeKeys.Clear();
+            _registrationKeys.Clear();
             _result.AddResource(registration);
         }
 

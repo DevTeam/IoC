@@ -352,7 +352,7 @@
                                     resolving.Contract(parameterType);
                                 }
                                 
-                                key = resolving.CreateCompositeKey();
+                                key = resolving.CreateResolvingKey();
                             }
                             else
                             {

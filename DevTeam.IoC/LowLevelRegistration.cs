@@ -7,18 +7,17 @@
 
     internal static class LowLevelRegistration
     {
-        public static IEnumerable<ICompositeKey> CreateKeys<TContract>()
+        public static IEnumerable<IKey> CreateKeys<TContract>()
         {
             return CreateKeys(typeof(TContract));
         }
 
-        public static IEnumerable<ICompositeKey> CreateKeys(Type contractType)
+        public static IEnumerable<IKey> CreateKeys(Type contractType)
         {
-            var key = RootContainerConfiguration.KeyFactory.CreateCompositeKey(Enumerable.Repeat<IContractKey>(new ContractKey(contractType, true), 1));
-            return Enumerable.Repeat(key, 1).ToArray();
+            return Enumerable.Repeat((IKey)new ContractKey(contractType, true), 1).ToArray();
         }
 
-        public static IDisposable RawRegister<TContract>(IRegistry registry, IEnumerable<ICompositeKey> keys, Func<IResolverContext, TContract> factoryMethod, params IExtension[] extensions)
+        public static IDisposable RawRegister<TContract>(IRegistry registry, IEnumerable<IKey> keys, Func<IResolverContext, TContract> factoryMethod, params IExtension[] extensions)
         {
             var registryContext = registry.CreateRegistryContext(keys, new MethodFactory<TContract>(factoryMethod), extensions);
             IDisposable disposable;
@@ -26,7 +25,7 @@
             return disposable;
         }
 
-        public static IDisposable RawRegister(Type contractType, IRegistry registry, IEnumerable<ICompositeKey> keys, Func<IResolverContext, object> factoryMethod, params IExtension[] extensions)
+        public static IDisposable RawRegister(Type contractType, IRegistry registry, IEnumerable<IKey> keys, Func<IResolverContext, object> factoryMethod, params IExtension[] extensions)
         {
             var registryContext = registry.CreateRegistryContext(keys, new MethodFactory<object>(factoryMethod), extensions);
             IDisposable disposable;

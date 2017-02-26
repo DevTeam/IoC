@@ -1,12 +1,11 @@
 ﻿namespace DevTeam.IoC.Contracts
 {
     using System;
-    using System.Linq;
 
     [PublicAPI]
     public static class Extensions
     {
-        private static ICompositeKey _fluentKey;
+        private static IKey _fluentKey;
 
         [NotNull]
         public static IConfiguration Feature([NotNull] this IResolver resolver, Wellknown.Feature feature)
@@ -115,7 +114,7 @@
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             if (_fluentKey == null)
             {
-                _fluentKey = resolver.KeyFactory.CreateCompositeKey(Enumerable.Repeat(resolver.KeyFactory.CreateContractKey(typeof(IFluent), true), 1));
+                _fluentKey = resolver.KeyFactory.CreateContractKey(typeof(IFluent), true);
             }
 
             IResolverContext ctx;

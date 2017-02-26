@@ -11,7 +11,7 @@
         private readonly HashSet<IContractKey> _genericContractKeys = new HashSet<IContractKey>();
         private readonly HashSet<ITagKey> _tagKeys = new HashSet<ITagKey>();
         private readonly HashSet<IStateKey> _stateKeys = new HashSet<IStateKey>();
-        private ICompositeKey _compositeKey;
+        private IKey _resolvingKey;
 
         public Resolving([NotNull] IFluent fluent, [NotNull] T container)
             : base(fluent, container)
@@ -31,7 +31,7 @@
         {
             if (stateProvider == null) throw new ArgumentNullException(nameof(stateProvider));
             IResolverContext ctx;
-            var key = CreateCompositeKey();
+            var key = CreateResolvingKey();
             if (!Resolver.TryCreateResolverContext(key, out ctx, stateProvider))
             {
                 throw new InvalidOperationException(GetCantResolveErrorMessage(key));
@@ -44,7 +44,7 @@
         {
             if (stateProvider == null) throw new ArgumentNullException(nameof(stateProvider));
             IResolverContext ctx;
-            var key = CreateCompositeKey();
+            var key = CreateResolvingKey();
             if (!Resolver.TryCreateResolverContext(key, out ctx, stateProvider))
             {
                 instance = default(object);
@@ -64,7 +64,7 @@
             }
 
             IResolverContext ctx;
-            var key = CreateCompositeKey();
+            var key = CreateResolvingKey();
             if (!Resolver.TryCreateResolverContext(key, out ctx, stateProvider))
             {
                 throw new InvalidOperationException(GetCantResolveErrorMessage(key));
@@ -82,7 +82,7 @@
             }
 
             IResolverContext ctx;
-            var key = CreateCompositeKey();
+            var key = CreateResolvingKey();
             if (!Resolver.TryCreateResolverContext(key, out ctx, stateProvider))
             {
                 instance = default(TContract);
@@ -185,23 +185,30 @@
             return false;
         }
 
-        internal ICompositeKey CreateCompositeKey()
+        internal IKey CreateResolvingKey()
         {
-            if (_compositeKey != null)
+            if (_resolvingKey != null)
             {
-                return _compositeKey;
+                return _resolvingKey;
             }
 
-            _compositeKey = Resolver.KeyFactory.CreateCompositeKey(_genericContractKeys, _tagKeys.Any() ? _tagKeys : null, _stateKeys.Any() ? _stateKeys : null);
-            return _compositeKey;
+            var tagKeys = _tagKeys.Any() ? _tagKeys : null;
+            var stateKeys = _stateKeys.Any() ? _stateKeys : null;
+            if (_genericContractKeys.Count == 1 && tagKeys == null && stateKeys == null)
+            {
+                return _genericContractKeys.Single();
+            }
+
+            _resolvingKey = Resolver.KeyFactory.CreateCompositeKey(_genericContractKeys, tagKeys, stateKeys);
+            return _resolvingKey;
         }
 
         private void OnCompositeKeyChanged()
         {
-            _compositeKey = null;
+            _resolvingKey = null;
         }
 
-        private string GetCantResolveErrorMessage(ICompositeKey key)
+        private string GetCantResolveErrorMessage(IKey key)
         {
             return $"Can't resolve {key}.{Environment.NewLine}{Environment.NewLine}{Resolver}";
         }

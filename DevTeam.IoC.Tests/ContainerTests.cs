@@ -137,11 +137,11 @@
             {
                 // When
                 container.CreateRegistryContext(
-                    CreateCompositeKeys(container, false, new[] { typeof(IResolver) }, new object[0]),
+                    Enumerable.Repeat((IKey)new ContractKey(typeof(IResolver), true), 1),
                     _factory.Object,
                     new IExtension[0]);
 
-                var resolverContext = container.CreateContext(CreateCompositeKey(container, true, new[] { typeof(IResolver) }));
+                var resolverContext = container.CreateContext(new ContractKey(typeof(IResolver), true));
                 var resolver = container.Resolve(resolverContext);
 
                 // Then

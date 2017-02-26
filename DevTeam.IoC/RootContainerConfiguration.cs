@@ -12,14 +12,14 @@
         public static readonly Fluent Fluent = new Fluent();
         public static readonly IMetadataProvider MetadataProvider = new AutowiringMetadataProvider();
         private static readonly IInstanceFactoryProvider ExpressionInstanceFactoryProvider = new ExpressionInstanceFactoryProvider();
-        private static readonly IEnumerable<ICompositeKey> ResolverKeys = LowLevelRegistration.CreateKeys<IResolver>();
-        private static readonly IEnumerable<ICompositeKey> RegistryKeys = LowLevelRegistration.CreateKeys<IRegistry>();
-        private static readonly IEnumerable<ICompositeKey> KeyFactoryKeys = LowLevelRegistration.CreateKeys<IKeyFactory>();
-        private static readonly IEnumerable<ICompositeKey> FluentKeys = LowLevelRegistration.CreateKeys<IFluent>();
-        private static readonly IEnumerable<ICompositeKey> InstanceFactoryProviderKeys = LowLevelRegistration.CreateKeys<IInstanceFactoryProvider>();
-        private static readonly IEnumerable<ICompositeKey> ResolvingKeys = LowLevelRegistration.CreateKeys<IResolving<IResolver>>();
-        private static readonly IEnumerable<ICompositeKey> RegistrationKeys = LowLevelRegistration.CreateKeys<IRegistration<IContainer>>();
-        private static readonly IEnumerable<ICompositeKey> MetadataProviderKeys = LowLevelRegistration.CreateKeys<IMetadataProvider>();
+        private static readonly IEnumerable<IKey> ResolverKeys = LowLevelRegistration.CreateKeys<IResolver>();
+        private static readonly IEnumerable<IKey> RegistryKeys = LowLevelRegistration.CreateKeys<IRegistry>();
+        private static readonly IEnumerable<IKey> KeyFactoryKeys = LowLevelRegistration.CreateKeys<IKeyFactory>();
+        private static readonly IEnumerable<IKey> FluentKeys = LowLevelRegistration.CreateKeys<IFluent>();
+        private static readonly IEnumerable<IKey> InstanceFactoryProviderKeys = LowLevelRegistration.CreateKeys<IInstanceFactoryProvider>();
+        private static readonly IEnumerable<IKey> ResolvingKeys = LowLevelRegistration.CreateKeys<IResolving<IResolver>>();
+        private static readonly IEnumerable<IKey> RegistrationKeys = LowLevelRegistration.CreateKeys<IRegistration<IContainer>>();
+        private static readonly IEnumerable<IKey> MetadataProviderKeys = LowLevelRegistration.CreateKeys<IMetadataProvider>();
 
         private RootContainerConfiguration()
         {

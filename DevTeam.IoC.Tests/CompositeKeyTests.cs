@@ -101,10 +101,25 @@
             key1.Equals(key2).ShouldBeFalse();
         }
 
+        [Test]
+        public void ShouldSupportEqForIdenticalContractAndComposite()
+        {
+            // Given
+
+            // When
+            IKey key1 = CreateInstance(new[] { _contractKey1 });
+            IKey key2 = new ContractKey(_contractKey1.ContractType, true);
+
+            // Then
+            key1.GetHashCode().ShouldBe(key2.GetHashCode());
+            key1.Equals(key2).ShouldBeTrue();
+            key2.Equals(key1).ShouldBeTrue();
+        }
+
         private CompositeKey CreateInstance(
             [NotNull] IEnumerable<IContractKey> contractKey,
-            [NotNull] IEnumerable<ITagKey> tagKeys,
-            [NotNull] IEnumerable<IStateKey> stateKeys)
+            [CanBeNull] IEnumerable<ITagKey> tagKeys = null,
+            [CanBeNull] IEnumerable<IStateKey> stateKeys = null)
         {
             return new CompositeKey(contractKey, tagKeys, stateKeys);
         }
