@@ -15,6 +15,7 @@
         private readonly HashSet<IKey> _registrationKeys = new HashSet<IKey>();
         private readonly Lazy<IInstanceFactoryProvider> _instanceFactoryProvider;
         private readonly RegistrationResult<T> _result;
+        private readonly ICache<Type, IResolverFactory> _resolverFactoryCache;
 
         public Registration([NotNull] IFluent fluent, [NotNull] T container)
             : base(fluent, container)
@@ -23,6 +24,8 @@
             if (container == null) throw new ArgumentNullException(nameof(container));
             _instanceFactoryProvider = new Lazy<IInstanceFactoryProvider>(GetInstanceFactoryProvider);
             _result = new RegistrationResult<T>(this);
+            var cacheProvider = container as IProvider<ICache<Type, IResolverFactory>>;
+            cacheProvider?.TryGet(out _resolverFactoryCache);
         }
 
         private List<IExtension> Extensions { get; } = new List<IExtension>();
@@ -106,15 +109,11 @@
             AsFactoryMethodInternal(ctx =>
                 {
                     var resolvedType = metadataProvider.ResolveImplementationType(ctx, implementationType);
-                    ICache<Type, IResolverFactory> factoryCache;
                     IResolverFactory factory;
-                    if (ctx.Container.TryResolve(out factoryCache))
+                    if (_resolverFactoryCache != null && !_resolverFactoryCache.TryGet(resolvedType, out factory))
                     {
-                        if (!factoryCache.TryGet(resolvedType, out factory))
-                        {
-                            factory = new MetadataFactory(resolvedType, _instanceFactoryProvider.Value, metadataProvider);
-                            factoryCache.Set(resolvedType, factory);
-                        }
+                        factory = new MetadataFactory(resolvedType, _instanceFactoryProvider.Value, metadataProvider);
+                        _resolverFactoryCache.Set(resolvedType, factory);
                     }
                     else
                     {

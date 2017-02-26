@@ -165,14 +165,6 @@
             yield return
                 container
                 .Register()
-                .Tag(Wellknown.Feature.Cache)
-                .Contract<IConfiguration>()
-                .FactoryMethod(ctx => CacheFeature.Shared)
-                .Apply();
-
-            yield return
-                container
-                .Register()
                 .Tag(Wellknown.Feature.Dto)
                 .Contract<IConfiguration>()
                 .FactoryMethod(ctx => DtoFeature.Shared)

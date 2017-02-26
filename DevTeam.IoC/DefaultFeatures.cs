@@ -23,7 +23,6 @@
             yield return KeyComparersFeature.Shared;
             yield return EnumerablesFeature.Shared;
             yield return TasksFeature.Shared;
-            yield return CacheFeature.Shared;
             yield return DtoFeature.Shared;
         }
 

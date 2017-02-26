@@ -6,21 +6,25 @@
 
     using Contracts;
 
-    public class Container : IContainer, IObservable<IRegistrationEvent>
+    public class Container : IContainer, IObservable<IRegistrationEvent>, IProvider<ICache<Type, IResolverFactory>>
     {
         private readonly List<IDisposable> _resources = new List<IDisposable>();
         private readonly Dictionary<IEqualityComparer<IKey>, Dictionary<IKey, RegistrationItem>> _registrations = new Dictionary<IEqualityComparer<IKey>, Dictionary<IKey, RegistrationItem>>();
         private readonly Subject<IRegistrationEvent> _registrationSubject = new Subject<IRegistrationEvent>();
         private readonly IKeyFactory _keyFactory;
-        private ICache<IKey, IResolverContext> _cache;
+        private readonly ICache<IKey, IResolverContext> _resolverContextCache = new Cache<IKey, IResolverContext>();
+        private readonly ICache<Type, IResolverFactory> _resolverFactoryCache = new Cache<Type, IResolverFactory>();
 
         public Container([CanBeNull] object tag = null)
         {
             Tag = tag;
             _resources.Add(new CompositeDisposable(RootContainerConfiguration.Shared.Apply(this)));
             _resources.Add(new CompositeDisposable(ContainerConfiguration.Shared.Apply(this)));
-            this.TryResolve(out _keyFactory);
-            this.TryResolve(out _cache);
+            if (!this.TryResolve(out _keyFactory))
+            {
+                throw new InvalidOperationException("Can not resolve key's factory");
+            }
+
             var cacheTracker = new CacheTracker(this);
             _resources.Add(Subscribe(cacheTracker));
         }
@@ -30,8 +34,11 @@
             Tag = tag;
             Parent = parentContainer;
             _resources.Add(new CompositeDisposable(ContainerConfiguration.Shared.Apply(this)));
-            this.TryResolve(out _keyFactory);
-            this.TryResolve(out _cache);
+            if (!this.TryResolve(out _keyFactory))
+            {
+                throw new InvalidOperationException("Can not resolve key's factory");
+            }
+
             var cacheTracker = new CacheTracker(this);
             _resources.Add(Subscribe(cacheTracker));
             var parent = Parent;
@@ -137,7 +144,7 @@
 
             lock (LockObject)
             {
-                if (_cache != null && _cache.TryGet(key, out resolverContext))
+                if (_resolverContextCache.TryGet(key, out resolverContext))
                 {
                     return true;
                 }
@@ -163,7 +170,7 @@
                     {
                         if (isRootResolver)
                         {
-                            _cache?.Set(key, resolverContext);
+                            _resolverContextCache.Set(key, resolverContext);
                         }
 
                         return true;
@@ -174,7 +181,7 @@
                 {
                     if (isRootResolver)
                     {
-                        _cache?.Set(key, resolverContext);
+                        _resolverContextCache.Set(key, resolverContext);
                     }
 
                     return true;
@@ -225,6 +232,18 @@
             return _registrationSubject.Subscribe(observer);
         }
 
+        public bool TryGet(out ICache<Type, IResolverFactory> instance, IStateProvider stateProvider)
+        {
+            instance = _resolverFactoryCache;
+            return true;
+        }
+
+        public bool TryGet(out ICache<Type, IResolverFactory> instance, params object[] state)
+        {
+            instance = _resolverFactoryCache;
+            return true;
+        }
+
         public override string ToString()
         {
             return $"{nameof(Container)} [Tag: {Tag ?? "null"}]{Environment.NewLine}{string.Join(Environment.NewLine, Registrations)}";
@@ -243,7 +262,7 @@
             {
                 if (value.Stage == EventStage.After)
                 {
-                    _container._cache?.TryRemove(value.Key);
+                    _container._resolverContextCache.TryRemove(value.Key);
                 }
             }
 

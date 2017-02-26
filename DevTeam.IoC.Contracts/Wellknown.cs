@@ -35,9 +35,6 @@
             // Support resolving via IResolver<>, IProvider<>, Func<>
             Resolvers,
 
-            // Use cache to optimize a performance.
-            Cache,
-
             // Support configuration using Dto.
             Dto
         }

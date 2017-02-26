@@ -41,7 +41,6 @@
   <ItemGroup>
     <Compile Include="AutowiringMetadataProvider.cs" />
     <Compile Include="Cache.cs" />
-    <Compile Include="CacheFeature.cs" />
     <Compile Include="CacheTracker.cs" />
     <Compile Include="CompositeConfiguration.cs" />
     <Compile Include="ConfigurationDescriptionDto.cs" />
