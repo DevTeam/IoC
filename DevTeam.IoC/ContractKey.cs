@@ -57,27 +57,29 @@
                 return false;
             }
 
-            if (GenericTypeArguments.Length == other.GenericTypeArguments.Length)
+            var genericTypeArguments = GenericTypeArguments;
+            var otherGenericTypeArguments = other.GenericTypeArguments;
+            if (genericTypeArguments.Length == otherGenericTypeArguments.Length)
             {
-                if(GenericTypeArguments.Length == 0)
+                if(genericTypeArguments.Length == 0)
                 {
                     return true;
                 }
 
-                return GenericTypeArguments.SequenceEqual(other.GenericTypeArguments);
+                return genericTypeArguments.SequenceEqual(otherGenericTypeArguments);
             }
 
             if (ToResolve == other.ToResolve)
             {
-                return GenericTypeArguments.SequenceEqual(other.GenericTypeArguments);
+                return genericTypeArguments.SequenceEqual(otherGenericTypeArguments);
             }
 
-            if ((!ToResolve && GenericTypeArguments.Length == 0) || (!other.ToResolve && other.GenericTypeArguments.Length == 0))
+            if ((!ToResolve && genericTypeArguments.Length == 0) || (!other.ToResolve && otherGenericTypeArguments.Length == 0))
             {
                 return true;
             }
 
-            return GenericTypeArguments.SequenceEqual(other.GenericTypeArguments);
+            return GenericTypeArguments.SequenceEqual(otherGenericTypeArguments);
         }
 
         public override string ToString()

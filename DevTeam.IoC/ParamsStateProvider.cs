@@ -7,12 +7,11 @@
     internal class ParamsStateProvider: IStateProvider
     {
         private readonly object[] _state;
-        private readonly Lazy<int> _hashCode;
+        private int? _hashCode;
 
         public ParamsStateProvider(params object[] state)
         {
             _state = state;
-            _hashCode = new Lazy<int>(GetHashInternal);
         }
 
         public object GetState(IResolverContext resolverContext, IStateKey stateKey)
@@ -39,7 +38,10 @@
 
         public override int GetHashCode()
         {
+            // ReSharper disable NonReadonlyMemberInGetHashCode
+            _hashCode = _hashCode ?? GetHashInternal();
             return _hashCode.Value;
+            // ReSharper restore NonReadonlyMemberInGetHashCode
         }
 
         private int GetHashInternal()

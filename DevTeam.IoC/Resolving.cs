@@ -12,6 +12,10 @@
         private readonly HashSet<ITagKey> _tagKeys = new HashSet<ITagKey>();
         private readonly HashSet<IStateKey> _stateKeys = new HashSet<IStateKey>();
         private IKey _resolvingKey;
+        private bool _hasTagKeys;
+        private bool _hasStateKeys;
+        private IContractKey _singleContractKey;
+        private int _genericContractKeysCount;
 
         public Resolving([NotNull] IFluent fluent, [NotNull] T container)
             : base(fluent, container)
@@ -129,6 +133,11 @@
             foreach (var contractKey in keys)
             {
                 changed |= _genericContractKeys.Add(contractKey);
+                if (changed)
+                {
+                    _genericContractKeysCount++;
+                    _singleContractKey = contractKey;
+                }
             }
 
             if (changed)
@@ -144,6 +153,7 @@
         {
             if (_stateKeys.Add(key))
             {
+                _hasStateKeys = true;
                 OnCompositeKeyChanged();
                 return true;
             }
@@ -155,6 +165,7 @@
         {
             if (_tagKeys.Add(key))
             {
+                _hasTagKeys = true;
                 OnCompositeKeyChanged();
                 return true;
             }
@@ -192,11 +203,11 @@
                 return _resolvingKey;
             }
 
-            var tagKeys = _tagKeys.Any() ? _tagKeys : null;
-            var stateKeys = _stateKeys.Any() ? _stateKeys : null;
-            if (_genericContractKeys.Count == 1 && tagKeys == null && stateKeys == null)
+            var tagKeys = _hasTagKeys ? _tagKeys : null;
+            var stateKeys = _hasStateKeys ? _stateKeys : null;
+            if (_genericContractKeysCount == 1 && tagKeys == null && stateKeys == null)
             {
-                return _genericContractKeys.Single();
+                return _singleContractKey;
             }
 
             _resolvingKey = Resolver.KeyFactory.CreateCompositeKey(_genericContractKeys, tagKeys, stateKeys);
