@@ -8,6 +8,7 @@
     internal struct ContractKey: IContractKey
     {
         private static readonly Type[] EmptyGenericTypeArguments = new Type[0];
+        private readonly int _hashCode;
 
         public ContractKey(Type contractType, bool toResolve)
         {
@@ -23,6 +24,8 @@
                 ContractType = contractType;
                 GenericTypeArguments = EmptyGenericTypeArguments;
             }
+
+            _hashCode = ContractType.GetHashCode();
         }
 
         public Type ContractType { get; }
@@ -47,7 +50,7 @@
 
         public override int GetHashCode()
         {
-            return ContractType.GetHashCode();
+            return _hashCode;
         }
 
         private bool Equals(IContractKey other)

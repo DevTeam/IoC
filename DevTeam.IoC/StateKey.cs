@@ -6,6 +6,8 @@
 
     internal struct StateKey: IStateKey
     {
+        private readonly int _hashCode;
+
         public StateKey(int index, [NotNull] Type stateType)
         {
             if (stateType == null) throw new ArgumentNullException(nameof(stateType));
@@ -13,6 +15,10 @@
 
             Index = index;
             StateType = stateType;
+            unchecked
+            {
+                _hashCode = (Index * 397) ^ StateType.GetHashCode();
+            }
         }
 
         public int Index { get; }
@@ -33,10 +39,7 @@
                 return 0;
             }
 
-            unchecked
-            {
-                return (Index * 397) ^ StateType.GetHashCode();
-            }
+            return _hashCode;
         }
 
         private bool Equals(IStateKey other)

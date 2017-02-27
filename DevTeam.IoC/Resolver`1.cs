@@ -74,7 +74,7 @@
 
         protected IStateProvider CreateStateProvider(params object[] state)
         {
-            return new ParamsStateProvider(state);
+            return ParamsStateProvider.Create(state);
         }
 
         private static IEnumerable<IKey> ExcludeContractKeys(IKey key)

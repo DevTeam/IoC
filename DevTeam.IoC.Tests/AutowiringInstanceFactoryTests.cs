@@ -105,7 +105,7 @@
             registryContext.SetupGet(i => i.Container).Returns(_container);
             var resolverContext = new Mock<IResolverContext>();
             resolverContext.SetupGet(i => i.RegistryContext).Returns(registryContext.Object);
-            resolverContext.SetupGet(i => i.StateProvider).Returns(new ParamsStateProvider(state));
+            resolverContext.SetupGet(i => i.StateProvider).Returns(ParamsStateProvider.Create(state));
             return resolverContext.Object;
         }
 

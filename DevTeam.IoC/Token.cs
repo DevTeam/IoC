@@ -20,9 +20,9 @@
             Resolver = container;
         }
 
-        protected IFluent Fluent { get; }
+        protected IFluent Fluent;
 
-        protected T Resolver { get; }
+        protected T Resolver;
 
         public TToken Key(IEnumerable<IKey> keys)
         {

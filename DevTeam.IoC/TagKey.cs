@@ -6,10 +6,13 @@
 
     internal struct TagKey : ITagKey
     {
+        private readonly int _hashCode;
+
         public TagKey([NotNull] object tag)
         {
             if (tag == null) throw new ArgumentNullException(nameof(tag));
             Tag = tag;
+            _hashCode = Tag.GetHashCode();
         }
 
         public object Tag { get; }
@@ -28,7 +31,7 @@
                 return 0;
             }
 
-            return Tag.GetHashCode();
+            return _hashCode;
         }
 
         private bool Equals(ITagKey other)

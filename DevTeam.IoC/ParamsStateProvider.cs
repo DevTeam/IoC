@@ -1,6 +1,5 @@
 ﻿namespace DevTeam.IoC
 {
-    using System;
     using System.Linq;
     using Contracts;
 
@@ -9,7 +8,19 @@
         private readonly object[] _state;
         private int? _hashCode;
 
-        public ParamsStateProvider(params object[] state)
+        public static readonly ParamsStateProvider Empty = new ParamsStateProvider();
+
+        public static IStateProvider Create(params object[] state)
+        {
+            if (state.Length == 0)
+            {
+                return Empty;
+            }
+
+            return new ParamsStateProvider(state);
+        }
+
+        private ParamsStateProvider(params object[] state)
         {
             _state = state;
         }

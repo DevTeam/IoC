@@ -147,7 +147,7 @@
             }
         }
 
-        private static readonly Dictionary<string, Action<int>> Iocs = new Dictionary<string, Action<int>>()
+        private static readonly Dictionary<string, Func<int, long>> Iocs = new Dictionary<string, Func<int, long>>()
         {
             {"Unity", Unity},
             {"DevTeam", DevTeam}
@@ -164,40 +164,54 @@
                 ioc.Value(warmupSeries);
             }
 
+            var results = new Dictionary<string, long>();
             foreach (var ioc in Iocs)
             {
-                var stopwatch = new Stopwatch();
-                stopwatch.Start();
-                ioc.Value(series);
-                stopwatch.Stop();
-                Debug.WriteLine($"{ioc.Key}: {stopwatch.ElapsedMilliseconds}");
+                var elapsedMilliseconds = ioc.Value(series);
+                Debug.WriteLine($"{ioc.Key}: {elapsedMilliseconds}");
+                results.Add(ioc.Key, elapsedMilliseconds);
+            }
+
+            var actualElapsedMilliseconds = results["DevTeam"];
+            foreach (var result in results)
+            {
+                Assert.LessOrEqual(actualElapsedMilliseconds, result.Value, $"{result.Key} is better: {result.Value}, our result is : {actualElapsedMilliseconds}");
             }
         }
 
-        public static void DevTeam(int series)
+        public static long DevTeam(int series)
         {
             using (var container = new Container().Configure()
                 .DependsOn(Wellknown.Feature.Default).ToSelf()
                 .Register().Contract<IService1>().Autowiring<Service1>()
                 .And().Contract<IService2>().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<Service2>().ToSelf())
             {
+                var resolver = container.Resolve().Contract<IService1>();
+                var stopwatch = Stopwatch.StartNew();
                 for (var i = 0; i < series; i++)
                 {
-                    container.Resolve().Instance<IService1>();
+                    resolver.Instance<IService1>();
                 }
+
+                stopwatch.Stop();
+                return stopwatch.ElapsedMilliseconds;
             }
         }
 
-        public static void Unity(int series)
+        public static long Unity(int series)
         {
             using (var container = new UnityContainer())
             {
                 container.RegisterType<IService1, Service1>();
                 container.RegisterType<IService2, Service2>(new ContainerControlledLifetimeManager());
+                var stopwatch = Stopwatch.StartNew();
                 for (var i = 0; i < series; i++)
                 {
                     container.Resolve(typeof(IService1));
                 }
+
+                stopwatch.Stop();
+                return stopwatch.ElapsedMilliseconds;
             }
         }
 

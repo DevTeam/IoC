@@ -99,31 +99,31 @@
         public object Instance(params object[] state)
         {
             if (state == null) throw new ArgumentNullException(nameof(state));
-            return Instance(new ParamsStateProvider(state));
+            return Instance(ParamsStateProvider.Create(state));
         }
 
         public bool TryInstance(out object instance, params object[] state)
         {
             if (state == null) throw new ArgumentNullException(nameof(state));
-            return TryInstance(out instance, new ParamsStateProvider(state));
+            return TryInstance(out instance, ParamsStateProvider.Create(state));
         }
 
         public bool TryInstance<TContract>(out TContract instance, params object[] state)
         {
             if (state == null) throw new ArgumentNullException(nameof(state));
-            return TryInstance(out instance, new ParamsStateProvider(state));
+            return TryInstance(out instance, ParamsStateProvider.Create(state));
         }
 
         public TContract Instance<TContract>(params object[] state)
         {
             if (state == null) throw new ArgumentNullException(nameof(state));
-            return Instance<TContract>(new ParamsStateProvider(state));
+            return Instance<TContract>(ParamsStateProvider.Create(state));
         }
 
         public bool Instance<TContract>(out TContract instance, params object[] state)
         {
             if (state == null) throw new ArgumentNullException(nameof(state));
-            return TryInstance(out instance, new ParamsStateProvider(state));
+            return TryInstance(out instance, ParamsStateProvider.Create(state));
         }
 
         protected override bool AddContractKey(IEnumerable<IContractKey> keys)
