@@ -6,11 +6,17 @@
 
     using Contracts;
 
-    public class Container : IContainer, IObservable<IRegistrationEvent>, IProvider<ICache<Type, IResolverFactory>>
+    public class Container :
+        IContainer, 
+        IObservable<IRegistrationEvent>,
+        IProvider<ICache<Type, IResolverFactory>>,
+        IProvider<IFluent>
     {
         private readonly List<IDisposable> _resources = new List<IDisposable>();
         private readonly Dictionary<IEqualityComparer<IKey>, Dictionary<IKey, RegistrationItem>> _registrations = new Dictionary<IEqualityComparer<IKey>, Dictionary<IKey, RegistrationItem>>();
         private readonly Subject<IRegistrationEvent> _registrationSubject = new Subject<IRegistrationEvent>();
+        // ReSharper disable once MemberInitializerValueIgnored
+        private readonly IFluent _fluent = RootContainerConfiguration.Fluent;
         private readonly IKeyFactory _keyFactory;
         private readonly ICache<IKey, IResolverContext> _resolverContextCache = new Cache<IKey, IResolverContext>();
         private readonly ICache<Type, IResolverFactory> _resolverFactoryCache = new Cache<Type, IResolverFactory>();
@@ -20,6 +26,11 @@
             Tag = tag;
             _resources.Add(new CompositeDisposable(RootContainerConfiguration.Shared.Apply(this)));
             _resources.Add(new CompositeDisposable(ContainerConfiguration.Shared.Apply(this)));
+            if (!this.TryResolve(out _fluent))
+            {
+                throw new InvalidOperationException("Can not resolve fluent");
+            }
+
             if (!this.TryResolve(out _keyFactory))
             {
                 throw new InvalidOperationException("Can not resolve key's factory");
@@ -34,6 +45,11 @@
             Tag = tag;
             Parent = parentContainer;
             _resources.Add(new CompositeDisposable(ContainerConfiguration.Shared.Apply(this)));
+            if (!this.TryResolve(out _fluent))
+            {
+                throw new InvalidOperationException("Can not resolve fluent");
+            }
+
             if (!this.TryResolve(out _keyFactory))
             {
                 throw new InvalidOperationException("Can not resolve key's factory");
@@ -237,15 +253,15 @@
             return _registrationSubject.Subscribe(observer);
         }
 
-        public bool TryGet(out ICache<Type, IResolverFactory> instance, IStateProvider stateProvider)
+        public bool TryGet(out ICache<Type, IResolverFactory> instance)
         {
             instance = _resolverFactoryCache;
             return true;
         }
 
-        public bool TryGet(out ICache<Type, IResolverFactory> instance, params object[] state)
+        public bool TryGet(out IFluent instance)
         {
-            instance = _resolverFactoryCache;
+            instance = _fluent;
             return true;
         }
 

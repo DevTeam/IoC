@@ -14,11 +14,9 @@
         protected static readonly ITagKey[] EmptyTagKeys = new ITagKey[0];
         protected static readonly IStateKey[] EmptyStateKeys = new IStateKey[0];
 
-        protected Token(IFluent fluent, T container)
+        protected Token(T container)
         {
-            if (fluent == null) throw new ArgumentNullException(nameof(fluent));
-            if (container == null) throw new ArgumentNullException(nameof(container));
-            Fluent = fluent;
+            Fluent = container.Fluent();
             Resolver = container;
         }
 

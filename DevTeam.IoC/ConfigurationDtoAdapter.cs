@@ -285,7 +285,7 @@
                         {
                             if (ctorParam.Dependency != null)
                             {
-                                var resolving = new Resolving<IContainer>(container.Resolve().Instance<IFluent>(), container);
+                                var resolving = new Resolving<IContainer>(container);
                                 var hasContractKey = false;
                                 foreach (var keyDto in ctorParam.Dependency)
                                 {

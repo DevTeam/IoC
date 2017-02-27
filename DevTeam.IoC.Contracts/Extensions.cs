@@ -5,8 +5,6 @@
     [PublicAPI]
     public static class Extensions
     {
-        private static IKey _fluentKey;
-
         [NotNull]
         public static IConfiguration Feature([NotNull] this IResolver resolver, Wellknown.Feature feature)
         {
@@ -18,7 +16,7 @@
             where T : IContainer
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
-            return GetFluent(container).Configure(container);
+            return Fluent(container).Configure(container);
         }
 
         [NotNull]
@@ -42,7 +40,7 @@
               where T : IContainer
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
-            return GetFluent(container).Register(container);
+            return Fluent(container).Register(container);
         }
 
         [NotNull]
@@ -62,7 +60,7 @@
               where T : IResolver
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            return GetFluent(resolver).Resolve(resolver);
+            return Fluent(resolver).Resolve(resolver);
         }
 
         [CanBeNull]
@@ -108,22 +106,18 @@
         }
 
         [NotNull]
-        private static IFluent GetFluent<T>([NotNull] T resolver)
+        public static IFluent Fluent<T>([NotNull] this T resolver)
              where T : IResolver
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            if (_fluentKey == null)
-            {
-                _fluentKey = resolver.KeyFactory.CreateContractKey(typeof(IFluent), true);
-            }
-
-            IResolverContext ctx;
-            if (!resolver.TryCreateResolverContext(_fluentKey, out ctx))
+            var fluentProvider = resolver as IProvider<IFluent>;
+            IFluent fluent;
+            if (fluentProvider == null || !fluentProvider.TryGet(out fluent))
             {
                 throw new InvalidOperationException($"{typeof(IFluent)} is not supported");
             }
 
-            return (IFluent)resolver.Resolve(ctx);
+            return fluent;
         }
     }
 }

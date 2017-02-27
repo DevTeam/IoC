@@ -9,8 +9,8 @@
     {
         public static readonly IConfiguration Shared = new RootContainerConfiguration();
         public static readonly KeyFactory KeyFactory = new KeyFactory();
-        public static readonly Fluent Fluent = new Fluent();
         public static readonly IMetadataProvider MetadataProvider = new AutowiringMetadataProvider();
+        public static readonly Fluent Fluent = new Fluent();
         private static readonly IInstanceFactoryProvider ExpressionInstanceFactoryProvider = new ExpressionInstanceFactoryProvider();
         private static readonly IEnumerable<IKey> ResolverKeys = LowLevelRegistration.CreateKeys<IResolver>();
         private static readonly IEnumerable<IKey> RegistryKeys = LowLevelRegistration.CreateKeys<IRegistry>();
@@ -39,7 +39,7 @@
             yield return LowLevelRegistration.RawRegister<IKeyFactory>(container, KeyFactoryKeys, ctx => KeyFactory);
             yield return LowLevelRegistration.RawRegister<IFluent>(container, FluentKeys, ctx => Fluent);
             yield return LowLevelRegistration.RawRegister(container, InstanceFactoryProviderKeys, ctx => ExpressionInstanceFactoryProvider);
-            yield return LowLevelRegistration.RawRegister(typeof(IResolving<>), container, ResolvingKeys, ctx => new Resolving<IResolver>(Fluent, container));
+            yield return LowLevelRegistration.RawRegister(typeof(IResolving<>), container, ResolvingKeys, ctx => new Resolving<IResolver>(container));
             yield return LowLevelRegistration.RawRegister(typeof(IRegistration<>), container, RegistrationKeys, ctx => new Registration<IContainer>(Fluent, container));
             yield return LowLevelRegistration.RawRegister(container, MetadataProviderKeys, ctx => MetadataProvider);
 

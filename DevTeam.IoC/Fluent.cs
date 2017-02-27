@@ -21,7 +21,7 @@
         public IResolving<T> Resolve<T>(T resolver)
               where T : IResolver
         {
-            return new Resolving<T>(this, resolver);
+            return new Resolving<T>(resolver);
         }
     }
 }

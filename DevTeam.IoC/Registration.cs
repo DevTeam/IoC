@@ -18,7 +18,7 @@
         private readonly ICache<Type, IResolverFactory> _resolverFactoryCache;
 
         public Registration([NotNull] IFluent fluent, [NotNull] T container)
-            : base(fluent, container)
+            : base(container)
         {
             if (fluent == null) throw new ArgumentNullException(nameof(fluent));
             if (container == null) throw new ArgumentNullException(nameof(container));
