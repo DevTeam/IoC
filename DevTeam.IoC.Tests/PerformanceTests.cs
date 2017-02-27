@@ -1,9 +1,12 @@
 ﻿namespace DevTeam.IoC.Tests
 {
     using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
     using Configurations.Json;
     using Contracts;
+    using Microsoft.Practices.Unity;
     using Models;
     using NUnit.Framework;
     using Shouldly;
@@ -144,6 +147,60 @@
             }
         }
 
+        private static readonly Dictionary<string, Action<int>> Iocs = new Dictionary<string, Action<int>>()
+        {
+            {"Unity", Unity},
+            {"DevTeam", DevTeam}
+        };
+
+        [Test]
+        public void ComparisonTest()
+        {
+            const int warmupSeries = 10;
+            const int series = 100000;
+
+            foreach (var ioc in Iocs)
+            {
+                ioc.Value(warmupSeries);
+            }
+
+            foreach (var ioc in Iocs)
+            {
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
+                ioc.Value(series);
+                stopwatch.Stop();
+                Debug.WriteLine($"{ioc.Key}: {stopwatch.ElapsedMilliseconds}");
+            }
+        }
+
+        public static void DevTeam(int series)
+        {
+            using (var container = new Container().Configure()
+                .DependsOn(Wellknown.Feature.Default).ToSelf()
+                .Register().Contract<IService1>().Autowiring<Service1>()
+                .And().Contract<IService2>().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<Service2>().ToSelf())
+            {
+                for (var i = 0; i < series; i++)
+                {
+                    container.Resolve().Instance<IService1>();
+                }
+            }
+        }
+
+        public static void Unity(int series)
+        {
+            using (var container = new UnityContainer())
+            {
+                container.RegisterType<IService1, Service1>();
+                container.RegisterType<IService2, Service2>(new ContainerControlledLifetimeManager());
+                for (var i = 0; i < series; i++)
+                {
+                    container.Resolve(typeof(IService1));
+                }
+            }
+        }
+
         private static void PerformanceTest(IContainer rootResolver, int ticks)
         {
             using (var childContainer = rootResolver.CreateChild("child")
@@ -164,5 +221,25 @@
         private class SimpleService : ISimpleService
         {
         }
+    }
+
+    public interface IService1
+    {
+    }
+
+    public class Service1 : IService1
+    {
+        public Service1(IService2 service2)
+        {
+            if (service2 == null) throw new ArgumentNullException(nameof(service2));
+        }
+    }
+
+    public interface IService2
+    {
+    }
+
+    public class Service2 : IService2
+    {
     }
 }
