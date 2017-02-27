@@ -154,6 +154,7 @@
         };
 
         [Test]
+        [Ignore("Abc")]
         public void ComparisonTest()
         {
             const int warmupSeries = 10;
