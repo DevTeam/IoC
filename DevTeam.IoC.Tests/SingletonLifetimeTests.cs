@@ -30,9 +30,7 @@
         {
             // Given
             var obj = new object();
-            var registrationKey = new object();
             var lifetime = CreateInstance();
-            _resolverContext.SetupGet(i => i.RegistrationKey).Returns(registrationKey);
             var key = new CompositeKey(new IContractKey[]{ new ContractKey(typeof(string), true) }, new ITagKey[] { new TagKey("abc") }, new IStateKey[] { new StateKey(0, typeof(string)) });
             _resolverContext.SetupGet(i => i.Key).Returns(key);
             _lifetimeEnumerator.Setup(i => i.MoveNext()).Returns(true);
@@ -52,9 +50,7 @@
         {
             // Given
             var obj = new object();
-            var registrationKey = new object();
             var lifetime = CreateInstance();
-            _resolverContext.SetupGet(i => i.RegistrationKey).Returns(registrationKey);
             var key = new CompositeKey(new IContractKey[] { new ContractKey(typeof(string), true) }, new ITagKey[] { new TagKey("abc") }, new IStateKey[] { new StateKey(0, typeof(string)) });
             _resolverContext.SetupGet(i => i.Key).Returns(key);
             _lifetimeEnumerator.Setup(i => i.MoveNext()).Returns(true);
@@ -74,9 +70,7 @@
         {
             // Given
             var obj = new object();
-            var registrationKey = new object();
             var lifetime = CreateInstance();
-            _resolverContext.SetupGet(i => i.RegistrationKey).Returns(registrationKey);
             var key = new CompositeKey(new IContractKey[] { new ContractKey(typeof(IEnumerable<string>), true) }, new ITagKey[] { new TagKey("abc") }, new IStateKey[] { new StateKey(0, typeof(string)) });
             _resolverContext.SetupGet(i => i.Key).Returns(key);
             _lifetimeEnumerator.Setup(i => i.MoveNext()).Returns(true);
@@ -99,9 +93,7 @@
         {
             // Given
             var obj = new object();
-            var registrationKey = new object();
             var lifetime = CreateInstance();
-            _resolverContext.SetupGet(i => i.RegistrationKey).Returns(registrationKey);
             _lifetimeEnumerator.Setup(i => i.MoveNext()).Returns(true);
             _lifetimeEnumerator.SetupGet(i => i.Current).Returns(_baseLifetime.Object);
 
@@ -128,9 +120,7 @@
             // Given
             var obj1 = new object();
             var obj2 = new object();
-            var registrationKey = new object();
             var lifetime = CreateInstance();
-            _resolverContext.SetupGet(i => i.RegistrationKey).Returns(registrationKey);
             _lifetimeEnumerator.Setup(i => i.MoveNext()).Returns(true);
             _lifetimeEnumerator.SetupGet(i => i.Current).Returns(_baseLifetime.Object);
 

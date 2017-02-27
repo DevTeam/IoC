@@ -31,9 +31,7 @@
         {
             // Given
             var obj = new object();
-            var registrationKey = new object();
             var lifetime = CreateInstance((lifetimeContext, resolverContext) => 0);
-            _resolverContext.SetupGet(i => i.RegistrationKey).Returns(registrationKey);
             _lifetimeEnumerator.Setup(i => i.MoveNext()).Returns(true);
             _lifetimeEnumerator.SetupGet(i => i.Current).Returns(_baseLifetime.Object);
             _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object)).Returns(obj);
@@ -51,9 +49,7 @@
         {
             // Given
             var obj = new object();
-            var registrationKey = new object();
             var lifetime = CreateInstance((lifetimeContext, resolverContext) => 0);
-            _resolverContext.SetupGet(i => i.RegistrationKey).Returns(registrationKey);
             var key = new CompositeKey(new IContractKey[] { new ContractKey(typeof(string), true) }, new ITagKey[] { new TagKey("abc") }, new IStateKey[] { new StateKey(0, typeof(string)) });
             _resolverContext.SetupGet(i => i.Key).Returns(key);
             _lifetimeEnumerator.Setup(i => i.MoveNext()).Returns(true);
@@ -76,10 +72,8 @@
             var key = 0;
             var obj1 = new object();
             var obj2 = new object();
-            var registrationKey = new object();
             // ReSharper disable once AccessToModifiedClosure
             var lifetime = CreateInstance((lifetimeContext, resolverContext) => key);
-            _resolverContext.SetupGet(i => i.RegistrationKey).Returns(registrationKey);
             _lifetimeEnumerator.Setup(i => i.MoveNext()).Returns(true);
             _lifetimeEnumerator.SetupGet(i => i.Current).Returns(_baseLifetime.Object);
 
@@ -105,10 +99,8 @@
             // Given
             var key = 0;
             var obj = new object();
-            var registrationKey = new object();
             // ReSharper disable once AccessToModifiedClosure
             var lifetime = CreateInstance((lifetimeContext, resolverContext) => key);
-            _resolverContext.SetupGet(i => i.RegistrationKey).Returns(registrationKey);
             _lifetimeEnumerator.Setup(i => i.MoveNext()).Returns(true);
             _lifetimeEnumerator.SetupGet(i => i.Current).Returns(_baseLifetime.Object);
             _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object)).Returns(obj);

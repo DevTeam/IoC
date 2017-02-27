@@ -7,8 +7,6 @@
 
         IKey Key { [NotNull] get; }
 
-        object RegistrationKey { [NotNull] get; }
-
         IResolverFactory InstanceFactory { [NotNull] get; }
 
         IStateProvider StateProvider { [NotNull] get; }

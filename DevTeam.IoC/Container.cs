@@ -146,6 +146,12 @@
             {
                 if (_resolverContextCache.TryGet(key, out resolverContext))
                 {
+                    resolverContext = new ResolverContext(
+                        container,
+                        resolverContext.RegistryContext,
+                        resolverContext.InstanceFactory,
+                        key,
+                        stateProvider);
                     return true;
                 }
 
@@ -162,7 +168,6 @@
                         registrationItem.RegistryContext,
                         registrationItem.InstanceFactory,
                         key,
-                        registrationItem.Key,
                         stateProvider);
 
                     var scope = registrationItem.Scope;

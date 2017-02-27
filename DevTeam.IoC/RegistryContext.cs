@@ -35,7 +35,7 @@
 
         public override string ToString()
         {
-            return $"{nameof(RegistryContext)} [Container: {Container.ToString() ?? "null"}, Keys: {string.Join(", ", Keys)}, InstanceFactory: {InstanceFactory} , Extensions: {string.Join(", ", Extensions)}]";
+            return $"{nameof(RegistryContext)} [Keys: {string.Join(", ", Keys)}, InstanceFactory: {InstanceFactory}, Extensions: {string.Join(", ", Extensions)}, Container: {Container.ToString() ?? "null"}]";
         }
     }
 }
