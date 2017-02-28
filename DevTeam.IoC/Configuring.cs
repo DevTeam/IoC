@@ -12,6 +12,7 @@
         private readonly T _container;
         private readonly List<HashSet<IConfiguration>> _configurations = new List<HashSet<IConfiguration>>();
         private readonly List<IDisposable> _registrations = new List<IDisposable>();
+        private readonly HashSet<IConfiguration> _appliedConfiguration = new HashSet<IConfiguration>();
 
         public Configuring(T container)
         {
@@ -93,19 +94,19 @@
 
         private IEnumerable<IConfiguration> GetConfigurations(
             IEnumerable<IConfiguration> configurations,
-            HashSet<IConfiguration> appliedConfigurations = null)
+            HashSet<IConfiguration> allConfigurations = null)
         {
-            appliedConfigurations = appliedConfigurations ?? new HashSet<IConfiguration>();
+            allConfigurations = allConfigurations ?? new HashSet<IConfiguration>();
             using (var enumerator = (configurations as IConfiguration[] ?? configurations).GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {
-                    if (!appliedConfigurations.Add(enumerator.Current))
+                    if (!allConfigurations.Add(enumerator.Current))
                     {
                         continue;
                     }
 
-                    foreach (var config in GetConfigurations(enumerator.Current.GetDependencies(_container), appliedConfigurations))
+                    foreach (var config in GetConfigurations(enumerator.Current.GetDependencies(_container), allConfigurations))
                     {
                         yield return config;
                     }
@@ -120,6 +121,7 @@
         {
             return 
                 from config in GetConfigurations(configurations)
+                where _appliedConfiguration.Add(config)
                 from registration in config.Apply(_container)
                 select registration;
         }
