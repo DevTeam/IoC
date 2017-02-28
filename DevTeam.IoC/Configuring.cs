@@ -9,15 +9,14 @@
     internal class Configuring<T> : IConfiguring<T>
         where T : IContainer
     {
-        private readonly T _resolver;
+        private readonly T _container;
         private readonly List<HashSet<IConfiguration>> _configurations = new List<HashSet<IConfiguration>>();
-        private readonly HashSet<IConfiguration> _appliedConfigurations = new HashSet<IConfiguration>();
         private readonly List<IDisposable> _registrations = new List<IDisposable>();
 
-        public Configuring(T resolver)
+        public Configuring(T container)
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            _resolver = resolver;
+            if (container == null) throw new ArgumentNullException(nameof(container));
+            _container = container;
         }
 
         public IConfiguring<T> DependsOn(params IConfiguration[] configurations)
@@ -37,7 +36,7 @@
         {
             if (features == null) throw new ArgumentNullException(nameof(features));
             if (features.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(features));
-            _configurations.Add(new HashSet<IConfiguration>(features.Distinct().Select(wellknownConfiguration => _resolver.Resolve<IResolver>().Tag(wellknownConfiguration).Instance<IConfiguration>())));
+            _configurations.Add(new HashSet<IConfiguration>(features.Distinct().Select(wellknownConfiguration => _container.Resolve<IResolver>().Tag(wellknownConfiguration).Instance<IConfiguration>())));
             return this;
         }
 
@@ -48,7 +47,7 @@
             if (configurationType == null) throw new ArgumentNullException(nameof(configurationType));
             if (string.IsNullOrWhiteSpace(description)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(description));
             _configurations.Add(new HashSet<IConfiguration> { DtoFeature.Shared, (IConfiguration)Activator.CreateInstance(configurationType) });
-            _configurations.Add(new HashSet<IConfiguration> { _resolver.Resolve().State<Type>(0).State<string>(1).Instance<IConfiguration>(configurationType, description) });
+            _configurations.Add(new HashSet<IConfiguration> { _container.Resolve().State<Type>(0).State<string>(1).Instance<IConfiguration>(configurationType, description) });
             return this;
         }
 
@@ -77,15 +76,13 @@
 
         public T ToSelf()
         {
-            _resolver.Resolve().Instance<IInternalResourceStore>().AddResource(Apply());
-            return _resolver;
+            _container.Resolve().Instance<IInternalResourceStore>().AddResource(Apply());
+            return _container;
         }
 
         public IConfiguration Create()
         {
-            var configuration = new CompositeConfiguration(_configurations.SelectMany(i => i).Distinct().ToList());
-            _configurations.Clear();
-            return configuration;
+            return new CompositeConfiguration(GetConfigurations(_configurations.SelectMany(i => i)).ToList());
         }
 
         private IDisposable Apply([NotNull] IEnumerable<IConfiguration> configuration)
@@ -94,34 +91,42 @@
             return new CompositeDisposable(ApplyConfigurations(configuration));
         }
 
-        private IEnumerable<IDisposable> ApplyConfigurations(IEnumerable<IConfiguration> configurations)
+        private IEnumerable<IConfiguration> GetConfigurations(
+            IEnumerable<IConfiguration> configurations,
+            HashSet<IConfiguration> appliedConfigurations = null)
         {
-            if (configurations == null) throw new ArgumentNullException(nameof(configurations));
+            appliedConfigurations = appliedConfigurations ?? new HashSet<IConfiguration>();
             using (var enumerator = (configurations as IConfiguration[] ?? configurations).GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {
-                    if (!_appliedConfigurations.Add(enumerator.Current))
+                    if (!appliedConfigurations.Add(enumerator.Current))
                     {
                         continue;
                     }
 
-                    foreach (var disposable in ApplyConfigurations(enumerator.Current.GetDependencies(_resolver)))
+                    foreach (var config in GetConfigurations(enumerator.Current.GetDependencies(_container), appliedConfigurations))
                     {
-                        yield return disposable;
+                        yield return config;
                     }
 
-                    foreach (var disposable in enumerator.Current.Apply(_resolver))
-                    {
-                        yield return disposable;
-                    }
+                    yield return enumerator.Current;
                 }
             }
         }
 
+        private IEnumerable<IDisposable> ApplyConfigurations(
+            IEnumerable<IConfiguration> configurations)
+        {
+            return 
+                from config in GetConfigurations(configurations)
+                from registration in config.Apply(_container)
+                select registration;
+        }
+
         private IConfiguration CreateConfigurationFromAssembly(Assembly assembly)
         {
-            return _resolver.Resolve().State<Assembly>(0).Instance<IConfiguration>(assembly);
+            return _container.Resolve().State<Assembly>(0).Instance<IConfiguration>(assembly);
         }
     }
 }
