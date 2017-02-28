@@ -19,6 +19,6 @@
 		</dependencies>
 	</metadata>
 	<files>
-  		<file src="bin\Release\DevTeam.IoC.Contracts.dll" target="lib" />
+  		<file src="bin\Release\DevTeam.IoC.Contracts.dll" target="lib\net45+net451+net452+net46+net461+net462+netcore+netcore45+netcore451+netcore50+wp81+wpa81+uap+uap10+netstandard1.0+netstandard1.1+netstandard1.2+netstandard1.3+netstandard1.4+netstandard1.5+netstandard1.6+netcoreapp1.0" />
 	</files>
 </package>
