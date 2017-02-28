@@ -80,6 +80,9 @@
     <Compile Include="CompositeDisposableTests.cs" />
     <Compile Include="CompositeKeyTests.cs" />
     <Compile Include="ConfigurationDtoAdapterTests.cs" />
+    <Compile Include="ConfigurationFromAssemblyTests.cs" />
+    <Compile Include="ConfigurationFromSringDataTests.cs" />
+    <Compile Include="DisposableTests.cs" />
     <Compile Include="ObservablesFeatureTests.cs" />
     <Compile Include="EnumerablesFeatureTests.cs" />
     <Compile Include="ContractKeyTests.cs" />

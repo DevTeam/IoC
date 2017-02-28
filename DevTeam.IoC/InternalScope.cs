@@ -6,13 +6,13 @@
 
     internal class InternalScope: IScope
     {
-        public bool AllowsRegistration(IRegistryContext context)
+        public bool AllowRegistration(IRegistryContext context)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
             return true;
         }
 
-        public bool AllowsResolving(IResolverContext context)
+        public bool AllowResolving(IResolverContext context)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
             return context.Container == context.RegistryContext.Container;

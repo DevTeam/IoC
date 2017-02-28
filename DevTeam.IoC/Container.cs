@@ -104,7 +104,7 @@
             lock (LockObject)
             {
                 var scope = registrationItem.Scope;
-                if (scope!= null && !scope.AllowsRegistration(context) && Parent != null)
+                if (scope!= null && !scope.AllowRegistration(context) && Parent != null)
                 {
                     return Parent.TryRegister(context, out registration);
                 }
@@ -187,7 +187,7 @@
                         stateProvider);
 
                     var scope = registrationItem.Scope;
-                    if (scope == null || scope.AllowsResolving(resolverContext))
+                    if (scope == null || scope.AllowResolving(resolverContext))
                     {
                         if (isRootResolver)
                         {

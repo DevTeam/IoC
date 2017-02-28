@@ -24,6 +24,8 @@
             _configuration = new Lazy<IConfiguration>(() => CreateConfiguration(description));
         }
 
+        internal IConfiguration BaseConfiguration => _configuration.Value;
+
         public IEnumerable<IConfiguration> GetDependencies(IContainer container)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));

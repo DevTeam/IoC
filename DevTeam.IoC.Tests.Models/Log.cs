@@ -3,6 +3,7 @@
     using System;
     using Contracts;
 
+    // to test ConfigurationFromAssembly
     [Contract(typeof(ILog))]
     [State(0, typeof(string))]
     internal class Log : ILog
