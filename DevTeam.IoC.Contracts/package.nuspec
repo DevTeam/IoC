@@ -19,6 +19,10 @@
 		</dependencies>
 	</metadata>
 	<files>
-  		<file src="bin\Release\DevTeam.IoC.Contracts.dll" target="lib\net45+netcore+wp81+uap+netstandard1.0+netcoreapp1.0" />
+  		<file src="bin\Release\DevTeam.IoC.Contracts.*" target="lib\portable-net45" />
+		<file src="bin\Release\DevTeam.IoC.Contracts.*" target="lib\portable-netcore+netcore45+netcore451+netcore50" />
+		<file src="bin\Release\DevTeam.IoC.Contracts.*" target="lib\portable-wp81+wpa81+uap+uap10" />
+		<file src="bin\Release\DevTeam.IoC.Contracts.*" target="lib\portable-netstandard1.0+netstandard1.1+netstandard1.2+netstandard1.3+netstandard1.4+netstandard1.5+netstandard1.6" />
+		<file src="bin\Release\DevTeam.IoC.Contracts.*" target="lib\portable-netcoreapp1.0" />
 	</files>
 </package>

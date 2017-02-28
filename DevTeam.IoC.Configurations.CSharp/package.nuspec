@@ -20,6 +20,9 @@
 		</dependencies>
 	</metadata>
 	<files>
-  		<file src="bin\Release\DevTeam.IoC.Configurations.CSharp.dll" target="lib\net46+netcore+netcore50+netstandard1.5+netcoreapp1.0" />
+  		<file src="bin\Release\DevTeam.IoC.Configurations.CSharp.*" target="lib\portable-net46" />
+		<file src="bin\Release\DevTeam.IoC.Configurations.CSharp.*" target="lib\portable-netcore50" />
+		<file src="bin\Release\DevTeam.IoC.Configurations.CSharp.*" target="lib\portable-netstandard1.5+netstandard1.6" />
+		<file src="bin\Release\DevTeam.IoC.Configurations.CSharp.*" target="lib\portable-netcoreapp1.0" />
 	</files>
 </package>
