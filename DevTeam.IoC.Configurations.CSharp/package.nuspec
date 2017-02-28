@@ -20,6 +20,6 @@
 		</dependencies>
 	</metadata>
 	<files>
-  		<file src="bin\Release\DevTeam.IoC.Configurations.CSharp.dll" target="lib\portable-net45+win8+wp8+wpa81+MonoAndroid10+xamarinios10+MonoTouch10+Xamarin.iOS+monoandroid+monotouch+netstandard1.5+netcoreapp" />
+  		<file src="bin\Release\DevTeam.IoC.Configurations.CSharp.dll" target="lib\net46+net461+net462+netcore+netcore50+netstandard1.5+netstandard1.6+netcoreapp1.0" />
 	</files>
 </package>
