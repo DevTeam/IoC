@@ -2,7 +2,7 @@
 
 There are many different implementations of [Inversion of Control](https://github.com/DevTeam/IoC/wiki/Inversion-of-Control). Why it would be preferable to use this implementation? It is fast and has many outstanding [features](https://github.com/DevTeam/IoC/wiki/Features) to make your code more efficient. See [Wiki](https://github.com/DevTeam/IoC/wiki) for details.
 
-[Comparison test](https://github.com/DevTeam/IoC/tree/master/DevTeam.IoC.Tests/ComparisonTests.cs) with IoC containers in the synthetic test - creating a graph from 2 transient and singleton objects in the serie of 100k iterations:
+[Comparison test](https://github.com/DevTeam/IoC/tree/master/DevTeam.IoC.Tests/ComparisonTests.cs) with IoC containers (release builds) in the synthetic test - creating a graph from 2 transient and singleton objects in the serie of 100k iterations:
 
 - This    110 ms
 - [Unity](https://www.nuget.org/packages/Unity/)    245 ms
