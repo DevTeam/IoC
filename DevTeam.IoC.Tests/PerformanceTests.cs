@@ -1,12 +1,9 @@
 ﻿namespace DevTeam.IoC.Tests
 {
     using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
     using System.IO;
     using Configurations.Json;
     using Contracts;
-    using Microsoft.Practices.Unity;
     using Models;
     using NUnit.Framework;
     using Shouldly;
@@ -147,75 +144,6 @@
             }
         }
 
-        private static readonly Dictionary<string, Func<int, long>> Iocs = new Dictionary<string, Func<int, long>>()
-        {
-            {"Unity", Unity},
-            {"DevTeam", DevTeam}
-        };
-
-        [Test]
-        [Ignore("Abc")]
-        public void ComparisonTest()
-        {
-            const int warmupSeries = 10;
-            const int series = 100000;
-
-            foreach (var ioc in Iocs)
-            {
-                ioc.Value(warmupSeries);
-            }
-
-            var results = new Dictionary<string, long>();
-            foreach (var ioc in Iocs)
-            {
-                var elapsedMilliseconds = ioc.Value(series);
-                Debug.WriteLine($"{ioc.Key}: {elapsedMilliseconds}");
-                results.Add(ioc.Key, elapsedMilliseconds);
-            }
-
-            var actualElapsedMilliseconds = results["DevTeam"];
-            foreach (var result in results)
-            {
-                Assert.LessOrEqual(actualElapsedMilliseconds, result.Value, $"{result.Key} is better: {result.Value}, our result is : {actualElapsedMilliseconds}");
-            }
-        }
-
-        public static long DevTeam(int series)
-        {
-            using (var container = new Container().Configure()
-                .DependsOn(Wellknown.Feature.Default).ToSelf()
-                .Register().Contract<IService1>().Autowiring<Service1>()
-                .And().Contract<IService2>().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<Service2>().ToSelf())
-            {
-                var resolver = container.Resolve().Contract<IService1>();
-                var stopwatch = Stopwatch.StartNew();
-                for (var i = 0; i < series; i++)
-                {
-                    resolver.Instance<IService1>();
-                }
-
-                stopwatch.Stop();
-                return stopwatch.ElapsedMilliseconds;
-            }
-        }
-
-        public static long Unity(int series)
-        {
-            using (var container = new UnityContainer())
-            {
-                container.RegisterType<IService1, Service1>();
-                container.RegisterType<IService2, Service2>(new ContainerControlledLifetimeManager());
-                var stopwatch = Stopwatch.StartNew();
-                for (var i = 0; i < series; i++)
-                {
-                    container.Resolve(typeof(IService1));
-                }
-
-                stopwatch.Stop();
-                return stopwatch.ElapsedMilliseconds;
-            }
-        }
-
         private static void PerformanceTest(IContainer rootResolver, int ticks)
         {
             using (var childContainer = rootResolver.CreateChild("child")
@@ -236,25 +164,5 @@
         private class SimpleService : ISimpleService
         {
         }
-    }
-
-    public interface IService1
-    {
-    }
-
-    public class Service1 : IService1
-    {
-        public Service1(IService2 service2)
-        {
-            if (service2 == null) throw new ArgumentNullException(nameof(service2));
-        }
-    }
-
-    public interface IService2
-    {
-    }
-
-    public class Service2 : IService2
-    {
     }
 }

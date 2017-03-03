@@ -69,3 +69,9 @@ Or another way to glue via [Json file](https://github.com/DevTeam/IoC/blob/maste
   { "register": [ { "contract": [ "ICat" ] } ], "autowiring": "ShroedingersCat" }
 ]
 ```
+
+[Comparison test](https://github.com/DevTeam/IoC/tree/master/DevTeam.IoC.Tests/ComparisonTests.cs) with other IoC containers in the synthetic test - creating a graph from 2 transient and singleton objects in the serie of 100k iterations:
+
+This   : 110  ms
+[Unity](https://www.nuget.org/packages/Unity/)  : 245  ms
+[Ninject](https://www.nuget.org/packages/Ninject/): 1412 ms
