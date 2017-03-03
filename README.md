@@ -1,6 +1,12 @@
 [<img src="http://tcavs2015.cloudapp.net/app/rest/builds/buildType:(id:DevTeam_IoC_Build)/statusIcon"/>](http://tcavs2015.cloudapp.net/viewType.html?buildTypeId=DevTeam_IoC_Build) [<img src="https://www.nuget.org/Content/Logos/nugetlogo.png" height="18">](https://github.com/DevTeam/IoC/wiki/NuGet-packages)
 
-There are many different implementations of [Inversion of Control](https://github.com/DevTeam/IoC/wiki/Inversion-of-Control). Why it would be preferable to use this implementation? It has many outstanding [features](https://github.com/DevTeam/IoC/wiki/Features) to make your code more efficient. See [Wiki](https://github.com/DevTeam/IoC/wiki) for details.
+There are many different implementations of [Inversion of Control](https://github.com/DevTeam/IoC/wiki/Inversion-of-Control). Why it would be preferable to use this implementation? It is fast and has many outstanding [features](https://github.com/DevTeam/IoC/wiki/Features) to make your code more efficient. See [Wiki](https://github.com/DevTeam/IoC/wiki) for details.
+
+[Comparison test](https://github.com/DevTeam/IoC/tree/master/DevTeam.IoC.Tests/ComparisonTests.cs) with IoC containers in the synthetic test - creating a graph from 2 transient and singleton objects in the serie of 100k iterations:
+
+- This   : 110  ms
+- [Unity](https://www.nuget.org/packages/Unity/)  : 245  ms
+- [Ninject](https://www.nuget.org/packages/Ninject/): 1412 ms
 
 Here is the example [Shroedingers Cat](https://github.com/DevTeam/IoC/tree/master/Samples/ShroedingersCat):
 
@@ -69,9 +75,3 @@ Or another way to glue via [Json file](https://github.com/DevTeam/IoC/blob/maste
   { "register": [ { "contract": [ "ICat" ] } ], "autowiring": "ShroedingersCat" }
 ]
 ```
-
-[Comparison test](https://github.com/DevTeam/IoC/tree/master/DevTeam.IoC.Tests/ComparisonTests.cs) with other IoC containers in the synthetic test - creating a graph from 2 transient and singleton objects in the serie of 100k iterations:
-
-This   : 110  ms
-[Unity](https://www.nuget.org/packages/Unity/)  : 245  ms
-[Ninject](https://www.nuget.org/packages/Ninject/): 1412 ms
