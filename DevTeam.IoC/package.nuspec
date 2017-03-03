@@ -14,7 +14,7 @@
 		<description>Provides IoC implementation.</description>
 		<tags>.NETStandard NETCore Core Portable DevTeam Pattern IoC Container DI dependencyinjection Inversion Control State Bind Factory</tags>
 		<dependencies>
-			<dependency id="DevTeam.IoC.Contracts" version="[$version$]" />
+			<dependency id="DevTeam.IoC.Contracts" version="$ContractDependencyVersion$" />
 		</dependencies>
 	</metadata>
 	<files>
