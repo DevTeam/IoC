@@ -11,6 +11,12 @@
     [TestFixture]
     public class PerformanceTests
     {
+
+#if DEBUG
+        private const int RepeatCount = 100;
+#else
+        private const int RepeatCount = 100000;
+#endif
         [Test]
         public void SimpleTest()
         {
@@ -38,7 +44,7 @@
                 .Register().Contract<ISimpleService>().Autowiring<SimpleService>().ToSelf())
             {
                 var resolving = rootContainer.Resolve().Contract<ISimpleService>();
-                for (var i = 0; i < 100000; i++)
+                for (var i = 0; i < RepeatCount; i++)
                 {
                     resolving.Instance<ISimpleService>();
                 }
@@ -53,7 +59,7 @@
                 .Register().Contract<ISimpleService>().FactoryMethod(ctx => new SimpleService()).ToSelf())
             {
                 var resolving = rootContainer.Resolve().Contract<ISimpleService>();
-                for (var i = 0; i < 1000000; i++)
+                for (var i = 0; i < RepeatCount; i++)
                 {
                     resolving.Instance<ISimpleService>();
                 }
@@ -68,7 +74,7 @@
                 .Register().Lifetime(Wellknown.Lifetime.Singleton).Contract<ISimpleService>().Autowiring<SimpleService>().ToSelf())
             {
                 var resolving = rootContainer.Resolve().Contract<ISimpleService>();
-                for (var i = 0; i < 100000; i++)
+                for (var i = 0; i < RepeatCount; i++)
                 {
                     resolving.Instance<ISimpleService>();
                 }
@@ -88,7 +94,7 @@
                     container = container.CreateChild(i);
                 }
 
-                for (var i = 0; i < 10000; i++)
+                for (var i = 0; i < RepeatCount; i++)
                 {
                     container.Resolve().Instance<ISimpleService>();
                 }

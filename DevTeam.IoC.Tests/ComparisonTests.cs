@@ -22,6 +22,9 @@
         [Test]
         public void ComparisonTest()
         {
+#if DEBUG
+            Assert.Inconclusive("Inconclusive for DEBUG build");
+#endif
             const int warmupSeries = 10;
             const int series = 100000;
             const int pressure = 1 << 32;
