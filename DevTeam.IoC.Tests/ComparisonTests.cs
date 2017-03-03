@@ -35,6 +35,7 @@
             foreach (var ioc in Iocs)
             {
                 GC.AddMemoryPressure(pressure);
+                GC.Collect();
                 GC.RemoveMemoryPressure(pressure);
 
                 var elapsedMilliseconds = ioc.Value(series);
