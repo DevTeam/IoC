@@ -4,9 +4,9 @@ There are many different implementations of [Inversion of Control](https://githu
 
 [Comparison test](https://github.com/DevTeam/IoC/tree/master/DevTeam.IoC.Tests/ComparisonTests.cs) with IoC containers in the synthetic test - creating a graph from 2 transient and singleton objects in the serie of 100k iterations:
 
-- This   : 110  ms
-- [Unity](https://www.nuget.org/packages/Unity/)  : 245  ms
-- [Ninject](https://www.nuget.org/packages/Ninject/): 1412 ms
+- This    110 ms
+- [Unity](https://www.nuget.org/packages/Unity/)    245 ms
+- [Ninject](https://www.nuget.org/packages/Ninject/)    1412 ms
 
 Here is the example [Shroedingers Cat](https://github.com/DevTeam/IoC/tree/master/Samples/ShroedingersCat):
 
