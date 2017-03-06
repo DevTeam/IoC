@@ -32,32 +32,32 @@
             _creationContext.SetupGet(i => i.ResolverContext).Returns(_resolverContext.Object);
             _matchedConstructorParams = new IParameterMetadata[]
             {
-                new ParameterMetadata(null, 0, new object[0], null, new StateKey(0, typeof(int))),
-                new ParameterMetadata(new IKey[] { new ContractKey(typeof(IEnumerable<string>), true) },0, new object[0], null, null ),
-                new ParameterMetadata(new IKey[] { new ContractKey(typeof(IEnumerable<int>), true) }, 0, new object[0], null, null ),
-                new ParameterMetadata(new IKey[] { new ContractKey(typeof(string), true), new StateKey(1, typeof(int)), }, 0, new object[] { null }, null, null ),
-                new ParameterMetadata(new IKey[] { new ContractKey(typeof(string), true), new TagKey("abc") }, 0, new object[0], null, null ),
-                new ParameterMetadata(null, 0, new object[0], null, new StateKey(1, typeof(string))),
+                new ParameterMetadata(null, null, null, 0, new object[0], null, new StateKey(0, typeof(int))),
+                new ParameterMetadata(new IContractKey[] {new ContractKey(typeof(IEnumerable<string>), true)}, null, null, 0, new object[0], null, null ),
+                new ParameterMetadata(new IContractKey[] { new ContractKey(typeof(IEnumerable<int>), true) }, null, null, 0, new object[0], null, null ),
+                new ParameterMetadata(new IContractKey[] { new ContractKey(typeof(string), true) }, null, new IStateKey[] { new StateKey(1, typeof(int)), }, 0, new object[] { null }, null, null ),
+                new ParameterMetadata(new IContractKey[] { new ContractKey(typeof(string), true) }, new ITagKey[] { new TagKey("abc") }, null, 0, new object[0], null, null ),
+                new ParameterMetadata(null, null, null, 0, new object[0], null, new StateKey(1, typeof(string))),
             };
 
             _notMatchedByStateTypeConstructorParams = new IParameterMetadata[]
             {
-                new ParameterMetadata(null, 0, new object[0], null, new StateKey(0, typeof(double))),
-                new ParameterMetadata(new IKey[] { new ContractKey(typeof(IEnumerable<string>), true) },0, new object[0], null, null ),
-                new ParameterMetadata(new IKey[] { new ContractKey(typeof(IEnumerable<int>), true) }, 0, new object[0], null, null ),
-                new ParameterMetadata(new IKey[] { new ContractKey(typeof(string), true), new StateKey(1, typeof(int)), }, 0, new object[] { null }, null, null ),
-                new ParameterMetadata(new IKey[] { new ContractKey(typeof(string), true), new TagKey("abc") }, 0, new object[0], null, null ),
-                new ParameterMetadata(null, 0, new object[0], null, new StateKey(1, typeof(string))),
+                new ParameterMetadata(null, null, null, 0, new object[0], null, new StateKey(0, typeof(double))),
+                new ParameterMetadata(new IContractKey[] {new ContractKey(typeof(IEnumerable<string>), true)}, null, null, 0, new object[0], null, null ),
+                new ParameterMetadata(new IContractKey[] { new ContractKey(typeof(IEnumerable<int>), true) }, null, null, 0, new object[0], null, null ),
+                new ParameterMetadata(new IContractKey[] { new ContractKey(typeof(string), true) }, null, new IStateKey[] { new StateKey(1, typeof(int)), }, 0, new object[] { null }, null, null ),
+                new ParameterMetadata(new IContractKey[] { new ContractKey(typeof(string), true) }, new ITagKey[] { new TagKey("abc") }, null, 0, new object[0], null, null ),
+                new ParameterMetadata(null, null, null, 0, new object[0], null, new StateKey(1, typeof(string))),
             };
 
             _notMatchedByContractTypeConstructorParams = new IParameterMetadata[]
             {
-                new ParameterMetadata(null, 0, new object[0], null, new StateKey(0, typeof(int))),
-                new ParameterMetadata(new IKey[] { new ContractKey(typeof(IEnumerable<double>), true) },0, new object[0], null, null ),
-                new ParameterMetadata(new IKey[] { new ContractKey(typeof(IEnumerable<int>), true) }, 0, new object[0], null, null ),
-                new ParameterMetadata(new IKey[] { new ContractKey(typeof(string), true), new StateKey(1, typeof(int)), }, 0, new object[] { null }, null, null ),
-                new ParameterMetadata(new IKey[] { new ContractKey(typeof(string), true), new TagKey("abc") }, 0, new object[0], null, null ),
-                new ParameterMetadata(null, 0, new object[0], null, new StateKey(1, typeof(string))),
+                new ParameterMetadata(null, null, null, 0, new object[0], null, new StateKey(0, typeof(int))),
+                new ParameterMetadata(new IContractKey[] {new ContractKey(typeof(IEnumerable<double>), true)}, null, null, 0, new object[0], null, null ),
+                new ParameterMetadata(new IContractKey[] { new ContractKey(typeof(IEnumerable<int>), true) }, null, null, 0, new object[0], null, null ),
+                new ParameterMetadata(new IContractKey[] { new ContractKey(typeof(string), true) }, null, new IStateKey[] { new StateKey(1, typeof(int)), }, 0, new object[] { null }, null, null ),
+                new ParameterMetadata(new IContractKey[] { new ContractKey(typeof(string), true) }, new ITagKey[] { new TagKey("abc") }, null, 0, new object[0], null, null ),
+                new ParameterMetadata(null, null, null, 0, new object[0], null, new StateKey(1, typeof(string))),
             };
         }
 

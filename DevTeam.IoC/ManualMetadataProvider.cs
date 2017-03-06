@@ -90,7 +90,7 @@
             if (paramMetadata.IsDependency)
             {
                 return (
-                    from contractKey in EnumerateContractKeys(paramMetadata.Keys)
+                    from contractKey in paramMetadata.ContractKeys ?? Enumerable.Empty<IContractKey>()
                     let contractTypeInfo = contractKey.ContractType.GetTypeInfo()
                     where parameterTypeInfo.IsAssignableFrom(contractTypeInfo) || (genericTypeInfo != null && genericTypeInfo.IsAssignableFrom(contractTypeInfo) && contractKey.GenericTypeArguments.SequenceEqual(genericTypeArguments))
                     select contractKey).Any();
@@ -103,27 +103,6 @@
 
             var stateTypeInfo = paramMetadata.StateKey.StateType.GetTypeInfo();
             return parameterTypeInfo.IsAssignableFrom(stateTypeInfo) || (genericTypeInfo != null && genericTypeInfo.IsAssignableFrom(stateTypeInfo));
-        }
-
-        private static IEnumerable<IContractKey> EnumerateContractKeys(IEnumerable<IKey> keys)
-        {
-            foreach (var key in keys)
-            {
-                var contractKey = key as IContractKey;
-                if (contractKey != null)
-                {
-                    yield return contractKey;
-                }
-
-                var compositeKey = key as ICompositeKey;
-                if (compositeKey != null)
-                {
-                    foreach (var subContractKey in compositeKey.ContractKeys)
-                    {
-                        yield return subContractKey;
-                    }
-                }
-            }
         }
     }
 }

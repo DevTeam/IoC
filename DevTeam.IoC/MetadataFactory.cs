@@ -1,6 +1,7 @@
 ﻿namespace DevTeam.IoC
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using Contracts;
@@ -58,7 +59,30 @@
 #endif
             if (parameterMetadata.IsDependency)
             {
-                return creationContext.ResolverContext.RegistryContext.Container.Resolve<IResolver>().Key(parameterMetadata.Keys).Instance(parameterMetadata.State ?? EmptyState);
+                var container = creationContext.ResolverContext.RegistryContext.Container;
+                var resolver = container.Resolve();
+                if (parameterMetadata.ContractKeys != null)
+                {
+                    resolver.Key((IEnumerable<IContractKey>)parameterMetadata.ContractKeys);
+                }
+
+                if (parameterMetadata.StateKeys != null)
+                {
+                    foreach (var stateKey in parameterMetadata.StateKeys)
+                    {
+                        resolver.Key(stateKey);
+                    }
+                }
+
+                if (parameterMetadata.TagKeys != null)
+                {
+                    foreach (var tagKey in parameterMetadata.TagKeys)
+                    {
+                        resolver.Key(tagKey);
+                    }
+                }
+
+                return resolver.Instance(parameterMetadata.State ?? EmptyState);
             }
 
             if(parameterMetadata.Value != null)

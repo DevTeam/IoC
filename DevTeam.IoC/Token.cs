@@ -29,10 +29,8 @@
 
         public TToken Key(IEnumerable<IKey> keys)
         {
-#if DEBUG
-            if (keys == null) throw new ArgumentNullException(nameof(keys));
-#endif
 
+            if (keys == null) throw new ArgumentNullException(nameof(keys));
             foreach (var key in keys)
             {
                 var contractKey = key as IContractKey;
@@ -65,10 +63,38 @@
 
         public TToken Key(params IKey[] keys)
         {
-#if DEBUG
             if (keys == null) throw new ArgumentNullException(nameof(keys));
-#endif
             return Key((IEnumerable<IKey>)keys);
+        }
+
+        public TToken Key(IEnumerable<IContractKey> keys)
+        {
+            if (keys == null) throw new ArgumentNullException(nameof(keys));
+            AddContractKey(keys);
+            return (TToken)(object)this;
+        }
+
+        public TToken Key(IStateKey key)
+        {
+            if (key == null) throw new ArgumentNullException(nameof(key));
+            if (key == null) throw new ArgumentNullException(nameof(key));
+            AddStateKey(key);
+            return (TToken)(object)this;
+        }
+
+        public TToken Key(ITagKey key)
+        {
+            if (key == null) throw new ArgumentNullException(nameof(key));
+            if (key == null) throw new ArgumentNullException(nameof(key));
+            AddTagKey(key);
+            return (TToken)(object)this;
+        }
+
+        public TToken Key(ICompositeKey compositeKey)
+        {
+            if (compositeKey == null) throw new ArgumentNullException(nameof(compositeKey));
+            AddCompositeKey(compositeKey);
+            return (TToken)(object)this;
         }
 
         public abstract TToken Contract(params Type[] contractTypes);
@@ -80,27 +106,21 @@
 
         public TToken State(int index, Type stateType)
         {
-#if DEBUG
             if (stateType == null) throw new ArgumentNullException(nameof(stateType));
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
-#endif
             AddStateKey(Resolver.KeyFactory.CreateStateKey(index, stateType));
             return (TToken)(object)this;
         }
 
         public TToken State<TState>(int index)
         {
-#if DEBUG
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
-#endif
             return State(index, typeof(TState));
         }
 
         public TToken Tag([NotNull] params object[] tags)
         {
-#if DEBUG
             if (tags == null) throw new ArgumentNullException(nameof(tags));
-#endif
             foreach (var tag in tags)
             {
                 AddTagKey(Resolver.KeyFactory.CreateTagKey(tag));

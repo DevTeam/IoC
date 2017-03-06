@@ -5,7 +5,11 @@
     {
         bool IsDependency { get; }
 
-        IKey[] Keys { [CanBeNull] get; }
+        IContractKey[] ContractKeys { [CanBeNull] get; }
+
+        ITagKey[] TagKeys { [CanBeNull] get; }
+
+        IStateKey[] StateKeys { [CanBeNull] get; }
 
         object[] State { [CanBeNull] get; }
 

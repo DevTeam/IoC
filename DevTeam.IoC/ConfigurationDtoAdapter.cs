@@ -246,8 +246,8 @@
                             throw new Exception($"Invalid constructor parameter type {ctorParam.TypeName}");
                         }
 
+                        Resolving<IContainer> resolving = null;
                         IStateKey stateKey = null;
-                        IKey key = null;
                         object value = null;
                         var state = new List<object>();
                         if (ctorParam.Value != null)
@@ -285,7 +285,7 @@
                         {
                             if (ctorParam.Dependency != null)
                             {
-                                var resolving = new Resolving<IContainer>(container);
+                                resolving = new Resolving<IContainer>(container);
                                 var hasContractKey = false;
                                 foreach (var keyDto in ctorParam.Dependency)
                                 {
@@ -353,16 +353,18 @@
                                 {
                                     resolving.Contract(parameterType);
                                 }
-                                
-                                key = resolving.CreateResolvingKey();
-                            }
-                            else
-                            {
-                                key = new ContractKey(parameterType, true);
                             }
                         }
 
-                        var param = new ParameterMetadata(stateKey == null ? new[] { key } : null, stateIndex, state.ToArray(), value, stateKey);
+                        var param = new ParameterMetadata(
+                            resolving?.ContractKeys.ToArray() ?? new IContractKey[] { new ContractKey(parameterType, true) },
+                            resolving?.TagKeys?.ToArray(),
+                            resolving?.StateKeys?.ToArray(),
+                            stateIndex,
+                            state.ToArray(),
+                            value,
+                            stateKey);
+
                         constructorParameters.Add(param);
                         if (!param.IsDependency)
                         {

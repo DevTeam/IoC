@@ -8,12 +8,12 @@
     internal class Resolving<T> : Token<T, IResolving<T>>, IResolving<T>
           where T : IResolver
     {
-        private readonly HashSet<IContractKey> _genericContractKeys = new HashSet<IContractKey>();
+        private readonly HashSet<IContractKey> _сontractKeys = new HashSet<IContractKey>();
         [CanBeNull] private HashSet<ITagKey> _tagKeys;
         [CanBeNull] private HashSet<IStateKey> _stateKeys;
         private IResolverContext _resolverContext;
         private IContractKey _singleContractKey;
-        private int _genericContractKeysCount;
+        private int _contractKeysCount;
 
         public Resolving([NotNull] T container)
             : base(container)
@@ -22,6 +22,15 @@
             if (container == null) throw new ArgumentNullException(nameof(container));
 #endif
         }
+
+        [NotNull]
+        internal IEnumerable<IContractKey> ContractKeys => _сontractKeys;
+
+        [CanBeNull]
+        internal IEnumerable<ITagKey> TagKeys => _tagKeys;
+
+        [CanBeNull]
+        internal IEnumerable<IStateKey> StateKeys => _stateKeys;
 
         public override IResolving<T> Contract(params Type[] contractTypes)
         {
@@ -69,7 +78,7 @@
 #if DEBUG
             if (stateProvider == null) throw new ArgumentNullException(nameof(stateProvider));
 #endif
-            if (_genericContractKeys.Count == 0)
+            if (_сontractKeys.Count == 0)
             {
                 Contract<TContract>();
             }
@@ -89,7 +98,7 @@
 #if DEBUG
             if (stateProvider == null) throw new ArgumentNullException(nameof(stateProvider));
 #endif
-            if (_genericContractKeys.Count == 0)
+            if (_сontractKeys.Count == 0)
             {
                 Contract<TContract>();
             }
@@ -151,10 +160,10 @@
             var changed = false;
             foreach (var contractKey in keys)
             {
-                changed |= _genericContractKeys.Add(contractKey);
+                changed |= _сontractKeys.Add(contractKey);
                 if (changed)
                 {
-                    _genericContractKeysCount++;
+                    _contractKeysCount++;
                     _singleContractKey = contractKey;
                 }
             }
@@ -223,14 +232,14 @@
             return false;
         }
 
-        internal IKey CreateResolvingKey()
+        private IKey CreateResolvingKey()
         {
-            if (_genericContractKeysCount == 1 && _tagKeys == null && _stateKeys == null)
+            if (_contractKeysCount == 1 && _tagKeys == null && _stateKeys == null)
             {
                 return _singleContractKey;
             }
 
-            return Resolver.KeyFactory.CreateCompositeKey(_genericContractKeys, _tagKeys, _stateKeys);
+            return Resolver.KeyFactory.CreateCompositeKey(_сontractKeys, _tagKeys, _stateKeys);
         }
 
         private void OnCompositeKeyChanged()

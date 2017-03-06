@@ -1,16 +1,18 @@
 ﻿namespace DevTeam.IoC
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Contracts;
 
     internal class ParameterMetadata : IParameterMetadata
     {
-        private static readonly IKey[] EmptyKeys = new IKey[0];
         private static readonly object[] EmptyState = new object[0];
 
         public ParameterMetadata(
-            [CanBeNull] IKey[] keys,
+            [CanBeNull] IContractKey[] contractKeys,
+            [CanBeNull] ITagKey[] tagKeys,
+            [CanBeNull] IStateKey[] stateKeys,
             int stateIndex,
             [CanBeNull] object[] state,
             [CanBeNull] object value,
@@ -19,39 +21,60 @@
 #if DEBUG
             if (stateIndex < 0) throw new ArgumentOutOfRangeException(nameof(stateIndex));
 #endif
-            Keys = keys ?? EmptyKeys;
             State = state ?? EmptyState;
+            ContractKeys = contractKeys;
+            TagKeys = tagKeys;
+            StateKeys = stateKeys;
             Value = value;
             StateKey = stateKey;
-            IsDependency = keys != null && value == null;
+            IsDependency = StateKey == null && value == null;
         }
 
         public bool IsDependency { get; }
 
         public object[] State { [NotNull] get; }
 
+        public IContractKey[] ContractKeys { get; }
+
+        public ITagKey[] TagKeys { get; }
+
+        public IStateKey[] StateKeys { get; }
+
         public object Value { [CanBeNull] get; }
 
         public IStateKey StateKey { [CanBeNull] get; }
-
-        public IKey[] Keys { [NotNull] get; }
-
-        protected bool Equals(ParameterMetadata other)
-        {
-            return IsDependency == other.IsDependency && State.SequenceEqual(other.State) && Equals(Value, other.Value) && Equals(StateKey, other.StateKey) && Keys.SequenceEqual(other.Keys);
-        }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return Equals((ParameterMetadata) obj);
+            var other = obj as IParameterMetadata;
+            return other != null && Equals(other);
         }
 
         public override int GetHashCode()
         {
             return 0;
+        }
+
+        private bool Equals(IParameterMetadata other)
+        {
+            return IsDependency == other.IsDependency && Equals(ContractKeys, other.ContractKeys) && Equals(TagKeys, other.TagKeys) && Equals(StateKeys, other.StateKeys) && Equals(Value, other.Value) && Equals(StateKey, other.StateKey) && Equals(State, other.State);
+        }
+
+        private bool Equals<T>([CanBeNull] IEnumerable<T> s1, [CanBeNull] IEnumerable<T> s2)
+        {
+            if (Object.Equals(s1, s2))
+            {
+                return true;
+            }
+
+            if (s1 == null || s2 == null)
+            {
+                return false;
+            }
+
+            return s1.SequenceEqual(s2);
         }
     }
 }
