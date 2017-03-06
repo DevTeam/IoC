@@ -37,7 +37,14 @@
 #if DEBUG
             if (creationContext == null) throw new ArgumentNullException(nameof(creationContext));
 #endif
-            return _instanceFactory.Create(_parameters.Select(param => ResolveParameter(creationContext, param)).ToArray());
+            var parametersCount = _parameters.Length;
+            var parameters = new object[parametersCount];
+            for (var i = 0; i < parametersCount; i++)
+            {
+                parameters[i] = ResolveParameter(creationContext, _parameters[i]);
+            }
+
+            return _instanceFactory.Create(parameters);
         }
 
         [CanBeNull]
