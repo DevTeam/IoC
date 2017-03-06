@@ -9,11 +9,9 @@
           where T : IResolver
     {
         private readonly HashSet<IContractKey> _genericContractKeys = new HashSet<IContractKey>();
-        private readonly HashSet<ITagKey> _tagKeys = new HashSet<ITagKey>();
-        private readonly HashSet<IStateKey> _stateKeys = new HashSet<IStateKey>();
+        [CanBeNull] private HashSet<ITagKey> _tagKeys;
+        [CanBeNull] private HashSet<IStateKey> _stateKeys;
         private IResolverContext _resolverContext;
-        private bool _hasTagKeys;
-        private bool _hasStateKeys;
         private IContractKey _singleContractKey;
         private int _genericContractKeysCount;
 
@@ -172,9 +170,13 @@
 
         protected override bool AddStateKey(IStateKey key)
         {
+            if (_stateKeys == null)
+            {
+                _stateKeys = new HashSet<IStateKey>();
+            }
+
             if (_stateKeys.Add(key))
             {
-                _hasStateKeys = true;
                 OnCompositeKeyChanged();
                 return true;
             }
@@ -184,9 +186,13 @@
 
         protected override bool AddTagKey(ITagKey key)
         {
+            if (_tagKeys == null)
+            {
+                _tagKeys = new HashSet<ITagKey>();
+            }
+
             if (_tagKeys.Add(key))
             {
-                _hasTagKeys = true;
                 OnCompositeKeyChanged();
                 return true;
             }
@@ -219,14 +225,12 @@
 
         internal IKey CreateResolvingKey()
         {
-            var tagKeys = _hasTagKeys ? _tagKeys : null;
-            var stateKeys = _hasStateKeys ? _stateKeys : null;
-            if (_genericContractKeysCount == 1 && tagKeys == null && stateKeys == null)
+            if (_genericContractKeysCount == 1 && _tagKeys == null && _stateKeys == null)
             {
                 return _singleContractKey;
             }
 
-            return Resolver.KeyFactory.CreateCompositeKey(_genericContractKeys, tagKeys, stateKeys);
+            return Resolver.KeyFactory.CreateCompositeKey(_genericContractKeys, _tagKeys, _stateKeys);
         }
 
         private void OnCompositeKeyChanged()

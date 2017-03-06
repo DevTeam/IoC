@@ -10,8 +10,8 @@
           where T : IContainer
     {
         private readonly List<HashSet<IContractKey>> _contractKeys = new List<HashSet<IContractKey>>();
-        private readonly HashSet<ITagKey> _tagKeys = new HashSet<ITagKey>();
-        private readonly HashSet<IStateKey> _stateKeys = new HashSet<IStateKey>();
+        [CanBeNull] private HashSet<ITagKey> _tagKeys;
+        [CanBeNull] private HashSet<IStateKey> _stateKeys;
         private readonly HashSet<IKey> _registrationKeys = new HashSet<IKey>();
         private readonly Lazy<IInstanceFactoryProvider> _instanceFactoryProvider;
         private readonly RegistrationResult<T> _result;
@@ -149,11 +149,21 @@
 
         protected override bool AddStateKey(IStateKey key)
         {
+            if (_stateKeys == null)
+            {
+                _stateKeys = new HashSet<IStateKey>();
+            }
+
             return _stateKeys.Add(key);
         }
 
         protected override bool AddTagKey(ITagKey key)
         {
+            if (_tagKeys == null)
+            {
+                _tagKeys = new HashSet<ITagKey>();
+            }
+
             return _tagKeys.Add(key);
         }
 
@@ -196,21 +206,19 @@
         {
             foreach (var contractKeys in _contractKeys)
             {
-                var tagKeys = _tagKeys.Any() ? _tagKeys : null;
-                var stateKeys = _stateKeys.Any() ? _stateKeys : null;
-                if (contractKeys.Count == 1 && tagKeys == null && stateKeys == null)
+                if (contractKeys.Count == 1 && _tagKeys == null && _stateKeys == null)
                 {
                     _registrationKeys.Add(contractKeys.Single());
                 }
                 else
                 {
-                    _registrationKeys.Add(Resolver.KeyFactory.CreateCompositeKey(contractKeys, tagKeys, stateKeys));
+                    _registrationKeys.Add(Resolver.KeyFactory.CreateCompositeKey(contractKeys, _tagKeys, _stateKeys));
                 }
             }
 
             _contractKeys.Clear();
-            _stateKeys.Clear();
-            _tagKeys.Clear();
+            _stateKeys?.Clear();
+            _tagKeys?.Clear();
         }
 
         private void AsFactoryMethodInternal<TImplementation>(
