@@ -25,12 +25,12 @@
             _state = state;
         }
 
-        public object GetState(IResolverContext resolverContext, IStateKey stateKey)
+        public object GetState(ICreationContext creationContext, IStateKey stateKey)
         {
             return _state[stateKey.Index];
         }
 
-        public object GetKey(IResolverContext resolverContext)
+        public object GetKey(ICreationContext creationContext)
         {
             return this;
         }
@@ -61,7 +61,7 @@
             {
                 unchecked
                 {
-                    return (code*397) ^ key.GetHashCode();
+                    return (code*397) ^ key?.GetHashCode() ?? 0;
                 }
             });
         }

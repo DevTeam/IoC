@@ -16,6 +16,7 @@
         private Mock<ILifetime> _baseLifetime;
         private Mock<ILifetimeContext> _lifetimeContext;
         private Mock<IResolverContext> _resolverContext;
+        private Mock<ICreationContext> _creationContext;
 
         [SetUp]
         public void SetUp()
@@ -24,6 +25,8 @@
             _baseLifetime = new Mock<ILifetime>();
             _lifetimeContext = new Mock<ILifetimeContext>();
             _resolverContext = new Mock<IResolverContext>();
+            _creationContext = new Mock<ICreationContext>();
+            _creationContext.SetupGet(i => i.ResolverContext).Returns(_resolverContext.Object);
         }
 
         [Test]
@@ -34,10 +37,10 @@
             var lifetime = CreateInstance((lifetimeContext, resolverContext) => 0);
             _lifetimeEnumerator.Setup(i => i.MoveNext()).Returns(true);
             _lifetimeEnumerator.SetupGet(i => i.Current).Returns(_baseLifetime.Object);
-            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object)).Returns(obj);
+            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object)).Returns(obj);
 
             // When
-            var actualObj = lifetime.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object);
+            var actualObj = lifetime.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object);
 
             // Then
             actualObj.ShouldBe(obj);
@@ -54,8 +57,8 @@
             _resolverContext.SetupGet(i => i.Key).Returns(key);
             _lifetimeEnumerator.Setup(i => i.MoveNext()).Returns(true);
             _lifetimeEnumerator.SetupGet(i => i.Current).Returns(_baseLifetime.Object);
-            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object)).Returns(obj);
-            lifetime.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object);
+            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object)).Returns(obj);
+            lifetime.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object);
 
             // When
             lifetime.Dispose();
@@ -79,15 +82,15 @@
 
             // When
             key = 1;
-            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object)).Returns(obj1);
-            var actualObj1 = lifetime.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object);
+            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object)).Returns(obj1);
+            var actualObj1 = lifetime.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object);
 
             key = 2;
-            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object)).Returns(obj2);
-            var actualObj2 = lifetime.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object);
+            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object)).Returns(obj2);
+            var actualObj2 = lifetime.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object);
 
             // Then
-            _baseLifetime.Verify(i => i.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object), Times.Exactly(2));
+            _baseLifetime.Verify(i => i.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object), Times.Exactly(2));
             actualObj1.ShouldBe(obj1);
             actualObj2.ShouldBe(obj2);
             lifetime.Count.ShouldBe(2);
@@ -103,23 +106,23 @@
             var lifetime = CreateInstance((lifetimeContext, resolverContext) => key);
             _lifetimeEnumerator.Setup(i => i.MoveNext()).Returns(true);
             _lifetimeEnumerator.SetupGet(i => i.Current).Returns(_baseLifetime.Object);
-            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object)).Returns(obj);
+            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object)).Returns(obj);
 
             // When
             key = 3;
-            var actualObj1 = lifetime.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object);
+            var actualObj1 = lifetime.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object);
 
             key = 3;
-            var actualObj2 = lifetime.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object);
+            var actualObj2 = lifetime.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object);
 
             // Then
-            _baseLifetime.Verify(i => i.Create(_lifetimeContext.Object, _resolverContext.Object, _lifetimeEnumerator.Object), Times.Exactly(2));
+            _baseLifetime.Verify(i => i.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object), Times.Exactly(2));
             actualObj1.ShouldBe(obj);
             actualObj2.ShouldBe(obj);
             lifetime.Count.ShouldBe(1);
         }
 
-        private KeyBasedLifetime<int> CreateInstance(Func<ILifetimeContext, IResolverContext, int> keySelector)
+        private KeyBasedLifetime<int> CreateInstance(Func<ILifetimeContext, ICreationContext, int> keySelector)
         {
             return new MyBasedLifetime(keySelector, _baseLifetime.Object);
         }
@@ -129,7 +132,7 @@
             private readonly ILifetime _baseLifetime;
 
             public MyBasedLifetime(
-                Func<ILifetimeContext, IResolverContext, int> keySelector,
+                Func<ILifetimeContext, ICreationContext, int> keySelector,
                 ILifetime baseLifetime)
                 : base(keySelector)
             {

@@ -25,11 +25,11 @@
             return new Lifetime(lifetimeEnumerator.Current);
         }
 
-        private static Key KeySelector(ILifetimeContext lifetimeContext, IResolverContext resolverContext)
+        private static Key KeySelector(ILifetimeContext lifetimeContext, ICreationContext creationContext)
         {
             if (lifetimeContext == null) throw new ArgumentNullException(nameof(lifetimeContext));
-            if (resolverContext == null) throw new ArgumentNullException(nameof(resolverContext));
-            var genericTypes = (resolverContext.Key as IContractKey)?.GenericTypeArguments ?? (resolverContext.Key as ICompositeKey)?.ContractKeys?.Select(i => i.GenericTypeArguments).SelectMany(i => i).ToArray();
+            if (creationContext == null) throw new ArgumentNullException(nameof(creationContext));
+            var genericTypes = (creationContext.ResolverContext.Key as IContractKey)?.GenericTypeArguments ?? (creationContext.ResolverContext.Key as ICompositeKey)?.ContractKeys?.Select(i => i.GenericTypeArguments).SelectMany(i => i).ToArray();
             return new Key(genericTypes);
         }
 
@@ -86,7 +86,7 @@
                 _baseLifetime.Dispose();
             }
 
-            public object Create(ILifetimeContext lifetimeContext, IResolverContext resolverContext, IEnumerator<ILifetime> lifetimeEnumerator)
+            public object Create(ILifetimeContext lifetimeContext, ICreationContext creationContext, IEnumerator<ILifetime> lifetimeEnumerator)
             {
                 lock (_lockObject)
                 {
@@ -95,7 +95,7 @@
                         return _instance;
                     }
 
-                    _instance = _baseLifetime.Create(lifetimeContext, resolverContext, lifetimeEnumerator);
+                    _instance = _baseLifetime.Create(lifetimeContext, creationContext, lifetimeEnumerator);
                     return _instance;
                 }
             }

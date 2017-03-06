@@ -119,13 +119,14 @@
             return obj != null && GetType() == obj.GetType();
         }
 
-        private static object ResolveFunc(IResolverContext ctx)
+        private static object ResolveFunc(ICreationContext ctx)
         {
             return ((IFuncProvider)ResolveResolver(ctx)).GetFunc();
         }
 
-        private static object ResolveResolver(IResolverContext ctx)
+        private static object ResolveResolver(ICreationContext creationContext)
         {
+            var ctx = creationContext.ResolverContext;
             var genericContractKey = ctx.Key as IContractKey ?? (ctx.Key as ICompositeKey)?.ContractKeys.SingleOrDefault();
             if (genericContractKey == null)
             {
@@ -158,7 +159,7 @@
             }
 
             var ctor = resolverType.GetTypeInfo().DeclaredConstructors.Single(i => i.GetParameters().Length == 1);
-            var factory = ctx.Container.Resolve().Instance<IInstanceFactoryProvider>(ctx.StateProvider);
+            var factory = ctx.Container.Resolve().Instance<IInstanceFactoryProvider>(creationContext.StateProvider);
             return factory.GetFactory(ctor).Create(ctx);
         }
     }

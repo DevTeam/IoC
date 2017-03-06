@@ -11,10 +11,10 @@
 
         internal int Count => _instances.Count;
 
-        public object Create(ILifetimeContext lifetimeContext, IResolverContext resolverContext, IEnumerator<ILifetime> lifetimeEnumerator)
+        public object Create(ILifetimeContext lifetimeContext, ICreationContext creationContext, IEnumerator<ILifetime> lifetimeEnumerator)
         {
             if (lifetimeContext == null) throw new ArgumentNullException(nameof(lifetimeContext));
-            if (resolverContext == null) throw new ArgumentNullException(nameof(resolverContext));
+            if (creationContext == null) throw new ArgumentNullException(nameof(creationContext));
             if (lifetimeEnumerator == null) throw new ArgumentNullException(nameof(lifetimeEnumerator));
             if (!lifetimeEnumerator.MoveNext())
             {
@@ -23,7 +23,7 @@
 
             lock (_instances)
             {
-                var instance = lifetimeEnumerator.Current.Create(lifetimeContext, resolverContext, lifetimeEnumerator);
+                var instance = lifetimeEnumerator.Current.Create(lifetimeContext, creationContext, lifetimeEnumerator);
                 var disposable = instance as IDisposable;
                 if (disposable != null)
                 {

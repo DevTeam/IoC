@@ -4,9 +4,9 @@
     public interface IStateProvider
     {
         [NotNull]
-        object GetKey([NotNull] IResolverContext resolverContext);
+        object GetKey([NotNull] ICreationContext creationContext);
 
         [CanBeNull]
-        object GetState([NotNull] IResolverContext resolverContext, [NotNull] IStateKey stateKey);
+        object GetState([NotNull] ICreationContext creationContext, [NotNull] IStateKey stateKey);
     }
 }

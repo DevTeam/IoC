@@ -9,12 +9,12 @@
     {
         public static readonly ILifetime Shared = new TransientLifetime();
 
-        public object Create(ILifetimeContext lifetimeContext, IResolverContext resolverContext, IEnumerator<ILifetime> lifetimeEnumerator)
+        public object Create(ILifetimeContext lifetimeContext, ICreationContext creationContext, IEnumerator<ILifetime> lifetimeEnumerator)
         {
             if (lifetimeContext == null) throw new ArgumentNullException(nameof(lifetimeContext));
-            if (resolverContext == null) throw new ArgumentNullException(nameof(resolverContext));
+            if (creationContext == null) throw new ArgumentNullException(nameof(creationContext));
             if (lifetimeEnumerator == null) throw new ArgumentNullException(nameof(lifetimeEnumerator));
-            return resolverContext.RegistryContext.InstanceFactory.Create(resolverContext);
+            return creationContext.ResolverContext.RegistryContext.InstanceFactory.Create(creationContext);
         }
 
         public void Dispose()

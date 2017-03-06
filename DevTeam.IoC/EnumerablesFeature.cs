@@ -45,8 +45,9 @@
             return obj != null && GetType() == obj.GetType();
         }
 
-        private static object ResolveEnumerable(IResolverContext ctx)
+        private static object ResolveEnumerable(ICreationContext creationContext)
         {
+            var ctx = creationContext.ResolverContext;
             var genericContractKey = ctx.Key as IContractKey ?? (ctx.Key as ICompositeKey)?.ContractKeys.SingleOrDefault();
             if (genericContractKey == null)
             {
@@ -66,7 +67,7 @@
                 from key in keys
                 select ctx.Container.Resolve().Key(key).Instance();
 
-            var factory = ctx.Container.Resolve().Instance<IInstanceFactoryProvider>(ctx.StateProvider);
+            var factory = ctx.Container.Resolve().Instance<IInstanceFactoryProvider>(creationContext.StateProvider);
             var ctor = enumType.GetTypeInfo().DeclaredConstructors.Single(i => i.GetParameters().Length == 1);
             return factory.GetFactory(ctor).Create(source);
         }

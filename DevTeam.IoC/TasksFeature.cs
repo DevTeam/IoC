@@ -43,8 +43,9 @@
             return obj != null && GetType() == obj.GetType();
         }
 
-        private static object ResolveTask(IResolverContext ctx)
+        private static object ResolveTask(ICreationContext creationContext)
         {
+            var ctx = creationContext.ResolverContext;
             var genericContractKey = ctx.Key as IContractKey ?? (ctx.Key as ICompositeKey)?.ContractKeys.SingleOrDefault();
             if (genericContractKey == null)
             {
@@ -53,7 +54,7 @@
 
             var taskValueType = genericContractKey.GenericTypeArguments.First();
             var taskType = typeof(ResolverTask<>).MakeGenericType(taskValueType);
-            var factory = ctx.Container.Resolve().Instance<IInstanceFactoryProvider>(ctx.StateProvider);
+            var factory = ctx.Container.Resolve().Instance<IInstanceFactoryProvider>(creationContext.StateProvider);
             var ctor = taskType.GetTypeInfo().DeclaredConstructors.Single();
             return factory.GetFactory(ctor).Create(ctx);
         }

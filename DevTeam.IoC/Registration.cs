@@ -88,14 +88,14 @@
             return this;
         }
 
-        public IRegistrationResult<T> FactoryMethod(Func<IResolverContext, object> factoryMethod)
+        public IRegistrationResult<T> FactoryMethod(Func<ICreationContext, object> factoryMethod)
         {
             if (factoryMethod == null) throw new ArgumentNullException(nameof(factoryMethod));
             AsFactoryMethodInternal(factoryMethod);
             return _result;
         }
 
-        public IRegistrationResult<T> FactoryMethod<TImplementation>(Func<IResolverContext, TImplementation> factoryMethod)
+        public IRegistrationResult<T> FactoryMethod<TImplementation>(Func<ICreationContext, TImplementation> factoryMethod)
         {
             if (factoryMethod == null) throw new ArgumentNullException(nameof(factoryMethod));
             AsFactoryMethodInternal(factoryMethod, typeof(TImplementation));
@@ -214,7 +214,7 @@
         }
 
         private void AsFactoryMethodInternal<TImplementation>(
-            Func<IResolverContext, TImplementation> factoryMethod,
+            Func<ICreationContext, TImplementation> factoryMethod,
             Type implementationType = null)
         {
             AppendRegistryKeys();

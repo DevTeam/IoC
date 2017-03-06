@@ -4,6 +4,6 @@
     public interface IResolverFactory
     {
         [NotNull]
-        object Create([NotNull] IResolverContext resolverContext);
+        object Create([NotNull] ICreationContext creationContext);
     }
 }

@@ -21,11 +21,11 @@
             _constructorParams = constructorParams.ToArray();
         }
 
-        public Type ResolveImplementationType(IResolverContext resolverContext, Type implementationType)
+        public Type ResolveImplementationType(ICreationContext creationContext, Type implementationType)
         {
-            if (resolverContext == null) throw new ArgumentNullException(nameof(resolverContext));
+            if (creationContext == null) throw new ArgumentNullException(nameof(creationContext));
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
-            return _defaultMetadataProvider.ResolveImplementationType(resolverContext, implementationType);
+            return _defaultMetadataProvider.ResolveImplementationType(creationContext, implementationType);
         }
 
         public bool TrySelectConstructor(Type implementationType, out ConstructorInfo constructor, out Exception error)

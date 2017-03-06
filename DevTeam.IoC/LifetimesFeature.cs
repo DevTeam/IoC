@@ -59,7 +59,7 @@
                 .Register()
                 .Tag(Wellknown.Lifetime.PerContainer)
                 .Contract<ILifetime>()
-                .FactoryMethod(ctx => new SingletonBasedLifetime<IResolver>((lifetimeContext, resolverContext) => resolverContext.Container))
+                .FactoryMethod(ctx => new SingletonBasedLifetime<IResolver>((lifetimeContext, curCtx) => curCtx.ResolverContext.Container))
                 .Apply();
 
             yield return
@@ -67,7 +67,7 @@
                 .Register()
                 .Tag(Wellknown.Lifetime.PerState)
                 .Contract<ILifetime>()
-                .FactoryMethod(ctx => new SingletonBasedLifetime<object>((lifetimeContext, resolverContext) => resolverContext.StateProvider.GetKey(resolverContext)))
+                .FactoryMethod(ctx => new SingletonBasedLifetime<object>((lifetimeContext, curCtx) => curCtx.StateProvider.GetKey(curCtx)))
                 .Apply();
         }
 

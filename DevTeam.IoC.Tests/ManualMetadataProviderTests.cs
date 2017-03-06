@@ -21,12 +21,15 @@
         private IParameterMetadata[] _matchedConstructorParams;
         private IParameterMetadata[] _notMatchedByStateTypeConstructorParams;
         private IParameterMetadata[] _notMatchedByContractTypeConstructorParams;
+        private Mock<ICreationContext> _creationContext;
 
         [SetUp]
         public void SetUp()
         {
             _defaultMetadataProvider = new Mock<IMetadataProvider>();
             _resolverContext = new Mock<IResolverContext>();
+            _creationContext = new Mock<ICreationContext>();
+            _creationContext.SetupGet(i => i.ResolverContext).Returns(_resolverContext.Object);
             _matchedConstructorParams = new IParameterMetadata[]
             {
                 new ParameterMetadata(null, 0, new object[0], null, new StateKey(0, typeof(int))),
@@ -63,10 +66,10 @@
         {
             // Given
             var metadataProvider = CreateInstance(Enumerable.Empty<IParameterMetadata>());
-            _defaultMetadataProvider.Setup(i => i.ResolveImplementationType(_resolverContext.Object, typeof(IEnumerable<string>))).Returns(typeof(IDisposable));
+            _defaultMetadataProvider.Setup(i => i.ResolveImplementationType(_creationContext.Object, typeof(IEnumerable<string>))).Returns(typeof(IDisposable));
 
             // When
-            var resolvedType = metadataProvider.ResolveImplementationType(_resolverContext.Object, typeof(IEnumerable<string>));
+            var resolvedType = metadataProvider.ResolveImplementationType(_creationContext.Object, typeof(IEnumerable<string>));
 
             // Then
             resolvedType.ShouldBe(typeof(IDisposable));

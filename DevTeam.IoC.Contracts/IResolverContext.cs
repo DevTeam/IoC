@@ -9,8 +9,6 @@
 
         IResolverFactory InstanceFactory { [NotNull] get; }
 
-        IStateProvider StateProvider { [NotNull] get; }
-
         IRegistryContext RegistryContext { [NotNull] get; }
     }
 }

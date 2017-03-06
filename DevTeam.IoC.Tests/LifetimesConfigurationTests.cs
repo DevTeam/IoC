@@ -200,7 +200,7 @@
                 using (
                     container.Register()
                     .Contract<MyClass>()
-                    .FactoryMethod(ctx => new MyClass(ctx.Container.Resolve().Instance<ISimpleService>(), ctx.Container.Resolve().Instance<ISimpleService>())).Apply())
+                    .FactoryMethod(ctx => new MyClass(ctx.ResolverContext.Container.Resolve().Instance<ISimpleService>(), ctx.ResolverContext.Container.Resolve().Instance<ISimpleService>())).Apply())
                 using (
                     container.Register()
                     .Lifetime(Wellknown.Lifetime.PerResolve)

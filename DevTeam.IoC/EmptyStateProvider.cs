@@ -7,16 +7,19 @@
     {
         public static readonly IStateProvider Shared = new EmptyStateProvider();
 
-        public object GetState(IResolverContext resolverContext, IStateKey stateKey)
+        private EmptyStateProvider()
         {
-            if (resolverContext == null) throw new ArgumentNullException(nameof(resolverContext));
+        }
+
+        public object GetState(ICreationContext creationContext, IStateKey stateKey)
+        {
+            if (creationContext == null) throw new ArgumentNullException(nameof(creationContext));
             if (stateKey == null) throw new ArgumentNullException(nameof(stateKey));
             return null;
         }
 
-        public object GetKey(IResolverContext resolverContext)
+        public object GetKey(ICreationContext creationContext)
         {
-            if (resolverContext == null) throw new ArgumentNullException(nameof(resolverContext));
             return Shared;
         }
     }

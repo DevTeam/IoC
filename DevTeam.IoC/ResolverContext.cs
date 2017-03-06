@@ -10,8 +10,7 @@
             [NotNull] IContainer container,
             [NotNull] IRegistryContext registryContext,
             [NotNull] IResolverFactory instanceFactory,
-            [NotNull] IKey key,
-            [CanBeNull] IStateProvider stateProvider = null)
+            [NotNull] IKey key)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
             if (key == null) throw new ArgumentNullException(nameof(key));
@@ -21,7 +20,6 @@
             RegistryContext = registryContext;
             InstanceFactory = instanceFactory;
             Key = key;
-            StateProvider = stateProvider ?? EmptyStateProvider.Shared;
         }
 
         public IContainer Container { get; set; }
@@ -30,13 +28,11 @@
 
         public IResolverFactory InstanceFactory { get; }
 
-        public IStateProvider StateProvider { get; }
-
         public IRegistryContext RegistryContext { get; }
 
         public override string ToString()
         {
-            return $"{nameof(RegistryContext)} [ Key: {Key}, InstanceFactory: {InstanceFactory}, StateProvider: {StateProvider} , RegistryContext: {RegistryContext}, Container: {Container}]";
+            return $"{nameof(RegistryContext)} [ Key: {Key}, InstanceFactory: {InstanceFactory}, RegistryContext: {RegistryContext}, Container: {Container}]";
         }
     }
 }

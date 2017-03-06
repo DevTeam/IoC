@@ -27,7 +27,7 @@
                 .Register()
                 .Lifetime(Wellknown.Lifetime.AutoDisposing)
                 .Contract<IContainer>()
-                .FactoryMethod(ctx => new Container(ctx.Container, null, ctx))
+                .FactoryMethod(ctx => new Container(ctx.ResolverContext.Container, null, ctx.ResolverContext))
                 .Apply();
 
             yield return
@@ -36,7 +36,7 @@
                 .Lifetime(Wellknown.Lifetime.AutoDisposing)
                 .State(0, typeof(object))
                 .Contract<IContainer>()
-                .FactoryMethod(ctx => new Container(ctx.Container, ctx.GetState<object>(0), ctx))
+                .FactoryMethod(ctx => new Container(ctx.ResolverContext.Container, ctx.GetState<object>(0), ctx.ResolverContext))
                 .Apply();
         }
 

@@ -5,9 +5,9 @@
     {
         IKeyFactory KeyFactory { [NotNull] get; }
 
-        bool TryCreateResolverContext([NotNull] IKey key, out IResolverContext resolverContext, [CanBeNull] IStateProvider stateProvider = null, [CanBeNull] IContainer container = null);
+        bool TryCreateResolverContext([NotNull] IKey key, out IResolverContext resolverContext, [CanBeNull] IContainer container = null);
 
         [NotNull]
-        object Resolve([NotNull] IResolverContext context);
+        object Resolve([NotNull] IResolverContext context, [CanBeNull] IStateProvider stateProvider = null);
     }
 }

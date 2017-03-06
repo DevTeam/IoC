@@ -112,6 +112,7 @@
     <Compile Include="Token.cs" />
     <Compile Include="TransientLifetime.cs" />
     <Compile Include="TypeResolver.cs" />
+    <Compile Include="CreationContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DevTeam.IoC.Contracts\DevTeam.IoC.Contracts.csproj">

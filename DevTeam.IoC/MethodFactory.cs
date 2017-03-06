@@ -6,18 +6,18 @@ namespace DevTeam.IoC
 
     internal class MethodFactory<TContract> : IResolverFactory
     {
-        private readonly Func<IResolverContext, TContract> _factoryMethod;
+        private readonly Func<ICreationContext, TContract> _factoryMethod;
 
-        public MethodFactory(Func<IResolverContext, TContract> factoryMethod)
+        public MethodFactory(Func<ICreationContext, TContract> factoryMethod)
         {
             if (factoryMethod == null) throw new ArgumentNullException(nameof(factoryMethod));
             _factoryMethod = factoryMethod;
         }
 
-        public object Create(IResolverContext resolverContext)
+        public object Create(ICreationContext creationContext)
         {
-            if (resolverContext == null) throw new ArgumentNullException(nameof(resolverContext));
-            return _factoryMethod(resolverContext);
+            if (creationContext == null) throw new ArgumentNullException(nameof(creationContext));
+            return _factoryMethod(creationContext);
         }
     }
 }

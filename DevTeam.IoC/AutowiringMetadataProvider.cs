@@ -8,11 +8,11 @@
 
     internal class AutowiringMetadataProvider : IMetadataProvider
     {
-        public Type ResolveImplementationType(IResolverContext resolverContext, Type implementationType)
+        public Type ResolveImplementationType(ICreationContext creationContext, Type implementationType)
         {
-            if (resolverContext == null) throw new ArgumentNullException(nameof(resolverContext));
+            if (creationContext == null) throw new ArgumentNullException(nameof(creationContext));
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
-            var contractKey = resolverContext.Key as IContractKey ?? (resolverContext.Key as ICompositeKey)?.ContractKeys.FirstOrDefault();
+            var contractKey = creationContext.ResolverContext.Key as IContractKey ?? (creationContext.ResolverContext.Key as ICompositeKey)?.ContractKeys.FirstOrDefault();
             if (contractKey != null && contractKey.GenericTypeArguments.Length > 0 && implementationType.GetTypeInfo().GenericTypeParameters.Length == contractKey.GenericTypeArguments.Length)
             {
                 return implementationType.MakeGenericType(contractKey.GenericTypeArguments);

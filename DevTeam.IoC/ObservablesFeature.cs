@@ -33,8 +33,9 @@
                     .Apply();
         }
 
-        private object ResolveObservable(IResolverContext ctx)
+        private object ResolveObservable(ICreationContext creationContext)
         {
+            var ctx = creationContext.ResolverContext;
             var genericContractKey = ctx.Key as IContractKey ?? (ctx.Key as ICompositeKey)?.ContractKeys.SingleOrDefault();
             if (genericContractKey == null)
             {
@@ -46,7 +47,7 @@
             var enumereble = ctx.Container.Resolve().Contract(enumType).Instance();
             var observableType = typeof(Observable<>).MakeGenericType(itemType);
 
-            var factory = ctx.Container.Resolve().Instance<IInstanceFactoryProvider>(ctx.StateProvider);
+            var factory = ctx.Container.Resolve().Instance<IInstanceFactoryProvider>(ctx);
             var ctor = observableType.GetTypeInfo().DeclaredConstructors.Single(i => i.GetParameters().Length == 1);
             return factory.GetFactory(ctor).Create(enumereble);
         }

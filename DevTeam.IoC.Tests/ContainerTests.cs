@@ -30,7 +30,7 @@
             using (var container = CreateContainer())
             {
                 object obj = new object();
-                _factory.Setup(i => i.Create(It.IsAny<IResolverContext>())).Returns(obj);
+                _factory.Setup(i => i.Create(It.IsAny<ICreationContext>())).Returns(obj);
 
                 // When
                 var registryContext =
@@ -62,7 +62,7 @@
             using (container.Subscribe(eventObserver))
             {
                 object obj = new object();
-                _factory.Setup(i => i.Create(It.IsAny<IResolverContext>())).Returns(obj);
+                _factory.Setup(i => i.Create(It.IsAny<ICreationContext>())).Returns(obj);
                 keys = CreateCompositeKeys(container, false, new[] {typeof(string) }).ToArray();
                 // When
                 var registryContext =
@@ -112,7 +112,7 @@
             using (var container = CreateContainer())
             {
                 var obj = new object();
-                _factory.Setup(i => i.Create(It.IsAny<IResolverContext>())).Returns(obj);
+                _factory.Setup(i => i.Create(It.IsAny<ICreationContext>())).Returns(obj);
 
                 // When
                 var registryContext =
@@ -158,7 +158,7 @@
             using (var childContainer2 = new Container(childContainer1, "child2"))
             {
                 object obj = new object();
-                _factory.Setup(i => i.Create(It.IsAny<IResolverContext>())).Returns(obj);
+                _factory.Setup(i => i.Create(It.IsAny<ICreationContext>())).Returns(obj);
 
                 // When
                 var registryContext =
@@ -185,7 +185,7 @@
             using (var container = CreateContainer())
             {
                 Mock<IGenericService<string>> mock = new Mock<IGenericService<string>>();
-                _factory.Setup(i => i.Create(It.IsAny<IResolverContext>())).Returns(mock.Object);
+                _factory.Setup(i => i.Create(It.IsAny<ICreationContext>())).Returns(mock.Object);
 
                 // When
                 var registryContext =
@@ -213,7 +213,7 @@
             using (var container = CreateContainer())
             {
                 Mock<IGenericService<string>> mock = new Mock<IGenericService<string>>();
-                _factory.Setup(i => i.Create(It.IsAny<IResolverContext>())).Returns(mock.Object);
+                _factory.Setup(i => i.Create(It.IsAny<ICreationContext>())).Returns(mock.Object);
 
                 // When
                 var registryContext =
@@ -241,7 +241,7 @@
             using (var container = CreateContainer())
             {
                 var genericMock = new Mock<IGenericService<string>>();
-                _factory.Setup(i => i.Create(It.IsAny<IResolverContext>())).Returns(genericMock.Object);
+                _factory.Setup(i => i.Create(It.IsAny<ICreationContext>())).Returns(genericMock.Object);
 
                 // When
                 var registryContext =
@@ -268,7 +268,7 @@
             using (var container = CreateContainer())
             {
                 var ex = new Exception("test");
-                _factory.Setup(i => i.Create(It.IsAny<IResolverContext>())).Throws(ex);
+                _factory.Setup(i => i.Create(It.IsAny<ICreationContext>())).Throws(ex);
 
                 // When
                 var registryContext =

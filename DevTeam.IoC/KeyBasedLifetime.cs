@@ -7,25 +7,25 @@
 
     internal abstract class KeyBasedLifetime<TKey> : ILifetime
     {
-        private readonly Func<ILifetimeContext, IResolverContext, TKey> _keySelector;
+        private readonly Func<ILifetimeContext, ICreationContext, TKey> _keySelector;
         private readonly Dictionary<TKey, ILifetime> _lifetimes = new Dictionary<TKey, ILifetime>();
 
         internal int Count => _lifetimes.Count;
 
         protected KeyBasedLifetime(
-            [NotNull] Func<ILifetimeContext, IResolverContext, TKey> keySelector)
+            [NotNull] Func<ILifetimeContext, ICreationContext, TKey> keySelector)
         {
             if (keySelector == null) throw new ArgumentNullException(nameof(keySelector));
             _keySelector = keySelector;
         }
 
-        public object Create(ILifetimeContext lifetimeContext, IResolverContext resolverContext, IEnumerator<ILifetime> lifetimeEnumerator)
+        public object Create(ILifetimeContext lifetimeContext, ICreationContext creationContext, IEnumerator<ILifetime> lifetimeEnumerator)
         {
             if (lifetimeContext == null) throw new ArgumentNullException(nameof(lifetimeContext));
-            if (resolverContext == null) throw new ArgumentNullException(nameof(resolverContext));
+            if (creationContext == null) throw new ArgumentNullException(nameof(creationContext));
             if (lifetimeEnumerator == null) throw new ArgumentNullException(nameof(lifetimeEnumerator));
             ILifetime lifetime;
-            var key = _keySelector(lifetimeContext, resolverContext);
+            var key = _keySelector(lifetimeContext, creationContext);
             lock (_lifetimes)
             {
                 if (!_lifetimes.TryGetValue(key, out lifetime))
@@ -35,7 +35,7 @@
                 }
             }
 
-            return lifetime.Create(lifetimeContext, resolverContext, lifetimeEnumerator);
+            return lifetime.Create(lifetimeContext, creationContext, lifetimeEnumerator);
         }
 
         public void Dispose()

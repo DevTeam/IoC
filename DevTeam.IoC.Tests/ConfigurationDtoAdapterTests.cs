@@ -382,13 +382,13 @@
 
         private static class MyFactory
         {
-            public static string Create(IResolverContext ctx)
+            public static string Create(ICreationContext ctx)
             {
-                return ctx.RegistryContext.Container.Tag?.ToString() ?? "null";
+                return ctx.ResolverContext.RegistryContext.Container.Tag?.ToString() ?? "null";
             }
 
             // ReSharper disable once UnusedParameter.Local
-            public static string CreateAbcString(IResolverContext ctx)
+            public static string CreateAbcString(ICreationContext ctx)
             {
                 return "abc";
             }

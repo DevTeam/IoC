@@ -31,18 +31,18 @@
             _instanceFactory = instanceFactoryProvider.GetFactory(constructor);
         }
 
-        public object Create(IResolverContext resolverContext)
+        public object Create(ICreationContext creationContext)
         {
-            if (resolverContext == null) throw new ArgumentNullException(nameof(resolverContext));
-            return _instanceFactory.Create(_parameters.Select(param => ResolveParameter(resolverContext, param)).ToArray());
+            if (creationContext == null) throw new ArgumentNullException(nameof(creationContext));
+            return _instanceFactory.Create(_parameters.Select(param => ResolveParameter(creationContext, param)).ToArray());
         }
 
         [CanBeNull]
-        private static object ResolveParameter(IResolverContext resolverContext, IParameterMetadata parameterMetadata)
+        private static object ResolveParameter(ICreationContext creationContext, IParameterMetadata parameterMetadata)
         {
             if (parameterMetadata.IsDependency)
             {
-                return resolverContext.RegistryContext.Container.Resolve<IResolver>().Key(parameterMetadata.Keys).Instance(parameterMetadata.State ?? EmptyState);
+                return creationContext.ResolverContext.RegistryContext.Container.Resolve<IResolver>().Key(parameterMetadata.Keys).Instance(parameterMetadata.State ?? EmptyState);
             }
 
             if(parameterMetadata.Value != null)
@@ -50,7 +50,7 @@
                 return parameterMetadata.Value;
             }
 
-            return resolverContext.StateProvider.GetState(resolverContext, parameterMetadata.StateKey);
+            return creationContext.StateProvider.GetState(creationContext, parameterMetadata.StateKey);
         }
     }
 }

@@ -64,16 +64,16 @@
         }
 
         [CanBeNull]
-        public static object TryGetState([NotNull] this IResolverContext ctx, int index, [NotNull] Type stateType)
+        public static object TryGetState([NotNull] this ICreationContext ctx, int index, [NotNull] Type stateType)
         {
             if (ctx == null) throw new ArgumentNullException(nameof(ctx));
             if (stateType == null) throw new ArgumentNullException(nameof(stateType));
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
-            return ctx.StateProvider.GetState(ctx, ctx.Container.KeyFactory.CreateStateKey(index, stateType));
+            return ctx.StateProvider.GetState(ctx, ctx.ResolverContext.Container.KeyFactory.CreateStateKey(index, stateType));
         }
 
         [NotNull]
-        public static object GetState([NotNull] this IResolverContext ctx, int index, [NotNull] Type stateType)
+        public static object GetState([NotNull] this ICreationContext ctx, int index, [NotNull] Type stateType)
         {
             if (ctx == null) throw new ArgumentNullException(nameof(ctx));
             if (stateType == null) throw new ArgumentNullException(nameof(stateType));
@@ -90,7 +90,7 @@
         }
 
         [CanBeNull]
-        public static T TryGetState<T>([NotNull] this IResolverContext ctx, int index)
+        public static T TryGetState<T>([NotNull] this ICreationContext ctx, int index)
         {
             if (ctx == null) throw new ArgumentNullException(nameof(ctx));
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
@@ -98,7 +98,7 @@
         }
 
         [NotNull]
-        public static T GetState<T>([NotNull] this IResolverContext ctx, int index)
+        public static T GetState<T>([NotNull] this ICreationContext ctx, int index)
         {
             if (ctx == null) throw new ArgumentNullException(nameof(ctx));
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));

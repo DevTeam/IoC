@@ -6,7 +6,7 @@
     {
         private static long _id;
 
-        public static long GenerateId(IResolverContext ctx)
+        public static long GenerateId(ICreationContext ctx)
         {
             return System.Threading.Interlocked.Increment(ref _id);
         }

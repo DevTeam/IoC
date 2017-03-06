@@ -44,7 +44,7 @@
             // Given
 
             var instance = CreateInstance();
-            IResolverContext context = null;
+            ICreationContext context = null;
             _container.Register()
                 .Tag(typeof(MyConfig))
                 .State<IConfigurationDescriptionDto>(0)
@@ -64,7 +64,7 @@
             _configuration.Verify(i => i.Apply(_container), Times.Once);
             actualDependencies.ShouldBe(Enumerable.Repeat(_depConfiguration.Object, 1));
             actualRegistrations.ShouldBe(Enumerable.Repeat(_registration.Object, 1));
-            context.Container.ShouldBe(_container);
+            context.ResolverContext.Container.ShouldBe(_container);
         }
 
         [Test]
@@ -72,7 +72,7 @@
         {
             // Given
             var instance = CreateInstance();
-            IResolverContext context = null;
+            ICreationContext context = null;
             _container.Register()
                 .Tag(typeof(MyConfig))
                 .State<IConfigurationDescriptionDto>(0)
@@ -87,7 +87,7 @@
 
             // Then
             instance.BaseConfiguration.ShouldBeOfType<ConfigurationDtoAdapter>();
-            context.Container.ShouldBe(_container);
+            context.ResolverContext.Container.ShouldBe(_container);
         }
 
         private ConfigurationFromSringData CreateInstance()

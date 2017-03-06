@@ -392,7 +392,7 @@
                     throw new Exception($"Invalid factory method type {factoryMethodName}");
                 }
 
-                var factoryMethod = factoryMethodType.GetRuntimeMethod(factoryMethodName, new[] { typeof(IResolverContext) });
+                var factoryMethod = factoryMethodType.GetRuntimeMethod(factoryMethodName, new[] { typeof(ICreationContext) });
                 if (factoryMethod == null)
                 {
                     throw new Exception($"Factory method {registerDto.FactoryMethodName} was not found");

@@ -6,7 +6,7 @@
 
     internal class SingletonBasedLifetime<T>: KeyBasedLifetime<T>
     {
-        public SingletonBasedLifetime([NotNull] Func<ILifetimeContext, IResolverContext, T> keySelector)
+        public SingletonBasedLifetime([NotNull] Func<ILifetimeContext, ICreationContext, T> keySelector)
             : base(keySelector)
         {
         }

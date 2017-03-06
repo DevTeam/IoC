@@ -13,7 +13,7 @@
     {
 
 #if DEBUG
-        private const int RepeatCount = 100;
+        private const int RepeatCount = 1000;
 #else
         private const int RepeatCount = 100000;
 #endif

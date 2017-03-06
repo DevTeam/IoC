@@ -7,10 +7,10 @@
           where T : IContainer
     {
         [NotNull]
-        IRegistrationResult<T> FactoryMethod([NotNull] Func<IResolverContext, object> factoryMethod);
+        IRegistrationResult<T> FactoryMethod([NotNull] Func<ICreationContext, object> factoryMethod);
 
         [NotNull]
-        IRegistrationResult<T> FactoryMethod<TImplementation>([NotNull] Func<IResolverContext, TImplementation> factoryMethod);
+        IRegistrationResult<T> FactoryMethod<TImplementation>([NotNull] Func<ICreationContext, TImplementation> factoryMethod);
 
         [NotNull]
         IRegistrationResult<T> Autowiring([NotNull] Type implementationType, [CanBeNull] IMetadataProvider metadataProvider = null);

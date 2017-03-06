@@ -11,7 +11,7 @@
         private readonly HashSet<IContractKey> _genericContractKeys = new HashSet<IContractKey>();
         private readonly HashSet<ITagKey> _tagKeys = new HashSet<ITagKey>();
         private readonly HashSet<IStateKey> _stateKeys = new HashSet<IStateKey>();
-        private IKey _resolvingKey;
+        private IResolverContext _resolverContext;
         private bool _hasTagKeys;
         private bool _hasStateKeys;
         private IContractKey _singleContractKey;
@@ -34,27 +34,27 @@
         {
             if (stateProvider == null) throw new ArgumentNullException(nameof(stateProvider));
             IResolverContext ctx;
-            var key = CreateResolvingKey();
-            if (!Resolver.TryCreateResolverContext(key, out ctx, stateProvider))
+            IKey key;
+            if (!TryCreateResolverContext(stateProvider, out key, out ctx))
             {
                 throw new InvalidOperationException(GetCantResolveErrorMessage(key));
             }
 
-            return Resolver.Resolve(ctx);
+            return Resolver.Resolve(ctx, stateProvider);
         }
 
         public bool TryInstance(out object instance, IStateProvider stateProvider)
         {
             if (stateProvider == null) throw new ArgumentNullException(nameof(stateProvider));
             IResolverContext ctx;
-            var key = CreateResolvingKey();
-            if (!Resolver.TryCreateResolverContext(key, out ctx, stateProvider))
+            IKey key;
+            if (!TryCreateResolverContext(stateProvider, out key, out ctx))
             {
                 instance = default(object);
                 return false;
             }
 
-            instance = Resolver.Resolve(ctx);
+            instance = Resolver.Resolve(ctx, stateProvider);
             return true;
         }
 
@@ -67,13 +67,13 @@
             }
 
             IResolverContext ctx;
-            var key = CreateResolvingKey();
-            if (!Resolver.TryCreateResolverContext(key, out ctx, stateProvider))
+            IKey key;
+            if (!TryCreateResolverContext(stateProvider, out key, out ctx))
             {
                 throw new InvalidOperationException(GetCantResolveErrorMessage(key));
             }
 
-            return (TContract)Resolver.Resolve(ctx);
+            return (TContract)Resolver.Resolve(ctx, stateProvider);
         }
 
         public bool TryInstance<TContract>(out TContract instance, IStateProvider stateProvider)
@@ -84,15 +84,15 @@
                 Contract<TContract>();
             }
 
+            IKey key;
             IResolverContext ctx;
-            var key = CreateResolvingKey();
-            if (!Resolver.TryCreateResolverContext(key, out ctx, stateProvider))
+            if (!TryCreateResolverContext(stateProvider, out key, out ctx))
             {
                 instance = default(TContract);
                 return false;
             }
 
-            instance = (TContract)Resolver.Resolve(ctx);
+            instance = (TContract)Resolver.Resolve(ctx, stateProvider);
             return true;
         }
 
@@ -197,11 +197,6 @@
 
         internal IKey CreateResolvingKey()
         {
-            if (_resolvingKey != null)
-            {
-                return _resolvingKey;
-            }
-
             var tagKeys = _hasTagKeys ? _tagKeys : null;
             var stateKeys = _hasStateKeys ? _stateKeys : null;
             if (_genericContractKeysCount == 1 && tagKeys == null && stateKeys == null)
@@ -209,14 +204,36 @@
                 return _singleContractKey;
             }
 
-            _resolvingKey = Resolver.KeyFactory.CreateCompositeKey(_genericContractKeys, tagKeys, stateKeys);
-            return _resolvingKey;
+            return Resolver.KeyFactory.CreateCompositeKey(_genericContractKeys, tagKeys, stateKeys);
         }
 
         private void OnCompositeKeyChanged()
         {
-            _resolvingKey = null;
+            _resolverContext = null;
         }
+
+        private bool TryCreateResolverContext(
+            IStateProvider stateProvider,
+            out IKey key,
+            out IResolverContext ctx)
+        {
+            if (_resolverContext != null)
+            {
+                key = _resolverContext.Key;
+                ctx = _resolverContext;
+                return true;
+            }
+
+            key = CreateResolvingKey();
+            if (!Resolver.TryCreateResolverContext(key, out ctx))
+            {
+                return false;
+            }
+
+            _resolverContext = ctx;
+            return true;
+        }
+
 
         private string GetCantResolveErrorMessage(IKey key)
         {

@@ -12,13 +12,13 @@
             return container.Resolve().Instance<IKeyFactory>();
         }
 
-        public static IResolverContext CreateContext(this IResolver resolver, IKey key, IStateProvider stateProvider = null)
+        public static IResolverContext CreateContext(this IResolver resolver, IKey key)
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             if (key == null) throw new ArgumentNullException(nameof(key));
 
             IResolverContext context;
-            if (resolver.TryCreateResolverContext(key, out context, stateProvider))
+            if (resolver.TryCreateResolverContext(key, out context))
             {
                 return context;
             }

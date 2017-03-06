@@ -8,7 +8,7 @@
     internal class LifetimesFactory: IResolverFactory, IDisposable
     {
         private readonly IList<ILifetime> _lifetimes;
-        private readonly Func<IResolverContext, object> _factory;
+        private readonly Func<ICreationContext, object> _factory;
 
         public LifetimesFactory(IList<ILifetime> lifetimes)
         {
@@ -25,10 +25,10 @@
             }
         }
 
-        public object Create(IResolverContext resolverContext)
+        public object Create(ICreationContext creationContext)
         {
-            if (resolverContext == null) throw new ArgumentNullException(nameof(resolverContext));
-            return _factory(resolverContext);
+            if (creationContext == null) throw new ArgumentNullException(nameof(creationContext));
+            return _factory(creationContext);
         }
 
         public void Dispose()
@@ -39,22 +39,22 @@
             }
         }
 
-        private static object CreateSimple(IResolverContext resolverContext)
+        private static object CreateSimple(ICreationContext creationContext)
         {
             using (new LifetimeContext())
             {
-                return resolverContext.RegistryContext.InstanceFactory.Create(resolverContext);
+                return creationContext.ResolverContext.RegistryContext.InstanceFactory.Create(creationContext);
             }
         }
 
-        private object CreateUsingLifetimes(IResolverContext resolverContext)
+        private object CreateUsingLifetimes(ICreationContext creationContext)
         {
             using (var lifetimesEnumerator = _lifetimes.GetEnumerator())
             {
                 lifetimesEnumerator.MoveNext();
                 using (var lifetimeContext = new LifetimeContext())
                 {
-                    return lifetimesEnumerator.Current.Create(lifetimeContext, resolverContext, lifetimesEnumerator);
+                    return lifetimesEnumerator.Current.Create(lifetimeContext, creationContext, lifetimesEnumerator);
                 }
             }
         }

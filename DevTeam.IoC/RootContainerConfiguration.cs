@@ -34,8 +34,8 @@
         public IEnumerable<IDisposable> Apply(IContainer container)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
-            yield return LowLevelRegistration.RawRegister<IResolver>(container, ResolverKeys, ctx => ctx.Container);
-            yield return LowLevelRegistration.RawRegister<IRegistry>(container, RegistryKeys, ctx => (Container)ctx.Container);
+            yield return LowLevelRegistration.RawRegister<IResolver>(container, ResolverKeys, ctx => ctx.ResolverContext.Container);
+            yield return LowLevelRegistration.RawRegister<IRegistry>(container, RegistryKeys, ctx => (Container)ctx.ResolverContext.Container);
             yield return LowLevelRegistration.RawRegister<IKeyFactory>(container, KeyFactoryKeys, ctx => KeyFactory);
             yield return LowLevelRegistration.RawRegister<IFluent>(container, FluentKeys, ctx => Fluent);
             yield return LowLevelRegistration.RawRegister(container, InstanceFactoryProviderKeys, ctx => ExpressionInstanceFactoryProvider);
@@ -65,7 +65,7 @@
                     }
 
                     ICache<Type, IResolverFactory> factoryCache;
-                    if (ctx.Container.TryResolve(out factoryCache))
+                    if (ctx.ResolverContext.Container.TryResolve(out factoryCache))
                     {
                         IResolverFactory factory;
                         if (!factoryCache.TryGet(implementationType, out factory))
@@ -95,7 +95,7 @@
                 .State<Type>(0)
                 .State<string>(1)
                 .Contract<IConfiguration>()
-                .FactoryMethod(ctx => new ConfigurationFromSringData(ctx.Container, ctx.GetState<Type>(0), ctx.GetState<string>(1)))
+                .FactoryMethod(ctx => new ConfigurationFromSringData(ctx.ResolverContext.Container, ctx.GetState<Type>(0), ctx.GetState<string>(1)))
                 .Apply();
 
             yield return

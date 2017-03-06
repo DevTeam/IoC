@@ -148,7 +148,7 @@
             }
         }
 
-        public bool TryCreateResolverContext(IKey key, out IResolverContext resolverContext, IStateProvider stateProvider = null, IContainer container = null)
+        public bool TryCreateResolverContext(IKey key, out IResolverContext resolverContext, IContainer container = null)
         {
             if (key == null) throw new ArgumentNullException(nameof(key));
             var isRootResolver = false;
@@ -166,8 +166,7 @@
                         container,
                         resolverContext.RegistryContext,
                         resolverContext.InstanceFactory,
-                        key,
-                        stateProvider);
+                        key);
                     return true;
                 }
 
@@ -183,8 +182,7 @@
                         container,
                         registrationItem.RegistryContext,
                         registrationItem.InstanceFactory,
-                        key,
-                        stateProvider);
+                        key);
 
                     var scope = registrationItem.Scope;
                     if (scope == null || scope.AllowResolving(resolverContext))
@@ -198,7 +196,7 @@
                     }
                 }
 
-                if (Parent != null && Parent.TryCreateResolverContext(key, out resolverContext, stateProvider, container))
+                if (Parent != null && Parent.TryCreateResolverContext(key, out resolverContext, container))
                 {
                     if (isRootResolver)
                     {
@@ -213,17 +211,17 @@
             }
         }
 
-        public object Resolve(IResolverContext context)
+        public object Resolve(IResolverContext context, IStateProvider stateProvider = null)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
             if (context.Container == this)
             {
-                return context.InstanceFactory.Create(context);
+                return context.InstanceFactory.Create(new CreationContext(context, stateProvider ?? EmptyStateProvider.Shared));
             }
 
             if (Parent != null)
             {
-                return Parent.Resolve(context);
+                return Parent.Resolve(context, stateProvider);
             }
 
             throw new InvalidOperationException("Invalid container context.");
