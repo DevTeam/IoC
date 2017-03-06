@@ -12,10 +12,12 @@
             [NotNull] IResolverFactory instanceFactory,
             [NotNull] IKey key)
         {
+#if DEBUG
             if (container == null) throw new ArgumentNullException(nameof(container));
             if (key == null) throw new ArgumentNullException(nameof(key));
             if (instanceFactory == null) throw new ArgumentNullException(nameof(instanceFactory));
             if (registryContext == null) throw new ArgumentNullException(nameof(registryContext));
+#endif
             Container = container;
             RegistryContext = registryContext;
             InstanceFactory = instanceFactory;

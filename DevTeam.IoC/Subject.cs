@@ -16,7 +16,9 @@
 
         public IDisposable Subscribe([NotNull] IObserver<T> observer)
         {
+#if DEBUG
             if (observer == null) throw new ArgumentNullException(nameof(observer));
+#endif
             _observers.Add(observer);
             _onChange?.Invoke(_observers.Count);
             return new Disposable(() =>
@@ -36,7 +38,9 @@
 
         public void OnError([NotNull] Exception error)
         {
+#if DEBUG
             if (error == null) throw new ArgumentNullException(nameof(error));
+#endif
             foreach (var observer in _observers)
             {
                 observer.OnError(error);
@@ -45,7 +49,9 @@
 
         public void OnNext([NotNull] T value)
         {
+#if DEBUG
             if (value == null) throw new ArgumentNullException(nameof(value));
+#endif
             foreach (var observer in _observers)
             {
                 observer.OnNext(value);

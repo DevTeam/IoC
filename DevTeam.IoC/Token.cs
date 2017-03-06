@@ -14,8 +14,11 @@
         protected static readonly ITagKey[] EmptyTagKeys = new ITagKey[0];
         protected static readonly IStateKey[] EmptyStateKeys = new IStateKey[0];
 
-        protected Token(T container)
+        protected Token([NotNull] T container)
         {
+#if DEBUG
+            if (container == null) throw new ArgumentNullException(nameof(container));
+#endif
             Fluent = container.Fluent();
             Resolver = container;
         }
@@ -26,7 +29,9 @@
 
         public TToken Key(IEnumerable<IKey> keys)
         {
+#if DEBUG
             if (keys == null) throw new ArgumentNullException(nameof(keys));
+#endif
 
             foreach (var key in keys)
             {
@@ -60,7 +65,9 @@
 
         public TToken Key(params IKey[] keys)
         {
+#if DEBUG
             if (keys == null) throw new ArgumentNullException(nameof(keys));
+#endif
             return Key((IEnumerable<IKey>)keys);
         }
 
@@ -73,21 +80,27 @@
 
         public TToken State(int index, Type stateType)
         {
+#if DEBUG
             if (stateType == null) throw new ArgumentNullException(nameof(stateType));
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
+#endif
             AddStateKey(Resolver.KeyFactory.CreateStateKey(index, stateType));
             return (TToken)(object)this;
         }
 
         public TToken State<TState>(int index)
         {
+#if DEBUG
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
+#endif
             return State(index, typeof(TState));
         }
 
         public TToken Tag([NotNull] params object[] tags)
         {
+#if DEBUG
             if (tags == null) throw new ArgumentNullException(nameof(tags));
+#endif
             foreach (var tag in tags)
             {
                 AddTagKey(Resolver.KeyFactory.CreateTagKey(tag));

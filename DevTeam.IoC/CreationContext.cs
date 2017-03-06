@@ -7,8 +7,10 @@
     {
         public CreationContext([NotNull] IResolverContext resolverContext, [NotNull] IStateProvider stateProvider)
         {
+#if DEBUG
             if (resolverContext == null) throw new ArgumentNullException(nameof(resolverContext));
             if (stateProvider == null) throw new ArgumentNullException(nameof(stateProvider));
+#endif
             ResolverContext = resolverContext;
             StateProvider = stateProvider;
         }

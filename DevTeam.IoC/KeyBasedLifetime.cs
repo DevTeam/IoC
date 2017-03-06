@@ -15,15 +15,19 @@
         protected KeyBasedLifetime(
             [NotNull] Func<ILifetimeContext, ICreationContext, TKey> keySelector)
         {
+#if DEBUG
             if (keySelector == null) throw new ArgumentNullException(nameof(keySelector));
+#endif
             _keySelector = keySelector;
         }
 
         public object Create(ILifetimeContext lifetimeContext, ICreationContext creationContext, IEnumerator<ILifetime> lifetimeEnumerator)
         {
+#if DEBUG
             if (lifetimeContext == null) throw new ArgumentNullException(nameof(lifetimeContext));
             if (creationContext == null) throw new ArgumentNullException(nameof(creationContext));
             if (lifetimeEnumerator == null) throw new ArgumentNullException(nameof(lifetimeEnumerator));
+#endif
             ILifetime lifetime;
             var key = _keySelector(lifetimeContext, creationContext);
             lock (_lifetimes)

@@ -12,8 +12,9 @@
 
         public ConfigurationFromAssembly([NotNull] Assembly assembly)
         {
-            _assembly = assembly;
             if (assembly == null) throw new ArgumentNullException(nameof(assembly));
+            _assembly = assembly;
+            
         }
 
         public IEnumerable<IConfiguration> GetDependencies(IContainer container)

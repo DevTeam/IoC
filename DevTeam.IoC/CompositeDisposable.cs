@@ -11,7 +11,9 @@
 
         public CompositeDisposable([NotNull] IEnumerable<IDisposable> configurations)
         {
+#if DEBUG
             if (configurations == null) throw new ArgumentNullException(nameof(configurations));
+#endif
             _configurations = configurations.ToList();
         }
 

@@ -19,7 +19,9 @@
             [CanBeNull] IEnumerable<ITagKey> tagKeys = null,
             [CanBeNull] IEnumerable<IStateKey> stateKeys = null)
         {
+#if DEBUG
             if (contractKeys == null) throw new ArgumentNullException(nameof(contractKeys));
+#endif
             ContractKeys = CreateSet(contractKeys, out _contractsHashCode);
             TagKeys = tagKeys != null ? CreateSet(tagKeys, out _tagsHashCode) : EmptyTagKeys;
             StateKeys = stateKeys != null ? CreateSet(stateKeys, out _statesHashCode) : EmptyStateKeys;

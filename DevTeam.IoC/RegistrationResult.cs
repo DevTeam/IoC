@@ -11,7 +11,9 @@
 
         public RegistrationResult([NotNull] Registration<T> registration)
         {
+#if DEBUG
             if (registration == null) throw new ArgumentNullException(nameof(registration));
+#endif
             _registration = registration;
         }
 

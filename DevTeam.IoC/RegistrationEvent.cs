@@ -11,8 +11,10 @@
             [NotNull] IKey key,
             [NotNull] IRegistryContext registryContext)
         {
+#if DEBUG
             if (key == null) throw new ArgumentNullException(nameof(key));
             if (registryContext == null) throw new ArgumentNullException(nameof(registryContext));
+#endif
             Stage = stage;
             Action = action;
             Key = key;

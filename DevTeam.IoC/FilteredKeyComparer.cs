@@ -9,7 +9,9 @@
 
         public FilteredKeyComparer(KeyFilterContext keyFilterContext)
         {
+#if DEBUG
             if (keyFilterContext == null) throw new ArgumentNullException(nameof(keyFilterContext));
+#endif
             _keyFilterContext = keyFilterContext;
         }
 

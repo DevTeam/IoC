@@ -16,8 +16,10 @@
             [NotNull] IRegistryContext registryContext,
             [NotNull] IEnumerable<IDisposable> resources)
         {
+#if DEBUG
             if (registryContext == null) throw new ArgumentNullException(nameof(registryContext));
             if (resources == null) throw new ArgumentNullException(nameof(resources));
+#endif
             _resources = resources;
             RegistryContext = registryContext;
             InstanceFactory = new LifetimesFactory(registryContext.Extensions.OfType<ILifetime>().ToList());

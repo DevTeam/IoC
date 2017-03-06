@@ -12,7 +12,9 @@
 
         public Resolver(IResolverContext context)
         {
+#if DEBUG
             if (context == null) throw new ArgumentNullException(nameof(context));
+#endif
             _resolving = context.Container.Resolve<IResolver>().Key(ExcludeContractKeys(context.Key)).Contract<TContract>();
         }
 
@@ -79,8 +81,9 @@
 
         private static IEnumerable<IKey> ExcludeContractKeys(IKey key)
         {
+#if DEBUG
             if (key == null) throw new ArgumentNullException(nameof(key));
-
+#endif
             var contractKey = key as IContractKey;
             if (contractKey != null)
             {

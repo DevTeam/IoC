@@ -10,9 +10,10 @@
 
         public StateKey(int index, [NotNull] Type stateType)
         {
+#if DEBUG
             if (stateType == null) throw new ArgumentNullException(nameof(stateType));
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
-
+#endif
             Index = index;
             StateType = stateType;
             unchecked

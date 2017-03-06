@@ -9,7 +9,9 @@
 
         public CacheTracker([NotNull] ICache<IKey, IResolverContext> cache)
         {
+#if DEBUG
             if (cache == null) throw new ArgumentNullException(nameof(cache));
+#endif
             _cache = cache;
         }
 

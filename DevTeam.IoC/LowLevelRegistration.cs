@@ -12,21 +12,46 @@
             return CreateKeys(typeof(TContract));
         }
 
-        public static IEnumerable<IKey> CreateKeys(Type contractType)
+        public static IEnumerable<IKey> CreateKeys([NotNull] Type contractType)
         {
+#if DEBUG
+            if (contractType == null) throw new ArgumentNullException(nameof(contractType));
+#endif
             return Enumerable.Repeat((IKey)new ContractKey(contractType, true), 1).ToArray();
         }
 
-        public static IDisposable RawRegister<TContract>(IRegistry registry, IEnumerable<IKey> keys, Func<ICreationContext, TContract> factoryMethod, params IExtension[] extensions)
+        public static IDisposable RawRegister<TContract>(
+            [NotNull] IRegistry registry,
+            [NotNull] IEnumerable<IKey> keys,
+            [NotNull] Func<ICreationContext, TContract> factoryMethod,
+            [NotNull] params IExtension[] extensions)
         {
+#if DEBUG
+            if (registry == null) throw new ArgumentNullException(nameof(registry));
+            if (keys == null) throw new ArgumentNullException(nameof(keys));
+            if (factoryMethod == null) throw new ArgumentNullException(nameof(factoryMethod));
+            if (extensions == null) throw new ArgumentNullException(nameof(extensions));
+#endif
             var registryContext = registry.CreateRegistryContext(keys, new MethodFactory<TContract>(factoryMethod), extensions);
             IDisposable disposable;
             registry.TryRegister(registryContext, out disposable);
             return disposable;
         }
 
-        public static IDisposable RawRegister(Type contractType, IRegistry registry, IEnumerable<IKey> keys, Func<ICreationContext, object> factoryMethod, params IExtension[] extensions)
+        public static IDisposable RawRegister(
+            [NotNull] Type contractType,
+            [NotNull] IRegistry registry,
+            [NotNull] IEnumerable<IKey> keys,
+            [NotNull] Func<ICreationContext, object> factoryMethod,
+            [NotNull] params IExtension[] extensions)
         {
+#if DEBUG
+            if (contractType == null) throw new ArgumentNullException(nameof(contractType));
+            if (registry == null) throw new ArgumentNullException(nameof(registry));
+            if (keys == null) throw new ArgumentNullException(nameof(keys));
+            if (factoryMethod == null) throw new ArgumentNullException(nameof(factoryMethod));
+            if (extensions == null) throw new ArgumentNullException(nameof(extensions));
+#endif
             var registryContext = registry.CreateRegistryContext(keys, new MethodFactory<object>(factoryMethod), extensions);
             IDisposable disposable;
             registry.TryRegister(registryContext, out disposable);

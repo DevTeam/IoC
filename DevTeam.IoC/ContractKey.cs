@@ -12,7 +12,9 @@
 
         public ContractKey(Type contractType, bool toResolve)
         {
+#if DEBUG
             if (contractType == null) throw new ArgumentNullException(nameof(contractType));
+#endif
             ToResolve = toResolve;
             if (contractType.IsConstructedGenericType)
             {

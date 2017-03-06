@@ -10,8 +10,10 @@
     {
         public Type ResolveImplementationType(ICreationContext creationContext, Type implementationType)
         {
+#if DEBUG
             if (creationContext == null) throw new ArgumentNullException(nameof(creationContext));
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
+#endif
             var contractKey = creationContext.ResolverContext.Key as IContractKey ?? (creationContext.ResolverContext.Key as ICompositeKey)?.ContractKeys.FirstOrDefault();
             if (contractKey != null && contractKey.GenericTypeArguments.Length > 0 && implementationType.GetTypeInfo().GenericTypeParameters.Length == contractKey.GenericTypeArguments.Length)
             {
@@ -23,7 +25,9 @@
 
         public bool TrySelectConstructor(Type implementationType, out ConstructorInfo constructor, out Exception error)
         {
+#if DEBUG
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
+#endif
             var implementationTypeInfo = implementationType.GetTypeInfo();
             var constructorInfos = implementationTypeInfo.DeclaredConstructors.Where(i => i.IsPublic).ToArray();
             if (constructorInfos.Length == 1)

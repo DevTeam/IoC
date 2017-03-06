@@ -15,7 +15,9 @@
 
         public bool TryGet(TKey key, out TValue value)
         {
+#if DEBUG
             if (key == null) throw new ArgumentNullException(nameof(key));
+#endif
             if (_cache.TryGetValue(key, out value))
             {
                 return true;
@@ -26,14 +28,18 @@
 
         public void Set(TKey key, TValue value)
         {
+#if DEBUG
             if (key == null) throw new ArgumentNullException(nameof(key));
             if (value == null) throw new ArgumentNullException(nameof(value));
+#endif
             _cache[key] = value;
         }
 
         public bool TryRemove(TKey key)
         {
+#if DEBUG
             if (key == null) throw new ArgumentNullException(nameof(key));
+#endif
             return _cache.Remove(key);
         }
     }

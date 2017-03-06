@@ -14,11 +14,12 @@
             [NotNull] IResolverFactory factory,
             [NotNull] IEnumerable<IExtension> extensionPoints)
         {
+#if DEBUG
             if (container == null) throw new ArgumentNullException(nameof(container));
             if (keys == null) throw new ArgumentNullException(nameof(keys));
             if (factory == null) throw new ArgumentNullException(nameof(factory));
             if (extensionPoints == null) throw new ArgumentNullException(nameof(extensionPoints));
-
+#endif
             Container = container;
             Keys = keys;
             InstanceFactory = factory;

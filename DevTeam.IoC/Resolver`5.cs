@@ -10,7 +10,9 @@
         public Resolver(IResolverContext context)
             : base(context)
         {
+#if DEBUG
             if (context == null) throw new ArgumentNullException(nameof(context));
+#endif
             _resolving = CreateResolving().State<TState1>(0).State<TState2>(1).State<TState4>(4).State<TState4>(4);
         }
 

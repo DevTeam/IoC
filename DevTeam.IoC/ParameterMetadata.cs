@@ -16,7 +16,9 @@
             [CanBeNull] object value,
             [CanBeNull] IStateKey stateKey)
         {
+#if DEBUG
             if (stateIndex < 0) throw new ArgumentOutOfRangeException(nameof(stateIndex));
+#endif
             Keys = keys ?? EmptyKeys;
             State = state ?? EmptyState;
             Value = value;

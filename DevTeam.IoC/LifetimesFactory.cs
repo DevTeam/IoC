@@ -12,7 +12,9 @@
 
         public LifetimesFactory(IList<ILifetime> lifetimes)
         {
+#if DEBUG
             if (lifetimes == null) throw new ArgumentNullException(nameof(lifetimes));
+#endif
             _lifetimes = lifetimes;
             if (_lifetimes.Count > 0)
             {
@@ -27,7 +29,9 @@
 
         public object Create(ICreationContext creationContext)
         {
+#if DEBUG
             if (creationContext == null) throw new ArgumentNullException(nameof(creationContext));
+#endif
             return _factory(creationContext);
         }
 

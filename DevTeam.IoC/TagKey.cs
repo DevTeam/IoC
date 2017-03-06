@@ -10,7 +10,9 @@
 
         public TagKey([NotNull] object tag)
         {
+#if DEBUG
             if (tag == null) throw new ArgumentNullException(nameof(tag));
+#endif
             Tag = tag;
             _hashCode = Tag.GetHashCode();
         }

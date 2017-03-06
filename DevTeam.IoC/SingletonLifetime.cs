@@ -27,8 +27,10 @@
 
         private static Key KeySelector(ILifetimeContext lifetimeContext, ICreationContext creationContext)
         {
+#if DEBUG
             if (lifetimeContext == null) throw new ArgumentNullException(nameof(lifetimeContext));
             if (creationContext == null) throw new ArgumentNullException(nameof(creationContext));
+#endif
             var genericTypes = (creationContext.ResolverContext.Key as IContractKey)?.GenericTypeArguments ?? (creationContext.ResolverContext.Key as ICompositeKey)?.ContractKeys?.Select(i => i.GenericTypeArguments).SelectMany(i => i).ToArray();
             return new Key(genericTypes);
         }

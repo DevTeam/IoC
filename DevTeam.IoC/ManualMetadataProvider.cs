@@ -15,22 +15,28 @@
             [NotNull] IMetadataProvider defaultMetadataProvider,
             [NotNull] IEnumerable<IParameterMetadata> constructorParams)
         {
+#if DEBUG
             if (defaultMetadataProvider == null) throw new ArgumentNullException(nameof(defaultMetadataProvider));
             if (constructorParams == null) throw new ArgumentNullException(nameof(constructorParams));
+#endif
             _defaultMetadataProvider = defaultMetadataProvider;
             _constructorParams = constructorParams.ToArray();
         }
 
         public Type ResolveImplementationType(ICreationContext creationContext, Type implementationType)
         {
+#if DEBUG
             if (creationContext == null) throw new ArgumentNullException(nameof(creationContext));
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
+#endif
             return _defaultMetadataProvider.ResolveImplementationType(creationContext, implementationType);
         }
 
         public bool TrySelectConstructor(Type implementationType, out ConstructorInfo constructor, out Exception error)
         {
+#if DEBUG
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
+#endif
             var typeInfo = implementationType.GetTypeInfo();
             constructor = typeInfo.DeclaredConstructors.Where(MatchConstructor).FirstOrDefault();
             if (constructor == null)
@@ -45,12 +51,17 @@
 
         public IParameterMetadata[] GetConstructorParameters(ConstructorInfo constructor)
         {
+#if DEBUG
             if (constructor == null) throw new ArgumentNullException(nameof(constructor));
+#endif
             return _constructorParams;
         }
 
-        private bool MatchConstructor(ConstructorInfo ctor)
+        private bool MatchConstructor([NotNull] ConstructorInfo ctor)
         {
+#if DEBUG
+            if (ctor == null) throw new ArgumentNullException(nameof(ctor));
+#endif
             var ctorParams = ctor.GetParameters();
             if (ctorParams.Length != _constructorParams.Length)
             {
@@ -62,8 +73,12 @@
                 .All(i => MatchParameter(i.ctorParam, i.bindingParam));
         }
 
-        private static bool MatchParameter(ParameterInfo paramInfo, IParameterMetadata paramMetadata)
+        private static bool MatchParameter([NotNull] ParameterInfo paramInfo, [NotNull] IParameterMetadata paramMetadata)
         {
+#if DEBUG
+            if (paramInfo == null) throw new ArgumentNullException(nameof(paramInfo));
+            if (paramMetadata == null) throw new ArgumentNullException(nameof(paramMetadata));
+#endif
             var parameterTypeInfo = paramInfo.ParameterType.GetTypeInfo();
             TypeInfo genericTypeInfo = null;
             Type[] genericTypeArguments = null;

@@ -9,7 +9,9 @@
 
         public Disposable(Action disposableAction, object owner = null)
         {
+#if DEBUG
             if (disposableAction == null) throw new ArgumentNullException(nameof(disposableAction));
+#endif
             _disposableAction = disposableAction;
             _owner = owner;
         }
