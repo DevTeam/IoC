@@ -3,7 +3,7 @@
     using System;
     using Contracts;
 
-    internal class CreationContext : ICreationContext
+    internal struct CreationContext : ICreationContext
     {
         public CreationContext([NotNull] IResolverContext resolverContext, [NotNull] IStateProvider stateProvider)
         {

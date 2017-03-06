@@ -44,10 +44,11 @@
 
             var itemType = genericContractKey.GenericTypeArguments.First();
             var enumType = typeof(IEnumerable<>).MakeGenericType(itemType);
-            var enumereble = ctx.Container.Resolve().Contract(enumType).Instance();
+            var container = ctx.Container;
+            var enumereble = container.Resolve().Contract(enumType).Instance();
             var observableType = typeof(Observable<>).MakeGenericType(itemType);
 
-            var factory = ctx.Container.Resolve().Instance<IInstanceFactoryProvider>(ctx);
+            var factory = container.Resolve().Instance<IInstanceFactoryProvider>(ctx);
             var ctor = observableType.GetTypeInfo().DeclaredConstructors.Single(i => i.GetParameters().Length == 1);
             return factory.GetFactory(ctor).Create(enumereble);
         }

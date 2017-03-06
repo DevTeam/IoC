@@ -57,17 +57,18 @@
             var enumItemType = genericContractKey.GenericTypeArguments.First();
             var enumType = typeof(Enumerable<>).MakeGenericType(enumItemType);
             var contractKeys = new List<IContractKey> { new ContractKey(enumItemType, true) };
+            var container = ctx.Container;
 
             var keys = (
                 from contractKey in contractKeys
-                from key in FilterByContract(GetAllRegistrations(ctx.Container), contractKey)
+                from key in FilterByContract(GetAllRegistrations(container), contractKey)
                 select key).Distinct();
 
             var source =
                 from key in keys
-                select ctx.Container.Resolve().Key(key).Instance();
+                select container.Resolve().Key(key).Instance();
 
-            var factory = ctx.Container.Resolve().Instance<IInstanceFactoryProvider>(creationContext.StateProvider);
+            var factory = container.Resolve().Instance<IInstanceFactoryProvider>(creationContext.StateProvider);
             var ctor = enumType.GetTypeInfo().DeclaredConstructors.Single(i => i.GetParameters().Length == 1);
             return factory.GetFactory(ctor).Create(source);
         }
