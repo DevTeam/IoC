@@ -94,9 +94,9 @@
             instance.StateClass.Arg2.ShouldBe(5);
         }
 
-        private static IResolverFactory CreateFactory<T>()
+        private IResolverFactory CreateFactory<T>()
         {
-            return new MetadataFactory(typeof(T), new ExpressionInstanceFactoryProvider(), new AutowiringMetadataProvider());
+            return new MetadataFactory(typeof(T), new ExpressionInstanceFactoryProvider(), new AutowiringMetadataProvider(), _container.KeyFactory);
         }
 
         private ICreationContext CreateContext(params object[] state)

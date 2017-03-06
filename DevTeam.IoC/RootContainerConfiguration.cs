@@ -70,14 +70,14 @@
                         IResolverFactory factory;
                         if (!factoryCache.TryGet(implementationType, out factory))
                         {
-                            factory = new MetadataFactory(implementationType, ExpressionInstanceFactoryProvider, MetadataProvider);
+                            factory = new MetadataFactory(implementationType, ExpressionInstanceFactoryProvider, MetadataProvider, ctx.ResolverContext.Container.KeyFactory);
                             factoryCache.Set(implementationType, factory);
                         }
 
                         return factory;
                     }
 
-                    return new MetadataFactory(implementationType, ExpressionInstanceFactoryProvider, MetadataProvider);
+                    return new MetadataFactory(implementationType, ExpressionInstanceFactoryProvider, MetadataProvider, ctx.ResolverContext.Container.KeyFactory);
                 })
                 .Apply();
 

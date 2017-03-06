@@ -261,13 +261,13 @@
             {
                 if (!_resolverFactoryCache.TryGet(resolvedType, out factory))
                 {
-                    factory = new MetadataFactory(resolvedType, _instanceFactoryProvider.Value, metadataProvider);
+                    factory = new MetadataFactory(resolvedType, _instanceFactoryProvider.Value, metadataProvider, Resolver.KeyFactory);
                     _resolverFactoryCache.Set(resolvedType, factory);
                 }
             }
             else
             {
-                factory = new MetadataFactory(resolvedType, _instanceFactoryProvider.Value, metadataProvider);
+                factory = new MetadataFactory(resolvedType, _instanceFactoryProvider.Value, metadataProvider, Resolver.KeyFactory);
             }
 
             return factory;

@@ -1,22 +1,21 @@
 ﻿namespace DevTeam.IoC
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Reflection;
     using Contracts;
 
     internal class MetadataFactory: IResolverFactory
     {
-        private static readonly object[] EmptyState = new object[0];
         private readonly IInstanceFactory _instanceFactory;
         private readonly IParameterMetadata[] _parameters;
         private object[] _parametersArray;
+        private readonly IKey[] _keys;
 
         public MetadataFactory(
             [NotNull] Type implementationType,
             [NotNull] IInstanceFactoryProvider instanceFactoryProvider,
-            [NotNull] IMetadataProvider metadataProvider)
+            [NotNull] IMetadataProvider metadataProvider,
+            [NotNull] IKeyFactory keyFactory)
         {
 #if DEBUG
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
@@ -32,7 +31,19 @@
 
             _parameters = metadataProvider.GetConstructorParameters(constructor);
             _instanceFactory = instanceFactoryProvider.GetFactory(constructor);
-            _parametersArray = new object[_parameters.Length];
+            var len = _parameters.Length;
+            _parametersArray = new object[len];
+            _keys = new IKey[len];
+            for (var i = 0; i < len; i++)
+            {
+                var parameter = _parameters[i];
+                if (!parameter.IsDependency)
+                {
+                    continue;
+                }
+
+                _keys[i] = keyFactory.CreateCompositeKey(parameter.ContractKeys, parameter.TagKeys, parameter.StateKeys);
+            }
         }
 
         public object Create(ICreationContext creationContext)
@@ -42,47 +53,31 @@
 #endif
             for (var i = 0; i < _parametersArray.Length; i++)
             {
-                _parametersArray[i] = ResolveParameter(creationContext, _parameters[i]);
+                _parametersArray[i] = ResolveParameter(i, creationContext);
             }
 
             return _instanceFactory.Create(_parametersArray);
         }
 
         [CanBeNull]
-        private static object ResolveParameter(
-            [NotNull] ICreationContext creationContext,
-            [NotNull] IParameterMetadata parameterMetadata)
+        private object ResolveParameter(
+            int index,
+            [NotNull] ICreationContext creationContext)
         {
 #if DEBUG
             if (creationContext == null) throw new ArgumentNullException(nameof(creationContext));
-            if (parameterMetadata == null) throw new ArgumentNullException(nameof(parameterMetadata));
 #endif
+            IParameterMetadata parameterMetadata = _parameters[index];
             if (parameterMetadata.IsDependency)
             {
+                var key = _keys[index];
                 var container = creationContext.ResolverContext.RegistryContext.Container;
-                var resolver = container.Resolve();
-                if (parameterMetadata.ContractKeys != null)
+                IResolverContext ctx;
+                if (!container.TryCreateResolverContext(key, out ctx))
                 {
-                    resolver.Key((IEnumerable<IContractKey>)parameterMetadata.ContractKeys);
+                    throw new InvalidOperationException(GetCantResolveErrorMessage(container, key));
                 }
-
-                if (parameterMetadata.StateKeys != null)
-                {
-                    foreach (var stateKey in parameterMetadata.StateKeys)
-                    {
-                        resolver.Key(stateKey);
-                    }
-                }
-
-                if (parameterMetadata.TagKeys != null)
-                {
-                    foreach (var tagKey in parameterMetadata.TagKeys)
-                    {
-                        resolver.Key(tagKey);
-                    }
-                }
-
-                return resolver.Instance(parameterMetadata.State ?? EmptyState);
+                return container.Resolve(ctx, ParamsStateProvider.Create(parameterMetadata.State));
             }
 
             if(parameterMetadata.Value != null)
@@ -91,6 +86,11 @@
             }
 
             return creationContext.StateProvider.GetState(creationContext, parameterMetadata.StateKey);
+        }
+
+        private string GetCantResolveErrorMessage(IResolver resolver, IKey key)
+        {
+            return $"Can't resolve {key}.{Environment.NewLine}{Environment.NewLine}{resolver}";
         }
     }
 }
