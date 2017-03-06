@@ -102,34 +102,35 @@
             return _result;
         }
 
-        public IRegistrationResult<T> Autowiring(Type implementationType, IMetadataProvider metadataProvider = null)
+        public IRegistrationResult<T> Autowiring(Type implementationType, bool lazy = false, IMetadataProvider metadataProvider = null)
         {
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
             metadataProvider = metadataProvider ?? Fluent.Resolve(Resolver).Instance<IMetadataProvider>();
-            AsFactoryMethodInternal(ctx =>
+            Type resolvedType;
+            IResolverFactory resolverFactory;
+            if (!lazy && metadataProvider.TryResolveImplementationType(implementationType, out resolvedType))
+            {
+                resolverFactory = CreateFactory(resolvedType, metadataProvider);
+                AsFactoryMethodInternal(ctx => resolverFactory.Create(ctx), implementationType);
+            }
+            else
+            {
+                AsFactoryMethodInternal(ctx =>
                 {
-                    var resolvedType = metadataProvider.ResolveImplementationType(ctx, implementationType);
-                    IResolverFactory factory;
-                    if (_resolverFactoryCache != null)
+                    Type currentResolvedType;
+                    if (!metadataProvider.TryResolveImplementationType(implementationType, out currentResolvedType, ctx))
                     {
-                        if (!_resolverFactoryCache.TryGet(resolvedType, out factory))
-                        {
-                            factory = new MetadataFactory(resolvedType, _instanceFactoryProvider.Value, metadataProvider);
-                            _resolverFactoryCache.Set(resolvedType, factory);
-                        }
-                    }
-                    else
-                    {
-                        factory = new MetadataFactory(resolvedType, _instanceFactoryProvider.Value, metadataProvider);
+                        throw new InvalidOperationException("Can not define type to resolve from type {currentResolvedType}");
                     }
 
-                    return factory.Create(ctx);
-                },
-                implementationType);
+                    return CreateFactory(currentResolvedType, metadataProvider).Create(ctx);
+                }, implementationType);
+            }
+
             return _result;
         }
 
-        public IRegistrationResult<T> Autowiring<TImplementation>()
+        public IRegistrationResult<T> Autowiring<TImplementation>(bool lazy = false)
         {
             return Autowiring(typeof(TImplementation));
         }
@@ -251,6 +252,25 @@
             }
 
             return instanceFactoryProvider;
+        }
+
+        private IResolverFactory CreateFactory(Type resolvedType, IMetadataProvider metadataProvider)
+        {
+            IResolverFactory factory;
+            if (_resolverFactoryCache != null)
+            {
+                if (!_resolverFactoryCache.TryGet(resolvedType, out factory))
+                {
+                    factory = new MetadataFactory(resolvedType, _instanceFactoryProvider.Value, metadataProvider);
+                    _resolverFactoryCache.Set(resolvedType, factory);
+                }
+            }
+            else
+            {
+                factory = new MetadataFactory(resolvedType, _instanceFactoryProvider.Value, metadataProvider);
+            }
+
+            return factory;
         }
     }
 }

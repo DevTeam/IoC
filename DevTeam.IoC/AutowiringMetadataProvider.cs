@@ -8,19 +8,31 @@
 
     internal class AutowiringMetadataProvider : IMetadataProvider
     {
-        public Type ResolveImplementationType(ICreationContext creationContext, Type implementationType)
+        public bool TryResolveImplementationType(Type implementationType, out Type resolvedType, ICreationContext creationContext = null)
         {
 #if DEBUG
-            if (creationContext == null) throw new ArgumentNullException(nameof(creationContext));
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
 #endif
-            var contractKey = creationContext.ResolverContext.Key as IContractKey ?? (creationContext.ResolverContext.Key as ICompositeKey)?.ContractKeys.FirstOrDefault();
-            if (contractKey != null && contractKey.GenericTypeArguments.Length > 0 && implementationType.GetTypeInfo().GenericTypeParameters.Length == contractKey.GenericTypeArguments.Length)
+            var implementationTypeInfo = implementationType.GetTypeInfo();
+            if (implementationTypeInfo.IsGenericTypeDefinition)
             {
-                return implementationType.MakeGenericType(contractKey.GenericTypeArguments);
+                if (creationContext == null)
+                {
+                    resolvedType = default(Type);
+                    return false;
+                }
+
+                var ctx = creationContext.ResolverContext;
+                var contractKey = ctx.Key as IContractKey ?? (ctx.Key as ICompositeKey)?.ContractKeys.FirstOrDefault();
+                if (contractKey != null && contractKey.GenericTypeArguments.Length > 0 && implementationTypeInfo.GenericTypeParameters.Length == contractKey.GenericTypeArguments.Length)
+                {
+                    resolvedType = implementationType.MakeGenericType(contractKey.GenericTypeArguments);
+                    return true;
+                }
             }
 
-            return implementationType;
+            resolvedType = implementationType;
+            return true;
         }
 
         public bool TrySelectConstructor(Type implementationType, out ConstructorInfo constructor, out Exception error)

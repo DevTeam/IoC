@@ -66,12 +66,14 @@
         {
             // Given
             var metadataProvider = CreateInstance(Enumerable.Empty<IParameterMetadata>());
-            _defaultMetadataProvider.Setup(i => i.ResolveImplementationType(_creationContext.Object, typeof(IEnumerable<string>))).Returns(typeof(IDisposable));
+            Type resolvedType = typeof(IDisposable);
+            _defaultMetadataProvider.Setup(i => i.TryResolveImplementationType(typeof(IEnumerable<string>), out resolvedType, _creationContext.Object)).Returns(true);
 
             // When
-            var resolvedType = metadataProvider.ResolveImplementationType(_creationContext.Object, typeof(IEnumerable<string>));
+            var result =  metadataProvider.TryResolveImplementationType(typeof(IEnumerable<string>), out resolvedType, _creationContext.Object);
 
             // Then
+            result.ShouldBeTrue();
             resolvedType.ShouldBe(typeof(IDisposable));
         }
 

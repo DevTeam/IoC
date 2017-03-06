@@ -373,7 +373,7 @@
                     metadataProvider = container.Resolve().State<IEnumerable<IParameterMetadata>>(0).Instance<IMetadataProvider>(constructorParameters);
                 }
 
-                yield return registration.Autowiring(autowiringType, metadataProvider).Apply();
+                yield return registration.Autowiring(autowiringType, false, metadataProvider).Apply();
             }
 
             if (!string.IsNullOrWhiteSpace(registerDto.FactoryMethodName))

@@ -13,10 +13,10 @@
         IRegistrationResult<T> FactoryMethod<TImplementation>([NotNull] Func<ICreationContext, TImplementation> factoryMethod);
 
         [NotNull]
-        IRegistrationResult<T> Autowiring([NotNull] Type implementationType, [CanBeNull] IMetadataProvider metadataProvider = null);
+        IRegistrationResult<T> Autowiring([NotNull] Type implementationType, bool lazy = false, [CanBeNull] IMetadataProvider metadataProvider = null);
 
         [NotNull]
-        IRegistrationResult<T> Autowiring<TImplementation>();
+        IRegistrationResult<T> Autowiring<TImplementation>(bool lazy = false);
 
         [NotNull]
         IRegistration<T> Attributes([NotNull] Type implementationType);

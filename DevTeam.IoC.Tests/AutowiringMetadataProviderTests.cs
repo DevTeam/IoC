@@ -41,9 +41,32 @@
             creationContext.SetupGet(i => i.ResolverContext).Returns(resolverContext.Object);
 
             // When
-            var actualResolveImplementationType = metadataProvider.ResolveImplementationType(creationContext.Object, implementationType);
+            Type actualResolveImplementationType;
+            var result = metadataProvider.TryResolveImplementationType(implementationType, out actualResolveImplementationType, creationContext.Object);
 
             // Then
+            result.ShouldBeTrue();
+            actualResolveImplementationType.ShouldBe(expectedResolveImplementationType);
+        }
+
+        [Test]
+        [TestCase(typeof(string), true, typeof(string))]
+        [TestCase(typeof(IEnumerable<string>), true, typeof(IEnumerable<string>))]
+        [TestCase(typeof(IEnumerable<>), false, null)]
+        public void ShouldResolveImplementationTypeWhenHasNotCreationContext(
+            Type implementationType,
+            bool expectedResult,
+            Type expectedResolveImplementationType)
+        {
+            // Given
+            var metadataProvider = CreateInstance();
+
+            // When
+            Type actualResolveImplementationType;
+            var result = metadataProvider.TryResolveImplementationType(implementationType, out actualResolveImplementationType);
+
+            // Then
+            result.ShouldBe(expectedResult);
             actualResolveImplementationType.ShouldBe(expectedResolveImplementationType);
         }
 
