@@ -10,6 +10,7 @@
         private static readonly object[] EmptyState = new object[0];
         private readonly IInstanceFactory _instanceFactory;
         private readonly IParameterMetadata[] _parameters;
+        private object[] _parametersArray;
 
         public MetadataFactory(
             [NotNull] Type implementationType,
@@ -30,6 +31,7 @@
 
             _parameters = metadataProvider.GetConstructorParameters(constructor);
             _instanceFactory = instanceFactoryProvider.GetFactory(constructor);
+            _parametersArray = new object[_parameters.Length];
         }
 
         public object Create(ICreationContext creationContext)
@@ -37,14 +39,12 @@
 #if DEBUG
             if (creationContext == null) throw new ArgumentNullException(nameof(creationContext));
 #endif
-            var parametersCount = _parameters.Length;
-            var parameters = new object[parametersCount];
-            for (var i = 0; i < parametersCount; i++)
+            for (var i = 0; i < _parametersArray.Length; i++)
             {
-                parameters[i] = ResolveParameter(creationContext, _parameters[i]);
+                _parametersArray[i] = ResolveParameter(creationContext, _parameters[i]);
             }
 
-            return _instanceFactory.Create(parameters);
+            return _instanceFactory.Create(_parametersArray);
         }
 
         [CanBeNull]
