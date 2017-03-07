@@ -5,8 +5,8 @@
   },
 
   "dependencies": {
-    "DevTeam.IoC": "1.0.55-beta",
-    "DevTeam.IoC.Contracts": "1.0.55-beta",
+    "DevTeam.IoC": "1.0.82-beta",
+    "DevTeam.IoC.Contracts": "1.0.82-beta",
     "Microsoft.NETCore.App": "1.1.1"
   },
 
