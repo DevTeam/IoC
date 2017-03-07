@@ -11,16 +11,10 @@ There are many different implementations of [Inversion of Control](https://githu
 Here is the example [Shroedingers Cat](https://github.com/DevTeam/IoC/tree/master/Samples/ShroedingersCat):
 
 ```csharp
-public class Program
+using (var container = new Container().Configure().DependsOn<Glue>().ToSelf())
 {
-    public static void Main()
-    {
-        using (var container = new Container().Configure().DependsOn<Glue>().ToSelf())
-        {
-            var box = container.Resolve().Instance<IBox<ICat>>();
-            Console.WriteLine(box.Content.IsAlive);
-        }
-    }
+    var box = container.Resolve().Instance<IBox<ICat>>();
+    Console.WriteLine(box.Content.IsAlive);
 }
 ```
 
