@@ -7,15 +7,16 @@
   "dependencies": {
     "DevTeam.IoC": "1.0.55-beta",
     "DevTeam.IoC.Contracts": "1.0.55-beta",
-    "Microsoft.NETCore.App": {
-      "type": "platform",
-      "version": "1.0.1"
-    }
+    "Microsoft.NETCore.App": "1.1.1"
   },
 
   "frameworks": {
     "netcoreapp1.0": {
       "imports": "dnxcore50"
     }
+  },
+
+  "runtimes": {
+    "win10-x64": { }
   }
 }
