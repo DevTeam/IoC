@@ -31,16 +31,17 @@
             if (lifetimeContext == null) throw new ArgumentNullException(nameof(lifetimeContext));
             if (creationContext == null) throw new ArgumentNullException(nameof(creationContext));
 #endif
-            var genericTypes = (creationContext.ResolverContext.Key as IContractKey)?.GenericTypeArguments ?? (creationContext.ResolverContext.Key as ICompositeKey)?.ContractKeys?.Select(i => i.GenericTypeArguments).SelectMany(i => i).ToArray();
-            return new Key(genericTypes);
+            var genericTypes = (creationContext.ResolverContext.Key as IContractKey)?.GenericTypeArguments ?? ((creationContext.ResolverContext.Key as ICompositeKey)?.ContractKeys).FirstOrDefault(i => i.GenericTypeArguments.Length > 0)?.GenericTypeArguments;
+            return genericTypes != null ? new Key(genericTypes) : Key.Empty;
         }
 
         internal class Key
         {
+            public static Key Empty = new Key();
             private readonly Type[] _types;
             private readonly int _hashCode;
 
-            public Key(Type[] types)
+            public Key(params Type[] types)
             {
                 _types = types;
                 _hashCode = 1;

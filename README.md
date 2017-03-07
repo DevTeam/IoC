@@ -4,7 +4,7 @@ There are many different implementations of [Inversion of Control](https://githu
 
 ![Comparison test](https://github.com/DevTeam/IoC/blob/master/Docs/Images/speed.png) [Comparison test](https://github.com/DevTeam/IoC/tree/master/DevTeam.IoC.Tests/ComparisonTests.cs) of IoC containers (release builds) in the synthetic test - creating a graph from 2 transient and singleton objects in the serie of 100k iterations:
 
-- This    71 ms
+- This    52 ms
 - [Unity](https://www.nuget.org/packages/Unity/)    256 ms
 - [Ninject](https://www.nuget.org/packages/Ninject/)    1654 ms
 
