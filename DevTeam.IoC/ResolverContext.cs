@@ -1,10 +1,9 @@
 ﻿namespace DevTeam.IoC
 {
     using System;
-
     using Contracts;
 
-    internal class ResolverContext: IResolverContext
+    internal struct ResolverContext: IResolverContext
     {
         public ResolverContext(
             [NotNull] IContainer container,

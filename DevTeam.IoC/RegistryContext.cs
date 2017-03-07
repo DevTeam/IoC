@@ -2,28 +2,26 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-
     using Contracts;
 
-    internal class RegistryContext : IRegistryContext
+    internal struct RegistryContext : IRegistryContext
     {
         public RegistryContext(
             [NotNull] IContainer container,
             [NotNull] IKey[] keys,
             [NotNull] IResolverFactory factory,
-            [NotNull] IEnumerable<IExtension> extensionPoints)
+            [NotNull] params IExtension[] extensions)
         {
 #if DEBUG
             if (container == null) throw new ArgumentNullException(nameof(container));
             if (keys == null) throw new ArgumentNullException(nameof(keys));
             if (factory == null) throw new ArgumentNullException(nameof(factory));
-            if (extensionPoints == null) throw new ArgumentNullException(nameof(extensionPoints));
+            if (extensions == null) throw new ArgumentNullException(nameof(extensions));
 #endif
             Container = container;
             Keys = keys;
             InstanceFactory = factory;
-            Extensions = extensionPoints.ToArray();
+            Extensions = extensions;
         }
 
         public IContainer Container { get; }

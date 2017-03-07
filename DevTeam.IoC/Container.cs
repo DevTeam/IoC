@@ -7,7 +7,7 @@
     using Contracts;
 
     public class Container :
-        IContainer, 
+        IContainer,
         IObservable<IRegistrationEvent>,
         IProvider<ICache<Type, IResolverFactory>>,
         IProvider<IFluent>
@@ -81,7 +81,7 @@
 
         private object LockObject => _registrations;
 
-        public IRegistryContext CreateRegistryContext(IEnumerable<IKey> keys, IResolverFactory factory, IEnumerable<IExtension> extensions)
+        public IRegistryContext CreateRegistryContext(IEnumerable<IKey> keys, IResolverFactory factory, params IExtension[] extensions)
         {
             if (keys == null) throw new ArgumentNullException(nameof(keys));
             if (factory == null) throw new ArgumentNullException(nameof(factory));
@@ -104,9 +104,17 @@
             lock (LockObject)
             {
                 var scope = registrationItem.Scope;
-                if (scope!= null && !scope.AllowRegistration(context) && Parent != null)
+                if (scope!= null && !scope.AllowRegistration(context, this))
                 {
-                    return Parent.TryRegister(context, out registration);
+                    var parent = Parent;
+                    if (parent == null)
+                    {
+                        registrationItem.Dispose();
+                        registration = default(IDisposable);
+                        return false;
+                    }
+
+                    return parent.TryRegister(context, out registration);
                 }
 
                 var comparer = registrationItem.KeyComparer != null ? (IEqualityComparer<IKey>)registrationItem.KeyComparer : EqualityComparer<IKey>.Default;

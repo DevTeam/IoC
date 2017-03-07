@@ -8,8 +8,6 @@
 
     internal class RegistrationItem : IDisposable
     {
-        private readonly IScope _scope;
-        private readonly IKeyComparer _keyComparer;
         private IEnumerable<IDisposable> _resources;
 
         public RegistrationItem(
@@ -24,19 +22,29 @@
             RegistryContext = registryContext;
             InstanceFactory = new LifetimesFactory(registryContext.Extensions.OfType<ILifetime>().ToList());
             Key = new object();
-            TryGetExtension(out _scope);
-            TryGetExtension(out _keyComparer);
+            foreach (var extension in registryContext.Extensions)
+            {
+                var scope = extension as IScope;
+                if (scope != null)
+                {
+                    Scope = scope;
+                }
+
+                var keyComparer = extension as IKeyComparer;
+                if (keyComparer != null)
+                {
+                    KeyComparer = keyComparer;
+                }
+            }
         }
 
         public IRegistryContext RegistryContext { [NotNull] get; }
 
         public LifetimesFactory InstanceFactory { [NotNull] get; }
 
-        [CanBeNull]
-        public IScope Scope => _scope;
+        public IScope Scope { [CanBeNull] get; }
 
-        [CanBeNull]
-        public IKeyComparer KeyComparer => _keyComparer;
+        public IKeyComparer KeyComparer { [CanBeNull] get; }
 
         public object Key { [NotNull] get; }
 
@@ -48,13 +56,6 @@
             }
             _resources = Enumerable.Empty<IDisposable>();
             InstanceFactory.Dispose();
-        }
-
-        private bool TryGetExtension<TContract>(out TContract instance)
-            where TContract : class, IExtension
-        {
-            instance = RegistryContext.Extensions.OfType<TContract>().SingleOrDefault();
-            return instance != default(TContract);
         }
     }
 }

@@ -9,13 +9,16 @@
     internal class Registration<T> : Token<T, IRegistration<T>>, IRegistration<T>
           where T : IContainer
     {
+        // ReSharper disable once StaticMemberInGenericType
+        private static readonly IExtension[] EmptyExtensions = new IExtension[0];
         private readonly List<HashSet<IContractKey>> _contractKeys = new List<HashSet<IContractKey>>();
-        [CanBeNull] private HashSet<ITagKey> _tagKeys;
-        [CanBeNull] private HashSet<IStateKey> _stateKeys;
         private readonly HashSet<IKey> _registrationKeys = new HashSet<IKey>();
         private readonly Lazy<IInstanceFactoryProvider> _instanceFactoryProvider;
         private readonly RegistrationResult<T> _result;
         private readonly ICache<Type, IResolverFactory> _resolverFactoryCache;
+        [CanBeNull] private HashSet<ITagKey> _tagKeys;
+        [CanBeNull] private HashSet<IStateKey> _stateKeys;
+        [CanBeNull] private List<IExtension> _extensions;
 
         public Registration([NotNull] IFluent fluent, [NotNull] T container)
             : base(container)
@@ -28,7 +31,17 @@
             cacheProvider?.TryGet(out _resolverFactoryCache);
         }
 
-        private List<IExtension> Extensions { get; } = new List<IExtension>();
+        private List<IExtension> Extensions {
+            get
+            {
+                if (_extensions == null)
+                {
+                    _extensions = new List<IExtension>();
+                }
+
+                return _extensions;
+            }
+        }
 
         public IRegistration<T> Attributes(Type implementationType)
         {
@@ -233,7 +246,7 @@
             }
 
             IDisposable registration;
-            var context = Resolver.CreateRegistryContext(_registrationKeys, new MethodFactory<TImplementation>(factoryMethod), Extensions);
+            var context = Resolver.CreateRegistryContext(_registrationKeys, new MethodFactory<TImplementation>(factoryMethod), _extensions?.ToArray() ?? EmptyExtensions);
             if (!Resolver.TryRegister(context, out registration))
             {
                 throw new InvalidOperationException($"Can't register {string.Join(Environment.NewLine, context.Keys)}.{Environment.NewLine}{Environment.NewLine}{Resolver}");

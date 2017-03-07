@@ -77,6 +77,7 @@
                 {
                     throw new InvalidOperationException(GetCantResolveErrorMessage(container, key));
                 }
+
                 return container.Resolve(ctx, ParamsStateProvider.Create(parameterMetadata.State));
             }
 

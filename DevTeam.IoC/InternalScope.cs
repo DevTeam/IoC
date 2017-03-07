@@ -6,10 +6,11 @@
 
     internal class InternalScope: IScope
     {
-        public bool AllowRegistration(IRegistryContext context)
+        public bool AllowRegistration(IRegistryContext context, IContainer targetContainer)
         {
 #if DEBUG
             if (context == null) throw new ArgumentNullException(nameof(context));
+            if (targetContainer == null) throw new ArgumentNullException(nameof(targetContainer));
 #endif
             return true;
         }
