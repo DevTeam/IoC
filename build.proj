@@ -46,11 +46,15 @@
 
 	<Target Name="GetNuGet">
 		<DownloadFile
-	    	Url="https://dist.nuget.org/win-x86-commandline/v3.5.0/NuGet.exe"
+	    	Url="https://dist.nuget.org/win-x86-commandline/v4.0.0/NuGet.exe"
 	    	LocalFilePath="packages\nuget.exe"/>
 	</Target>
 
-	<Target Name="Build">
+	<Target Name="Restore" DependsOnTargets="GetNuGet">
+		<Exec Command="packages\nuget.exe restore DevTeam.IoC.sln"/>
+	</Target>
+	
+	<Target Name="Build" DependsOnTargets="Restore">
 		<Message Text="Contract Assembly Version: $(ContractAssemblyVersion)"/>
 		<Message Text="Contract Version: $(ContractVersion)"/>
 		<Message Text="Assembly Version: $(AssemblyVersion)"/>
@@ -59,17 +63,17 @@
 	    	FilePath='%(Package.AssemblyInfoFile)'
 			Pattern='(\[assembly:\s(AssemblyVersion|AssemblyFileVersion)\()"(\d+\.\d+\.\d+)"(\)\])'
 			Replacement='$1"$(AssemblyVersion)"$4'/>
-		<MSBuild Projects="DevTeam.IoC.sln" Targets="Clean;Restore;Build" BuildInParallel="true" Properties="Configuration=$(Configuration)"/>
+		<MSBuild Projects="DevTeam.IoC.sln" Targets="Clean;Build" BuildInParallel="true" Properties="Configuration=$(Configuration)"/>
 	</Target>	
 
-	<Target Name="RunTests" DependsOnTargets="Build">
+	<Target Name="RunTests" DependsOnTargets="GetNuGet;Build">
 		<Exec Command="packages\nuget.exe install NUnit.Console -Version 3.6.0 -o packages"/>
 		<Exec IgnoreExitCode="True" Command="$(MSBuildProjectDirectory)\packages\NUnit.ConsoleRunner.3.5.0\tools\nunit3-console.exe %(TestAssembly.Identity)\bin\$(Configuration)\%(TestAssembly.FileName)%(TestAssembly.Extension).dll --noresult --noheader">
 			<Output TaskParameter="ExitCode" ItemName="exitCode"/>
 		</Exec>
 	</Target>
 
-	<Target Name="CreatePackages" DependsOnTargets="RunTests">
+	<Target Name="CreatePackages" DependsOnTargets="GetNuGet;RunTests">
 		<Exec Command="packages\nuget.exe pack %(Package.Identity)\package.nuspec -Version %(Package.Version) -properties ContractDependencyVersion=%(Package.ContractDependencyVersion) -OutputDirectory $(PackagesDirectory)"/>
 		<Message Text="##teamcity[publishArtifacts '$(PackagesDirectory)\%(Package.FileName)%(Package.Extension).%(Package.Version).nupkg=>$(PackagesDirectory)']" />
 	</Target>
