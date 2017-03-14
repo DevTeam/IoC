@@ -1,129 +1,23 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6492C3B0-FB09-4C85-AFF8-98CBDE7C518E}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DevTeam.IoC.Contracts</RootNamespace>
+    <TargetFramework>netstandard1.0</TargetFramework>
     <AssemblyName>DevTeam.IoC.Contracts</AssemblyName>
-    <DefaultLanguage>en-US</DefaultLanguage>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <PackageId>DevTeam.IoC.Contracts</PackageId>
+    <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <GenerateNeutralResourcesLanguageAttribute>false</GenerateNeutralResourcesLanguageAttribute>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <!-- A reference to the entire .NET Framework is automatically included -->
-    <None Include="project.json" />
+    <PackageReference Include="Microsoft.NETCore.Portable.Compatibility" Version="1.0.1" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Annotations.cs" />
-    <Compile Include="AutowiringAttribute.cs" />
-    <Compile Include="EventStage.cs" />
-    <Compile Include="IEvent.cs" />
-    <Compile Include="IProvider.cs" />
-    <Compile Include="IRegistrationEvent.cs" />
-    <Compile Include="EventAction.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="ContractAttribute.cs" />
-    <Compile Include="Dto\IConfigurationDto.cs" />
-    <Compile Include="Dto\IDependencyAssemblyDto.cs" />
-    <Compile Include="Dto\IDependencyReferenceDto.cs" />
-    <Compile Include="Dto\IConfigurationStatementDto.cs" />
-    <Compile Include="Dto\IParameterDto.cs" />
-    <Compile Include="Dto\IContractDto.cs" />
-    <Compile Include="Dto\IContainerDto.cs" />
-    <Compile Include="Dto\IKeyComparerDto.cs" />
-    <Compile Include="Dto\ILifetimeDto.cs" />
-    <Compile Include="Dto\IReferenceDto.cs" />
-    <Compile Include="Dto\IRegisterDto.cs" />
-    <Compile Include="Dto\IRegisterStatementDto.cs" />
-    <Compile Include="Dto\IScopeDto.cs" />
-    <Compile Include="Dto\IStateDto.cs" />
-    <Compile Include="Dto\ITagDto.cs" />
-    <Compile Include="Dto\IUsingDto.cs" />
-    <Compile Include="Dto\IDependencyConfigurationDto.cs" />
-    <Compile Include="Dto\IValueDto.cs" />
-    <Compile Include="Dto\IDependencyFeatureDto.cs" />
-    <Compile Include="IParameterMetadata.cs" />
-    <Compile Include="ICache.cs" />
-    <Compile Include="ICompositeKey.cs" />
-    <Compile Include="IConfiguration.cs" />
-    <Compile Include="Dto\IConfigurationDescriptionDto.cs" />
-    <Compile Include="IConfiguring.cs" />
-    <Compile Include="IInstanceFactory.cs" />
-    <Compile Include="IInstanceFactoryProvider.cs" />
-    <Compile Include="IContainer.cs" />
-    <Compile Include="IExtension.cs" />
-    <Compile Include="IFluent.cs" />
-    <Compile Include="IContractKey.cs" />
-    <Compile Include="IKeyComparer.cs" />
-    <Compile Include="ILifetimeContext.cs" />
-    <Compile Include="IMetadataProvider.cs" />
-    <Compile Include="IProvider`5.cs" />
-    <Compile Include="IProvider`4.cs" />
-    <Compile Include="IProvider`3.cs" />
-    <Compile Include="IProvider`2.cs" />
-    <Compile Include="IReferenceDescriptionResolver.cs" />
-    <Compile Include="IRegistration.cs" />
-    <Compile Include="IProvider`1.cs" />
-    <Compile Include="IRegistrationResult.cs" />
-    <Compile Include="IResolver`3.cs" />
-    <Compile Include="IResolver`4.cs" />
-    <Compile Include="IResolver`5.cs" />
-    <Compile Include="IResolver`2.cs" />
-    <Compile Include="IResolver`1.cs" />
-    <Compile Include="IResolving.cs" />
-    <Compile Include="IStateProvider.cs" />
-    <Compile Include="ITagKey.cs" />
-    <Compile Include="IResolverFactory.cs" />
-    <Compile Include="IKey.cs" />
-    <Compile Include="IKeyFactory.cs" />
-    <Compile Include="ILifetime.cs" />
-    <Compile Include="IRegistry.cs" />
-    <Compile Include="IRegistryContext.cs" />
-    <Compile Include="IResolver.cs" />
-    <Compile Include="IResolverContext.cs" />
-    <Compile Include="IScope.cs" />
-    <Compile Include="IStateKey.cs" />
-    <Compile Include="IToken.cs" />
-    <Compile Include="ITypeResolver.cs" />
-    <Compile Include="ICreationContext.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StateAttribute.cs" />
-    <Compile Include="TagAttribute.cs" />
-    <Compile Include="Wellknown.cs" />
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

@@ -1,131 +1,27 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7C83C5C6-83CF-4348-9269-E2351E00B5A9}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DevTeam.IoC</RootNamespace>
+    <TargetFramework>netstandard1.0</TargetFramework>
     <AssemblyName>DevTeam.IoC</AssemblyName>
-    <DefaultLanguage>en-US</DefaultLanguage>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <PackageId>DevTeam.IoC</PackageId>
+    <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <GenerateNeutralResourcesLanguageAttribute>false</GenerateNeutralResourcesLanguageAttribute>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <!-- A reference to the entire .NET Framework is automatically included -->
-    <None Include="project.json" />
+    <PackageReference Include="Microsoft.NETCore.Portable.Compatibility" Version="1.0.1" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="AutowiringMetadataProvider.cs" />
-    <Compile Include="Cache.cs" />
-    <Compile Include="CacheTracker.cs" />
-    <Compile Include="CompositeConfiguration.cs" />
-    <Compile Include="ConfigurationDescriptionDto.cs" />
-    <Compile Include="ConfigurationDtoAdapter.cs" />
-    <Compile Include="ConfigurationFromAssembly.cs" />
-    <Compile Include="ConfigurationFromSringData.cs" />
-    <Compile Include="ContainerConfiguration.cs" />
-    <Compile Include="ObservablesFeature.cs" />
-    <Compile Include="RegistrationEvent.cs" />
-    <Compile Include="IInternalResourceStore.cs" />
-    <Compile Include="InternalResourceStore.cs" />
-    <Compile Include="LowLevelRegistration.cs" />
-    <Compile Include="ManualMetadataProvider.cs" />
-    <Compile Include="ParameterMetadata.cs" />
-    <Compile Include="IFuncProvider.cs" />
-    <Compile Include="MetadataFactory.cs" />
-    <Compile Include="Configuring.cs" />
-    <Compile Include="Disposable.cs" />
-    <Compile Include="DtoFeature.cs" />
-    <Compile Include="RegistrationResult.cs" />
-    <Compile Include="SingletonBasedLifetime.cs" />
-    <Compile Include="Subject.cs" />
-    <Compile Include="TasksFeature.cs" />
-    <Compile Include="FilteredKeyComparer.cs" />
-    <Compile Include="CompositeDisposable.cs" />
-    <Compile Include="AutoDisposingLifetime.cs" />
-    <Compile Include="EnumerablesFeature.cs" />
-    <Compile Include="EmptyStateProvider.cs" />
-    <Compile Include="ExpressionInstanceFactoryProvider.cs" />
-    <Compile Include="Fluent.cs" />
-    <Compile Include="MethodFactory.cs" />
-    <Compile Include="DefaultFeatures.cs" />
-    <Compile Include="ContractKey.cs" />
-    <Compile Include="GlobalScope.cs" />
-    <Compile Include="InstanceFactory.cs" />
-    <Compile Include="InstanceFactoryMethod.cs" />
-    <Compile Include="InternalScope.cs" />
-    <Compile Include="KeyFilterContext.cs" />
-    <Compile Include="LifetimeContext.cs" />
-    <Compile Include="KeyBasedLifetime.cs" />
-    <Compile Include="ResolversFeature.cs" />
-    <Compile Include="KeyFactory.cs" />
-    <Compile Include="KeyComparersFeature.cs" />
-    <Compile Include="LifetimesFeature.cs" />
-    <Compile Include="LifetimesFactory.cs" />
-    <Compile Include="CompositeKey.cs" />
-    <Compile Include="Container.cs" />
-    <Compile Include="LowLevelResolving.cs" />
-    <Compile Include="ParamsStateProvider.cs" />
-    <Compile Include="Registration.cs" />
-    <Compile Include="Resolver`1.cs" />
-    <Compile Include="Resolver`5.cs" />
-    <Compile Include="Resolver`4.cs" />
-    <Compile Include="Resolver`3.cs" />
-    <Compile Include="Resolver`2.cs" />
-    <Compile Include="Resolving.cs" />
-    <Compile Include="RootContainerConfiguration.cs" />
-    <Compile Include="ScopesFeature.cs" />
-    <Compile Include="SingletonLifetime.cs" />
-    <Compile Include="StateKey.cs" />
-    <Compile Include="ChildContainersFeature.cs" />
-    <Compile Include="StaticContractKey.cs" />
-    <Compile Include="TagKey.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RegistrationItem.cs" />
-    <Compile Include="RegistryContext.cs" />
-    <Compile Include="ResolverContext.cs" />
-    <Compile Include="Token.cs" />
-    <Compile Include="TransientLifetime.cs" />
-    <Compile Include="TypeResolver.cs" />
-    <Compile Include="CreationContext.cs" />
+    <ProjectReference Include="..\DevTeam.IoC.Contracts\DevTeam.IoC.Contracts.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DevTeam.IoC.Contracts\DevTeam.IoC.Contracts.csproj">
-      <Project>{6492c3b0-fb09-4c85-aff8-98cbde7c518e}</Project>
-      <Name>DevTeam.IoC.Contracts</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>
