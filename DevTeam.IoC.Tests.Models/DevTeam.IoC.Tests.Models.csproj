@@ -17,12 +17,32 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="EventsConfiguration.json" />
+    <None Remove="PlatformConfiguration.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="EventsConfiguration.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="PlatformConfiguration.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.Portable.Compatibility" Version="1.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DevTeam.IoC.Contracts\DevTeam.IoC.Contracts.csproj" />
     <ProjectReference Include="..\DevTeam.IoC\DevTeam.IoC.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

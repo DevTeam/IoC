@@ -68,7 +68,7 @@
 
 	<Target Name="RunTests" DependsOnTargets="GetNuGet;Build">
 		<Exec Command="packages\nuget.exe install NUnit.Console -Version 3.6.0 -o packages"/>
-		<Exec IgnoreExitCode="True" Command="$(MSBuildProjectDirectory)\packages\NUnit.ConsoleRunner.3.5.0\tools\nunit3-console.exe %(TestAssembly.Identity)\bin\$(Configuration)\%(TestAssembly.FileName)%(TestAssembly.Extension).dll --noresult --noheader">
+		<Exec IgnoreExitCode="True" Command="$(MSBuildProjectDirectory)\packages\NUnit.ConsoleRunner.3.6.0\tools\nunit3-console.exe %(TestAssembly.Identity)\bin\$(Configuration)\%(TestAssembly.FileName)%(TestAssembly.Extension).dll --noresult --noheader">
 			<Output TaskParameter="ExitCode" ItemName="exitCode"/>
 		</Exec>
 	</Target>
