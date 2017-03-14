@@ -20,9 +20,11 @@
 		</dependencies>
 	</metadata>
 	<files>
-  		<file src="bin\Release\DevTeam.IoC.Configurations.CSharp.*" target="lib\portable-net462" />
-		<file src="bin\Release\DevTeam.IoC.Configurations.CSharp.*" target="lib\portable-netcore50" />
-		<file src="bin\Release\DevTeam.IoC.Configurations.CSharp.*" target="lib\portable-netstandard1.5+netstandard1.6" />
-		<file src="bin\Release\DevTeam.IoC.Configurations.CSharp.*" target="lib\portable-netcoreapp1.0" />
+		<file src="bin\Release\DevTeam.IoC.Configurations.Json.*" target="lib\net462" />
+  		<file src="bin\Release\DevTeam.IoC.Configurations.Json.*" target="lib\portable-net462" />
+		<file src="bin\Release\DevTeam.IoC.Configurations.Json.*" target="lib\netcore50" />
+		<file src="bin\Release\DevTeam.IoC.Configurations.Json.*" target="lib\netstandard5.0" />
+		<file src="bin\Release\DevTeam.IoC.Configurations.Json.*" target="lib\uap" />
+		<file src="bin\Release\DevTeam.IoC.Configurations.Json.*" target="lib\netcoreapp1.0" />
 	</files>
 </package>
