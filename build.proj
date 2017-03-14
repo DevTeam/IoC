@@ -59,7 +59,7 @@
 	    	FilePath='%(Package.AssemblyInfoFile)'
 			Pattern='(\[assembly:\s(AssemblyVersion|AssemblyFileVersion)\()"(\d+\.\d+\.\d+)"(\)\])'
 			Replacement='$1"$(AssemblyVersion)"$4'/>
-		<MSBuild Projects="DevTeam.IoC.sln" BuildInParallel="true" Properties="Configuration=$(Configuration)"/>
+		<MSBuild Projects="DevTeam.IoC.sln" Targets="Clean;Restore;Build" BuildInParallel="true" Properties="Configuration=$(Configuration)"/>
 	</Target>	
 
 	<Target Name="RunTests" DependsOnTargets="Build">
