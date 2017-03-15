@@ -11,7 +11,13 @@
 		<projectUrl>https://github.com/DevTeam/IoC/</projectUrl>
 		<iconUrl>https://avatars0.githubusercontent.com/u/12184234?v=3&amp;s=200</iconUrl>
 		<!--requireLicenseAcceptance>false</requireLicenseAcceptance-->
-		<description>Provides configuration of IoC using CSharp files.</description>
+		<description>Provides the configuring of IoC containers via CSharp files compiled in realtime.
+
+Supported platforms:
+  - .NET 4.62+
+  - .NET Core
+  - .NET Standard 1.5
+  - Portable Libraries</description>
 		<tags>.NETStandard NETCore Core Portable DevTeam Pattern IoC Container DI dependencyinjection Inversion Control State Bind Factory</tags>
 		<dependencies>
 			<dependency id="DevTeam.IoC.Contracts" version="$ContractDependencyVersion$" />
@@ -23,7 +29,7 @@
 		<file src="bin\Release\netstandard1.5\DevTeam.IoC.Configurations.Json.*" target="lib\net462" />
   		<file src="bin\Release\netstandard1.5\DevTeam.IoC.Configurations.Json.*" target="lib\portable-net462" />
 		<file src="bin\Release\netstandard1.5\DevTeam.IoC.Configurations.Json.*" target="lib\netcore50" />
-		<file src="bin\Release\netstandard1.5\DevTeam.IoC.Configurations.Json.*" target="lib\netstandard5.0" />
+		<file src="bin\Release\netstandard1.5\DevTeam.IoC.Configurations.Json.*" target="lib\netstandard1.5" />
 		<file src="bin\Release\netstandard1.5\DevTeam.IoC.Configurations.Json.*" target="lib\uap" />
 		<file src="bin\Release\netstandard1.5\DevTeam.IoC.Configurations.Json.*" target="lib\netcoreapp1.0" />
 	</files>

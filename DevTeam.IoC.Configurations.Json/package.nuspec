@@ -11,7 +11,15 @@
 		<projectUrl>https://github.com/DevTeam/IoC/</projectUrl>
 		<iconUrl>https://avatars0.githubusercontent.com/u/12184234?v=3&amp;s=200</iconUrl>
 		<!--requireLicenseAcceptance>false</requireLicenseAcceptance-->
-		<description>Provides configuration of IoC using Json files.</description>
+		<description>Provides the configuring of IoC containers via Json files.
+
+Supported platforms:
+  - .NET 4.5+
+  - .NET Core
+  - Windows 8
+  - Universal (Windows Phone 8.1+, Windows 8.1+)
+  - .NET Standard 1.0
+  - Portable Libraries</description>
 		<tags>.NETStandard NETCore Core Portable DevTeam Pattern IoC Container DI dependencyinjection Inversion Control State Bind Factory</tags>
 		<dependencies>
 			<dependency id="DevTeam.IoC.Contracts" version="$ContractDependencyVersion$" />
