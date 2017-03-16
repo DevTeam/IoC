@@ -3,8 +3,7 @@
     [PublicAPI]
     public interface IStateProvider
     {
-        [NotNull]
-        object GetKey([NotNull] ICreationContext creationContext);
+        object Key { [NotNull] get; }
 
         [CanBeNull]
         object GetState([NotNull] ICreationContext creationContext, [NotNull] IStateKey stateKey);

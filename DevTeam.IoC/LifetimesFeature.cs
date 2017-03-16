@@ -67,7 +67,7 @@
                 .Register()
                 .Tag(Wellknown.Lifetime.PerState)
                 .Contract<ILifetime>()
-                .FactoryMethod(ctx => new SingletonBasedLifetime<object>((lifetimeContext, curCtx) => curCtx.StateProvider.GetKey(curCtx)))
+                .FactoryMethod(ctx => new SingletonBasedLifetime<object>((lifetimeContext, curCtx) => curCtx.StateProvider.Key))
                 .Apply();
         }
 

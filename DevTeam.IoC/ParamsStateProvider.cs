@@ -25,14 +25,11 @@
             _state = state;
         }
 
+        public object Key => this;
+
         public object GetState(ICreationContext creationContext, IStateKey stateKey)
         {
             return _state[stateKey.Index];
-        }
-
-        public object GetKey(ICreationContext creationContext)
-        {
-            return this;
         }
 
         public bool Equals(ParamsStateProvider other)

@@ -1,6 +1,5 @@
 ﻿namespace DevTeam.IoC
 {
-    using System;
     using Contracts;
 
     internal class EmptyStateProvider: IStateProvider
@@ -11,6 +10,8 @@
         {
         }
 
+        public object Key => 0;
+
         public object GetState(ICreationContext creationContext, IStateKey stateKey)
         {
 #if DEBUG
@@ -18,11 +19,6 @@
             if (stateKey == null) throw new ArgumentNullException(nameof(stateKey));
 #endif
             return null;
-        }
-
-        public object GetKey(ICreationContext creationContext)
-        {
-            return Shared;
         }
     }
 }
