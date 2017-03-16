@@ -20,7 +20,7 @@
         [CanBeNull] private HashSet<IStateKey> _stateKeys;
         [CanBeNull] private List<IExtension> _extensions;
 
-        public Registration([NotNull] IFluent fluent, [NotNull] T container)
+        internal Registration([NotNull] IFluent fluent, [NotNull] T container)
             : base(container)
         {
             if (fluent == null) throw new ArgumentNullException(nameof(fluent));

@@ -164,8 +164,7 @@
                 var registryContext =
                     container.CreateRegistryContext(
                         CreateCompositeKeys(container, false, new[] { typeof(string) }, new object[0]),
-                        _factory.Object,
-                        new IExtension[0]);
+                        _factory.Object);
 
                 using (container.Register(registryContext))
                 {
@@ -287,6 +286,30 @@
             }
         }
 
+        [Test]
+        public void ShouldUseCustomContainerWhenOverrided()
+        {
+            // Given
+            using (var container = new Container().Configure()
+                .DependsOn(Wellknown.Feature.ChildContainers).ToSelf()
+                .CreateChild()
+                .Register().Contract<IContainer>().FactoryMethod(ctx => new CustomContainer(ctx.ResolverContext.Container)).ToSelf()
+                .CreateChild()
+                .Register().Contract<ISimpleService>().Autowiring<SimpleService>().ToSelf())
+            {
+                // When
+                var actualInstance = container.Resolve().Instance<ISimpleService>();
+
+                // Then
+                actualInstance.ShouldBeOfType<SimpleService>();
+            }
+        }
+
+        // ReSharper disable once ClassNeverInstantiated.Local
+        private class SimpleService : ISimpleService
+        {
+        }
+
         private static ICompositeKey CreateCompositeKey(IContainer container, bool toResolve, Type[] genericTypes, object[] tags = null)
         {
             var keyFactory = container.GetKeyFactory();
@@ -304,7 +327,7 @@
             yield return CreateCompositeKey(container, toResolve, genericTypes, tags);
         }
 
-        private Container CreateContainer()
+        private static Container CreateContainer()
         {
             return new Container();
         }

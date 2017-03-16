@@ -15,7 +15,7 @@
         private IContractKey _singleContractKey;
         private int _contractKeysCount;
 
-        public Resolving([NotNull] T container)
+        internal Resolving([NotNull] T container)
             : base(container)
         {
 #if DEBUG
@@ -34,21 +34,15 @@
 
         public override IResolving<T> Contract(params Type[] contractTypes)
         {
-#if DEBUG
             if (contractTypes == null) throw new ArgumentNullException(nameof(contractTypes));
-#endif
             AddContractKey(contractTypes.Select(type => Resolver.KeyFactory.CreateContractKey(type, true)));
             return this;
         }
 
         public object Instance(IStateProvider stateProvider)
         {
-#if DEBUG
             if (stateProvider == null) throw new ArgumentNullException(nameof(stateProvider));
-#endif
-            IResolverContext ctx;
-            IKey key;
-            if (!TryCreateResolverContext(stateProvider, out key, out ctx))
+            if (!TryCreateResolverContext(stateProvider, out IKey key, out IResolverContext ctx))
             {
                 throw new InvalidOperationException(GetCantResolveErrorMessage(key));
             }
@@ -58,12 +52,8 @@
 
         public bool TryInstance(out object instance, IStateProvider stateProvider)
         {
-#if DEBUG
             if (stateProvider == null) throw new ArgumentNullException(nameof(stateProvider));
-#endif
-            IResolverContext ctx;
-            IKey key;
-            if (!TryCreateResolverContext(stateProvider, out key, out ctx))
+            if (!TryCreateResolverContext(stateProvider, out IKey key, out IResolverContext ctx))
             {
                 instance = default(object);
                 return false;
@@ -75,17 +65,13 @@
 
         public TContract Instance<TContract>(IStateProvider stateProvider)
         {
-#if DEBUG
             if (stateProvider == null) throw new ArgumentNullException(nameof(stateProvider));
-#endif
             if (_сontractKeys.Count == 0)
             {
                 Contract<TContract>();
             }
 
-            IResolverContext ctx;
-            IKey key;
-            if (!TryCreateResolverContext(stateProvider, out key, out ctx))
+            if (!TryCreateResolverContext(stateProvider, out IKey key, out IResolverContext ctx))
             {
                 throw new InvalidOperationException(GetCantResolveErrorMessage(key));
             }
@@ -95,17 +81,13 @@
 
         public bool TryInstance<TContract>(out TContract instance, IStateProvider stateProvider)
         {
-#if DEBUG
             if (stateProvider == null) throw new ArgumentNullException(nameof(stateProvider));
-#endif
             if (_сontractKeys.Count == 0)
             {
                 Contract<TContract>();
             }
 
-            IKey key;
-            IResolverContext ctx;
-            if (!TryCreateResolverContext(stateProvider, out key, out ctx))
+            if (!TryCreateResolverContext(stateProvider, out IKey key, out IResolverContext ctx))
             {
                 instance = default(TContract);
                 return false;
@@ -117,41 +99,31 @@
 
         public object Instance(params object[] state)
         {
-#if DEBUG
             if (state == null) throw new ArgumentNullException(nameof(state));
-#endif
             return Instance(ParamsStateProvider.Create(state));
         }
 
         public bool TryInstance(out object instance, params object[] state)
         {
-#if DEBUG
             if (state == null) throw new ArgumentNullException(nameof(state));
-#endif
             return TryInstance(out instance, ParamsStateProvider.Create(state));
         }
 
         public bool TryInstance<TContract>(out TContract instance, params object[] state)
         {
-#if DEBUG
             if (state == null) throw new ArgumentNullException(nameof(state));
-#endif
             return TryInstance(out instance, ParamsStateProvider.Create(state));
         }
 
         public TContract Instance<TContract>(params object[] state)
         {
-#if DEBUG
             if (state == null) throw new ArgumentNullException(nameof(state));
-#endif
             return Instance<TContract>(ParamsStateProvider.Create(state));
         }
 
         public bool Instance<TContract>(out TContract instance, params object[] state)
         {
-#if DEBUG
             if (state == null) throw new ArgumentNullException(nameof(state));
-#endif
             return TryInstance(out instance, ParamsStateProvider.Create(state));
         }
 

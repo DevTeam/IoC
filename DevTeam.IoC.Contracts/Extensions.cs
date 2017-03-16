@@ -26,8 +26,7 @@
             if (registry == null) throw new ArgumentNullException(nameof(registry));
             if (context == null) throw new ArgumentNullException(nameof(context));
 
-            IDisposable registration;
-            if (!registry.TryRegister(context, out registration))
+            if (!registry.TryRegister(context, out IDisposable registration))
             {
                 throw new InvalidOperationException($"Can not register {string.Join(Environment.NewLine, context.Keys)}.{Environment.NewLine}{Environment.NewLine}{registry}");
             }
@@ -111,10 +110,9 @@
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             var fluentProvider = resolver as IProvider<IFluent>;
-            IFluent fluent;
-            if (fluentProvider == null || !fluentProvider.TryGet(out fluent))
+            if (fluentProvider == null || !fluentProvider.TryGet(out IFluent fluent))
             {
-                throw new InvalidOperationException($"{typeof(IFluent)} is not supported");
+                throw new InvalidOperationException($"{typeof(IProvider<IFluent>)} is not supported. Only \"{nameof(IContainer)}\" interface is uspported.");
             }
 
             return fluent;

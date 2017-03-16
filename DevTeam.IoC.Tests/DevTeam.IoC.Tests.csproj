@@ -81,6 +81,7 @@
     <Compile Include="AutowiringInstanceFactoryTests.cs" />
     <Compile Include="AutowiringMetadataProviderTests.cs" />
     <Compile Include="CacheTests.cs" />
+    <Compile Include="CustomContainer.cs" />
     <Compile Include="InstanceFactoryProviderTests.cs" />
     <Compile Include="Integration\ComparisonTests.cs" />
     <Compile Include="CompositeDisposableTests.cs" />

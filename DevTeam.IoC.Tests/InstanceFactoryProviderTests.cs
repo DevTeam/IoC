@@ -65,6 +65,7 @@
         {
         }
 
+        // ReSharper disable once ClassNeverInstantiated.Local
         private class SimpleServiceWithState : ISimpleService
         {
             public SimpleServiceWithState([State] string str, [State] int num)
