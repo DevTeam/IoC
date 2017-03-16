@@ -3,6 +3,7 @@
     using System;
     using Contracts;
 
+    // ReSharper disable once UnusedMember.Global
    internal class Timer: IEventProducer<DateTimeOffset>
    {
        private readonly ILogger<Timer> _logger;

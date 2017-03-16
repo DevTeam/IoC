@@ -1,4 +1,5 @@
-﻿namespace DevTeam.IoC.Tests.Integration
+﻿// ReSharper disable HeuristicUnreachableCode
+namespace DevTeam.IoC.Tests.Integration
 {
     using System;
     using System.Collections.Generic;
@@ -58,7 +59,7 @@
             }
         }
 
-        public static long DevTeam(int series)
+        private static long DevTeam(int series)
         {
             using (var container = new Container().Configure()
                 .DependsOn(Wellknown.Feature.Default).ToSelf()
@@ -77,7 +78,7 @@
             }
         }
 
-        public static long Unity(int series)
+        private static long Unity(int series)
         {
             using (var container = new UnityContainer())
             {
@@ -94,7 +95,7 @@
             }
         }
 
-        public static long Ninject(int series)
+        private static long Ninject(int series)
         {
             using (var kernel = new StandardKernel())
             {
@@ -116,6 +117,7 @@
     {
     }
 
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class Service1 : IService1
     {
         public Service1([NotNull] IService2 service2)
@@ -128,6 +130,7 @@
     {
     }
 
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class Service2 : IService2
     {
     }

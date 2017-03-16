@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using Contracts;
 
+    // ReSharper disable once ClassNeverInstantiated.Global
     internal class TimerSource: IEventSource<DateTimeOffset>, IDisposable
     {
         private readonly ILog _log;

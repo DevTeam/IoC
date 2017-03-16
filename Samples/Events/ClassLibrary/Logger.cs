@@ -3,6 +3,7 @@
     using System;
     using Contracts;
 
+    // ReSharper disable once UnusedMember.Global
     internal class Logger<T>: ILogger<T>
     {
         private readonly IName<T> _name;

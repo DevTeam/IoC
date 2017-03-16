@@ -64,16 +64,15 @@
                         throw new InvalidOperationException($"Can not resolve {nameof(implementationType)}");
                     }
 
-                    ICache<Type, IResolverFactory> factoryCache;
-                    if (ctx.ResolverContext.Container.TryResolve(out factoryCache))
+                    if (ctx.ResolverContext.Container.TryResolve(out ICache<Type, IResolverFactory> factoryCache))
                     {
-                        IResolverFactory factory;
-                        if (!factoryCache.TryGet(implementationType, out factory))
+                        if (factoryCache.TryGet(implementationType, out IResolverFactory factory))
                         {
-                            factory = new MetadataFactory(implementationType, ExpressionInstanceFactoryProvider, MetadataProvider, ctx.ResolverContext.Container.KeyFactory);
-                            factoryCache.Set(implementationType, factory);
+                            return factory;
                         }
 
+                        factory = new MetadataFactory(implementationType, ExpressionInstanceFactoryProvider, MetadataProvider, ctx.ResolverContext.Container.KeyFactory);
+                        factoryCache.Set(implementationType, factory);
                         return factory;
                     }
 

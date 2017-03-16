@@ -3,6 +3,7 @@
     using System;
     using Contracts;
 
+    // ReSharper disable once UnusedMember.Global
     internal class Console: IConsole
     {
         public void WriteLine(string line, Color color)

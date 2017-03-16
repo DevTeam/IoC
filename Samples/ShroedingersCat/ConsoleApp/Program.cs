@@ -1,4 +1,5 @@
 ﻿// ReSharper disable ArrangeTypeModifiers
+// ReSharper disable ClassNeverInstantiated.Global
 namespace ConsoleApp
 {
     using System;
@@ -18,7 +19,7 @@ namespace ConsoleApp
         }
     }
 
-    interface IBox<T> { T Content { get; } }
+    interface IBox<out T> { T Content { get; } }
 
     interface ICat { bool IsAlive { get; } }
 

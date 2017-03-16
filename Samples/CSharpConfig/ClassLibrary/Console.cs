@@ -2,6 +2,7 @@
 {
     using System;
 
+    // ReSharper disable once UnusedMember.Global
     public class Console : IConsole
     {
         public void WriteLine(string line)

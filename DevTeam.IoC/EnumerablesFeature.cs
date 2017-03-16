@@ -142,7 +142,6 @@
             public Enumerator(IEnumerator<object> source)
             {
                 if (source == null) throw new ArgumentNullException(nameof(source));
-
                 _source = source;
             }
 

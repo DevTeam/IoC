@@ -17,6 +17,7 @@
             _configurations = configurations.ToList();
         }
 
+        // ReSharper disable once UnusedMember.Global
         internal int Count => _configurations.Count;
 
         public void Dispose()

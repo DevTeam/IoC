@@ -3,6 +3,7 @@
     using System;
     using Contracts;
 
+    // ReSharper disable once UnusedMember.Global
     internal class Chronometer: IEventConsumer<DateTimeOffset>
     {
         private readonly IConsole _console;

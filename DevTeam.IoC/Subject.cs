@@ -6,7 +6,7 @@
 
     internal class Subject<T>: IObservable<T>, IObserver<T>
     {
-        private readonly Action<int> _onChange;
+        [CanBeNull] private readonly Action<int> _onChange;
         private readonly List<IObserver<T>> _observers = new List<IObserver<T>>();
 
         public Subject([CanBeNull] Action<int> onChange = null)

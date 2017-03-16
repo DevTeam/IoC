@@ -12,14 +12,6 @@
             return CreateKeys(typeof(TContract));
         }
 
-        public static IEnumerable<IKey> CreateKeys([NotNull] Type contractType)
-        {
-#if DEBUG
-            if (contractType == null) throw new ArgumentNullException(nameof(contractType));
-#endif
-            return Enumerable.Repeat((IKey)new ContractKey(contractType, true), 1).ToArray();
-        }
-
         public static IDisposable RawRegister<TContract>(
             [NotNull] IRegistry registry,
             [NotNull] IEnumerable<IKey> keys,
@@ -56,6 +48,14 @@
             IDisposable disposable;
             registry.TryRegister(registryContext, out disposable);
             return disposable;
+        }
+
+        private static IEnumerable<IKey> CreateKeys([NotNull] Type contractType)
+        {
+#if DEBUG
+            if (contractType == null) throw new ArgumentNullException(nameof(contractType));
+#endif
+            return Enumerable.Repeat((IKey)new ContractKey(contractType, true), 1).ToArray();
         }
     }
 }

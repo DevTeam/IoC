@@ -3,6 +3,7 @@
     using System;
     using Contracts;
 
+    // ReSharper disable once UnusedMember.Global
     internal class Tracer<T>: IEventConsumer<T>, IDisposable
     {
         private readonly ILogger<Tracer<T>> _logger;

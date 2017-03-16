@@ -1,6 +1,5 @@
 ﻿namespace DevTeam.IoC.Tests
 {
-    using System.Linq;
     using NUnit.Framework;
 
     using Shouldly;

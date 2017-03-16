@@ -37,7 +37,7 @@
 
         internal class Key
         {
-            public static Key Empty = new Key();
+            public static readonly Key Empty = new Key();
             private readonly Type[] _types;
             private readonly int _hashCode;
 
@@ -61,13 +61,15 @@
 
             public override bool Equals(object obj)
             {
+#if DEBUG
                 if (ReferenceEquals(null, obj)) return false;
                 if (ReferenceEquals(this, obj)) return true;
                 if (obj.GetType() != GetType()) return false;
+#endif
                 return Equals((Key) obj);
             }
 
-            protected bool Equals(Key other)
+            private bool Equals(Key other)
             {
                 return _types.SequenceEqual(other._types);
             }

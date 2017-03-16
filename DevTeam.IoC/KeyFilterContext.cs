@@ -11,7 +11,7 @@
         public static KeyFilterContext Current
         {
             get { return _current ?? DefaultContext; }
-            set { _current = value; }
+            private set { _current = value; }
         }
 
         public KeyFilterContext(Predicate<Type> filter)

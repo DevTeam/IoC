@@ -252,7 +252,7 @@
             }
         }
 
-        public class Statefull
+        private class Statefull
         {
             public Statefull(string name)
             {
@@ -262,7 +262,7 @@
             public string Name { get; }
         }
 
-        public class MyClass
+        private class MyClass
         {
             public MyClass(ISimpleService simpleService1, ISimpleService simpleService2)
             {

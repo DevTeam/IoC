@@ -38,6 +38,7 @@
             public T Value { get; }
 
             [CanBeNull]
+            // ReSharper disable once MemberCanBePrivate.Global
             public Exception Error { get; }
         }
 

@@ -1,4 +1,5 @@
-﻿namespace DevTeam.IoC.Tests
+﻿// ReSharper disable UnusedParameter.Local
+namespace DevTeam.IoC.Tests
 {
     using System.Reflection;
     using Contracts;

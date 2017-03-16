@@ -1,4 +1,3 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26228.4
@@ -25,15 +24,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Contacts", "Contacts", "{91
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CSharpConfig", "CSharpConfig", "{C7C11931-2AC2-45EB-8BE4-E5062DD34986}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevTeam.IoC", "DevTeam.IoC\DevTeam.IoC.csproj", "{7C83C5C6-83CF-4348-9269-E2351E00B5A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevTeam.IoC", "DevTeam.IoC\DevTeam.IoC.csproj", "{7C83C5C6-83CF-4348-9269-E2351E00B5A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevTeam.IoC.Contracts", "DevTeam.IoC.Contracts\DevTeam.IoC.Contracts.csproj", "{6492C3B0-FB09-4C85-AFF8-98CBDE7C518E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevTeam.IoC.Contracts", "DevTeam.IoC.Contracts\DevTeam.IoC.Contracts.csproj", "{6492C3B0-FB09-4C85-AFF8-98CBDE7C518E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevTeam.IoC.Tests", "DevTeam.IoC.Tests\DevTeam.IoC.Tests.csproj", "{0F6A7CD1-1025-4939-A494-4E5852BF9746}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevTeam.IoC.Configurations.Json", "DevTeam.IoC.Configurations.Json\DevTeam.IoC.Configurations.Json.csproj", "{1BB91071-24D9-4AC0-8066-44D56CD01BBC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevTeam.IoC.Configurations.Json", "DevTeam.IoC.Configurations.Json\DevTeam.IoC.Configurations.Json.csproj", "{1BB91071-24D9-4AC0-8066-44D56CD01BBC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevTeam.IoC.Tests.Models", "DevTeam.IoC.Tests.Models\DevTeam.IoC.Tests.Models.csproj", "{8254B780-A9E0-4424-95F5-5DFC0405ADEB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevTeam.IoC.Tests.Models", "DevTeam.IoC.Tests.Models\DevTeam.IoC.Tests.Models.csproj", "{8254B780-A9E0-4424-95F5-5DFC0405ADEB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp", "Samples\HelloWorld\ConsoleApp\ConsoleApp.csproj", "{7E26E5D1-A287-44BC-BC0D-64B7C35A7CBE}"
 EndProject
@@ -41,9 +40,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassLibrary", "Samples\Hel
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "Samples\Events\ConsoleApp\ConsoleApp.csproj", "{73A26F05-92F9-475E-A8BE-5FB3543EC7C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contracts", "Samples\Events\Contracts\Contracts.csproj", "{02D9EBB8-3922-41D7-89D8-ED520C6C35BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contracts", "Samples\Events\Contracts\Contracts.csproj", "{02D9EBB8-3922-41D7-89D8-ED520C6C35BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassLibrary", "Samples\Events\ClassLibrary\ClassLibrary.csproj", "{4D61A4E2-3356-4538-88B0-4BC539973160}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassLibrary", "Samples\Events\ClassLibrary\ClassLibrary.csproj", "{4D61A4E2-3356-4538-88B0-4BC539973160}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "Samples\ShroedingersCat\ConsoleApp\ConsoleApp.csproj", "{A4D7CC21-F9A7-472B-9EC0-3FC15DBD959B}"
 EndProject
@@ -53,7 +52,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp", "Samples\Traff
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp", "Samples\CSharpConfig\ConsoleApp\ConsoleApp.csproj", "{697E8A22-0027-4267-9006-5F7499A6B4DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevTeam.IoC.Configurations.CSharp", "DevTeam.IoC.Configurations.CSharp\DevTeam.IoC.Configurations.CSharp.csproj", "{851D6AE6-3663-4017-9990-6F883512D479}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevTeam.IoC.Configurations.CSharp", "DevTeam.IoC.Configurations.CSharp\DevTeam.IoC.Configurations.CSharp.csproj", "{851D6AE6-3663-4017-9990-6F883512D479}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassLibrary", "Samples\CSharpConfig\ClassLibrary\ClassLibrary.csproj", "{2AFD2943-EEBA-409D-B470-E0DF7D219D4A}"
 EndProject

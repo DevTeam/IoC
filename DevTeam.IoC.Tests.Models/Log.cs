@@ -6,6 +6,7 @@
     // to test ConfigurationFromAssembly
     [Contract(typeof(ILog))]
     [State(0, typeof(string))]
+    // ReSharper disable once ClassNeverInstantiated.Global
     internal class Log : ILog
     {
         private readonly IConsole _console;

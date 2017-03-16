@@ -8,7 +8,7 @@
 
     public class Program
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
             using (var container = new Container()
                 .Configure().DependsOn<CSharpConfiguration>(File.ReadAllText("Config.cs.txt")).ToSelf()

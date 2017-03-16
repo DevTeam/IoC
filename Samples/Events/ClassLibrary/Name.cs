@@ -1,5 +1,6 @@
 ﻿namespace ClassLibrary
 {
+    // ReSharper disable once UnusedMember.Global
     internal class Name<T> : IName<T>
     {
         // ReSharper disable once StaticMemberInGenericType

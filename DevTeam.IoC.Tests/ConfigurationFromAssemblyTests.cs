@@ -4,8 +4,6 @@
     using System.Reflection;
     using Contracts;
     using Models;
-    using Moq;
-
     using NUnit.Framework;
 
     using Shouldly;

@@ -180,8 +180,7 @@
 
                 foreach (var registrations in _registrations)
                 {
-                    RegistrationItem registrationItem;
-                    if (!registrations.Value.TryGetValue(key, out registrationItem))
+                    if (!registrations.Value.TryGetValue(key, out RegistrationItem registrationItem))
                     {
                         continue;
                     }

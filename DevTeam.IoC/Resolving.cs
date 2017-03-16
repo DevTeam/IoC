@@ -53,7 +53,9 @@
         public bool TryInstance(out object instance, IStateProvider stateProvider)
         {
             if (stateProvider == null) throw new ArgumentNullException(nameof(stateProvider));
+#pragma warning disable 168
             if (!TryCreateResolverContext(stateProvider, out IKey key, out IResolverContext ctx))
+#pragma warning restore 168
             {
                 instance = default(object);
                 return false;
@@ -87,7 +89,9 @@
                 Contract<TContract>();
             }
 
+#pragma warning disable 168
             if (!TryCreateResolverContext(stateProvider, out IKey key, out IResolverContext ctx))
+#pragma warning restore 168
             {
                 instance = default(TContract);
                 return false;

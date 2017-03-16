@@ -124,6 +124,7 @@
             }
         }
 
+        [Test]
         public void ContainerShouldRegisterAndResolveWhenSeveralKeysAndSpecifiedGenericType()
         {
             // Given
@@ -160,7 +161,7 @@
         [Contract(typeof(ISimpleService))]
         [State(0, typeof(string))]
         [Tag("abc")]
-        public class ClassWithMetadata: ISimpleService
+        private class ClassWithMetadata: ISimpleService
         {
             public ClassWithMetadata([State] string str)
             {

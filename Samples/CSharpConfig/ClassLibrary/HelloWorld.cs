@@ -2,6 +2,7 @@
 {
     using System;
 
+    // ReSharper disable once UnusedMember.Global
     public class HelloWorld : IHelloWorld
     {
         private readonly IConsole _console;

@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using Contracts;
 
+    // ReSharper disable once ClassNeverInstantiated.Global
     internal class EventRegistry : IEventRegistry, IDisposable
     {
         private readonly IResolver _resolver;

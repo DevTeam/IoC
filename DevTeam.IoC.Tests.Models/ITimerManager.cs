@@ -2,6 +2,7 @@
 {
     public interface ITimerManager
     {
+        // ReSharper disable once UnusedMember.Global
         void Tick();
     }
 }

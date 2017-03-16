@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using Contracts;
 
+    // ReSharper disable once ClassNeverInstantiated.Global
     internal class Timer : ITimer, ITimerManager
     {
         private readonly ILog _log;

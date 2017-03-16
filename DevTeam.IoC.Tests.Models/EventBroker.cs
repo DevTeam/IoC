@@ -5,6 +5,7 @@
     using System.Reflection;
     using Contracts;
 
+    // ReSharper disable once ClassNeverInstantiated.Global
     internal class EventBroker : IEventBroker
     {
         private readonly ILog _log;

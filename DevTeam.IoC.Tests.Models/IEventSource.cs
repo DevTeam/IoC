@@ -4,6 +4,7 @@
 
     internal interface IEventSource<out TEvent>
     {
+        // ReSharper disable once UnusedMember.Global
         IDisposable Subscribe(IEventListener<TEvent> listener);
     }
 }

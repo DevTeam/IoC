@@ -3,6 +3,7 @@
     using System;
     using Contracts;
 
+    // ReSharper disable once ClassNeverInstantiated.Global
     internal class Console : IConsole
     {
         private readonly bool _isTraceEnabled;

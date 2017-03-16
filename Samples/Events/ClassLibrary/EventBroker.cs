@@ -5,6 +5,7 @@
     using System.Linq;
     using Contracts;
 
+    // ReSharper disable once UnusedMember.Global
     internal class EventBroker<T>: IEventBroker, IDisposable
     {
         private readonly IEnumerable<IDisposable> _subscriptions;
