@@ -1,4 +1,4 @@
-﻿namespace DevTeam.IoC.Tests
+﻿namespace DevTeam.IoC.Tests.Integration
 {
     using System;
     using System.Collections.Generic;
@@ -10,6 +10,8 @@
     using Ninject;
     using NUnit.Framework;
 
+    [TestFixture]
+    [Category("Long")]
     public class ComparisonTests
     {
         private static readonly Dictionary<string, Func<int, long>> Iocs = new Dictionary<string, Func<int, long>>()

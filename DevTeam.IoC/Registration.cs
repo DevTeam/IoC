@@ -31,17 +31,7 @@
             cacheProvider?.TryGet(out _resolverFactoryCache);
         }
 
-        private List<IExtension> Extensions {
-            get
-            {
-                if (_extensions == null)
-                {
-                    _extensions = new List<IExtension>();
-                }
-
-                return _extensions;
-            }
-        }
+        private List<IExtension> Extensions => _extensions ?? (_extensions = new List<IExtension>());
 
         public IRegistration<T> Attributes(Type implementationType)
         {
@@ -104,14 +94,14 @@
         public IRegistrationResult<T> FactoryMethod(Func<ICreationContext, object> factoryMethod)
         {
             if (factoryMethod == null) throw new ArgumentNullException(nameof(factoryMethod));
-            AsFactoryMethodInternal(factoryMethod);
+            FactoryMethodInternal(factoryMethod);
             return _result;
         }
 
         public IRegistrationResult<T> FactoryMethod<TImplementation>(Func<ICreationContext, TImplementation> factoryMethod)
         {
             if (factoryMethod == null) throw new ArgumentNullException(nameof(factoryMethod));
-            AsFactoryMethodInternal(factoryMethod, typeof(TImplementation));
+            FactoryMethodInternal(factoryMethod, typeof(TImplementation));
             return _result;
         }
 
@@ -119,19 +109,17 @@
         {
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
             metadataProvider = metadataProvider ?? Fluent.Resolve(Resolver).Instance<IMetadataProvider>();
-            Type resolvedType;
             IResolverFactory resolverFactory;
-            if (!lazy && metadataProvider.TryResolveImplementationType(implementationType, out resolvedType))
+            if (!lazy && metadataProvider.TryResolveImplementationType(implementationType, out Type resolvedType))
             {
                 resolverFactory = CreateFactory(resolvedType, metadataProvider);
-                AsFactoryMethodInternal(ctx => resolverFactory.Create(ctx), implementationType);
+                FactoryMethodInternal(ctx => resolverFactory.Create(ctx), implementationType);
             }
             else
             {
-                AsFactoryMethodInternal(ctx =>
+                FactoryMethodInternal(ctx =>
                 {
-                    Type currentResolvedType;
-                    if (!metadataProvider.TryResolveImplementationType(implementationType, out currentResolvedType, ctx))
+                    if (!metadataProvider.TryResolveImplementationType(implementationType, out Type currentResolvedType, ctx))
                     {
                         throw new InvalidOperationException("Can not define type to resolve from type {currentResolvedType}");
                     }
@@ -145,7 +133,7 @@
 
         public IRegistrationResult<T> Autowiring<TImplementation>(bool lazy = false)
         {
-            return Autowiring(typeof(TImplementation));
+            return Autowiring(typeof(TImplementation), lazy);
         }
 
         internal T ToSelf(params IDisposable[] resource)
@@ -235,7 +223,7 @@
             _tagKeys?.Clear();
         }
 
-        private void AsFactoryMethodInternal<TImplementation>(
+        private void FactoryMethodInternal<TImplementation>(
             Func<ICreationContext, TImplementation> factoryMethod,
             Type implementationType = null)
         {
@@ -245,9 +233,8 @@
                 AppendRegistryKeys();
             }
 
-            IDisposable registration;
             var context = Resolver.CreateRegistryContext(_registrationKeys, new MethodFactory<TImplementation>(factoryMethod), _extensions?.ToArray() ?? EmptyExtensions);
-            if (!Resolver.TryRegister(context, out registration))
+            if (!Resolver.TryRegister(context, out IDisposable registration))
             {
                 throw new InvalidOperationException($"Can't register {string.Join(Environment.NewLine, context.Keys)}.{Environment.NewLine}{Environment.NewLine}{Resolver}");
             }
@@ -258,8 +245,7 @@
 
         private IInstanceFactoryProvider GetInstanceFactoryProvider()
         {
-            IInstanceFactoryProvider instanceFactoryProvider;
-            if (!Resolver.TryResolve(out instanceFactoryProvider))
+            if (!Resolver.TryResolve(out IInstanceFactoryProvider instanceFactoryProvider))
             {
                 throw new InvalidOperationException($"{typeof(IInstanceFactoryProvider)} was not registered.");
             }
@@ -272,11 +258,13 @@
             IResolverFactory factory;
             if (_resolverFactoryCache != null)
             {
-                if (!_resolverFactoryCache.TryGet(resolvedType, out factory))
+                if (_resolverFactoryCache.TryGet(resolvedType, out factory))
                 {
-                    factory = new MetadataFactory(resolvedType, _instanceFactoryProvider.Value, metadataProvider, Resolver.KeyFactory);
-                    _resolverFactoryCache.Set(resolvedType, factory);
+                    return factory;
                 }
+
+                factory = new MetadataFactory(resolvedType, _instanceFactoryProvider.Value, metadataProvider, Resolver.KeyFactory);
+                _resolverFactoryCache.Set(resolvedType, factory);
             }
             else
             {

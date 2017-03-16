@@ -22,9 +22,7 @@
             if (instanceFactoryProvider == null) throw new ArgumentNullException(nameof(instanceFactoryProvider));
             if (metadataProvider == null) throw new ArgumentNullException(nameof(metadataProvider));
 #endif
-            Exception error;
-            ConstructorInfo constructor;
-            if (!metadataProvider.TrySelectConstructor(implementationType, out constructor, out error))
+            if (!metadataProvider.TrySelectConstructor(implementationType, out ConstructorInfo constructor, out Exception error))
             {
                 throw error;
             }
@@ -67,13 +65,12 @@
 #if DEBUG
             if (creationContext == null) throw new ArgumentNullException(nameof(creationContext));
 #endif
-            IParameterMetadata parameterMetadata = _parameters[index];
+            var parameterMetadata = _parameters[index];
             if (parameterMetadata.IsDependency)
             {
                 var key = _keys[index];
                 var container = creationContext.ResolverContext.RegistryContext.Container;
-                IResolverContext ctx;
-                if (!container.TryCreateResolverContext(key, out ctx))
+                if (!container.TryCreateResolverContext(key, out IResolverContext ctx))
                 {
                     throw new InvalidOperationException(GetCantResolveErrorMessage(container, key));
                 }

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>    
+  <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{0F6A7CD1-1025-4939-A494-4E5852BF9746}</ProjectGuid>
@@ -81,7 +81,8 @@
     <Compile Include="AutowiringInstanceFactoryTests.cs" />
     <Compile Include="AutowiringMetadataProviderTests.cs" />
     <Compile Include="CacheTests.cs" />
-    <Compile Include="ComparisonTests.cs" />
+    <Compile Include="InstanceFactoryProviderTests.cs" />
+    <Compile Include="Integration\ComparisonTests.cs" />
     <Compile Include="CompositeDisposableTests.cs" />
     <Compile Include="CompositeKeyTests.cs" />
     <Compile Include="ConfigurationDtoAdapterTests.cs" />
@@ -94,7 +95,7 @@
     <Compile Include="ContractKeyTests.cs" />
     <Compile Include="EventObserver.cs" />
     <Compile Include="KeyUtils.cs" />
-    <Compile Include="PerformanceTests.cs" />
+    <Compile Include="Integration\PerformanceTests.cs" />
     <Compile Include="JsonConfigurationTests.cs" />
     <Compile Include="ManualMetadataProviderTests.cs" />
     <Compile Include="ReferenceDescriptionResolver.cs" />

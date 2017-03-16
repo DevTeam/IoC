@@ -1,4 +1,4 @@
-﻿namespace DevTeam.IoC.Tests
+﻿namespace DevTeam.IoC.Tests.Integration
 {
     using System;
     using System.IO;
@@ -9,6 +9,7 @@
     using Shouldly;
 
     [TestFixture]
+    [Category("Long")]
     public class PerformanceTests
     {
 

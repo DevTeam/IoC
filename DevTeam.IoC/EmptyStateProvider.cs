@@ -1,5 +1,6 @@
 ﻿namespace DevTeam.IoC
 {
+    using System;
     using Contracts;
 
     internal class EmptyStateProvider: IStateProvider
