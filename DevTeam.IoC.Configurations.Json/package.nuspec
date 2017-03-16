@@ -11,6 +11,7 @@
 		<projectUrl>https://github.com/DevTeam/IoC/</projectUrl>
 		<iconUrl>https://avatars0.githubusercontent.com/u/12184234?v=3&amp;s=200</iconUrl>
 		<!--requireLicenseAcceptance>false</requireLicenseAcceptance-->
+		<summary>Provides the configuring of IoC containers via Json files.</summary>
 		<description>Provides the configuring of IoC containers via Json files.
 
 Supported platforms:
