@@ -22,7 +22,9 @@
             yield return ScopesFeature.Shared;
             yield return KeyComparersFeature.Shared;
             yield return EnumerablesFeature.Shared;
+#if !NET35
             yield return TasksFeature.Shared;
+#endif
             yield return DtoFeature.Shared;
         }
 

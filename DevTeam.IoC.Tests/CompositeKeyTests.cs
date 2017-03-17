@@ -9,6 +9,7 @@
     [TestFixture]
     public class CompositeKeyTests
     {
+        private readonly Reflection _refelction = new Reflection();
         private IContractKey _contractKey1;
         private IContractKey _contractKey2;
         private IContractKey _contractKey3;
@@ -21,9 +22,9 @@
         [SetUp]
         public void SetUp()
         {
-            _contractKey1 = new ContractKey(typeof(string), true);
-            _contractKey2 = new ContractKey(typeof(IEnumerable<string>), true);
-            _contractKey3 = new ContractKey(typeof(IEnumerable<>), true);
+            _contractKey1 = new ContractKey(_refelction, typeof(string), true);
+            _contractKey2 = new ContractKey(_refelction, typeof(IEnumerable<string>), true);
+            _contractKey3 = new ContractKey(_refelction, typeof(IEnumerable<>), true);
             _stateKey1 = new StateKey(0, typeof(string));
             _stateKey2 = new StateKey(1, typeof(int));
             _tagKey1 = new TagKey("abc");
@@ -108,7 +109,7 @@
 
             // When
             IKey key1 = CreateInstance(new[] { _contractKey1 });
-            IKey key2 = new ContractKey(_contractKey1.ContractType, true);
+            IKey key2 = new ContractKey(_refelction, _contractKey1.ContractType, true);
 
             // Then
             key1.GetHashCode().ShouldBe(key2.GetHashCode());

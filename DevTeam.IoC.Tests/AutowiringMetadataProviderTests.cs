@@ -19,6 +19,8 @@
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     public class AutowiringMetadataProviderTests
     {
+        private readonly Reflection _reflection = new Reflection();
+
         [SetUp]
         public void SetUp()
         {
@@ -34,7 +36,7 @@
         {
             // Given
             var metadataProvider = CreateInstance();
-            var key = new CompositeKey((contractKeyType != null ? Enumerable.Repeat(contractKeyType, 1) : Enumerable.Empty<Type>()).Select(i => new ContractKey(i, true)).Cast<IContractKey>().ToArray());
+            var key = new CompositeKey((contractKeyType != null ? Enumerable.Repeat(contractKeyType, 1) : Enumerable.Empty<Type>()).Select(i => new ContractKey(_reflection, i, true)).Cast<IContractKey>().ToArray());
             var resolverContext = new Mock<IResolverContext>();
             resolverContext.SetupGet(i => i.Key).Returns(key);
             var creationContext = new Mock<ICreationContext>();
@@ -42,7 +44,7 @@
 
             // When
             Type actualResolveImplementationType;
-            var result = metadataProvider.TryResolveImplementationType(implementationType, out actualResolveImplementationType, creationContext.Object);
+            var result = metadataProvider.TryResolveImplementationType(_reflection, implementationType, out actualResolveImplementationType, creationContext.Object);
 
             // Then
             result.ShouldBeTrue();
@@ -63,7 +65,7 @@
 
             // When
             Type actualResolveImplementationType;
-            var result = metadataProvider.TryResolveImplementationType(implementationType, out actualResolveImplementationType);
+            var result = metadataProvider.TryResolveImplementationType(_reflection, implementationType, out actualResolveImplementationType);
 
             // Then
             result.ShouldBe(expectedResult);
@@ -91,7 +93,7 @@
             // When
             ConstructorInfo ctor;
             Exception exception;
-            var actualResult = metadataProvider.TrySelectConstructor(implementationType, out ctor, out exception);
+            var actualResult = metadataProvider.TrySelectConstructor(_reflection, implementationType, out ctor, out exception);
 
             // Then
             actualResult.ShouldBe(expectedResult);
@@ -119,15 +121,15 @@
             var expectedCtorParams = new IParameterMetadata[]
             {
                 new ParameterMetadata(null, null, null, 0, new object[0], null, new StateKey(0, typeof(int))),
-                new ParameterMetadata(new IContractKey[] { new ContractKey(typeof(IEnumerable<string>), true)}, null, null, 0, new object[0], null, null ),
-                new ParameterMetadata(new IContractKey[] { new ContractKey(typeof(IDisposable), true) }, null, null, 0, new object[0], null, null ),
-                new ParameterMetadata(new IContractKey[] { new ContractKey(typeof(string), true) }, null, new IStateKey[] { new StateKey(1, typeof(int)), }, 0, new object[] { null }, null, null ),
-                new ParameterMetadata(new IContractKey[] { new ContractKey(typeof(string), true) }, new ITagKey[] { new TagKey("abc") }, null, 0, new object[0], null, null ),
+                new ParameterMetadata(new IContractKey[] { new ContractKey(_reflection, typeof(IEnumerable<string>), true)}, null, null, 0, new object[0], null, null ),
+                new ParameterMetadata(new IContractKey[] { new ContractKey(_reflection, typeof(IDisposable), true) }, null, null, 0, new object[0], null, null ),
+                new ParameterMetadata(new IContractKey[] { new ContractKey(_reflection, typeof(string), true) }, null, new IStateKey[] { new StateKey(1, typeof(int)), }, 0, new object[] { null }, null, null ),
+                new ParameterMetadata(new IContractKey[] { new ContractKey(_reflection, typeof(string), true) }, new ITagKey[] { new TagKey("abc") }, null, 0, new object[0], null, null ),
                 new ParameterMetadata(null, null, null, 0, new object[0], null, new StateKey(1, typeof(string)))
             };
 
             // When
-            var actualCtorParams = metadataProvider.GetConstructorParameters(ctor);
+            var actualCtorParams = metadataProvider.GetConstructorParameters(_reflection, ctor);
 
             // Then
             actualCtorParams.Length.ShouldBe(expectedCtorParams.Length);

@@ -107,7 +107,7 @@
             var compositeKey = key as ICompositeKey;
             if (compositeKey != null)
             {
-                foreach (var subKey in ((IEnumerable<IKey>)compositeKey.StateKeys).Concat(compositeKey.TagKeys))
+                foreach (var subKey in compositeKey.StateKeys.Cast<IKey>().Concat(compositeKey.TagKeys.Cast<IKey>()))
                 {
                     yield return subKey;
                 }

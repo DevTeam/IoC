@@ -46,7 +46,7 @@
             if (configurationType == null) throw new ArgumentNullException(nameof(configurationType));
             if (description == null) throw new ArgumentNullException(nameof(description));
             if (configurationType == null) throw new ArgumentNullException(nameof(configurationType));
-            if (string.IsNullOrWhiteSpace(description)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(description));
+            if (description.IsNullOrWhiteSpace()) throw new ArgumentException("Value cannot be null or whitespace.", nameof(description));
             _configurations.Add(new HashSet<IConfiguration> { DtoFeature.Shared, (IConfiguration)Activator.CreateInstance(configurationType) });
             _configurations.Add(new HashSet<IConfiguration> { _container.Resolve().State<Type>(0).State<string>(1).Instance<IConfiguration>(configurationType, description) });
             return this;
@@ -55,7 +55,7 @@
         public IConfiguring<T> DependsOn<TConfiguration>(string description) where TConfiguration : IConfiguration, new()
         {
             if (description == null) throw new ArgumentNullException(nameof(description));
-            if (string.IsNullOrWhiteSpace(description)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(description));
+            if (description.IsNullOrWhiteSpace()) throw new ArgumentException("Value cannot be null or whitespace.", nameof(description));
             return DependsOn(typeof(TConfiguration), description);
         }
 

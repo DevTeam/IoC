@@ -15,6 +15,7 @@
     [TestFixture]
     public class ContainerTests
     {
+        private readonly Reflection _reflection = new Reflection();
         private Mock<IResolverFactory> _factory;
 
         [SetUp]
@@ -134,10 +135,10 @@
             {
                 // When
                 container.CreateRegistryContext(
-                    Enumerable.Repeat((IKey)new ContractKey(typeof(IResolver), true), 1),
+                    Enumerable.Repeat((IKey)new ContractKey(_reflection, typeof(IResolver), true), 1),
                     _factory.Object);
 
-                var resolverContext = container.CreateContext(new ContractKey(typeof(IResolver), true));
+                var resolverContext = container.CreateContext(new ContractKey(_reflection, typeof(IResolver), true));
                 var resolver = container.Resolve(resolverContext);
 
                 // Then

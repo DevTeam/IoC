@@ -24,8 +24,9 @@
 
         public IEnumerable<IDisposable> Apply(IContainer container)
         {
+            var reflection = container.Resolve().Instance<IReflection>();
             return 
-                from typeInfo in _assembly.DefinedTypes
+                from typeInfo in reflection.GetDefinedTypes(_assembly)
                 where typeInfo.GetCustomAttributes<ContractAttribute>().Any()
                 let type = typeInfo.AsType()
                 select container.Register().Attributes(typeInfo.AsType()).Autowiring(type).Apply();

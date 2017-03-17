@@ -272,7 +272,7 @@
 
         public override string ToString()
         {
-            return $"{nameof(Container)} [Tag: {Tag ?? "null"}]{Environment.NewLine}{string.Join(Environment.NewLine, Registrations)}";
+            return $"{nameof(Container)} [Tag: {Tag ?? "null"}]{Environment.NewLine}{string.Join(Environment.NewLine, Registrations.Select(i => i.ToString()).ToArray())}";
         }
 
         private class CacheTracker : IObserver<IRegistrationEvent>

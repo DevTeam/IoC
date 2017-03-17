@@ -7,12 +7,13 @@
 
     internal class AutowiringMetadataProvider : IMetadataProvider
     {
-        public bool TryResolveImplementationType(Type implementationType, out Type resolvedType, ICreationContext creationContext = null)
+        public bool TryResolveImplementationType(IReflection reflection, Type implementationType, out Type resolvedType, ICreationContext creationContext = null)
         {
 #if DEBUG
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
+            if (reflection == null) throw new ArgumentNullException(nameof(reflection));
 #endif
-            var implementationTypeInfo = implementationType.GetTypeInfo();
+            var implementationTypeInfo = reflection.GetTypeInfo(implementationType);
             if (implementationTypeInfo.IsGenericTypeDefinition)
             {
                 if (creationContext == null)
@@ -34,12 +35,13 @@
             return true;
         }
 
-        public bool TrySelectConstructor(Type implementationType, out ConstructorInfo constructor, out Exception error)
+        public bool TrySelectConstructor(IReflection reflection, Type implementationType, out ConstructorInfo constructor, out Exception error)
         {
 #if DEBUG
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
+            if (reflection == null) throw new ArgumentNullException(nameof(reflection));
 #endif
-            var implementationTypeInfo = implementationType.GetTypeInfo();
+            var implementationTypeInfo = reflection.GetTypeInfo(implementationType);
             var constructorInfos = implementationTypeInfo.DeclaredConstructors.Where(i => i.IsPublic).ToArray();
             if (constructorInfos.Length == 1)
             {
@@ -60,7 +62,7 @@
             {
                 var autowiringConstructor = (
                     from ctor in constructorInfos
-                    let autowiringAttribute = ctor.GetCustomAttribute<AutowiringAttribute>()
+                    let autowiringAttribute = reflection.GetCustomAttribute<AutowiringAttribute>(ctor)
                     where autowiringAttribute != null
                     select ctor).SingleOrDefault();
 
@@ -83,17 +85,20 @@
             return false;
         }
 
-        public IParameterMetadata[] GetConstructorParameters(ConstructorInfo constructor)
+        public IParameterMetadata[] GetConstructorParameters(IReflection reflection, ConstructorInfo constructor)
         {
+#if DEBUG
             if (constructor == null) throw new ArgumentNullException(nameof(constructor));
+            if (reflection == null) throw new ArgumentNullException(nameof(reflection));
+#endif
             var ctorParams = constructor.GetParameters();
             var arguments = new IParameterMetadata[ctorParams.Length];
             var stateIndex = 0;
             for (var paramIndex = 0; paramIndex < ctorParams.Length; paramIndex++)
             {
                 var info = ctorParams[paramIndex];
-                var contractAttributes = info.GetCustomAttributes<ContractAttribute>().ToArray();
-                var stateAttributes = info.GetCustomAttributes<StateAttribute>().OrderBy(i => i.Index).ToArray();
+                var contractAttributes = reflection.GetCustomAttributes<ContractAttribute>(info).ToArray();
+                var stateAttributes = reflection.GetCustomAttributes<StateAttribute>(info).OrderBy(i => i.Index).ToArray();
                 IStateKey stateKey = null;
                 object[] state = null;
                 IContractKey[] contractKeys = null;
@@ -108,14 +113,14 @@
                     // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
                     if (contractAttributes.Length > 0)
                     {
-                        contractKeys = contractAttributes.SelectMany(i => i.ContractTypes).Select(type => (IContractKey)new ContractKey(type, true)).DefaultIfEmpty(new ContractKey(info.ParameterType, true)).ToArray();
+                        contractKeys = contractAttributes.SelectMany(i => i.ContractTypes).Select(type => (IContractKey)new ContractKey(reflection, type, true)).DefaultIfEmpty(new ContractKey(reflection, info.ParameterType, true)).ToArray();
                     }
                     else
                     {
-                        contractKeys = Enumerable.Repeat((IContractKey)new ContractKey(info.ParameterType, true), 1).ToArray();
+                        contractKeys = Enumerable.Repeat((IContractKey)new ContractKey(reflection, info.ParameterType, true), 1).ToArray();
                     }
 
-                    tagKeys = info.GetCustomAttributes<TagAttribute>().SelectMany(i => i.Tags).Select(i => (ITagKey)new TagKey(i)).ToArray();
+                    tagKeys = reflection.GetCustomAttributes<TagAttribute>(info).SelectMany(i => i.Tags).Select(i => (ITagKey)new TagKey(i)).ToArray();
                     state = stateAttributes.OrderBy(i => i.Index).Select(i => i.Value).ToArray();
                     stateKeys = stateAttributes.Select(i => (IStateKey)new StateKey(i.Index, i.StateType)).ToArray();
                     contractKeys = contractKeys.Length > 0 ? contractKeys : null;

@@ -7,7 +7,7 @@
     internal class CustomContainer : IContainer, IProvider<IFluent>
     {
         private static readonly IFluent SharedFluent = new Fluent();
-        private static readonly IKeyFactory SharedKeyFactory = new KeyFactory();
+        private static readonly IKeyFactory SharedKeyFactory = new KeyFactory(new Reflection());
 
         public CustomContainer([NotNull] IContainer parent)
         {

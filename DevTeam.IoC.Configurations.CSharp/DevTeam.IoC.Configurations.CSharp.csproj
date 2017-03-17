@@ -1,8 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks15 Condition=" '$(TargetFrameworks15)' == '' ">netstandard1.5;net462;netcoreapp1.0</TargetFrameworks15>
-	<TargetFrameworks>$(TargetFrameworks15)</TargetFrameworks>
     <AssemblyName>DevTeam.IoC.Configurations.CSharp</AssemblyName>
     <PackageId>DevTeam.IoC.Configurations.CSharp</PackageId>
     <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
@@ -18,11 +16,13 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	<TargetFrameworks>netstandard1.5;net462;netcoreapp1.0</TargetFrameworks>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <TreatSpecificWarningsAsErrors />
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	<TargetFrameworks>netstandard1.5;netstandard1.6;net462;netcoreapp1.0;netcoreapp1.1</TargetFrameworks>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <TreatSpecificWarningsAsErrors />
   </PropertyGroup>

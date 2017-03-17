@@ -5,10 +5,10 @@
     [PublicAPI]
     public interface ICompositeKey: IKey
     {
-        ISet<IContractKey> ContractKeys { [NotNull] get; }
+        HashSet<IContractKey> ContractKeys { [NotNull] get; }
 
-        ISet<ITagKey> TagKeys { [NotNull] get; }
+        HashSet<ITagKey> TagKeys { [NotNull] get; }
 
-        ISet<IStateKey> StateKeys { [NotNull] get; }
+        HashSet<IStateKey> StateKeys { [NotNull] get; }
     }
 }

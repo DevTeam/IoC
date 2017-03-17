@@ -7,9 +7,12 @@
 
     internal static class LowLevelRegistration
     {
-        public static IEnumerable<IKey> CreateKeys<TContract>()
+        public static IEnumerable<IKey> CreateKeys<TContract>([NotNull] IReflection reflection)
         {
-            return CreateKeys(typeof(TContract));
+#if DEBUG
+            if (reflection == null) throw new ArgumentNullException(nameof(reflection));
+#endif
+            return CreateKeys(reflection, typeof(TContract));
         }
 
         public static IDisposable RawRegister<TContract>(
@@ -50,12 +53,13 @@
             return disposable;
         }
 
-        private static IEnumerable<IKey> CreateKeys([NotNull] Type contractType)
+        private static IEnumerable<IKey> CreateKeys([NotNull] IReflection reflection, [NotNull] Type contractType)
         {
 #if DEBUG
+            if (reflection == null) throw new ArgumentNullException(nameof(reflection));
             if (contractType == null) throw new ArgumentNullException(nameof(contractType));
 #endif
-            return Enumerable.Repeat((IKey)new ContractKey(contractType, true), 1).ToArray();
+            return Enumerable.Repeat((IKey)new ContractKey(reflection, contractType, true), 1).ToArray();
         }
     }
 }

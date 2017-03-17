@@ -5,8 +5,6 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using System.Reflection;
-
     using Contracts;
 
     [SuppressMessage("ReSharper", "IdentifierTypo")]
@@ -27,11 +25,12 @@
         public IEnumerable<IDisposable> Apply(IContainer container)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
+            var reflection = container.Resolve().Instance<IReflection>();
             yield return
                 container
                 .Register()
                 .Contract(typeof(IEnumerable<>))
-                .FactoryMethod(ResolveEnumerable)
+                .FactoryMethod(ctx => ResolveEnumerable(ctx, reflection))
                 .Apply();
         }
 
@@ -45,7 +44,7 @@
             return obj != null && GetType() == obj.GetType();
         }
 
-        private static object ResolveEnumerable(ICreationContext creationContext)
+        private static object ResolveEnumerable(ICreationContext creationContext, IReflection reflection)
         {
             var ctx = creationContext.ResolverContext;
             var genericContractKey = ctx.Key as IContractKey ?? (ctx.Key as ICompositeKey)?.ContractKeys.SingleOrDefault();
@@ -56,7 +55,7 @@
 
             var enumItemType = genericContractKey.GenericTypeArguments.First();
             var enumType = typeof(Enumerable<>).MakeGenericType(enumItemType);
-            var contractKeys = new List<IContractKey> { new ContractKey(enumItemType, true) };
+            var contractKeys = new List<IContractKey> { new ContractKey(reflection, enumItemType, true) };
             var container = ctx.Container;
 
             var keys = (
@@ -69,7 +68,7 @@
                 select container.Resolve().Key(key).Instance();
 
             var factory = container.Resolve().Instance<IInstanceFactoryProvider>(creationContext.StateProvider);
-            var ctor = enumType.GetTypeInfo().DeclaredConstructors.Single(i => i.GetParameters().Length == 1);
+            var ctor = reflection.GetTypeInfo(enumType).DeclaredConstructors.Single(i => i.GetParameters().Length == 1);
             return factory.GetFactory(ctor).Create(source);
         }
 

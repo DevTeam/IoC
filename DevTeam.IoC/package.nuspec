@@ -15,7 +15,7 @@
 		<description>Simple, flexible and fast IoC container.
 
 Supported platforms:
-  - .NET 4.5+
+  - .NET 3.5+
   - .NET Core
   - .NET Standard 1.0</description>
 		<tags>.NETStandard NETCore Core Portable DevTeam Pattern IoC Container DI dependencyinjection Inversion Control State Bind Factory</tags>

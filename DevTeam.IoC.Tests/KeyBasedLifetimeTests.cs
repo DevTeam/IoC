@@ -12,6 +12,7 @@
     [TestFixture]
     public class KeyBasedLifetimeTests
     {
+        private readonly Reflection _reflection = new Reflection();
         private Mock<IEnumerator<ILifetime>> _lifetimeEnumerator;
         private Mock<ILifetime> _baseLifetime;
         private Mock<ILifetimeContext> _lifetimeContext;
@@ -53,7 +54,7 @@
             // Given
             var obj = new object();
             var lifetime = CreateInstance((lifetimeContext, resolverContext) => 0);
-            var key = new CompositeKey(new IContractKey[] { new ContractKey(typeof(string), true) }, new ITagKey[] { new TagKey("abc") }, new IStateKey[] { new StateKey(0, typeof(string)) });
+            var key = new CompositeKey(new IContractKey[] { new ContractKey(_reflection, typeof(string), true) }, new ITagKey[] { new TagKey("abc") }, new IStateKey[] { new StateKey(0, typeof(string)) });
             _resolverContext.SetupGet(i => i.Key).Returns(key);
             _lifetimeEnumerator.Setup(i => i.MoveNext()).Returns(true);
             _lifetimeEnumerator.SetupGet(i => i.Current).Returns(_baseLifetime.Object);

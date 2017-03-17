@@ -6,6 +6,14 @@
 
     internal class KeyFactory: IKeyFactory
     {
+        private readonly IReflection _reflection;
+
+        public KeyFactory([NotNull] IReflection reflection)
+        {
+            if (reflection == null) throw new ArgumentNullException(nameof(reflection));
+            _reflection = reflection;
+        }
+
         public ICompositeKey CreateCompositeKey(IEnumerable<IContractKey> contractKey, IEnumerable<ITagKey> tagKeys = null, IEnumerable<IStateKey> stateKeys = null)
         {
 #if DEBUG
@@ -19,7 +27,7 @@
 #if DEBUG
             if (contractType == null) throw new ArgumentNullException(nameof(contractType));
 #endif
-            return new ContractKey(contractType, toResolve);
+            return new ContractKey(_reflection, contractType, toResolve);
         }
 
         public IStateKey CreateStateKey(int index, Type stateType)

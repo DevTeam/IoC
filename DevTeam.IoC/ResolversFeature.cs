@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
     using Contracts;
 
     internal class ResolversFeature : IConfiguration
@@ -23,13 +22,15 @@
         public IEnumerable<IDisposable> Apply(IContainer container)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
+            var reflection = container.Resolve().Instance<IReflection>();
+
             yield return
                 container
                 .Register()
                 .Contract(typeof(IResolver<>))
                 .Contract(typeof(IProvider<>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .FactoryMethod(ResolveResolver)
+                .FactoryMethod(ctx => ResolveResolver(ctx, reflection))
                 .Apply();
 
             yield return
@@ -37,7 +38,7 @@
                 .Register()
                 .Contract(typeof(Func<>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .FactoryMethod(ResolveFunc)
+                .FactoryMethod(ctx => ResolveFunc(ctx, reflection))
                 .Apply();
 
             yield return
@@ -46,7 +47,7 @@
                 .Contract(typeof(IResolver<,>))
                 .Contract(typeof(IProvider<,>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .FactoryMethod(ResolveResolver)
+                .FactoryMethod(ctx => ResolveResolver(ctx, reflection))
                 .Apply();
 
             yield return
@@ -54,7 +55,7 @@
                 .Register()
                 .Contract(typeof(Func<,>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .FactoryMethod(ResolveFunc)
+                .FactoryMethod(ctx => ResolveFunc(ctx, reflection))
                 .Apply();
 
             yield return
@@ -63,7 +64,7 @@
                 .Contract(typeof(IResolver<,,>))
                 .Contract(typeof(IProvider<,,>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .FactoryMethod(ResolveResolver)
+                .FactoryMethod(ctx => ResolveResolver(ctx, reflection))
                 .Apply();
 
             yield return
@@ -71,7 +72,7 @@
                 .Register()
                 .Contract(typeof(Func<,,>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .FactoryMethod(ResolveFunc)
+                .FactoryMethod(ctx => ResolveFunc(ctx, reflection))
                 .Apply();
 
             yield return
@@ -80,7 +81,7 @@
                 .Contract(typeof(IResolver<,,,>))
                 .Contract(typeof(IProvider<,,,>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .FactoryMethod(ResolveResolver)
+                .FactoryMethod(ctx => ResolveResolver(ctx, reflection))
                 .Apply();
 
             yield return
@@ -88,7 +89,7 @@
                 .Register()
                 .Contract(typeof(Func<,,,>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .FactoryMethod(ResolveFunc)
+                .FactoryMethod(ctx => ResolveFunc(ctx, reflection))
                 .Apply();
 
             yield return
@@ -97,7 +98,7 @@
                 .Contract(typeof(IResolver<,,,,>))
                 .Contract(typeof(IProvider<,,,,>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .FactoryMethod(ResolveResolver)
+                .FactoryMethod(ctx => ResolveResolver(ctx, reflection))
                 .Apply();
 
             yield return
@@ -105,7 +106,7 @@
                 .Register()
                 .Contract(typeof(Func<,,,,>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .FactoryMethod(ResolveFunc)
+                .FactoryMethod(ctx => ResolveFunc(ctx, reflection))
                 .Apply();
         }
 
@@ -119,12 +120,12 @@
             return obj != null && GetType() == obj.GetType();
         }
 
-        private static object ResolveFunc(ICreationContext ctx)
+        private static object ResolveFunc(ICreationContext ctx, IReflection reflection)
         {
-            return ((IFuncProvider)ResolveResolver(ctx)).GetFunc();
+            return ((IFuncProvider)ResolveResolver(ctx, reflection)).GetFunc();
         }
 
-        private static object ResolveResolver(ICreationContext creationContext)
+        private static object ResolveResolver(ICreationContext creationContext, IReflection reflection)
         {
             var ctx = creationContext.ResolverContext;
             var genericContractKey = ctx.Key as IContractKey ?? (ctx.Key as ICompositeKey)?.ContractKeys.SingleOrDefault();
@@ -158,7 +159,7 @@
                     break;
             }
 
-            var ctor = resolverType.GetTypeInfo().DeclaredConstructors.Single(i => i.GetParameters().Length == 1);
+            var ctor = reflection.GetTypeInfo(resolverType).DeclaredConstructors.Single(i => i.GetParameters().Length == 1);
             var factory = ctx.Container.Resolve().Instance<IInstanceFactoryProvider>(creationContext.StateProvider);
             return factory.GetFactory(ctor).Create(ctx);
         }

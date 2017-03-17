@@ -23,21 +23,23 @@
             _constructorParams = constructorParams.ToArray();
         }
 
-        public bool TryResolveImplementationType(Type implementationType, out Type resolvedType, ICreationContext creationContext = null)
+        public bool TryResolveImplementationType(IReflection reflection, Type implementationType, out Type resolvedType, ICreationContext creationContext = null)
         {
 #if DEBUG
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
+            if (reflection == null) throw new ArgumentNullException(nameof(reflection));
 #endif
-            return _defaultMetadataProvider.TryResolveImplementationType(implementationType, out resolvedType, creationContext);
+            return _defaultMetadataProvider.TryResolveImplementationType(reflection, implementationType, out resolvedType, creationContext);
         }
 
-        public bool TrySelectConstructor(Type implementationType, out ConstructorInfo constructor, out Exception error)
+        public bool TrySelectConstructor(IReflection reflection, Type implementationType, out ConstructorInfo constructor, out Exception error)
         {
 #if DEBUG
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
+            if (reflection == null) throw new ArgumentNullException(nameof(reflection));
 #endif
-            var typeInfo = implementationType.GetTypeInfo();
-            constructor = typeInfo.DeclaredConstructors.Where(MatchConstructor).FirstOrDefault();
+            var typeInfo = reflection.GetTypeInfo(implementationType);
+            constructor = typeInfo.DeclaredConstructors.FirstOrDefault(ctor => MatchConstructor(reflection, ctor));
             if (constructor == null)
             {
                 error = new InvalidOperationException("Constructor was not found.");
@@ -48,17 +50,19 @@
             return true;
         }
 
-        public IParameterMetadata[] GetConstructorParameters(ConstructorInfo constructor)
+        public IParameterMetadata[] GetConstructorParameters(IReflection reflection, ConstructorInfo constructor)
         {
 #if DEBUG
             if (constructor == null) throw new ArgumentNullException(nameof(constructor));
+            if (reflection == null) throw new ArgumentNullException(nameof(reflection));
 #endif
             return _constructorParams;
         }
 
-        private bool MatchConstructor([NotNull] ConstructorInfo ctor)
+        private bool MatchConstructor([NotNull] IReflection reflection, [NotNull] ConstructorInfo ctor)
         {
 #if DEBUG
+            if (reflection == null) throw new ArgumentNullException(nameof(reflection));
             if (ctor == null) throw new ArgumentNullException(nameof(ctor));
 #endif
             var ctorParams = ctor.GetParameters();
@@ -69,30 +73,31 @@
 
             return ctorParams
                 .Zip(_constructorParams, (ctorParam, bindingParam) => new { ctorParam, bindingParam })
-                .All(i => MatchParameter(i.ctorParam, i.bindingParam));
+                .All(i => MatchParameter(reflection, i.ctorParam, i.bindingParam));
         }
 
-        private static bool MatchParameter([NotNull] ParameterInfo paramInfo, [NotNull] IParameterMetadata paramMetadata)
+        private static bool MatchParameter([NotNull] IReflection reflection, [NotNull] ParameterInfo paramInfo, [NotNull] IParameterMetadata paramMetadata)
         {
 #if DEBUG
+            if (reflection == null) throw new ArgumentNullException(nameof(reflection));
             if (paramInfo == null) throw new ArgumentNullException(nameof(paramInfo));
             if (paramMetadata == null) throw new ArgumentNullException(nameof(paramMetadata));
 #endif
-            var parameterTypeInfo = paramInfo.ParameterType.GetTypeInfo();
-            TypeInfo genericTypeInfo = null;
+            var parameterTypeInfo = reflection.GetTypeInfo(paramInfo.ParameterType);
+            ITypeInfo genericTypeInfo = null;
             Type[] genericTypeArguments = null;
-            if (paramInfo.ParameterType.IsConstructedGenericType)
+            if (reflection.GetIsConstructedGenericType(paramInfo.ParameterType))
             {
-                genericTypeInfo = parameterTypeInfo.GetGenericTypeDefinition().GetTypeInfo();
-                genericTypeArguments = paramInfo.ParameterType.GenericTypeArguments;
+                genericTypeInfo = reflection.GetTypeInfo(parameterTypeInfo.GetGenericTypeDefinition());
+                genericTypeArguments = reflection.GetGenericTypeArguments(paramInfo.ParameterType);
             }
 
             if (paramMetadata.IsDependency)
             {
                 return (
                     from contractKey in paramMetadata.ContractKeys ?? Enumerable.Empty<IContractKey>()
-                    let contractTypeInfo = contractKey.ContractType.GetTypeInfo()
-                    where parameterTypeInfo.IsAssignableFrom(contractTypeInfo) || (genericTypeInfo != null && genericTypeInfo.IsAssignableFrom(contractTypeInfo) && contractKey.GenericTypeArguments.SequenceEqual(genericTypeArguments))
+                    let contractTypeInfo = reflection.GetTypeInfo(contractKey.ContractType)
+                    where parameterTypeInfo.IsAssignableFrom(contractTypeInfo) || (genericTypeInfo != null && genericTypeInfo.IsAssignableFrom(contractTypeInfo) && genericTypeArguments != null && contractKey.GenericTypeArguments.SequenceEqual(genericTypeArguments))
                     select contractKey).Any();
             }
 
@@ -101,7 +106,7 @@
                 return true;
             }
 
-            var stateTypeInfo = paramMetadata.StateKey.StateType.GetTypeInfo();
+            var stateTypeInfo = reflection.GetTypeInfo(paramMetadata.StateKey.StateType);
             return parameterTypeInfo.IsAssignableFrom(stateTypeInfo) || (genericTypeInfo != null && genericTypeInfo.IsAssignableFrom(stateTypeInfo));
         }
     }

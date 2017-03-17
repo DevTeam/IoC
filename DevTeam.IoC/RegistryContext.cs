@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Contracts;
 
     internal struct RegistryContext : IRegistryContext
@@ -34,7 +35,7 @@
 
         public override string ToString()
         {
-            return $"{nameof(RegistryContext)} [Keys: {string.Join(", ", Keys)}, InstanceFactory: {InstanceFactory}, Extensions: {string.Join(", ", Extensions)}, Container: {Container.ToString() ?? "null"}]";
+            return $"{nameof(RegistryContext)} [Keys: {string.Join(", ", Keys.Select(i => i.ToString()).ToArray())}, InstanceFactory: {InstanceFactory}, Extensions: {string.Join(", ", Extensions.Select(i => i.ToString()).ToArray())}, Container: {Container}]";
         }
     }
 }

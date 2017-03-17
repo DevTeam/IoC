@@ -12,22 +12,24 @@
         private readonly IKey[] _keys;
 
         public MetadataFactory(
+            [NotNull] IReflection reflection,
             [NotNull] Type implementationType,
             [NotNull] IInstanceFactoryProvider instanceFactoryProvider,
             [NotNull] IMetadataProvider metadataProvider,
             [NotNull] IKeyFactory keyFactory)
         {
 #if DEBUG
+            if (reflection == null) throw new ArgumentNullException(nameof(reflection));
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
             if (instanceFactoryProvider == null) throw new ArgumentNullException(nameof(instanceFactoryProvider));
             if (metadataProvider == null) throw new ArgumentNullException(nameof(metadataProvider));
 #endif
-            if (!metadataProvider.TrySelectConstructor(implementationType, out ConstructorInfo constructor, out Exception error))
+            if (!metadataProvider.TrySelectConstructor(reflection, implementationType, out ConstructorInfo constructor, out Exception error))
             {
                 throw error;
             }
 
-            _parameters = metadataProvider.GetConstructorParameters(constructor);
+            _parameters = metadataProvider.GetConstructorParameters(reflection, constructor);
             _instanceFactory = instanceFactoryProvider.GetFactory(constructor);
             var len = _parameters.Length;
             _parametersArray = new object[len];

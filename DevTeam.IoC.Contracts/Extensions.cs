@@ -1,6 +1,7 @@
 ﻿namespace DevTeam.IoC.Contracts
 {
     using System;
+    using System.Linq;
 
     [PublicAPI]
     public static class Extensions
@@ -28,7 +29,7 @@
 
             if (!registry.TryRegister(context, out IDisposable registration))
             {
-                throw new InvalidOperationException($"Can not register {string.Join(Environment.NewLine, context.Keys)}.{Environment.NewLine}{Environment.NewLine}{registry}");
+                throw new InvalidOperationException($"Can not register {string.Join(Environment.NewLine, context.Keys.Select(i => i.ToString()).ToArray())}.{Environment.NewLine}{Environment.NewLine}{registry}");
             }
 
             return registration;

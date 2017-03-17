@@ -2,6 +2,7 @@
 {
     using System;
     using Contracts;
+    using Color = Contracts.Color;
 
     // ReSharper disable once UnusedMember.Global
     internal class Console: IConsole

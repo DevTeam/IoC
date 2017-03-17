@@ -15,7 +15,7 @@
 		<Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
 		<PackagesDirectory>packages</PackagesDirectory>	
 
-		<TargetFrameworks10>netstandard1.0;netstandard1.1;netstandard1.2;netstandard1.3;netstandard1.4;netstandard1.5;netstandard1.6;net45;net451;net452;net46;net461;net462;netcoreapp1.0;netcoreapp1.1</TargetFrameworks10>
+		<TargetFrameworks10>netstandard1.0;netstandard1.1;netstandard1.2;netstandard1.3;netstandard1.4;netstandard1.5;netstandard1.6;net40;net45;net451;net452;net46;net461;net462;netcoreapp1.0;netcoreapp1.1</TargetFrameworks10>
 		<TargetFrameworks15>netstandard1.5;netstandard1.6;net462;netcoreapp1.0;netcoreapp1.1</TargetFrameworks15>
 	</PropertyGroup>
 
@@ -53,11 +53,11 @@
 	    	LocalFilePath="packages\nuget.exe"/>
 	</Target>
 
-	<Target Name="ClearBin">
+	<Target Name="Clear">
 	    <RemoveDir Directories="%(Package.Identity)\bin\$(Configuration)" /> 
 	</Target>
 
-	<Target Name="Build" DependsOnTargets="ClearBin">
+	<Target Name="Build">
 		<Message Text="Contract Assembly Version: $(ContractAssemblyVersion)"/>
 		<Message Text="Contract Version: $(ContractVersion)"/>
 		<Message Text="Assembly Version: $(AssemblyVersion)"/>
@@ -69,14 +69,14 @@
 		<MSBuild Projects="DevTeam.IoC.sln" Targets="Restore;Build" BuildInParallel="false" Properties="Configuration=$(Configuration);TargetFrameworks10=$(TargetFrameworks10);TargetFrameworks15=$(TargetFrameworks15)"/>
 	</Target>	
 
-	<Target Name="RunTests" DependsOnTargets="GetNuGet;Build">
+	<Target Name="Test">
 		<Exec Command="packages\nuget.exe install NUnit.Console -Version 3.6.0 -o packages"/>
-		<Exec IgnoreExitCode="True" Command="$(MSBuildProjectDirectory)\packages\NUnit.ConsoleRunner.3.6.0\tools\nunit3-console.exe %(TestAssembly.Identity)\bin\$(Configuration)\%(TestAssembly.FileName)%(TestAssembly.Extension).dll --noresult --noheader">
+		<Exec IgnoreExitCode="True" Command="$(MSBuildProjectDirectory)\packages\NUnit.ConsoleRunner.3.6.0\tools\nunit3-console.exe %(TestAssembly.Identity)\bin\$(Configuration)\net45\%(TestAssembly.FileName)%(TestAssembly.Extension).dll --noresult --noheader">
 			<Output TaskParameter="ExitCode" ItemName="exitCode"/>
 		</Exec>
 	</Target>
 
-	<Target Name="CreatePackages" DependsOnTargets="GetNuGet;RunTests">
+	<Target Name="CreatePackages" DependsOnTargets="Clear;GetNuGet;Build;Test">
 		<Exec Command="packages\nuget.exe pack %(Package.Identity)\package.nuspec -Version %(Package.Version) -properties ContractDependencyVersion=%(Package.ContractDependencyVersion) -OutputDirectory $(PackagesDirectory)"/>
 		<Message Text="##teamcity[publishArtifacts '$(PackagesDirectory)\%(Package.FileName)%(Package.Extension).%(Package.Version).nupkg=>$(PackagesDirectory)']" />
 	</Target>

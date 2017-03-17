@@ -7,11 +7,11 @@
 
     public interface IMetadataProvider
     {
-        bool TryResolveImplementationType([NotNull] Type implementationType, out Type resolvedType, [CanBeNull] ICreationContext creationContext = null);
+        bool TryResolveImplementationType([NotNull] IReflection reflection, [NotNull] Type implementationType, out Type resolvedType, [CanBeNull] ICreationContext creationContext = null);
         
-        bool TrySelectConstructor([NotNull] Type implementationType, out ConstructorInfo constructor, out Exception error);
+        bool TrySelectConstructor([NotNull] IReflection reflection, [NotNull] Type implementationType, out ConstructorInfo constructor, out Exception error);
 
         [NotNull]
-        IParameterMetadata[] GetConstructorParameters([NotNull] ConstructorInfo constructor);
+        IParameterMetadata[] GetConstructorParameters([NotNull] IReflection reflection, [NotNull] ConstructorInfo constructor);
     }
 }

@@ -4,6 +4,6 @@
 
     internal static class StaticContractKey<TContract>
     {
-        public static readonly IKey Shared = new ContractKey(typeof(TContract), true);
+        public static readonly IKey Shared = new ContractKey(RootContainerConfiguration.Reflection, typeof(TContract), true);
     }
 }

@@ -7,7 +7,7 @@
 
     internal class CompositeKey: ICompositeKey
     {
-        private static readonly Cache<IContractKey, ISet<IContractKey>> ContractSetCache = new Cache<IContractKey, ISet<IContractKey>>();
+        private static readonly Cache<IContractKey, HashSet<IContractKey>> ContractSetCache = new Cache<IContractKey, HashSet<IContractKey>>();
         private static readonly HashSet<IStateKey> EmptyStateKeys = new HashSet<IStateKey>();
         private static readonly HashSet<ITagKey> EmptyTagKeys = new HashSet<ITagKey>();
         private readonly int _contractsHashCode;
@@ -27,11 +27,11 @@
             StateKeys = stateKeys != null ? CreateSet(stateKeys, out _statesHashCode) : EmptyStateKeys;
         }
 
-        public ISet<IContractKey> ContractKeys { get; }
+        public HashSet<IContractKey> ContractKeys { get; }
 
-        public ISet<ITagKey> TagKeys { get; }
+        public HashSet<ITagKey> TagKeys { get; }
 
-        public ISet<IStateKey> StateKeys { get; }
+        public HashSet<IStateKey> StateKeys { get; }
 
         public override bool Equals(object obj)
         {
@@ -68,7 +68,7 @@
 
         public override string ToString()
         {
-            return $"{nameof(CompositeKey)} [Contracts: {string.Join(", ", ContractKeys)}, Tags: {string.Join(", ", TagKeys)}, States: {string.Join(", ", StateKeys)}]";
+            return $"{nameof(CompositeKey)} [Contracts: {string.Join(", ", ContractKeys.Select(i => i.ToString()).ToArray())}, Tags: {string.Join(", ", TagKeys.Select(i => i.ToString()).ToArray())}, States: {string.Join(", ", StateKeys.Select(i => i.ToString()).ToArray())}]";
         }
 
         private bool Equals(ICompositeKey other)
@@ -90,7 +90,7 @@
         }
 
         [NotNull]
-        private ISet<T> CreateSet<T>([NotNull] IEnumerable<T> keys, out int hashCode)
+        private HashSet<T> CreateSet<T>([NotNull] IEnumerable<T> keys, out int hashCode)
         {
             var resultSet = new HashSet<T>(keys);
             hashCode = 0;

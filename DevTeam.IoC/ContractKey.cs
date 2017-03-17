@@ -10,16 +10,14 @@
         private static readonly Type[] EmptyGenericTypeArguments = new Type[0];
         private readonly int _hashCode;
 
-        public ContractKey(Type contractType, bool toResolve)
+        public ContractKey(IReflection reflection, Type contractType, bool toResolve)
         {
-#if DEBUG
             if (contractType == null) throw new ArgumentNullException(nameof(contractType));
-#endif
             ToResolve = toResolve;
-            if (contractType.IsConstructedGenericType)
+            if (reflection.GetIsConstructedGenericType(contractType))
             {
                 ContractType = contractType.GetGenericTypeDefinition();
-                GenericTypeArguments = contractType.GenericTypeArguments;
+                GenericTypeArguments = reflection.GetGenericTypeArguments(contractType);
             }
             else
             {
@@ -27,6 +25,7 @@
                 GenericTypeArguments = EmptyGenericTypeArguments;
             }
 
+            if (ContractType == null) throw new InvalidOperationException(nameof(ContractType));
             _hashCode = ContractType.GetHashCode();
         }
 
@@ -89,7 +88,7 @@
 
         public override string ToString()
         {
-            return $"{nameof(ContractKey)} [ContractType: {ContractType.Name}, GenericTypeArguments: {string.Join(", ", GenericTypeArguments.Select(i => i.Name))}]";
+            return $"{nameof(ContractKey)} [ContractType: {ContractType.Name}, GenericTypeArguments: {string.Join(", ", GenericTypeArguments.Select(i => i.Name).ToArray())}]";
         }
     }
 }

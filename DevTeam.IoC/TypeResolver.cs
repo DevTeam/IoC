@@ -40,20 +40,20 @@
         public void AddReference(string reference)
         {
             if (reference == null) throw new ArgumentNullException(nameof(reference));
-            if (IsNullOrWhiteSpace(reference)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(reference));
+            if (reference.IsNullOrWhiteSpace()) throw new ArgumentException("Value cannot be null or whitespace.", nameof(reference));
             _references.Add(Assembly.Load(new AssemblyName(reference)));
         }
 
         public void AddUsingStatement(string usingName)
         {
             if (usingName == null) throw new ArgumentNullException(nameof(usingName));
-            if (IsNullOrWhiteSpace(usingName)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(usingName));
+            if (usingName.IsNullOrWhiteSpace()) throw new ArgumentException("Value cannot be null or whitespace.", nameof(usingName));
             _usingStatements.Add(usingName);
         }
 
         public bool TryResolveType(string typeName, out Type type)
         {
-            if (IsNullOrWhiteSpace(typeName))
+            if (typeName.IsNullOrWhiteSpace())
             {
                 type = default(Type);
                 return false;

@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using Contracts;
 
-    internal class EventObserver<T>: IObserver<T>
+    internal class EventObserver<T> : IObserver<T>
     {
         public IList<Event> Events { get; } = new List<Event>();
 

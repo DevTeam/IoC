@@ -29,7 +29,7 @@
             var registrations = container.Registrations.ToList();
 
             // Then
-            registrations.OfType<ICompositeKey>().Count(i => i.ContractKeys.Contains(new ContractKey(typeof(ILog), true)) && i.StateKeys.Contains(new StateKey(0, typeof(string)))).ShouldBe(1);
+            registrations.OfType<ICompositeKey>().Count(i => i.ContractKeys.Contains(new ContractKey(new Reflection(), typeof(ILog), true)) && i.StateKeys.Contains(new StateKey(0, typeof(string)))).ShouldBe(1);
         }
 
         private static ConfigurationFromAssembly CreateInstance(Assembly assembly)

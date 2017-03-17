@@ -29,8 +29,10 @@
             // ReSharper disable once IdentifierTypo
             Observables,
 
+#if !NET35
             // Support injection via Task.
             Tasks,
+#endif
 
             // Support resolving via IResolver<>, IProvider<>, Func<>
             Resolvers,

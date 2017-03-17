@@ -3,16 +3,19 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
+    using Contracts;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
     internal class JsonDerivedTypeConverter<T>: JsonConverter
     {
-        private readonly IDictionary<Type, string[]> _derivedTypes;
+        [NotNull] private readonly IReflection _reflection;
+        [NotNull] private readonly IDictionary<Type, string[]> _derivedTypes;
 
-        public JsonDerivedTypeConverter(params Type[] derivedTypes)
+        public JsonDerivedTypeConverter([NotNull] IReflection reflection, params Type[] derivedTypes)
         {
+            _reflection = reflection;
+            if (reflection == null) throw new ArgumentNullException(nameof(reflection));
             if (derivedTypes == null) throw new ArgumentNullException(nameof(derivedTypes));
             if (derivedTypes.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(derivedTypes));
             _derivedTypes = derivedTypes.ToDictionary(i => i, GetPropertiesNames);
@@ -54,13 +57,13 @@
             serializer.Serialize(writer, value);
         }
 
-        private static string[] GetPropertiesNames(Type type)
+        private string[] GetPropertiesNames(Type type)
         {
             var names = (
-                from prop in type.GetTypeInfo().DeclaredProperties
-                let jsonIgnoreAttribute = prop.GetCustomAttribute(typeof(JsonIgnoreAttribute), true) as JsonIgnoreAttribute
+                from prop in _reflection.GetTypeInfo(type).DeclaredProperties
+                let jsonIgnoreAttribute = _reflection.GetCustomAttribute<JsonIgnoreAttribute>(prop)
                 where jsonIgnoreAttribute == null
-                let jsonPropertyAttribute = prop.GetCustomAttribute(typeof(JsonPropertyAttribute), true) as JsonPropertyAttribute
+                let jsonPropertyAttribute = _reflection.GetCustomAttribute<JsonPropertyAttribute>(prop)
                 select jsonPropertyAttribute?.PropertyName ?? prop.Name).ToArray();
 
             if (names.Length == 0)

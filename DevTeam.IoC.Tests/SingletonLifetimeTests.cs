@@ -11,6 +11,7 @@
     [TestFixture]
     public class SingletonLifetimeTests
     {
+        private readonly Reflection _reflection = new Reflection();
         private Mock<IEnumerator<ILifetime>> _lifetimeEnumerator;
         private Mock<ILifetime> _baseLifetime;
         private Mock<ILifetimeContext> _lifetimeContext;
@@ -34,7 +35,7 @@
             // Given
             var obj = new object();
             var lifetime = CreateInstance();
-            var key = new CompositeKey(new IContractKey[]{ new ContractKey(typeof(string), true) }, new ITagKey[] { new TagKey("abc") }, new IStateKey[] { new StateKey(0, typeof(string)) });
+            var key = new CompositeKey(new IContractKey[]{ new ContractKey(_reflection, typeof(string), true) }, new ITagKey[] { new TagKey("abc") }, new IStateKey[] { new StateKey(0, typeof(string)) });
             _resolverContext.SetupGet(i => i.Key).Returns(key);
             _lifetimeEnumerator.Setup(i => i.MoveNext()).Returns(true);
             _lifetimeEnumerator.SetupGet(i => i.Current).Returns(_baseLifetime.Object);
@@ -54,7 +55,7 @@
             // Given
             var obj = new object();
             var lifetime = CreateInstance();
-            var key = new CompositeKey(new IContractKey[] { new ContractKey(typeof(string), true) }, new ITagKey[] { new TagKey("abc") }, new IStateKey[] { new StateKey(0, typeof(string)) });
+            var key = new CompositeKey(new IContractKey[] { new ContractKey(_reflection, typeof(string), true) }, new ITagKey[] { new TagKey("abc") }, new IStateKey[] { new StateKey(0, typeof(string)) });
             _resolverContext.SetupGet(i => i.Key).Returns(key);
             _lifetimeEnumerator.Setup(i => i.MoveNext()).Returns(true);
             _lifetimeEnumerator.SetupGet(i => i.Current).Returns(_baseLifetime.Object);
@@ -74,7 +75,7 @@
             // Given
             var obj = new object();
             var lifetime = CreateInstance();
-            var key = new CompositeKey(new IContractKey[] { new ContractKey(typeof(IEnumerable<string>), true) }, new ITagKey[] { new TagKey("abc") }, new IStateKey[] { new StateKey(0, typeof(string)) });
+            var key = new CompositeKey(new IContractKey[] { new ContractKey(_reflection, typeof(IEnumerable<string>), true) }, new ITagKey[] { new TagKey("abc") }, new IStateKey[] { new StateKey(0, typeof(string)) });
             _resolverContext.SetupGet(i => i.Key).Returns(key);
             _lifetimeEnumerator.Setup(i => i.MoveNext()).Returns(true);
             _lifetimeEnumerator.SetupGet(i => i.Current).Returns(_baseLifetime.Object);
@@ -101,12 +102,12 @@
             _lifetimeEnumerator.SetupGet(i => i.Current).Returns(_baseLifetime.Object);
 
             // When
-            var key1 = new CompositeKey(new IContractKey[] { new ContractKey(typeof(IEnumerable<string>), true) }, new ITagKey[] { new TagKey("abc") }, new IStateKey[] { new StateKey(0, typeof(string)) });
+            var key1 = new CompositeKey(new IContractKey[] { new ContractKey(_reflection, typeof(IEnumerable<string>), true) }, new ITagKey[] { new TagKey("abc") }, new IStateKey[] { new StateKey(0, typeof(string)) });
             _resolverContext.SetupGet(i => i.Key).Returns(key1);
             _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object)).Returns(obj);
             var actualObj1 = lifetime.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object);
 
-            var key2 = new CompositeKey(new IContractKey[] { new ContractKey(typeof(IEnumerable<string>), true) }, new ITagKey[] { new TagKey("xyz") }, new IStateKey[] { new StateKey(0, typeof(string)) });
+            var key2 = new CompositeKey(new IContractKey[] { new ContractKey(_reflection, typeof(IEnumerable<string>), true) }, new ITagKey[] { new TagKey("xyz") }, new IStateKey[] { new StateKey(0, typeof(string)) });
             _resolverContext.SetupGet(i => i.Key).Returns(key2);
             var actualObj2 = lifetime.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object);
 
@@ -128,12 +129,12 @@
             _lifetimeEnumerator.SetupGet(i => i.Current).Returns(_baseLifetime.Object);
 
             // When
-            var key1 = new CompositeKey(new IContractKey[] { new ContractKey(typeof(IEnumerable<string>), true) }, new ITagKey[] { new TagKey("abc") }, new IStateKey[] { new StateKey(0, typeof(string)) });
+            var key1 = new CompositeKey(new IContractKey[] { new ContractKey(_reflection, typeof(IEnumerable<string>), true) }, new ITagKey[] { new TagKey("abc") }, new IStateKey[] { new StateKey(0, typeof(string)) });
             _resolverContext.SetupGet(i => i.Key).Returns(key1);
             _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object)).Returns(obj1);
             var actualObj1 = lifetime.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object);
 
-            var key2 = new CompositeKey(new IContractKey[] { new ContractKey(typeof(IEnumerable<int>), true) }, new ITagKey[] { new TagKey("abc") }, new IStateKey[] { new StateKey(0, typeof(string)) });
+            var key2 = new CompositeKey(new IContractKey[] { new ContractKey(_reflection, typeof(IEnumerable<int>), true) }, new ITagKey[] { new TagKey("abc") }, new IStateKey[] { new StateKey(0, typeof(string)) });
             _resolverContext.SetupGet(i => i.Key).Returns(key2);
             _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object)).Returns(obj2);
             var actualObj2 = lifetime.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object);

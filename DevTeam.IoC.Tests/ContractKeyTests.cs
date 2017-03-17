@@ -6,6 +6,8 @@
 
     public class ContractKeyTests
     {
+        private readonly Reflection _reflection = new Reflection();
+
         [Test]
         [TestCase(typeof(string), false, typeof(string), true, true)]
         [TestCase(typeof(IEquatable<string>), false, typeof(IEquatable<string>), true, true)]
@@ -19,8 +21,8 @@
         public void ContractKeyShouldImplementEq(Type contractType1, bool toResolve1, Type contractType2, bool toResolve2, bool expectedEq)
         {
             // Given
-            var key1 = new ContractKey(contractType1, toResolve1);
-            var key2 = new ContractKey(contractType2, toResolve2);
+            var key1 = new ContractKey(_reflection, contractType1, toResolve1);
+            var key2 = new ContractKey(_reflection, contractType2, toResolve2);
 
             // When
             var hashCode1 = key1.GetHashCode();

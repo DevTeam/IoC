@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
     using Contracts;
 
     internal class Registration<T> : Token<T, IRegistration<T>>, IRegistration<T>
@@ -16,6 +15,7 @@
         private readonly Lazy<IInstanceFactoryProvider> _instanceFactoryProvider;
         private readonly RegistrationResult<T> _result;
         private readonly ICache<Type, IResolverFactory> _resolverFactoryCache;
+        private readonly IReflection _reflection;
         [CanBeNull] private HashSet<ITagKey> _tagKeys;
         [CanBeNull] private HashSet<IStateKey> _stateKeys;
         [CanBeNull] private List<IExtension> _extensions;
@@ -29,6 +29,7 @@
             _result = new RegistrationResult<T>(this);
             var cacheProvider = container as IProvider<ICache<Type, IResolverFactory>>;
             cacheProvider?.TryGet(out _resolverFactoryCache);
+            _reflection = container.Resolve().Instance<IReflection>();
         }
 
         private List<IExtension> Extensions => _extensions ?? (_extensions = new List<IExtension>());
@@ -110,7 +111,7 @@
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
             metadataProvider = metadataProvider ?? Fluent.Resolve(Resolver).Instance<IMetadataProvider>();
             IResolverFactory resolverFactory;
-            if (!lazy && metadataProvider.TryResolveImplementationType(implementationType, out Type resolvedType))
+            if (!lazy && metadataProvider.TryResolveImplementationType(_reflection, implementationType, out Type resolvedType))
             {
                 resolverFactory = CreateFactory(resolvedType, metadataProvider);
                 FactoryMethodInternal(ctx => resolverFactory.Create(ctx), implementationType);
@@ -119,7 +120,7 @@
             {
                 FactoryMethodInternal(ctx =>
                 {
-                    if (!metadataProvider.TryResolveImplementationType(implementationType, out Type currentResolvedType, ctx))
+                    if (!metadataProvider.TryResolveImplementationType(_reflection, implementationType, out Type currentResolvedType, ctx))
                     {
                         throw new InvalidOperationException("Can not define type to resolve from type {currentResolvedType}");
                     }
@@ -182,7 +183,7 @@
             }
 
             var hasMetadata = false;
-            var typeInfo = metadataType.GetTypeInfo();
+            var typeInfo = _reflection.GetTypeInfo(metadataType);
             foreach (var contract in typeInfo.GetCustomAttributes<ContractAttribute>())
             {
                 Contract(contract.ContractTypes);
@@ -236,7 +237,7 @@
             var context = Resolver.CreateRegistryContext(_registrationKeys, new MethodFactory<TImplementation>(factoryMethod), _extensions?.ToArray() ?? EmptyExtensions);
             if (!Resolver.TryRegister(context, out IDisposable registration))
             {
-                throw new InvalidOperationException($"Can't register {string.Join(Environment.NewLine, context.Keys)}.{Environment.NewLine}{Environment.NewLine}{Resolver}");
+                throw new InvalidOperationException($"Can't register {string.Join(Environment.NewLine, context.Keys.Select(i => i.ToString()).ToArray())}.{Environment.NewLine}{Environment.NewLine}{Resolver}");
             }
 
             _registrationKeys.Clear();
@@ -263,12 +264,12 @@
                     return factory;
                 }
 
-                factory = new MetadataFactory(resolvedType, _instanceFactoryProvider.Value, metadataProvider, Resolver.KeyFactory);
+                factory = new MetadataFactory(_reflection, resolvedType, _instanceFactoryProvider.Value, metadataProvider, Resolver.KeyFactory);
                 _resolverFactoryCache.Set(resolvedType, factory);
             }
             else
             {
-                factory = new MetadataFactory(resolvedType, _instanceFactoryProvider.Value, metadataProvider, Resolver.KeyFactory);
+                factory = new MetadataFactory(_reflection, resolvedType, _instanceFactoryProvider.Value, metadataProvider, Resolver.KeyFactory);
             }
 
             return factory;

@@ -1,4 +1,5 @@
-﻿namespace DevTeam.IoC.Tests
+﻿#if !NET35
+namespace DevTeam.IoC.Tests
 {
     using System;
     using System.Collections.Generic;
@@ -67,3 +68,4 @@
         }
     }
 }
+#endif

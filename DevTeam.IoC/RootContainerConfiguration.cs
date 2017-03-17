@@ -7,19 +7,20 @@
 
     internal class RootContainerConfiguration: IConfiguration
     {
+        public static readonly IReflection Reflection = new Reflection();
         public static readonly IConfiguration Shared = new RootContainerConfiguration();
-        public static readonly KeyFactory KeyFactory = new KeyFactory();
+        public static readonly KeyFactory KeyFactory = new KeyFactory(Reflection);
         public static readonly IMetadataProvider MetadataProvider = new AutowiringMetadataProvider();
         public static readonly Fluent Fluent = new Fluent();
         private static readonly IInstanceFactoryProvider ExpressionInstanceFactoryProvider = new ExpressionInstanceFactoryProvider();
-        private static readonly IEnumerable<IKey> ResolverKeys = LowLevelRegistration.CreateKeys<IResolver>();
-        private static readonly IEnumerable<IKey> RegistryKeys = LowLevelRegistration.CreateKeys<IRegistry>();
-        private static readonly IEnumerable<IKey> KeyFactoryKeys = LowLevelRegistration.CreateKeys<IKeyFactory>();
-        private static readonly IEnumerable<IKey> FluentKeys = LowLevelRegistration.CreateKeys<IFluent>();
-        private static readonly IEnumerable<IKey> InstanceFactoryProviderKeys = LowLevelRegistration.CreateKeys<IInstanceFactoryProvider>();
-        private static readonly IEnumerable<IKey> ResolvingKeys = LowLevelRegistration.CreateKeys<IResolving<IResolver>>();
-        private static readonly IEnumerable<IKey> RegistrationKeys = LowLevelRegistration.CreateKeys<IRegistration<IContainer>>();
-        private static readonly IEnumerable<IKey> MetadataProviderKeys = LowLevelRegistration.CreateKeys<IMetadataProvider>();
+        private static readonly IEnumerable<IKey> ResolverKeys = LowLevelRegistration.CreateKeys<IResolver>(Reflection);
+        private static readonly IEnumerable<IKey> RegistryKeys = LowLevelRegistration.CreateKeys<IRegistry>(Reflection);
+        private static readonly IEnumerable<IKey> KeyFactoryKeys = LowLevelRegistration.CreateKeys<IKeyFactory>(Reflection);
+        private static readonly IEnumerable<IKey> FluentKeys = LowLevelRegistration.CreateKeys<IFluent>(Reflection);
+        private static readonly IEnumerable<IKey> InstanceFactoryProviderKeys = LowLevelRegistration.CreateKeys<IInstanceFactoryProvider>(Reflection);
+        private static readonly IEnumerable<IKey> ResolvingKeys = LowLevelRegistration.CreateKeys<IResolving<IResolver>>(Reflection);
+        private static readonly IEnumerable<IKey> RegistrationKeys = LowLevelRegistration.CreateKeys<IRegistration<IContainer>>(Reflection);
+        private static readonly IEnumerable<IKey> MetadataProviderKeys = LowLevelRegistration.CreateKeys<IMetadataProvider>(Reflection);
 
         private RootContainerConfiguration()
         {
@@ -38,6 +39,7 @@
             yield return LowLevelRegistration.RawRegister<IRegistry>(container, RegistryKeys, ctx => (Container)ctx.ResolverContext.Container);
             yield return LowLevelRegistration.RawRegister<IKeyFactory>(container, KeyFactoryKeys, ctx => KeyFactory);
             yield return LowLevelRegistration.RawRegister<IFluent>(container, FluentKeys, ctx => Fluent);
+            yield return LowLevelRegistration.RawRegister(container, ResolverKeys, ctx => Reflection);
             yield return LowLevelRegistration.RawRegister(container, InstanceFactoryProviderKeys, ctx => ExpressionInstanceFactoryProvider);
             yield return LowLevelRegistration.RawRegister(typeof(IResolving<>), container, ResolvingKeys, ctx => new Resolving<IResolver>(container));
             yield return LowLevelRegistration.RawRegister(typeof(IRegistration<>), container, RegistrationKeys, ctx => new Registration<IContainer>(Fluent, container));
@@ -64,6 +66,7 @@
                         throw new InvalidOperationException($"Can not resolve {nameof(implementationType)}");
                     }
 
+                    var reflection = ctx.ResolverContext.Container.Resolve().Instance<IReflection>();
                     if (ctx.ResolverContext.Container.TryResolve(out ICache<Type, IResolverFactory> factoryCache))
                     {
                         if (factoryCache.TryGet(implementationType, out IResolverFactory factory))
@@ -71,12 +74,12 @@
                             return factory;
                         }
 
-                        factory = new MetadataFactory(implementationType, ExpressionInstanceFactoryProvider, MetadataProvider, ctx.ResolverContext.Container.KeyFactory);
+                        factory = new MetadataFactory(reflection, implementationType, ExpressionInstanceFactoryProvider, MetadataProvider, ctx.ResolverContext.Container.KeyFactory);
                         factoryCache.Set(implementationType, factory);
                         return factory;
                     }
 
-                    return new MetadataFactory(implementationType, ExpressionInstanceFactoryProvider, MetadataProvider, ctx.ResolverContext.Container.KeyFactory);
+                    return new MetadataFactory(reflection, implementationType, ExpressionInstanceFactoryProvider, MetadataProvider, ctx.ResolverContext.Container.KeyFactory);
                 })
                 .Apply();
 
@@ -169,6 +172,7 @@
                 .FactoryMethod(ctx => DtoFeature.Shared)
                 .Apply();
 
+#if !NET35
             yield return
                 container
                 .Register()
@@ -176,6 +180,7 @@
                 .Contract<IConfiguration>()
                 .FactoryMethod(ctx => TasksFeature.Shared)
                 .Apply();
+#endif
         }
 
         public override int GetHashCode()
