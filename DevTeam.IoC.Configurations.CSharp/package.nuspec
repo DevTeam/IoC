@@ -15,10 +15,9 @@
 		<description>Provides the configuring of IoC containers via CSharp files compiled in realtime.
 
 Supported platforms:
-  - .NET 4.62+
+  - .NET 4.6.2+
   - .NET Core
-  - .NET Standard 1.5
-  - Portable Libraries</description>
+  - .NET Standard 1.5</description>
 		<tags>.NETStandard NETCore Core Portable DevTeam Pattern IoC Container DI dependencyinjection Inversion Control State Bind Factory</tags>
 		<dependencies>
 			<dependency id="DevTeam.IoC.Contracts" version="$ContractDependencyVersion$" />
@@ -27,6 +26,6 @@ Supported platforms:
 		</dependencies>
 	</metadata>
 	<files>
-		<file src="bin\Release\**\DevTeam.IoC.Configurations.Json.dll" target="lib" />
+		<file src="bin\Release\**\DevTeam.IoC.Configurations.CSharp.dll;bin\Release\**\DevTeam.IoC.Configurations.CSharp.pdb" target="lib" />
 	</files>
 </package>

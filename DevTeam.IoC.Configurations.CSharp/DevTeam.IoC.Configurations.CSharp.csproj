@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net462;netcoreapp1.0;netcoreapp1.1;netstandard1.5;netstandard1.6</TargetFrameworks>
+    <TargetFrameworks15 Condition=" '$(TargetFrameworks15)' == '' ">netstandard1.5;net462;netcoreapp1.0</TargetFrameworks15>
+	<TargetFrameworks>$(TargetFrameworks15)</TargetFrameworks>
     <AssemblyName>DevTeam.IoC.Configurations.CSharp</AssemblyName>
     <PackageId>DevTeam.IoC.Configurations.CSharp</PackageId>
     <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
@@ -28,7 +29,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.0.0" />
-    <PackageReference Include="Microsoft.NETCore.Portable.Compatibility" Version="1.0.1" />
     <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
   </ItemGroup>
 

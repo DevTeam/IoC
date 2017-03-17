@@ -17,10 +17,7 @@
 Supported platforms:
   - .NET 4.5+
   - .NET Core
-  - Windows 8
-  - Universal (Windows Phone 8.1+, Windows 8.1+)
-  - .NET Standard 1.0
-  - Portable Libraries</description>
+  - .NET Standard 1.0</description>
 		<tags>.NETStandard NETCore Core Portable DevTeam Pattern IoC Container DI dependencyinjection Inversion Control State Bind Factory</tags>
 		<dependencies>
 			<dependency id="Microsoft.NETCore.Portable.Compatibility" version="1.0.1" />
@@ -28,6 +25,6 @@ Supported platforms:
 		</dependencies>
 	</metadata>
 	<files>
-		<file src="bin\Release\**\DevTeam.IoC.Contracts.dll" target="lib" />
+		<file src="bin\Release\**\DevTeam.IoC.Contracts.dll;bin\Release\**\DevTeam.IoC.Contracts.pdb" target="lib" />
 	</files>
 </package>
