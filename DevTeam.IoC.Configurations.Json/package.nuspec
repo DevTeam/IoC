@@ -28,11 +28,6 @@ Supported platforms:
 		</dependencies>
 	</metadata>
 	<files>
-		<file src="bin\Release\netstandard1.0\DevTeam.IoC.Configurations.Json.*" target="lib\net45" />
-  		<file src="bin\Release\netstandard1.0\DevTeam.IoC.Configurations.Json.*" target="lib\portable-net45+win8+wpa81+wp8" />
-		<file src="bin\Release\netstandard1.0\DevTeam.IoC.Configurations.Json.*" target="lib\netcore" />
-		<file src="bin\Release\netstandard1.0\DevTeam.IoC.Configurations.Json.*" target="lib\netstandard1.0" />
-		<file src="bin\Release\netstandard1.0\DevTeam.IoC.Configurations.Json.*" target="lib\uap" />
-		<file src="bin\Release\netstandard1.0\DevTeam.IoC.Configurations.Json.*" target="lib\netcoreapp1.0" />
+		<file src="bin\Release\*\DevTeam.IoC.Configurations.Json.dll" target="lib" />
 	</files>
 </package>

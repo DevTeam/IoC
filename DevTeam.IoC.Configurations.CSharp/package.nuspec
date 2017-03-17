@@ -27,11 +27,6 @@ Supported platforms:
 		</dependencies>
 	</metadata>
 	<files>
-		<file src="bin\Release\netstandard1.5\DevTeam.IoC.Configurations.Json.*" target="lib\net462" />
-  		<file src="bin\Release\netstandard1.5\DevTeam.IoC.Configurations.Json.*" target="lib\portable-net462" />
-		<file src="bin\Release\netstandard1.5\DevTeam.IoC.Configurations.Json.*" target="lib\netcore50" />
-		<file src="bin\Release\netstandard1.5\DevTeam.IoC.Configurations.Json.*" target="lib\netstandard1.5" />
-		<file src="bin\Release\netstandard1.5\DevTeam.IoC.Configurations.Json.*" target="lib\uap" />
-		<file src="bin\Release\netstandard1.5\DevTeam.IoC.Configurations.Json.*" target="lib\netcoreapp1.0" />
+		<file src="bin\Release\**\DevTeam.IoC.Configurations.Json.dll" target="lib" />
 	</files>
 </package>

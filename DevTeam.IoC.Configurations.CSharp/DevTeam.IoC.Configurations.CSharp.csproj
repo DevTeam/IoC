@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.5</TargetFramework>
+    <TargetFrameworks>net462;netcoreapp1.0;netcoreapp1.1;netstandard1.5;netstandard1.6</TargetFrameworks>
     <AssemblyName>DevTeam.IoC.Configurations.CSharp</AssemblyName>
     <PackageId>DevTeam.IoC.Configurations.CSharp</PackageId>
     <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>

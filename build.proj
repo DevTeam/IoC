@@ -13,7 +13,7 @@
 		<ContractVersion>$(ContractAssemblyVersion)$(BuildType)</ContractVersion>
 		<Version>$(AssemblyVersion)$(BuildType)</Version>
 		<Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
-		<PackagesDirectory>packages</PackagesDirectory>			
+		<PackagesDirectory>packages</PackagesDirectory>	
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.0</TargetFramework>
+    <TargetFrameworks>net45;net451;net452;net46;net461;net462;netcoreapp1.0;netcoreapp1.1;netstandard1.0;netstandard1.1;netstandard1.2;netstandard1.3;netstandard1.4;netstandard1.5;netstandard1.6</TargetFrameworks>
     <AssemblyName>DevTeam.IoC</AssemblyName>
     <PackageId>DevTeam.IoC</PackageId>
     <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
@@ -25,10 +25,6 @@
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <TreatSpecificWarningsAsErrors />
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NETCore.Portable.Compatibility" Version="1.0.1" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DevTeam.IoC.Contracts\DevTeam.IoC.Contracts.csproj" />
