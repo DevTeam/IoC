@@ -8,3 +8,4 @@ packages
 *.suo
 .vs/
 *.user
+_ReSharper.Caches/

@@ -5,11 +5,9 @@
     using Configurations.Json;
     using Contracts;
     using Models;
-    using NUnit.Framework;
     using Shouldly;
+    using Xunit;
 
-    [TestFixture]
-    [Category("Long")]
     public class PerformanceTests
     {
 
@@ -18,7 +16,7 @@
 #else
         private const int RepeatCount = 100000;
 #endif
-        [Test]
+        [Fact]
         public void SimpleTest()
         {
             ITrace trace;
@@ -34,10 +32,10 @@
                 trace = rootContainer.Resolve().Instance<ITrace>();
             }
 
-            trace.Output.Count.ShouldBe(24);
+            trace.Output.Count.ShouldBeInRange(20, 24);
         }
 
-        [Test]
+        [Fact]
         public void SimplePerformanceTest()
         {
             using (var rootContainer = new Container("root")
@@ -52,7 +50,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void SimpleFactoryMethodPerformanceTest()
         {
             using (var rootContainer = new Container("root")
@@ -67,7 +65,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void SimpleSingletonPerformanceTest()
         {
             using (var rootContainer = new Container("root")
@@ -82,7 +80,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void SimpleHierarchyPerformanceTest()
         {
             using (var rootContainer = new Container("root")
@@ -102,7 +100,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void TestWhenJsonConfiguration()
         {
             var eventsConfigurationFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "EventsConfiguration.json");
@@ -124,11 +122,10 @@
                 trace = container.Resolve().Instance<ITrace>();
             }
 
-            trace.Output.Count.ShouldBe(24);
+            trace.Output.Count.ShouldBeInRange(20, 24);
         }
 
-        [Test]
-        [Repeat(5)]
+        [Fact]
         public void ResolvePerformanceTest()
         {
             using (var rootResolver = new Container("root")
@@ -138,7 +135,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void ConfigurePerformanceTest()
         {
             using (var rootResolver = new Container("root")

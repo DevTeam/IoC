@@ -1,25 +1,22 @@
 ﻿namespace DevTeam.IoC.Tests
 {
     using Contracts;
-
     using Moq;
-
-    using NUnit.Framework;
-
     using Shouldly;
+    using Xunit;
 
-    [TestFixture]
+
     public class AutowiringInstanceFactoryTests
     {
-        private IContainer _container;
+        private readonly IContainer _container;
 
-        [SetUp]
-        public void SetUp()
+        public AutowiringInstanceFactoryTests()
         {
             _container = new Container();
         }
 
-        [Test]
+        
+        [Fact]
         public void ShouldCreateObjectWhenDefaultCtor()
         {
             // Given
@@ -32,7 +29,7 @@
             instance.ShouldBeOfType<SimpleClass>();
         }
 
-        [Test]
+        [Fact]
         public void ShouldCreateObjectWhenDefaultCtorAndStaticInitializer()
         {
             // Given
@@ -45,7 +42,7 @@
             instance.ShouldBeOfType<SimpleClassWithStaticInitializer>();
         }
 
-        [Test]
+        [Fact]
         public void ShouldCreateObjectWhenStateClass()
         {
             // Given
@@ -59,7 +56,7 @@
             instance.Arg2.ShouldBe(3);
         }
 
-        [Test]
+        [Fact]
         public void ShouldCreateObjectWhenDependencyClass()
         {
             // Given
@@ -76,7 +73,7 @@
             instance.StateClass.ShouldNotBeNull();
         }
 
-        [Test]
+        [Fact]
         public void ShouldCreateObjectWhenDependencyWithStateClass()
         {
             // Given

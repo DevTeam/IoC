@@ -4,28 +4,14 @@
     using System.Collections.Generic;
     using System.Linq;
     using Contracts;
-    using NUnit.Framework;
-
     using Shouldly;
+    using Xunit;
 
-    [TestFixture]
     public class ConfiguringTests
     {
-        private Container _container;
+        private readonly Container _container = new Container();
 
-        [SetUp]
-        public void SetUp()
-        {
-            _container = new Container();
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            _container.Dispose();
-        }
-
-        [Test]
+        [Fact]
         public void ShouldApplyConfigsAccordingToOrder()
         {
             // Given
@@ -44,7 +30,7 @@
             config.GetDependencies(_container).Cast<Config>().Select(i => i.Id).ShouldBe(new[] { "1", "2" });
         }
 
-        [Test]
+        [Fact]
         public void ShouldApplyConfigsWhenToSelf()
         {
             // Given
@@ -58,7 +44,7 @@
             ids.ShouldBe(new[] { "1", "2" });
         }
 
-        [Test]
+        [Fact]
         public void ShouldDistinctWhenApplyConfigs()
         {
             // Given
@@ -78,7 +64,7 @@
             config.GetDependencies(_container).Cast<Config>().Select(i => i.Id).ShouldBe(new[] { "1", "2" });
         }
 
-        [Test]
+        [Fact]
         public void ShouldAppytWhenCycleInDependencies()
         {
             // Given

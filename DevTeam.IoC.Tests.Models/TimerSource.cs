@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Contracts;
 
     // ReSharper disable once ClassNeverInstantiated.Global
@@ -56,7 +57,7 @@
 
         public override string ToString()
         {
-            return $"{nameof(TimerSource)} [Listeners: {string.Join(", ", _listeners)}]";
+            return $"{nameof(TimerSource)} [Listeners: {string.Join(", ", _listeners.Select(i => i.ToString()).ToArray())}]";
         }
     }
 }

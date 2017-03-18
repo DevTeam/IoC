@@ -7,30 +7,25 @@
     using System.Reflection;
     using Contracts;
     using Moq;
-
-    using NUnit.Framework;
-
     using Shouldly;
+    using Xunit;
 
-    [TestFixture]
     [SuppressMessage("ReSharper", "UnusedParameter.Local")]
     public class ManualMetadataProviderTests
     {
         private readonly Reflection _reflection = new Reflection();
-        private Mock<IMetadataProvider> _defaultMetadataProvider;
-        private Mock<IResolverContext> _resolverContext;
-        private IParameterMetadata[] _matchedConstructorParams;
-        private IParameterMetadata[] _notMatchedByStateTypeConstructorParams;
-        private IParameterMetadata[] _notMatchedByContractTypeConstructorParams;
-        private Mock<ICreationContext> _creationContext;
+        private readonly Mock<IMetadataProvider> _defaultMetadataProvider;
+        private readonly IParameterMetadata[] _matchedConstructorParams;
+        private readonly IParameterMetadata[] _notMatchedByStateTypeConstructorParams;
+        private readonly IParameterMetadata[] _notMatchedByContractTypeConstructorParams;
+        private readonly Mock<ICreationContext> _creationContext;
 
-        [SetUp]
-        public void SetUp()
+        public ManualMetadataProviderTests()
         {
             _defaultMetadataProvider = new Mock<IMetadataProvider>();
-            _resolverContext = new Mock<IResolverContext>();
+            var resolverContext = new Mock<IResolverContext>();
             _creationContext = new Mock<ICreationContext>();
-            _creationContext.SetupGet(i => i.ResolverContext).Returns(_resolverContext.Object);
+            _creationContext.SetupGet(i => i.ResolverContext).Returns(resolverContext.Object);
             _matchedConstructorParams = new IParameterMetadata[]
             {
                 new ParameterMetadata(null, null, null, 0, new object[0], null, new StateKey(0, typeof(int))),
@@ -62,7 +57,7 @@
             };
         }
 
-        [Test]
+        [Fact]
         public void ShouldUseDefaultMetadataProviderToResolveImplementationType()
         {
             // Given
@@ -78,7 +73,7 @@
             resolvedType.ShouldBe(typeof(IDisposable));
         }
 
-        [Test]
+        [Fact]
         public void ShouldTrySelectConstructorWhenMatched()
         {
             // Given
@@ -95,7 +90,7 @@
             error.ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void ShouldTrySelectConstructorWhenNotMatchedByStateType()
         {
             // Given
@@ -110,7 +105,7 @@
             result.ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void ShouldTrySelectConstructorWhenNotMatchedByContractType()
         {
             // Given
@@ -125,7 +120,7 @@
             result.ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void ShouldReturnManualCreatedCtorParams()
         {
             // Given

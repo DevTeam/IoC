@@ -1,4 +1,5 @@
 ﻿// ReSharper disable HeuristicUnreachableCode
+#pragma warning disable 162
 namespace DevTeam.IoC.Tests.Integration
 {
     using System;
@@ -7,26 +8,28 @@ namespace DevTeam.IoC.Tests.Integration
     using System.IO;
     using System.Linq;
     using Contracts;
+#if !NET35
     using Microsoft.Practices.Unity;
+#endif
     using Ninject;
-    using NUnit.Framework;
+    using Xunit;
 
-    [TestFixture]
-    [Category("Long")]
     public class ComparisonTests
     {
         private static readonly Dictionary<string, Func<int, long>> Iocs = new Dictionary<string, Func<int, long>>()
         {
+#if !NET35
             {"Unity", Unity},
+#endif
             {"DevTeam", DevTeam},
             {"Ninject", Ninject},
         };
 
-        [Test]
+        [Fact]
         public void ComparisonTest()
         {
 #if DEBUG
-            Assert.Inconclusive("Inconclusive for DEBUG build");
+            return;
 #endif
             const int warmupSeries = 10;
             const int series = 100000;
@@ -50,12 +53,12 @@ namespace DevTeam.IoC.Tests.Integration
             }
 
             var actualElapsedMilliseconds = results["DevTeam"];
-            var resultsStr = string.Join("\n", results.Select(i => $"{i.Key}: {i.Value}"));
+            var resultsStr = string.Join("\n", results.Select(i => $"{i.Key}: {i.Value}").ToArray());
             var resultFileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ComparisonTest.txt");
             File.WriteAllText(resultFileName, resultsStr);
             foreach (var result in results)
             {
-                Assert.LessOrEqual(actualElapsedMilliseconds, result.Value, $"{result.Key} is better: {result.Value}, our result is : {actualElapsedMilliseconds}.\nResults:\n{resultsStr}");
+                Assert.True(actualElapsedMilliseconds <= result.Value, $"{result.Key} is better: {result.Value}, our result is : {actualElapsedMilliseconds}.\nResults:\n{resultsStr}");
             }
         }
 
@@ -78,6 +81,7 @@ namespace DevTeam.IoC.Tests.Integration
             }
         }
 
+#if !NET35
         private static long Unity(int series)
         {
             using (var container = new UnityContainer())
@@ -94,6 +98,7 @@ namespace DevTeam.IoC.Tests.Integration
                 return stopwatch.ElapsedMilliseconds;
             }
         }
+#endif
 
         private static long Ninject(int series)
         {

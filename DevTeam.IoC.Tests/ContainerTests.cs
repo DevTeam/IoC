@@ -5,32 +5,22 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Contracts;
-
     using Moq;
-
-    using NUnit.Framework;
-
     using Shouldly;
+    using Xunit;
 
-    [TestFixture]
     public class ContainerTests
     {
         private readonly Reflection _reflection = new Reflection();
-        private Mock<IResolverFactory> _factory;
+        private readonly Mock<IResolverFactory> _factory = new Mock<IResolverFactory>();
 
-        [SetUp]
-        public void SetUp()
-        {
-            _factory = new Mock<IResolverFactory>();
-        }
-
-        [Test]
+        [Fact]
         public void ContainerShouldRegister()
         {
             // Given
             using (var container = CreateContainer())
             {
-                object obj = new object();
+                var obj = new object();
                 _factory.Setup(i => i.Create(It.IsAny<ICreationContext>())).Returns(obj);
 
                 // When
@@ -51,13 +41,13 @@
             }
         }
 
-        [Test]
+        [Fact]
         [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         public void ContainerShouldRaiseEvents()
         {
             // Given
             var eventObserver = new EventObserver<IRegistrationEvent>();
-            ICompositeKey[] keys;
+            IKey[] keys;
             using (var container = CreateContainer())
             using (container.Subscribe(eventObserver))
             {
@@ -104,7 +94,7 @@
             event3.Value.Key.ShouldBe(keys[0]);
         }
 
-        [Test]
+        [Fact]
         public void ContainerShouldUnregister()
         {
             // Given
@@ -127,7 +117,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void ContainerShouldResolveItself()
         {
             // Given
@@ -146,7 +136,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void ContainerShouldResolveFromChild()
         {
             // Given
@@ -174,13 +164,13 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void ContainerShouldRegisterUndefinedGenericType()
         {
             // Given
             using (var container = CreateContainer())
             {
-                Mock<IGenericService<string>> mock = new Mock<IGenericService<string>>();
+                var mock = new Mock<IGenericService<string>>();
                 _factory.Setup(i => i.Create(It.IsAny<ICreationContext>())).Returns(mock.Object);
 
                 // When
@@ -201,7 +191,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void ContainerShouldRegisterDefinedGenericType()
         {
             // Given
@@ -228,7 +218,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void ContainerShouldNotResolveWhenGenericTypeArgsAreNotEq()
         {
             // Given
@@ -255,7 +245,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void ContainerShouldThrowExceptionWhenResolveThrowsException()
         {
             // Given
@@ -280,7 +270,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void ShouldUseCustomContainerWhenOverrided()
         {
             // Given
@@ -316,7 +306,7 @@
                 stateKeys);
         }
 
-        private static IEnumerable<ICompositeKey> CreateCompositeKeys(IContainer container, bool toResolve, Type[] genericTypes, object[] tags = null)
+        private static IEnumerable<IKey> CreateCompositeKeys(IContainer container, bool toResolve, Type[] genericTypes, object[] tags = null)
         {
             yield return CreateCompositeKey(container, toResolve, genericTypes, tags);
         }

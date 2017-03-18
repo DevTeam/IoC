@@ -3,7 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+#if !NET35
     using System.Threading.Tasks;
+#endif
     using Contracts;
 
     // ReSharper disable once ClassNeverInstantiated.Global
@@ -14,6 +16,7 @@
         private readonly List<IDisposable> _tokens = new List<IDisposable>();
         private readonly ILog _log;
 
+#if !NET35
         public EventRegistry(
              Task<IResolver> resolver,
              Task<IEventBroker> eventBroker,
@@ -33,6 +36,22 @@
             _resolver = resolver.Result;
             _eventBroker = eventBroker.Result;
         }
+#else
+        public EventRegistry(
+             IResolver resolver,
+             IEventBroker eventBroker,
+             [State(0, typeof(string))] IResolver<string, ILog> logResolver)
+        {
+            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
+            if (eventBroker == null) throw new ArgumentNullException(nameof(eventBroker));
+            if (logResolver == null) throw new ArgumentNullException(nameof(logResolver));
+
+            _log = logResolver.Resolve(nameof(EventRegistry));
+            _log.Method("Ctor()");
+            _resolver = resolver;
+            _eventBroker = eventBroker;
+        }
+#endif
 
         public void RegisterEvent<TEvent>()
         {

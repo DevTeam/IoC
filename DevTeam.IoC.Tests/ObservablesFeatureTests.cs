@@ -4,17 +4,13 @@ namespace DevTeam.IoC.Tests
     using System;
     using System.Collections.Generic;
     using Contracts;
-
     using Moq;
-
-    using NUnit.Framework;
-
     using Shouldly;
+    using Xunit;
 
-    [TestFixture]
     public class ObservablesFeatureTests
     {
-        [Test]
+        [Fact]
         public void ShouldSupportResolvingObservable()
         {
             // Given

@@ -4,20 +4,12 @@
     using System.Collections.Generic;
     using Contracts;
     using Moq;
-
-    using NUnit.Framework;
-
     using Shouldly;
+    using Xunit;
 
-    [TestFixture]
     public class CompositeDisposableTests
     {
-        [SetUp]
-        public void SetUp()
-        {
-        }
-
-        [Test]
+        [Fact]
         public void ShouldDisposable()
         {
             // Given
@@ -34,7 +26,7 @@
             disposable2.Verify(i => i.Dispose(), Times.Once);
         }
 
-        [Test]
+        [Fact]
         public void ShouldDisposableWhenDisposeSeveralTimes()
         {
             // Given

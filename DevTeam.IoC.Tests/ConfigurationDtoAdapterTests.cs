@@ -8,19 +8,17 @@
     using Contracts;
     using Contracts.Dto;
     using Moq;
-
-    using NUnit.Framework;
-
     using Shouldly;
+    using Xunit;
 
-    [TestFixture]
     public class ConfigurationDtoAdapterTests
     {
-        private MyTypeResolver _typeResolver;
-        private IContainer _container;
+        private readonly MyTypeResolver _typeResolver;
+        private readonly IContainer _container;
+        private readonly Reflection _reflection = new Reflection();
 
-        [SetUp]
-        public void SetUp()
+
+        public ConfigurationDtoAdapterTests()
         {
             _typeResolver = new MyTypeResolver();
             var rootContainer = new Container();
@@ -30,7 +28,7 @@
             _container.Register().Contract<ITypeResolver>().FactoryMethod(ctx => _typeResolver).ToSelf();
         }
 
-        [Test]
+        [Fact]
         public void ShouldGetDependenciesWhenEmpty()
         {
             // Given
@@ -44,7 +42,7 @@
             dependencies.Length.ShouldBe(0);
         }
 
-        [Test]
+        [Fact]
         public void ShouldGetDependenciesWhenUsingAndReferences()
         {
             // Given
@@ -62,7 +60,7 @@
             _typeResolver.References.ShouldBe(new[] { "xyz" });
         }
 
-        [Test]
+        [Fact]
         public void ShouldGetDependenciesWhenDependencyConfiguration()
         {
             // Given
@@ -78,7 +76,8 @@
             dependencies[0].ShouldBeOfType<MyConfiguration>();
         }
 
-        [Test]
+#if !NET35
+        [Fact]
         public void ShouldGetDependenciesWhenDependencyAssembly()
         {
             // Given
@@ -93,8 +92,9 @@
             dependencies.Length.ShouldBe(1);
             dependencies[0].ShouldBeOfType<ConfigurationFromAssembly>();
         }
+#endif
 
-        [Test]
+        [Fact]
         public void ShouldGetDependenciesWhenDependencyReference()
         {
             // Given
@@ -118,8 +118,20 @@
             }
         }
 
-        [Test]
+#if !NET35
         [Theory]
+        [InlineData(Wellknown.Feature.Default)]
+        [InlineData(Wellknown.Feature.ChildContainers)]
+        [InlineData(Wellknown.Feature.Dto)]
+        [InlineData(Wellknown.Feature.Enumerables)]
+        [InlineData(Wellknown.Feature.KeyComaprers)]
+        [InlineData(Wellknown.Feature.Lifetimes)]
+        [InlineData(Wellknown.Feature.Observables)]
+        [InlineData(Wellknown.Feature.Resolvers)]
+        [InlineData(Wellknown.Feature.Scopes)]
+#if !NET35
+        [InlineData(Wellknown.Feature.Tasks)]
+#endif
         public void ShouldGetDependenciesWhenDependencyFeature(Wellknown.Feature feature)
         {
             // Given
@@ -134,8 +146,9 @@
             dependencies.Length.ShouldBe(1);
             dependencies[0].ShouldBe(_container.Feature(feature));
         }
+#endif
 
-        [Test]
+        [Fact]
         public void ShouldApplyWhenUsingAndReferences()
         {
             // Given
@@ -153,7 +166,7 @@
             _typeResolver.References.ShouldBe(new[] { "xyz" });
         }
 
-        [Test]
+        [Fact]
         public void ShouldApplyWhenChildContainer()
         {
             // Given
@@ -187,13 +200,14 @@
             registrationContainerName.ShouldBe("10");
         }
 
-        [Test]
-        [TestCase("{0}.{1}")]
-        [TestCase("{0}. {1}")]
-        [TestCase("  {0}   .   {1} ")]
-        [TestCase("{0} : {1}")]
-        [TestCase("{0}::{1}")]
-        [TestCase("{0}->{1}")]
+#if !NET35
+        [Theory]
+        [InlineData("{0}.{1}")]
+        [InlineData("{0}. {1}")]
+        [InlineData("  {0}   .   {1} ")]
+        [InlineData("{0} : {1}")]
+        [InlineData("{0}::{1}")]
+        [InlineData("{0}->{1}")]
         public void ShouldApplyWhenRegisterFactoryMethod(string format)
         {
             // Given
@@ -218,8 +232,9 @@
             // Then
             registrationContainerName.ShouldBe("abc");
         }
+#endif
 
-        [Test]
+        [Fact]
         public void ShouldApplyWhenRegisterAutowiringTypeName()
         {
             // Given
@@ -245,7 +260,7 @@
             instance.ShouldBeOfType<SimpleService>();
         }
 
-        [Test]
+        [Fact]
         public void ShouldApplyWhenRegisterUsingContract()
         {
             // Given
@@ -271,7 +286,7 @@
             instance.ShouldBeOfType<SimpleService>();
         }
 
-        [Test]
+        [Fact]
         public void ShouldApplyWhenRegisterUsingTags()
         {
             // Given
@@ -304,7 +319,7 @@
             instance3.ShouldBeOfType<SimpleService>();
         }
 
-        [Test]
+        [Fact]
         public void ShouldApplyWhenRegisterUsingState()
         {
             // Given
@@ -355,7 +370,7 @@
 
             public bool TryResolveType(string typeName, out Type type)
             {
-                if (string.IsNullOrWhiteSpace(typeName))
+                if (typeName.IsNullOrWhiteSpace())
                 {
                     type = default(Type);
                     return false;

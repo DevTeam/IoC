@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<TargetFrameworks>net45</TargetFrameworks>
+	<TargetFrameworks>net35;net452</TargetFrameworks>
     <AssemblyName>DevTeam.IoC.Tests</AssemblyName>
     <PackageId>DevTeam.IoC.Tests</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
@@ -33,12 +33,26 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Unity" Version="4.0.1" />
-	<PackageReference Include="Moq" Version="4.7.1" />
+	<PackageReference Include="Moq" Version="4.2.1510.2205" />
 	<PackageReference Include="Ninject" Version="3.2.2.0" />
 	<PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
-	<PackageReference Include="NUnit" Version="3.6.1" />
 	<PackageReference Include="Shouldly" Version="2.8.2" />
+	<PackageReference Include="TeamCity.VSTest.TestAdapter" Version="1.0.0.43-beta" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'!='net35'">
+	<PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />	
+	<PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
+    <PackageReference Include="xunit" Version="2.2.0" />
+	<PackageReference Include="unity" Version="4.0.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'=='net35'">
+	<PackageReference Include="xunit" Version="1.9.2" />	    
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   </ItemGroup>
 
 </Project>

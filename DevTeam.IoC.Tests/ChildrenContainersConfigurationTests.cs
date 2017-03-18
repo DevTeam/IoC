@@ -1,14 +1,12 @@
 ﻿namespace DevTeam.IoC.Tests
 {
     using Contracts;
-
-    using NUnit.Framework;
-
     using Shouldly;
+    using Xunit;
 
     public class ChildrenContainersConfigurationTests
     {
-        [Test]
+        [Fact]
         public void ShouldCreateChildContainer()
         {
             // Given
@@ -23,7 +21,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void ShouldCreateChildContainerWhenHasTag()
         {
             // Given

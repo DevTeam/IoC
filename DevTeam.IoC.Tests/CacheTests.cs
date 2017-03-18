@@ -1,18 +1,11 @@
 ﻿namespace DevTeam.IoC.Tests
 {
-    using NUnit.Framework;
-
     using Shouldly;
+    using Xunit;
 
-    [TestFixture]
     public class CacheTests
     {
-        [SetUp]
-        public void SetUp()
-        {
-        }
-
-        [Test]
+        [Fact]
         public void ShouldSetAndGetValue()
         {
             // Given
@@ -29,7 +22,7 @@
             str.ShouldBe("abc");
         }
 
-        [Test]
+        [Fact]
         public void ShouldRemove()
         {
             // Given

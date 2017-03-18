@@ -2,19 +2,15 @@
 {
     using System.Diagnostics.CodeAnalysis;
     using Contracts;
-
     using Moq;
-
-    using NUnit.Framework;
-
     using Shouldly;
+    using Xunit;
 
-    [TestFixture]
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     public class ResolversConfigurationTests
     {
-        [Test]
+        [Fact]
         public void ContainerShouldResolveViaTypedResolver()
         {
             // Given
@@ -34,7 +30,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void ContainerShouldResolveViaTypedResolverWithState()
         {
             // Given
@@ -55,7 +51,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void ContainerShouldResolveViaTypedResolverWithTypedState()
         {
             // Given

@@ -4,19 +4,12 @@
     using System.Reflection;
     using Contracts;
     using Models;
-    using NUnit.Framework;
-
     using Shouldly;
+    using Xunit;
 
-    [TestFixture]
     public class ConfigurationFromAssemblyTests
     {
-        [SetUp]
-        public void SetUp()
-        {
-        }
-
-        [Test]
+        [Fact]
         public void ShouldRegister()
         {
             // Given

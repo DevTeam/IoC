@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
     using Contracts;
 
@@ -16,35 +17,35 @@
             _type = type;
         }
 
-        public IEnumerable<ConstructorInfo> DeclaredConstructors { get; }
+        public IEnumerable<ConstructorInfo> DeclaredConstructors => _type.GetConstructors();
 
-        public bool IsGenericTypeDefinition { get; }
+        public bool IsGenericTypeDefinition => _type.IsGenericTypeDefinition;
 
-        public IEnumerable<PropertyInfo> DeclaredProperties { get; }
+        public IEnumerable<PropertyInfo> DeclaredProperties => _type.GetProperties();
 
-        public Type[] GenericTypeParameters { get; }
+        public Type[] GenericTypeParameters => _type.GetGenericArguments();
 
-        public bool IsEnum { get; }
+        public bool IsEnum => _type.IsEnum;
 
         public Type AsType()
         {
-            throw new NotImplementedException();
+            return _type;
         }
 
         public IEnumerable<T> GetCustomAttributes<T>()
             where T : Attribute
         {
-            throw new NotImplementedException();
+            return _type.GetCustomAttributes(typeof(T), true).Cast<T>();
         }
 
         public bool IsAssignableFrom(ITypeInfo stateTypeInfo)
         {
-            throw new NotImplementedException();
+            return _type.IsAssignableFrom(stateTypeInfo.AsType());
         }
 
         public Type GetGenericTypeDefinition()
         {
-            throw new NotImplementedException();
+            return _type.GetGenericTypeDefinition();
         }
     }
 #endif

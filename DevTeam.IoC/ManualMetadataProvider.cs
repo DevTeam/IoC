@@ -88,8 +88,12 @@
             Type[] genericTypeArguments = null;
             if (reflection.GetIsConstructedGenericType(paramInfo.ParameterType))
             {
-                genericTypeInfo = reflection.GetTypeInfo(parameterTypeInfo.GetGenericTypeDefinition());
-                genericTypeArguments = reflection.GetGenericTypeArguments(paramInfo.ParameterType);
+                var genericTypeDefinition = parameterTypeInfo.GetGenericTypeDefinition();
+                if (genericTypeDefinition != null)
+                {
+                    genericTypeInfo = reflection.GetTypeInfo(genericTypeDefinition);
+                    genericTypeArguments = reflection.GetGenericTypeArguments(paramInfo.ParameterType);
+                }
             }
 
             if (paramMetadata.IsDependency)

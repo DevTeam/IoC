@@ -16,7 +16,7 @@
 
         public bool GetIsConstructedGenericType(Type type)
         {
-            return type.IsGenericType;
+            return type.IsGenericType && !type.IsGenericTypeDefinition;
         }
 
         public Type[] GetGenericTypeArguments(Type type)

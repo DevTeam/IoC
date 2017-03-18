@@ -1,16 +1,13 @@
 ﻿namespace DevTeam.IoC.Tests
 {
     using Contracts;
-
     using Moq;
-
-    using NUnit.Framework;
-
     using Shouldly;
+    using Xunit;
 
     public class KeyComparersConfigurationTests
     {
-        [Test]
+        [Fact]
         public void ShouldResolveWhenAnyTag()
         {
             // Given

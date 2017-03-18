@@ -4,13 +4,12 @@
     using System.IO;
     using Configurations.Json;
     using Newtonsoft.Json;
-    using NUnit.Framework;
     using Shouldly;
+    using Xunit;
 
-    [TestFixture]
     public class JsonConfigurationTests
     {
-        [Test]
+        [Fact]
         public void JsonShouldDeserializeAndSerialize()
         {
             // Given

@@ -2,18 +2,14 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-
     using Contracts;
-
     using Moq;
-
-    using NUnit.Framework;
-
     using Shouldly;
+    using Xunit;
 
     public class EnumConfigurationTests
     {
-        [Test]
+        [Fact]
         public void ContainerShouldResolveAllInstancesWhenResolveEnumerable()
         {
             // Given
@@ -44,7 +40,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void ContainerShouldResolveEmptyWhenNoRegistrations()
         {
             // Given

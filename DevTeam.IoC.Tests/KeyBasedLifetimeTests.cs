@@ -4,23 +4,19 @@
     using System.Collections.Generic;
     using Contracts;
     using Moq;
-
-    using NUnit.Framework;
-
     using Shouldly;
+    using Xunit;
 
-    [TestFixture]
     public class KeyBasedLifetimeTests
     {
         private readonly Reflection _reflection = new Reflection();
-        private Mock<IEnumerator<ILifetime>> _lifetimeEnumerator;
-        private Mock<ILifetime> _baseLifetime;
-        private Mock<ILifetimeContext> _lifetimeContext;
-        private Mock<IResolverContext> _resolverContext;
-        private Mock<ICreationContext> _creationContext;
+        private readonly Mock<IEnumerator<ILifetime>> _lifetimeEnumerator;
+        private readonly Mock<ILifetime> _baseLifetime;
+        private readonly Mock<ILifetimeContext> _lifetimeContext;
+        private readonly Mock<IResolverContext> _resolverContext;
+        private readonly Mock<ICreationContext> _creationContext;
 
-        [SetUp]
-        public void SetUp()
+        public KeyBasedLifetimeTests()
         {
             _lifetimeEnumerator = new Mock<IEnumerator<ILifetime>>();
             _baseLifetime = new Mock<ILifetime>();
@@ -30,7 +26,7 @@
             _creationContext.SetupGet(i => i.ResolverContext).Returns(_resolverContext.Object);
         }
 
-        [Test]
+        [Fact]
         public void ShouldSaveInstanceToInternalList()
         {
             // Given
@@ -48,7 +44,7 @@
             lifetime.Count.ShouldBe(1);
         }
 
-        [Test]
+        [Fact]
         public void ShouldClearInternalListWhenDispose()
         {
             // Given
@@ -69,7 +65,7 @@
         }
 
 
-        [Test]
+        [Fact]
         public void ShouldReturnDifferentObjectsWhenThereAreDifferentKeys()
         {
             // Given
@@ -97,7 +93,7 @@
             lifetime.Count.ShouldBe(2);
         }
 
-        [Test]
+        [Fact]
         public void ShouldReturnSameObjectsWhenThereAreSameKeys()
         {
             // Given

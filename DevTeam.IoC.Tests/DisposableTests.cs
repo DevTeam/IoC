@@ -1,14 +1,12 @@
 ﻿namespace DevTeam.IoC.Tests
 {
     using System;
-    using NUnit.Framework;
-
     using Shouldly;
+    using Xunit;
 
-    [TestFixture]
     public class DisposableTests
     {
-        [Test]
+        [Fact]
         public void ShouldInvokeActionWhenDispose()
         {
             // Given

@@ -6,22 +6,18 @@
     using Contracts;
     using Contracts.Dto;
     using Moq;
-
-    using NUnit.Framework;
-
     using Shouldly;
+    using Xunit;
 
-    [TestFixture]
     public class ConfigurationFromSringDataTests
     {
-        private Container _container;
-        private Mock<IConfiguration> _configuration;
-        private Mock<IConfiguration> _depConfiguration;
-        private Mock<IDisposable> _registration;
-        private Mock<IConfigurationDto> _configurationDto;
+        private readonly Container _container;
+        private readonly Mock<IConfiguration> _configuration;
+        private readonly Mock<IConfiguration> _depConfiguration;
+        private readonly Mock<IDisposable> _registration;
+        private readonly Mock<IConfigurationDto> _configurationDto;
 
-        [SetUp]
-        public void SetUp()
+        public ConfigurationFromSringDataTests()
         {
             _container = new Container().Configure().DependsOn(Wellknown.Feature.Dto).ToSelf();
             _configuration = new Mock<IConfiguration>();
@@ -32,13 +28,7 @@
             _configurationDto = new Mock<IConfigurationDto>();
         }
 
-        [TearDown]
-        public void TearDown()
-        {
-            _container.Dispose();
-        }
-
-        [Test]
+        [Fact]
         public void ShouldCeateRegistrationWhenItHasIConfigurationDescriptionDtoAsState()
         {
             // Given
@@ -67,7 +57,7 @@
             context.ResolverContext.Container.ShouldBe(_container);
         }
 
-        [Test]
+        [Fact]
         public void ShouldCeateRegistrationWhenItHasIConfigurationDtoAsState()
         {
             // Given

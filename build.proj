@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<Import Project="Utils.targets" />  
+	<Import Project="C:\Program Files\dotnet\sdk\1.0.0\Microsoft.TestPlatform.targets" Condition="Exists('C:\Program Files\dotnet\sdk\1.0.0\Microsoft.TestPlatform.targets')"/>
 
 	<PropertyGroup>
 		<BuildNumber Condition=" '$(BuildNumber)' == '' ">0</BuildNumber>
@@ -66,14 +67,13 @@
 	    	FilePath='%(Package.AssemblyInfoFile)'
 			Pattern='(\[assembly:\s(AssemblyVersion|AssemblyFileVersion)\()"(\d+\.\d+\.\d+)"(\)\])'
 			Replacement='$1"$(AssemblyVersion)"$4'/>
-		<MSBuild Projects="DevTeam.IoC.sln" Targets="Restore;Build" BuildInParallel="false" Properties="Configuration=$(Configuration);TargetFrameworks10=$(TargetFrameworks10);TargetFrameworks15=$(TargetFrameworks15)"/>
+		<MSBuild Projects="DevTeam.IoC.sln" Targets="Restore;Build" BuildInParallel="true" Properties="Configuration=$(Configuration);TargetFrameworks10=$(TargetFrameworks10);TargetFrameworks15=$(TargetFrameworks15)"/>
 	</Target>	
 
-	<Target Name="Test">
-		<Exec Command="packages\nuget.exe install NUnit.Console -Version 3.6.0 -o packages"/>
-		<Exec IgnoreExitCode="True" Command="$(MSBuildProjectDirectory)\packages\NUnit.ConsoleRunner.3.6.0\tools\nunit3-console.exe %(TestAssembly.Identity)\bin\$(Configuration)\net45\%(TestAssembly.FileName)%(TestAssembly.Extension).dll --noresult --noheader">
-			<Output TaskParameter="ExitCode" ItemName="exitCode"/>
-		</Exec>
+	<Target Name="Test" DependsOnTargets="GetNuGet">
+		<Exec Command="dotnet test DevTeam.IoC.Tests\DevTeam.IoC.Tests.csproj /p:TargetFramework=net452"/>
+		<Exec Command="packages\nuget.exe install xunit.runner.console -version 2.2.0 -o packages"/>		
+		<Exec Command="packages\xunit.runner.console.2.2.0\tools\xunit.console.exe DevTeam.IoC.Tests\bin\$(Configuration)\net35\DevTeam.IoC.Tests.dll"/>
 	</Target>
 
 	<Target Name="CreatePackages" DependsOnTargets="Clear;GetNuGet;Build;Test">

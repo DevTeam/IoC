@@ -2,25 +2,22 @@
 {
     using System.Collections.Generic;
     using Contracts;
-    using NUnit.Framework;
-
     using Shouldly;
+    using Xunit;
 
-    [TestFixture]
     public class CompositeKeyTests
     {
         private readonly Reflection _refelction = new Reflection();
-        private IContractKey _contractKey1;
-        private IContractKey _contractKey2;
-        private IContractKey _contractKey3;
-        private IStateKey _stateKey1;
-        private IStateKey _stateKey2;
-        private ITagKey _tagKey1;
-        private ITagKey _tagKey2;
-        private TagKey _tagKey3;
+        private readonly IContractKey _contractKey1;
+        private readonly IContractKey _contractKey2;
+        private readonly IContractKey _contractKey3;
+        private readonly IStateKey _stateKey1;
+        private readonly IStateKey _stateKey2;
+        private readonly ITagKey _tagKey1;
+        private readonly ITagKey _tagKey2;
+        private readonly TagKey _tagKey3;
 
-        [SetUp]
-        public void SetUp()
+        public CompositeKeyTests()
         {
             _contractKey1 = new ContractKey(_refelction, typeof(string), true);
             _contractKey2 = new ContractKey(_refelction, typeof(IEnumerable<string>), true);
@@ -32,7 +29,7 @@
             _tagKey3 = new TagKey("xyz");
         }
 
-        [Test]
+        [Fact]
         public void ShouldSupportEqForIdentical()
         {
             // Given
@@ -46,7 +43,7 @@
             key1.Equals(key2).ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void ShouldSupportEqForReordered()
         {
             // Given
@@ -60,7 +57,7 @@
             key1.Equals(key2).ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void ShouldSupportEqForNotIdenticalByContract()
         {
             // Given
@@ -74,7 +71,7 @@
             key1.Equals(key2).ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void ShouldSupportEqForNotIdenticalByTag()
         {
             // Given
@@ -88,7 +85,7 @@
             key1.Equals(key2).ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void ShouldSupportEqForNotIdenticalByState()
         {
             // Given
@@ -102,7 +99,7 @@
             key1.Equals(key2).ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void ShouldSupportEqForIdenticalContractAndComposite()
         {
             // Given

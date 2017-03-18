@@ -2,16 +2,13 @@
 {
     using System.Linq;
     using Contracts;
-
     using Moq;
-
-    using NUnit.Framework;
-
     using Shouldly;
+    using Xunit;
 
     public class ScopesConfigurationTests
     {
-        [Test]
+        [Fact]
         public void ContainerShouldResolveWhenGlobalScope()
         {
             // Given
@@ -36,7 +33,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void ContainerShouldUnregisterWhenGlobalScope()
         {
             // Given
@@ -67,7 +64,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void ContainerShouldNotResolveWhenInternalScopeAndChildContainer()
         {
             // Given
@@ -92,7 +89,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void ContainerShouldUnregisterWhenInternalScope()
         {
             // Given
@@ -125,7 +122,7 @@
             }
         }
 
-        private IContainer CreateContainer()
+        private static IContainer CreateContainer()
         {
             return new Container();
         }

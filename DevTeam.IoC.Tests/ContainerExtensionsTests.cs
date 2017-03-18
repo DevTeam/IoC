@@ -2,17 +2,13 @@
 {
     using System;
     using Contracts;
-
     using Moq;
-
-    using NUnit.Framework;
-
     using Shouldly;
+    using Xunit;
 
-    [TestFixture]
     public class ContainerExtensionsTests
     {
-        [Test]
+        [Fact]
         public void ContainerShouldRegisterAndResolveWhenOneKey()
         {
             // Given
@@ -30,7 +26,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void ContainerShouldRegisterUsingClassMetadataWhensFactoryMethod()
         {
             // Given
@@ -47,7 +43,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void ContainerShouldRegisterUsingClassMetadataAutomaticallyWhenAutowiring()
         {
             // Given
@@ -64,7 +60,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void ContainerShouldRegisterAndResolveWhenSeveralKeys()
         {
             // Given
@@ -84,7 +80,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void ContainerShouldRegisterAndResolveWhenSeveralKeysAndUndefinedGenericType()
         {
             // Given
@@ -104,7 +100,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void ContainerShouldRegisterAndResolveWhenSeveralKeysAndDefinedGenericType()
         {
             // Given
@@ -124,7 +120,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void ContainerShouldRegisterAndResolveWhenSeveralKeysAndSpecifiedGenericType()
         {
             // Given

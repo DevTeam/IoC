@@ -4,32 +4,27 @@
     using System.Collections.Generic;
     using Contracts;
     using Moq;
-
-    using NUnit.Framework;
-
     using Shouldly;
+    using Xunit;
 
-    [TestFixture]
     public class AutoDisposingLifetimeTests
     {
-        private Mock<IEnumerator<ILifetime>> _lifetimeEnumerator;
-        private Mock<ILifetime> _baseLifetime;
-        private Mock<ILifetimeContext> _lifetimeContext;
-        private Mock<IResolverContext> _resolverContext;
-        private Mock<ICreationContext> _сreationContext;
+        private readonly Mock<IEnumerator<ILifetime>> _lifetimeEnumerator;
+        private readonly Mock<ILifetime> _baseLifetime;
+        private readonly Mock<ILifetimeContext> _lifetimeContext;
+        private readonly Mock<ICreationContext> _сreationContext;
 
-        [SetUp]
-        public void SetUp()
+        public AutoDisposingLifetimeTests()
         {
             _lifetimeEnumerator = new Mock<IEnumerator<ILifetime>>();
             _baseLifetime = new Mock<ILifetime>();
             _lifetimeContext = new Mock<ILifetimeContext>();
-            _resolverContext = new Mock<IResolverContext>();
+            var resolverContext = new Mock<IResolverContext>();
             _сreationContext = new Mock<ICreationContext>();
-            _сreationContext.SetupGet(i => i.ResolverContext).Returns(_resolverContext.Object);
+            _сreationContext.SetupGet(i => i.ResolverContext).Returns(resolverContext.Object);
         }
 
-        [Test]
+        [Fact]
         public void ShouldUseBaseLifetimeToCreateObjectWhenObjIsNotDisposable()
         {
             // Given
@@ -48,7 +43,7 @@
             lifetime.Count.ShouldBe(0);
         }
 
-        [Test]
+        [Fact]
         public void ShouldSaveDisposingToInternalListWhenObjIsDisposable()
         {
             // Given
@@ -67,7 +62,7 @@
             lifetime.Count.ShouldBe(1);
         }
 
-        [Test]
+        [Fact]
         public void ShouldDisposeDisposableWhenDisposing()
         {
             // Given

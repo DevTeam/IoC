@@ -2,16 +2,13 @@
 {
     using System.Threading;
     using Contracts;
-
     using Moq;
-
-    using NUnit.Framework;
-
     using Shouldly;
+    using Xunit;
 
     public class LifetimesConfigurationTests
     {
-        [Test]
+        [Fact]
         public void ContainerShouldResolveSingleInstanceWhenSingletone()
         {
             // Given
@@ -34,7 +31,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void ContainerShouldResolveSingleInstanceWhenSingletoneUsingDifferentContracts()
         {
             // Given
@@ -58,7 +55,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void ContainerShouldResolveDifInstancesWhenDifStateAndPerState()
         {
             // Given
@@ -84,7 +81,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void ContainerShouldResolveSingleInstanceWhenSingletoneUsingDifferentGenericContracts()
         {
             // Given
@@ -114,7 +111,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void ContainerShouldDisposeAutoDisposingInstanceWhenUnregisteredControlled()
         {
             // Given
@@ -138,7 +135,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void ContainerShouldDisposeAutoDisposingInstanceWhenContainerDisposedForControlled()
         {
             // Given
@@ -161,7 +158,7 @@
             mock.Verify(i => i.Dispose(), Times.Once);
         }
 
-        [Test]
+        [Fact]
         public void ContainerShouldResolveSingleInstanceAndDisposeAutoDisposingWhenAutoDisposingSingletone()
         {
             // Given
@@ -189,7 +186,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void ContainerShouldResolveSingleInstanceWhenPerResolve()
         {
             // Given
@@ -215,7 +212,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void ContainerShouldResolveSingleInstanceWhenPerThread()
         {
             // Given

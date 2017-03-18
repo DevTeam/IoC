@@ -1,23 +1,23 @@
 ﻿namespace DevTeam.IoC.Tests
 {
     using System;
-    using NUnit.Framework;
     using Shouldly;
+    using Xunit;
 
     public class ContractKeyTests
     {
         private readonly Reflection _reflection = new Reflection();
-
-        [Test]
-        [TestCase(typeof(string), false, typeof(string), true, true)]
-        [TestCase(typeof(IEquatable<string>), false, typeof(IEquatable<string>), true, true)]
-        [TestCase(typeof(IEquatable<>), false, typeof(IEquatable<string>), true, true)]
-        [TestCase(typeof(IEquatable<string>), false, typeof(IEquatable<>), true, false)]
-        [TestCase(typeof(IEquatable<int>), false, typeof(IEquatable<string>), true, false)]
-        [TestCase(typeof(string), true, typeof(string), true, true)]
-        [TestCase(typeof(string), true, typeof(int), true, false)]
-        [TestCase(typeof(string), false, typeof(string), false, true)]
-        [TestCase(typeof(string), false, typeof(int), false, false)]
+#if !NET35
+        [Theory]
+        [InlineData(typeof(string), false, typeof(string), true, true)]
+        [InlineData(typeof(IEquatable<string>), false, typeof(IEquatable<string>), true, true)]
+        [InlineData(typeof(IEquatable<>), false, typeof(IEquatable<string>), true, true)]
+        [InlineData(typeof(IEquatable<string>), false, typeof(IEquatable<>), true, false)]
+        [InlineData(typeof(IEquatable<int>), false, typeof(IEquatable<string>), true, false)]
+        [InlineData(typeof(string), true, typeof(string), true, true)]
+        [InlineData(typeof(string), true, typeof(int), true, false)]
+        [InlineData(typeof(string), false, typeof(string), false, true)]
+        [InlineData(typeof(string), false, typeof(int), false, false)]
         public void ContractKeyShouldImplementEq(Type contractType1, bool toResolve1, Type contractType2, bool toResolve2, bool expectedEq)
         {
             // Given
@@ -35,5 +35,6 @@
             actualEq1.ShouldBe(expectedEq);
             actualEq2.ShouldBe(expectedEq);
         }
+#endif
     }
 }

@@ -3,17 +3,13 @@
     using System.Collections.Generic;
     using System.Linq;
     using Contracts;
-
     using Moq;
-
-    using NUnit.Framework;
-
     using Shouldly;
+    using Xunit;
 
-    [TestFixture]
     public class EnumerablesFeatureTests
     {
-        [Test]
+        [Fact]
         public void ShouldSupportResolvingEnumerable()
         {
             // Given

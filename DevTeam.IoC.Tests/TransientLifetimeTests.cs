@@ -3,36 +3,30 @@
     using System.Collections.Generic;
     using Contracts;
     using Moq;
-
-    using NUnit.Framework;
-
     using Shouldly;
+    using Xunit;
 
-    [TestFixture]
     public class TransientLifetimeTests
     {
-        private Mock<IEnumerator<ILifetime>> _lifetimeEnumerator;
-        private Mock<ILifetimeContext> _lifetimeContext;
-        private Mock<IResolverContext> _resolverContext;
-        private Mock<IResolverFactory> _instanceFactory;
-        private Mock<IRegistryContext> _registryContext;
-        private Mock<ICreationContext> _creationContext;
+        private readonly Mock<IEnumerator<ILifetime>> _lifetimeEnumerator;
+        private readonly Mock<ILifetimeContext> _lifetimeContext;
+        private readonly Mock<IResolverFactory> _instanceFactory;
+        private readonly Mock<ICreationContext> _creationContext;
 
-        [SetUp]
-        public void SetUp()
+        public TransientLifetimeTests()
         {
             _lifetimeEnumerator = new Mock<IEnumerator<ILifetime>>();
             _lifetimeContext = new Mock<ILifetimeContext>();
-            _resolverContext = new Mock<IResolverContext>();
-            _registryContext = new Mock<IRegistryContext>();
-            _resolverContext.SetupGet(i => i.RegistryContext).Returns(_registryContext.Object);
+            var resolverContext = new Mock<IResolverContext>();
+            var registryContext = new Mock<IRegistryContext>();
+            resolverContext.SetupGet(i => i.RegistryContext).Returns(registryContext.Object);
             _instanceFactory = new Mock<IResolverFactory>();
-            _registryContext.SetupGet(i => i.InstanceFactory).Returns(_instanceFactory.Object);
+            registryContext.SetupGet(i => i.InstanceFactory).Returns(_instanceFactory.Object);
             _creationContext = new Mock<ICreationContext>();
-            _creationContext.SetupGet(i => i.ResolverContext).Returns(_resolverContext.Object);
+            _creationContext.SetupGet(i => i.ResolverContext).Returns(resolverContext.Object);
         }
 
-        [Test]
+        [Fact]
         public void ShouldCreateNewObject()
         {
             // Given
@@ -47,7 +41,7 @@
             actualObj.ShouldBe(obj);
         }
 
-        [Test]
+        [Fact]
         public void ShouldCreateNewObjectEachTime()
         {
             // Given

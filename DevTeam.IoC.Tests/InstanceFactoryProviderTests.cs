@@ -4,24 +4,22 @@ namespace DevTeam.IoC.Tests
     using System.Reflection;
     using Contracts;
     using Moq;
-    using NUnit.Framework;
     using Shouldly;
+    using Xunit;
 
-    [TestFixture]
     public class InstanceFactoryProviderTests
     {
-        private Mock<IInstanceFactoryProvider> _instanceFactoryProvider;
-        private Mock<IInstanceFactory> _instanceFactory;
+        private readonly Mock<IInstanceFactoryProvider> _instanceFactoryProvider;
+        private readonly Mock<IInstanceFactory> _instanceFactory;
 
-        [SetUp]
-        public void SetUp()
+        public InstanceFactoryProviderTests()
         {
             _instanceFactoryProvider = new Mock<IInstanceFactoryProvider>();
             _instanceFactory = new Mock<IInstanceFactory>();
             _instanceFactoryProvider.Setup(i => i.GetFactory(It.IsAny<ConstructorInfo>())).Returns(_instanceFactory.Object);
         }
 
-        [Test]
+        [Fact]
         public void ShouldUseInstanceFactoryProviderWhenOverrided()
         {
             // Given
@@ -41,7 +39,7 @@ namespace DevTeam.IoC.Tests
             }
         }
 
-        [Test]
+        [Fact]
         public void ShouldUseInstanceFactoryProviderWithStateWhenOverrided()
         {
             // Given

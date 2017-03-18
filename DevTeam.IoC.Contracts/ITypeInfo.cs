@@ -25,7 +25,7 @@
         [NotNull]
         IEnumerable<T> GetCustomAttributes<T>() where T : Attribute;
 
-        [NotNull]
+        [CanBeNull]
         Type GetGenericTypeDefinition();
 
         bool IsAssignableFrom([NotNull] ITypeInfo stateTypeInfo);

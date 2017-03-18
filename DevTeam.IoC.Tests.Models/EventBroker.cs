@@ -2,22 +2,25 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Reflection;
     using Contracts;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class EventBroker : IEventBroker
     {
+        private readonly IReflection _reflection;
         private readonly ILog _log;
         private readonly Dictionary<Type, object> _sources = new Dictionary<Type, object>();
         private readonly Dictionary<Type, object> _listeners = new Dictionary<Type, object>();
         private readonly Dictionary<Type, List<IDisposable>> _subscriptions = new Dictionary<Type, List<IDisposable>>();
 
         public EventBroker(
+            [NotNull] IReflection reflection,
             [State(0, typeof(string), Value = nameof(EventBroker))] ILog log)
         {
+            if (reflection == null) throw new ArgumentNullException(nameof(reflection));
             if (log == null) throw new ArgumentNullException(nameof(log));
             log.Method("Ctor()");
+            _reflection = reflection;
             _log = log;
         }
 
@@ -88,7 +91,12 @@
 
             foreach (var source in _sources)
             {
-                var subscribeMethod = source.Value.GetType().GetTypeInfo().GetDeclaredMethod("Subscribe");
+                var subscribeMethod = _reflection.GetRuntimeMethod(source.Value.GetType(), "Subscribe");
+                if (subscribeMethod == null)
+                {
+                    continue;
+                }
+
                 foreach (var listener in _listeners)
                 {
                     var subscription = (IDisposable) subscribeMethod.Invoke(source.Value, new[] {listener.Value});

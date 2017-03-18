@@ -8,30 +8,22 @@
     using System.Text.RegularExpressions;
     using Contracts;
     using Moq;
-
-    using NUnit.Framework;
-
     using Shouldly;
+    using Xunit;
 
-    [TestFixture]
     [SuppressMessage("ReSharper", "EmptyConstructor")]
     [SuppressMessage("ReSharper", "UnusedParameter.Local")]
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     public class AutowiringMetadataProviderTests
     {
         private readonly Reflection _reflection = new Reflection();
-
-        [SetUp]
-        public void SetUp()
-        {
-        }
-
-        [Test]
-        [TestCase(typeof(string), null, typeof(string))]
-        [TestCase(typeof(IEnumerable<>), typeof(IEnumerable<string>), typeof(IEnumerable<string>))]
-        [TestCase(typeof(IEnumerable<>), typeof(IList<string>), typeof(IEnumerable<string>))]
-        [TestCase(typeof(IEnumerable<string>), typeof(IEnumerable<int>), typeof(IEnumerable<string>))]
-        [TestCase(typeof(IEnumerable<>), typeof(IDictionary<int, string>), typeof(IEnumerable<>))]
+#if !NET35
+        [Theory]
+        [InlineData(typeof(string), null, typeof(string))]
+        [InlineData(typeof(IEnumerable<>), typeof(IEnumerable<string>), typeof(IEnumerable<string>))]
+        [InlineData(typeof(IEnumerable<>), typeof(IList<string>), typeof(IEnumerable<string>))]
+        [InlineData(typeof(IEnumerable<string>), typeof(IEnumerable<int>), typeof(IEnumerable<string>))]
+        [InlineData(typeof(IEnumerable<>), typeof(IDictionary<int, string>), typeof(IEnumerable<>))]
         public void ShouldResolveImplementationType(Type implementationType, Type contractKeyType, Type expectedResolveImplementationType)
         {
             // Given
@@ -51,10 +43,10 @@
             actualResolveImplementationType.ShouldBe(expectedResolveImplementationType);
         }
 
-        [Test]
-        [TestCase(typeof(string), true, typeof(string))]
-        [TestCase(typeof(IEnumerable<string>), true, typeof(IEnumerable<string>))]
-        [TestCase(typeof(IEnumerable<>), false, null)]
+        [Theory]
+        [InlineData(typeof(string), true, typeof(string))]
+        [InlineData(typeof(IEnumerable<string>), true, typeof(IEnumerable<string>))]
+        [InlineData(typeof(IEnumerable<>), false, null)]
         public void ShouldResolveImplementationTypeWhenHasNotCreationContext(
             Type implementationType,
             bool expectedResult,
@@ -72,19 +64,19 @@
             actualResolveImplementationType.ShouldBe(expectedResolveImplementationType);
         }
 
-        [Test]
+        [Theory]
         // Default ctor
-        [TestCase(typeof(DefaultCtorClass), true, ".ctor()", null)]
+        [InlineData(typeof(DefaultCtorClass), true, ".ctor()", null)]
         // One ctor
-        [TestCase(typeof(OneCtorClass), true, ".ctor()", null)]
+        [InlineData(typeof(OneCtorClass), true, ".ctor()", null)]
         // One ctor with arg
-        [TestCase(typeof(OneCtorClassWithArg), true, ".ctor(System.String)", null)]
+        [InlineData(typeof(OneCtorClassWithArg), true, ".ctor(System.String)", null)]
         // Constructor with AutowiringAttribute
-        [TestCase(typeof(CtorClassWithAutowiringAttribute), true, ".ctor(System.Int32)", null)]
+        [InlineData(typeof(CtorClassWithAutowiringAttribute), true, ".ctor(System.Int32)", null)]
         // Several ctor with AutowiringAttribute
-        [TestCase(typeof(SeveralCtorClassWithAutowiringAttribute), false, null, "Too many resolving constructors")]
+        [InlineData(typeof(SeveralCtorClassWithAutowiringAttribute), false, null, "Too many resolving constructors")]
         // Several ctor
-        [TestCase(typeof(SeveralCtorClass), false, null, "Resolving constructor was not found")]
+        [InlineData(typeof(SeveralCtorClass), false, null, "Resolving constructor was not found")]
         public void ShouldSelectConstructor(Type implementationType, bool expectedResult, string expectedCtorName, string expectedExceptionPattern)
         {
             // Given
@@ -99,7 +91,7 @@
             actualResult.ShouldBe(expectedResult);
             if (actualResult)
             {
-                var args = string.Join(", ", ctor.GetParameters().Select(i => i.ParameterType));
+                var args = string.Join(", ", ctor.GetParameters().Select(i => i.ParameterType.ToString()).ToArray());
                 var actualCtorName = $".ctor({args})";
                 actualCtorName.ShouldBe(expectedCtorName);
             }
@@ -111,8 +103,9 @@
                 }
             }
         }
+#endif
 
-        [Test]
+        [Fact]
         public void ShouldGetConstructorParameters()
         {
             // Given
