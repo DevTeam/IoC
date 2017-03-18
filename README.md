@@ -2,6 +2,11 @@
 
 There are many different implementations of [Inversion of Control](https://github.com/DevTeam/IoC/wiki/Inversion-of-Control). Why it would be preferable to use this implementation? It is fast and has many outstanding [features](https://github.com/DevTeam/IoC/wiki/Features) to make your code more efficient. See [Wiki](https://github.com/DevTeam/IoC/wiki) for details.
 
+Supported platforms:
+  - .NET 3.5+
+  - .NET Core 1.0+
+  - .NET Standard 1.0+
+
 ![Comparison test](https://github.com/DevTeam/IoC/blob/master/Docs/Images/speed.png) [Comparison test](https://github.com/DevTeam/IoC/tree/master/DevTeam.IoC.Tests/ComparisonTests.cs) of IoC containers (release builds) in the synthetic test - creating a graph from 2 transient and singleton objects in the serie of 100k iterations:
 
 - This    52 ms
