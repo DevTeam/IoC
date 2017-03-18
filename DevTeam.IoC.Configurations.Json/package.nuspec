@@ -16,8 +16,8 @@
 
 Supported platforms:
   - .NET 3.5+
-  - .NET Core
-  - .NET Standard 1.0</description>
+  - .NET Core 1.0+
+  - .NET Standard 1.0+</description>
 		<tags>.NETStandard NETCore Core Portable DevTeam Pattern IoC Container DI dependencyinjection Inversion Control State Bind Factory</tags>
 		<dependencies>
 			<dependency id="DevTeam.IoC.Contracts" version="$ContractDependencyVersion$" />

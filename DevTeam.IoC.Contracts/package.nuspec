@@ -15,9 +15,9 @@
 		<description>Contracts for IoC container.
 
 Supported platforms:
-  - .NET 4.5+
-  - .NET Core
-  - .NET Standard 1.0</description>
+  - .NET 3.5+
+  - .NET Core 1.0+
+  - .NET Standard 1.0+</description>
 		<tags>.NETStandard NETCore Core Portable DevTeam Pattern IoC Container DI dependencyinjection Inversion Control State Bind Factory</tags>
 		<dependencies>
 			<dependency id="Microsoft.NETCore.Portable.Compatibility" version="1.0.1" />
