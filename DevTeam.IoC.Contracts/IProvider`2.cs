@@ -1,8 +1,8 @@
 ﻿namespace DevTeam.IoC.Contracts
 {
     [PublicAPI]
-    public interface IProvider<in TSTate1, TContract>
+    public interface IProvider<in TState1, TContract>
     {
-        bool TryGet(out TContract instance, [CanBeNull] TSTate1 state1);
+        bool TryGet(out TContract instance, [CanBeNull] TState1 state1);
     }
 }

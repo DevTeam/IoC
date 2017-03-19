@@ -1,9 +1,9 @@
 ﻿namespace DevTeam.IoC.Contracts
 {
     [PublicAPI]
-    public interface IResolver<in TSTate1, out TContract>
+    public interface IResolver<in TState1, out TContract>
     {
         [NotNull]
-        TContract Resolve([CanBeNull] TSTate1 state1);
+        TContract Resolve([CanBeNull] TState1 state1);
     }
 }
