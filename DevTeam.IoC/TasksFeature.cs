@@ -57,7 +57,7 @@
             var taskValueType = genericContractKey.GenericTypeArguments.First();
             var taskType = typeof(ResolverTask<>).MakeGenericType(taskValueType);
             var factory = ctx.Container.Resolve().Instance<IInstanceFactoryProvider>(creationContext.StateProvider);
-            var ctor = reflection.GetTypeInfo(taskType).DeclaredConstructors.Single();
+            var ctor = reflection.GetType(taskType).Constructors.Single();
             return factory.GetFactory(ctor).Create(ctx);
         }
 

@@ -1,4 +1,5 @@
-﻿namespace DevTeam.IoC
+﻿#if NET35 || NET40
+namespace DevTeam.IoC
 {
     using System;
     using System.Collections.Generic;
@@ -6,27 +7,11 @@
     using System.Reflection;
     using Contracts;
 
-#if NET35 || NET40
     internal class Reflection : IReflection
     {
-        public IEnumerable<ITypeInfo> GetDefinedTypes(Assembly assembly)
+        public IEnumerable<IType> GetDefinedTypes(Assembly assembly)
         {
-            return assembly.GetTypes().Select(type => (ITypeInfo)new TypeInfo(type));
-        }
-
-        public bool GetIsConstructedGenericType(Type type)
-        {
-            return type.IsGenericType && !type.IsGenericTypeDefinition;
-        }
-
-        public Type[] GetGenericTypeArguments(Type type)
-        {
-            return type.GetGenericArguments();
-        }
-
-        public MethodInfo GetRuntimeMethod(Type type, string methodName, params Type[] argumenTypes)
-        {
-            return type.GetMethod(methodName, argumenTypes);
+            return assembly.GetTypes().Select(type => (IType)new TypeImpl(type));
         }
 
         public IEnumerable<T> GetCustomAttributes<T>(MemberInfo memberInfo, bool inherit)
@@ -35,28 +20,16 @@
             return memberInfo.GetCustomAttributes(typeof(T), inherit).Cast<T>();
         }
 
-        public T GetCustomAttribute<T>(PropertyInfo propertyInfo) where T : Attribute
-        {
-            return propertyInfo.GetCustomAttributes(typeof(T), true).Cast<T>().SingleOrDefault();
-        }
-
         public IEnumerable<T> GetCustomAttributes<T>(ParameterInfo parameterInfo)
             where T : Attribute
         {
             return parameterInfo.GetCustomAttributes(typeof(T), true).Cast<T>();
         }
 
-        public T GetCustomAttribute<T>(ConstructorInfo constructorInfo)
-            where T : Attribute
+        public IType GetType(Type type)
         {
-            return constructorInfo.GetCustomAttributes(typeof(T), true).Cast<T>().SingleOrDefault();
-        }
-
-        public ITypeInfo GetTypeInfo(Type type)
-        {
-            return new TypeInfo(type);
+            return new TypeImpl(type);
         }
     }
-
-#endif
 }
+#endif

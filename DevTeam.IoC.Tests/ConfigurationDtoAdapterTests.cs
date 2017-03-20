@@ -85,7 +85,7 @@
             var configuration = CreateInstance(configurationDto);
 
             // When
-            configurationDto.Add(new DependencyAssemblyDto { AssemblyName = typeof(MyConfiguration).GetTypeInfo().Assembly.FullName });
+            configurationDto.Add(new DependencyAssemblyDto { AssemblyName = typeof(MyConfiguration).GetType().Assembly.FullName });
             var dependencies = configuration.GetDependencies(_container).ToArray();
 
             // Then

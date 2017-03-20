@@ -183,7 +183,7 @@
             }
 
             var hasMetadata = false;
-            var typeInfo = _reflection.GetTypeInfo(metadataType);
+            var typeInfo = _reflection.GetType(metadataType);
             foreach (var contract in typeInfo.GetCustomAttributes<ContractAttribute>())
             {
                 Contract(contract.ContractTypes);

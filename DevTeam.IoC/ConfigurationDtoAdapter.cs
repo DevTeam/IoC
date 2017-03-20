@@ -51,7 +51,7 @@
                 if (dependencyConfigurationDto != null)
                 {
                     Type configurationType;
-                    if (!typeResolver.TryResolveType(dependencyConfigurationDto.ConfigurationTypeName, out configurationType) || !reflection.GetTypeInfo(typeof(IConfiguration)).IsAssignableFrom(reflection.GetTypeInfo(configurationType)))
+                    if (!typeResolver.TryResolveType(dependencyConfigurationDto.ConfigurationTypeName, out configurationType) || !reflection.GetType(typeof(IConfiguration)).IsAssignableFrom(reflection.GetType(configurationType)))
                     {
                         throw new Exception($"Invalid configuration type {configurationType}");
                     }
@@ -78,7 +78,7 @@
                 if (dependencyReferenceDto != null)
                 {
                     Type configurationType;
-                    if (!typeResolver.TryResolveType(dependencyReferenceDto.ConfigurationTypeName, out configurationType) || !reflection.GetTypeInfo(typeof(IConfiguration)).IsAssignableFrom(reflection.GetTypeInfo(configurationType)))
+                    if (!typeResolver.TryResolveType(dependencyReferenceDto.ConfigurationTypeName, out configurationType) || !reflection.GetType(typeof(IConfiguration)).IsAssignableFrom(reflection.GetType(configurationType)))
                     {
                         throw new Exception($"Invalid configuration type {configurationType}");
                     }
@@ -398,7 +398,7 @@
                     throw new Exception($"Invalid factory method type {factoryMethodName}");
                 }
 
-                var factoryMethod = reflection.GetRuntimeMethod(factoryMethodType, factoryMethodName, new[] { typeof(ICreationContext) });
+                var factoryMethod = reflection.GetType(factoryMethodType).GetMethod(factoryMethodName, new[] { typeof(ICreationContext) });
                 if (factoryMethod == null)
                 {
                     throw new Exception($"Factory method {registerDto.FactoryMethodName} was not found");
@@ -450,7 +450,7 @@
         {
             if (reflection == null) throw new ArgumentNullException(nameof(reflection));
             if (type == null) throw new ArgumentNullException(nameof(type));
-            if (reflection.GetTypeInfo(type).IsEnum)
+            if (reflection.GetType(type).IsEnum)
             {
                 value = Enum.Parse(type, valueText);
                 return true;

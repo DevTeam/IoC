@@ -28,8 +28,8 @@
             return 
                 from typeInfo in reflection.GetDefinedTypes(_assembly)
                 where typeInfo.GetCustomAttributes<ContractAttribute>().Any()
-                let type = typeInfo.AsType()
-                select container.Register().Attributes(typeInfo.AsType()).Autowiring(type).Apply();
+                let type = typeInfo.Type
+                select container.Register().Attributes(typeInfo.Type).Autowiring(type).Apply();
         }
     }
 }

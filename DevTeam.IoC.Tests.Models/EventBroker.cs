@@ -91,7 +91,7 @@
 
             foreach (var source in _sources)
             {
-                var subscribeMethod = _reflection.GetRuntimeMethod(source.Value.GetType(), "Subscribe");
+                var subscribeMethod = _reflection.GetType(source.Value.GetType()).GetMethod("Subscribe");
                 if (subscribeMethod == null)
                 {
                     continue;

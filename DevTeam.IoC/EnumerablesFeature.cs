@@ -68,7 +68,7 @@
                 select container.Resolve().Key(key).Instance();
 
             var factory = container.Resolve().Instance<IInstanceFactoryProvider>(creationContext.StateProvider);
-            var ctor = reflection.GetTypeInfo(enumType).DeclaredConstructors.Single(i => i.GetParameters().Length == 1);
+            var ctor = reflection.GetType(enumType).Constructors.Single(i => i.GetParameters().Length == 1);
             return factory.GetFactory(ctor).Create(source);
         }
 

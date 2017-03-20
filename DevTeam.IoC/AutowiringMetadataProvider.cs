@@ -1,6 +1,7 @@
 ﻿namespace DevTeam.IoC
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using Contracts;
@@ -13,7 +14,7 @@
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
             if (reflection == null) throw new ArgumentNullException(nameof(reflection));
 #endif
-            var implementationTypeInfo = reflection.GetTypeInfo(implementationType);
+            var implementationTypeInfo = reflection.GetType(implementationType);
             if (implementationTypeInfo.IsGenericTypeDefinition)
             {
                 if (creationContext == null)
@@ -24,7 +25,7 @@
 
                 var ctx = creationContext.ResolverContext;
                 var contractKey = ctx.Key as IContractKey ?? (ctx.Key as ICompositeKey)?.ContractKeys.FirstOrDefault();
-                if (contractKey != null && contractKey.GenericTypeArguments.Length > 0 && implementationTypeInfo.GenericTypeParameters.Length == contractKey.GenericTypeArguments.Length)
+                if (contractKey != null && contractKey.GenericTypeArguments.Length > 0 && implementationTypeInfo.GenericTypeArguments.Length == contractKey.GenericTypeArguments.Length)
                 {
                     resolvedType = implementationType.MakeGenericType(contractKey.GenericTypeArguments);
                     return true;
@@ -41,19 +42,19 @@
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
             if (reflection == null) throw new ArgumentNullException(nameof(reflection));
 #endif
-            var implementationTypeInfo = reflection.GetTypeInfo(implementationType);
-            var constructorInfos = implementationTypeInfo.DeclaredConstructors.Where(i => i.IsPublic).ToArray();
+            var implementationTypeInfo = reflection.GetType(implementationType);
+            var constructorInfos = implementationTypeInfo.Constructors.Where(i => i.IsPublic).ToArray();
             if (constructorInfos.Length == 1)
             {
-                constructor = implementationTypeInfo.DeclaredConstructors.First();
+                constructor = implementationTypeInfo.Constructors.First();
                 error = default(Exception);
                 return true;
             }
 
-            constructorInfos = implementationTypeInfo.DeclaredConstructors.ToArray();
+            constructorInfos = implementationTypeInfo.Constructors.ToArray();
             if (constructorInfos.Length == 1)
             {
-                constructor = implementationTypeInfo.DeclaredConstructors.First();
+                constructor = implementationTypeInfo.Constructors.First();
                 error = default(Exception);
                 return true;
             }
@@ -62,7 +63,7 @@
             {
                 var autowiringConstructor = (
                     from ctor in constructorInfos
-                    let autowiringAttribute = reflection.GetCustomAttribute<AutowiringAttribute>(ctor)
+                    let autowiringAttribute = reflection.GetCustomAttributes<AutowiringAttribute>(ctor, true).FirstOrDefault()
                     where autowiringAttribute != null
                     select ctor).SingleOrDefault();
 
@@ -83,6 +84,19 @@
             error = new InvalidOperationException("Resolving constructor was not found.");
             constructor = default(ConstructorInfo);
             return false;
+        }
+
+        public IEnumerable<MethodInfo> GetMethods(IReflection reflection, Type implementationType)
+        {
+#if DEBUG
+            if (reflection == null) throw new ArgumentNullException(nameof(reflection));
+            if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
+#endif
+            return
+                from method in reflection.GetType(implementationType).Methods
+                let autowiringAttribute = reflection.GetCustomAttributes<AutowiringAttribute>(method, true)
+                where autowiringAttribute.Any()
+                select method;
         }
 
         public IParameterMetadata[] GetConstructorParameters(IReflection reflection, ConstructorInfo constructor)

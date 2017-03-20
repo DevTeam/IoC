@@ -60,10 +60,10 @@
         private string[] GetPropertiesNames(Type type)
         {
             var names = (
-                from prop in _reflection.GetTypeInfo(type).DeclaredProperties
-                let jsonIgnoreAttribute = _reflection.GetCustomAttribute<JsonIgnoreAttribute>(prop)
+                from prop in _reflection.GetType(type).Properties
+                let jsonIgnoreAttribute = _reflection.GetCustomAttributes<JsonIgnoreAttribute>(prop, true).FirstOrDefault()
                 where jsonIgnoreAttribute == null
-                let jsonPropertyAttribute = _reflection.GetCustomAttribute<JsonPropertyAttribute>(prop)
+                let jsonPropertyAttribute = _reflection.GetCustomAttributes<JsonPropertyAttribute>(prop, true).FirstOrDefault()
                 select jsonPropertyAttribute?.PropertyName ?? prop.Name).ToArray();
 
             if (names.Length == 0)

@@ -38,8 +38,8 @@
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
             if (reflection == null) throw new ArgumentNullException(nameof(reflection));
 #endif
-            var typeInfo = reflection.GetTypeInfo(implementationType);
-            constructor = typeInfo.DeclaredConstructors.FirstOrDefault(ctor => MatchConstructor(reflection, ctor));
+            var typeInfo = reflection.GetType(implementationType);
+            constructor = typeInfo.Constructors.FirstOrDefault(ctor => MatchConstructor(reflection, ctor));
             if (constructor == null)
             {
                 error = new InvalidOperationException("Constructor was not found.");
@@ -48,6 +48,11 @@
 
             error = default(Exception);
             return true;
+        }
+
+        public IEnumerable<MethodInfo> GetMethods(IReflection reflection, Type implementationType)
+        {
+            throw new NotImplementedException();
         }
 
         public IParameterMetadata[] GetConstructorParameters(IReflection reflection, ConstructorInfo constructor)
@@ -83,16 +88,16 @@
             if (paramInfo == null) throw new ArgumentNullException(nameof(paramInfo));
             if (paramMetadata == null) throw new ArgumentNullException(nameof(paramMetadata));
 #endif
-            var parameterTypeInfo = reflection.GetTypeInfo(paramInfo.ParameterType);
-            ITypeInfo genericTypeInfo = null;
+            var parameterTypeInfo = reflection.GetType(paramInfo.ParameterType);
+            IType genericTypeInfo = null;
             Type[] genericTypeArguments = null;
-            if (reflection.GetIsConstructedGenericType(paramInfo.ParameterType))
+            if (reflection.GetType(paramInfo.ParameterType).IsConstructedGenericType)
             {
-                var genericTypeDefinition = parameterTypeInfo.GetGenericTypeDefinition();
+                var genericTypeDefinition = parameterTypeInfo.GenericTypeDefinition;
                 if (genericTypeDefinition != null)
                 {
-                    genericTypeInfo = reflection.GetTypeInfo(genericTypeDefinition);
-                    genericTypeArguments = reflection.GetGenericTypeArguments(paramInfo.ParameterType);
+                    genericTypeInfo = reflection.GetType(genericTypeDefinition);
+                    genericTypeArguments = reflection.GetType(paramInfo.ParameterType).GenericTypeArguments;
                 }
             }
 
@@ -100,7 +105,7 @@
             {
                 return (
                     from contractKey in paramMetadata.ContractKeys ?? Enumerable.Empty<IContractKey>()
-                    let contractTypeInfo = reflection.GetTypeInfo(contractKey.ContractType)
+                    let contractTypeInfo = reflection.GetType(contractKey.ContractType)
                     where parameterTypeInfo.IsAssignableFrom(contractTypeInfo) || (genericTypeInfo != null && genericTypeInfo.IsAssignableFrom(contractTypeInfo) && genericTypeArguments != null && contractKey.GenericTypeArguments.SequenceEqual(genericTypeArguments))
                     select contractKey).Any();
             }
@@ -110,7 +115,7 @@
                 return true;
             }
 
-            var stateTypeInfo = reflection.GetTypeInfo(paramMetadata.StateKey.StateType);
+            var stateTypeInfo = reflection.GetType(paramMetadata.StateKey.StateType);
             return parameterTypeInfo.IsAssignableFrom(stateTypeInfo) || (genericTypeInfo != null && genericTypeInfo.IsAssignableFrom(stateTypeInfo));
         }
     }

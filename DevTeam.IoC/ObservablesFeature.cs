@@ -49,7 +49,7 @@
             var observableType = typeof(Observable<>).MakeGenericType(itemType);
 
             var factory = container.Resolve().Instance<IInstanceFactoryProvider>(ctx);
-            var ctor = reflection.GetTypeInfo(observableType).DeclaredConstructors.Single(i => i.GetParameters().Length == 1);
+            var ctor = reflection.GetType(observableType).Constructors.Single(i => i.GetParameters().Length == 1);
             return factory.GetFactory(ctor).Create(enumereble);
         }
 

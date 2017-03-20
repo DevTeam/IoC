@@ -14,10 +14,10 @@
         {
             if (contractType == null) throw new ArgumentNullException(nameof(contractType));
             ToResolve = toResolve;
-            if (reflection.GetIsConstructedGenericType(contractType))
+            if (reflection.GetType(contractType).IsConstructedGenericType)
             {
                 ContractType = contractType.GetGenericTypeDefinition();
-                GenericTypeArguments = reflection.GetGenericTypeArguments(contractType);
+                GenericTypeArguments = reflection.GetType(contractType).GenericTypeArguments;
             }
             else
             {
