@@ -13,7 +13,7 @@
         IContractKey CreateContractKey([NotNull] Type contractType, bool toResolve);
 
         [NotNull]
-        IStateKey CreateStateKey(int index, [NotNull] Type stateType);
+        IStateKey CreateStateKey(int index, [NotNull] Type stateType, bool toResolve);
 
         [NotNull]
         ITagKey CreateTagKey([NotNull] object tag);

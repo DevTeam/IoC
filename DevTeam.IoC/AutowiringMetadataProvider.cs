@@ -25,7 +25,7 @@
 
                 var ctx = creationContext.ResolverContext;
                 var contractKey = ctx.Key as IContractKey ?? (ctx.Key as ICompositeKey)?.ContractKeys.FirstOrDefault();
-                if (contractKey != null && contractKey.GenericTypeArguments.Length > 0 && implementationTypeInfo.GenericTypeArguments.Length == contractKey.GenericTypeArguments.Length)
+                if (contractKey != null && contractKey.GenericTypeArguments.Length > 0 && implementationTypeInfo.GenericTypeParameters.Length == contractKey.GenericTypeArguments.Length)
                 {
                     resolvedType = implementationType.MakeGenericType(contractKey.GenericTypeArguments);
                     return true;
@@ -94,20 +94,20 @@
 #endif
             return
                 from method in reflection.GetType(implementationType).Methods
-                let autowiringAttribute = reflection.GetCustomAttributes<AutowiringAttribute>(method, true)
-                where autowiringAttribute.Any()
+                let autowiringAttribute = reflection.GetCustomAttributes<AutowiringAttribute>(method, true).FirstOrDefault()
+                where autowiringAttribute != null
+                orderby autowiringAttribute.Order
                 select method;
         }
 
-        public IParameterMetadata[] GetConstructorParameters(IReflection reflection, ConstructorInfo constructor)
+        public IParameterMetadata[] GetParameters(IReflection reflection, MethodBase method, ref int stateIndex)
         {
 #if DEBUG
-            if (constructor == null) throw new ArgumentNullException(nameof(constructor));
+            if (method == null) throw new ArgumentNullException(nameof(method));
             if (reflection == null) throw new ArgumentNullException(nameof(reflection));
 #endif
-            var ctorParams = constructor.GetParameters();
+            var ctorParams = method.GetParameters();
             var arguments = new IParameterMetadata[ctorParams.Length];
-            var stateIndex = 0;
             for (var paramIndex = 0; paramIndex < ctorParams.Length; paramIndex++)
             {
                 var info = ctorParams[paramIndex];
@@ -120,7 +120,7 @@
                 IStateKey[] stateKeys = null;
                 if (stateAttributes.Length == 1 && contractAttributes.Length == 0 && !stateAttributes[0].IsDependency)
                 {
-                    stateKey = new StateKey(stateIndex, info.ParameterType);
+                    stateKey = new StateKey(reflection, stateIndex, info.ParameterType, true);
                 }
                 else
                 {
@@ -136,7 +136,7 @@
 
                     tagKeys = reflection.GetCustomAttributes<TagAttribute>(info).SelectMany(i => i.Tags).Select(i => (ITagKey)new TagKey(i)).ToArray();
                     state = stateAttributes.OrderBy(i => i.Index).Select(i => i.Value).ToArray();
-                    stateKeys = stateAttributes.Select(i => (IStateKey)new StateKey(i.Index, i.StateType)).ToArray();
+                    stateKeys = stateAttributes.Select(i => (IStateKey)new StateKey(reflection, i.Index, i.StateType, true)).ToArray();
                     contractKeys = contractKeys.Length > 0 ? contractKeys : null;
                     tagKeys = tagKeys.Length > 0 ? tagKeys : null;
                     stateKeys = stateKeys.Length > 0 ? stateKeys : null;

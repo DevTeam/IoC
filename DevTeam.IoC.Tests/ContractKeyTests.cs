@@ -6,8 +6,9 @@
 
     public class ContractKeyTests
     {
-        private readonly Reflection _reflection = new Reflection();
 #if !NET35
+        private readonly Reflection _reflection = new Reflection();
+
         [Theory]
         [InlineData(typeof(string), false, typeof(string), true, true)]
         [InlineData(typeof(IEquatable<string>), false, typeof(IEquatable<string>), true, true)]
@@ -26,12 +27,16 @@
 
             // When
             var hashCode1 = key1.GetHashCode();
-            var hashCode2 = key1.GetHashCode();
+            var hashCode2 = key2.GetHashCode();
             var actualEq1 = Equals(key1, key2);
             var actualEq2 = Equals(key2, key1);
 
             // Then
-            hashCode1.ShouldBe(hashCode2);
+            if (expectedEq)
+            {
+                hashCode1.ShouldBe(hashCode2);
+            }
+
             actualEq1.ShouldBe(expectedEq);
             actualEq2.ShouldBe(expectedEq);
         }

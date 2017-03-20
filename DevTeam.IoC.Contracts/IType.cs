@@ -21,6 +21,8 @@
 
         Type[] GenericTypeArguments { [NotNull] get; }
 
+        Type[] GenericTypeParameters { [NotNull] get; }
+
         bool IsConstructedGenericType { get; }
 
         Type Type { [NotNull] get; }

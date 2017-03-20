@@ -3,7 +3,7 @@
     using System;
 
     [PublicAPI]
-    public interface IStateKey: IKey
+    public interface IStateKey : IAsymmetricKey
     {
         int Index { get; }
 

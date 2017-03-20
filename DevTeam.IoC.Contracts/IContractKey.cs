@@ -3,12 +3,10 @@
     using System;
 
     [PublicAPI]
-    public interface IContractKey: IKey
+    public interface IContractKey: IAsymmetricKey
     {
         Type ContractType { [NotNull] get; }
 
         Type[] GenericTypeArguments { [NotNull] get; }
-
-        bool ToResolve { get; }
     }
 }

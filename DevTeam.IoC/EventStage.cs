@@ -1,4 +1,4 @@
-﻿namespace DevTeam.IoC.Contracts
+﻿namespace DevTeam.IoC
 {
     public enum EventStage
     {

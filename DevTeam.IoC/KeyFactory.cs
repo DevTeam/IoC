@@ -30,13 +30,13 @@
             return new ContractKey(_reflection, contractType, toResolve);
         }
 
-        public IStateKey CreateStateKey(int index, Type stateType)
+        public IStateKey CreateStateKey(int index, Type stateType, bool toResolve)
         {
 #if DEBUG
             if (stateType == null) throw new ArgumentNullException(nameof(stateType));
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
 #endif
-            return new StateKey(index, stateType);
+            return new StateKey(_reflection, index, stateType, toResolve);
         }
 
         public ITagKey CreateTagKey(object tag)

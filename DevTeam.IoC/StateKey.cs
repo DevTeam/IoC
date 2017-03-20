@@ -6,25 +6,28 @@
 
     internal struct StateKey: IStateKey
     {
-        private readonly int _hashCode;
+        [NotNull] private readonly IReflection _reflection;
+        private IType _type;
 
-        public StateKey(int index, [NotNull] Type stateType)
+        public StateKey([NotNull] IReflection reflection, int index, [NotNull] Type stateType, bool resolving)
         {
 #if DEBUG
+            if (reflection == null) throw new ArgumentNullException(nameof(reflection));
             if (stateType == null) throw new ArgumentNullException(nameof(stateType));
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
 #endif
             Index = index;
             StateType = stateType;
-            unchecked
-            {
-                _hashCode = (Index * 397) ^ StateType.GetHashCode();
-            }
+            Resolving = resolving;
+            _reflection = reflection;
+            _type = reflection.GetType(StateType);
         }
 
         public int Index { get; }
 
         public Type StateType { get; }
+
+        public bool Resolving { get; }
 
         public override bool Equals(object obj)
         {
@@ -40,17 +43,32 @@
                 return 0;
             }
 
-            return _hashCode;
+            return Index;
         }
 
         private bool Equals(IStateKey other)
         {
-            return KeyFilterContext.Current.Filter(typeof(IStateKey)) || Index == other.Index && StateType == other.StateType;
+            var eq = KeyFilterContext.Current.Filter(typeof(IStateKey)) || Index == other.Index;
+            if (!eq)
+            {
+                return false;
+            }
+
+            if (StateType == other.StateType)
+            {
+                return true;
+            }
+
+            var otherType = _reflection.GetType(other.StateType);
+
+            return 
+                (other.Resolving && _type.IsAssignableFrom(otherType))
+                || (Resolving && otherType.IsAssignableFrom(_type));
         }
 
         public override string ToString()
         {
-            return $"{nameof(StateKey)} [Index: {Index}, StateType: {StateType.Name}]";
+            return $"{nameof(StateKey)} [Index: {Index}, StateType: {StateType.Name}, Resolving: {Resolving}]";
         }
     }
 }

@@ -7,31 +7,28 @@ namespace DevTeam.IoC.Tests
     using Shouldly;
     using Xunit;
 
-    public class InstanceFactoryProviderTests
+    public class MethodFactoryTests
     {
-        private readonly Mock<IInstanceFactoryProvider> _instanceFactoryProvider;
-        private readonly Mock<IInstanceFactory> _instanceFactory;
+        private readonly Mock<IMethodFactory> _instanceFactoryProvider;
 
-        public InstanceFactoryProviderTests()
+        public MethodFactoryTests()
         {
-            _instanceFactoryProvider = new Mock<IInstanceFactoryProvider>();
-            _instanceFactory = new Mock<IInstanceFactory>();
-            _instanceFactoryProvider.Setup(i => i.GetFactory(It.IsAny<ConstructorInfo>())).Returns(_instanceFactory.Object);
+            _instanceFactoryProvider = new Mock<IMethodFactory>();
         }
 
         [Fact]
         public void ShouldUseInstanceFactoryProviderWhenOverrided()
         {
             // Given
+            var simpleService = new SimpleService();
+            _instanceFactoryProvider.Setup(i => i.CreateConstructor(It.IsAny<ConstructorInfo>())).Returns(args => simpleService);
             using (var container = new Container().Configure()
                 .DependsOn(Wellknown.Feature.ChildContainers).ToSelf()
                 .CreateChild()
-                .Register().Contract<IInstanceFactoryProvider>().FactoryMethod(ctx => _instanceFactoryProvider.Object).ToSelf()
+                .Register().Contract<IMethodFactory>().FactoryMethod(ctx => _instanceFactoryProvider.Object).ToSelf()
                 .Register().Contract<ISimpleService>().Autowiring<SimpleService>().ToSelf())
             {
                 // When
-                var simpleService = new SimpleService();
-                _instanceFactory.Setup(i => i.Create(It.IsAny<object[]>())).Returns(simpleService);
                 var actualInstance = container.Resolve().Instance<ISimpleService>();
 
                 // Then
@@ -43,16 +40,16 @@ namespace DevTeam.IoC.Tests
         public void ShouldUseInstanceFactoryProviderWithStateWhenOverrided()
         {
             // Given
+            var simpleService = new SimpleService();
+            _instanceFactoryProvider.Setup(i => i.CreateConstructor(It.IsAny<ConstructorInfo>())).Returns(a => simpleService);
             using (var container = new Container().Configure()
                 .DependsOn(Wellknown.Feature.ChildContainers).ToSelf()
                 .CreateChild()
-                .Register().Contract<IInstanceFactoryProvider>().FactoryMethod(ctx => _instanceFactoryProvider.Object).ToSelf()
+                .Register().Contract<IMethodFactory>().FactoryMethod(ctx => _instanceFactoryProvider.Object).ToSelf()
                 .Register().Contract<ISimpleService>().State<string>(0).State<int>(1).Autowiring<SimpleServiceWithState>().ToSelf())
             {
                 // When
                 var args = new object[] { "abc", 1 };
-                var simpleService = new SimpleService();
-                _instanceFactory.Setup(i => i.Create(args)).Returns(simpleService);
                 var actualInstance = container.Resolve().State<string>(0).State<int>(1).Instance<ISimpleService>(args);
 
                 // Then

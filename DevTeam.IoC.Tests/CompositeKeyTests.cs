@@ -22,8 +22,8 @@
             _contractKey1 = new ContractKey(_refelction, typeof(string), true);
             _contractKey2 = new ContractKey(_refelction, typeof(IEnumerable<string>), true);
             _contractKey3 = new ContractKey(_refelction, typeof(IEnumerable<>), true);
-            _stateKey1 = new StateKey(0, typeof(string));
-            _stateKey2 = new StateKey(1, typeof(int));
+            _stateKey1 = new StateKey(_refelction, 0, typeof(string), true);
+            _stateKey2 = new StateKey(_refelction, 1, typeof(int), true);
             _tagKey1 = new TagKey("abc");
             _tagKey2 = new TagKey(33);
             _tagKey3 = new TagKey("xyz");

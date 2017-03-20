@@ -37,7 +37,7 @@
             }
 
             var cacheTracker = new CacheTracker(this);
-            _resources.Add(Subscribe(cacheTracker));
+            _resources.Add(((IObservable<IRegistrationEvent>)this).Subscribe(cacheTracker));
         }
 
         internal Container([NotNull] IContainer parentContainer, [CanBeNull] object tag = null, [CanBeNull] IResolverContext resolverContext = null)
@@ -56,7 +56,7 @@
             }
 
             var cacheTracker = new CacheTracker(this);
-            _resources.Add(Subscribe(cacheTracker));
+            _resources.Add(((IObservable<IRegistrationEvent>)this).Subscribe(cacheTracker));
             var parent = Parent;
             do
             {
@@ -253,18 +253,18 @@
             }
         }
 
-        public IDisposable Subscribe([NotNull] IObserver<IRegistrationEvent> observer)
+        IDisposable IObservable<IRegistrationEvent>.Subscribe([NotNull] IObserver<IRegistrationEvent> observer)
         {
             return _registrationSubject.Subscribe(observer);
         }
 
-        public bool TryGet(out ICache<Type, IResolverFactory> instance)
+        bool IProvider<ICache<Type, IResolverFactory>>.TryGet(out ICache<Type, IResolverFactory> instance)
         {
             instance = _resolverFactoryCache;
             return true;
         }
 
-        public bool TryGet(out IFluent instance)
+        bool IProvider<IFluent>.TryGet(out IFluent instance)
         {
             instance = _fluent;
             return true;

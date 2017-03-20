@@ -1,6 +1,8 @@
-﻿namespace DevTeam.IoC.Contracts
+﻿namespace DevTeam.IoC
 {
-    public interface IRegistrationEvent : IEvent
+    using Contracts;
+
+    internal interface IRegistrationEvent : IEvent
     {
         IKey Key { [NotNull] get; }
 

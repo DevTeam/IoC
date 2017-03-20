@@ -49,7 +49,7 @@
             var eventObserver = new EventObserver<IRegistrationEvent>();
             IKey[] keys;
             using (var container = CreateContainer())
-            using (container.Subscribe(eventObserver))
+            using (((IObservable<IRegistrationEvent>)container).Subscribe(eventObserver))
             {
                 var obj = new object();
                 _factory.Setup(i => i.Create(It.IsAny<ICreationContext>())).Returns(obj);

@@ -93,7 +93,7 @@
 
         private IResolverFactory CreateFactory<T>()
         {
-            return new MetadataFactory(new Reflection(), typeof(T), new ExpressionInstanceFactoryProvider(), new AutowiringMetadataProvider(), _container.KeyFactory);
+            return new MetadataFactory(new Reflection(), typeof(T), new ExpressionMethodFactory(), new AutowiringMetadataProvider(), _container.KeyFactory);
         }
 
         private ICreationContext CreateContext(params object[] state)

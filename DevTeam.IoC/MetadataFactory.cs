@@ -1,27 +1,29 @@
 ﻿namespace DevTeam.IoC
 {
     using System;
+    using System.Collections.Generic;
     using System.Reflection;
     using Contracts;
 
     internal class MetadataFactory: IResolverFactory
     {
-        private readonly IInstanceFactory _instanceFactory;
+        private readonly Constructor _constructor;
         private readonly IParameterMetadata[] _parameters;
         private object[] _parametersArray;
         private readonly IKey[] _keys;
+        [CanBeNull] private List<MethodData> _methods;
 
         public MetadataFactory(
             [NotNull] IReflection reflection,
             [NotNull] Type implementationType,
-            [NotNull] IInstanceFactoryProvider instanceFactoryProvider,
+            [NotNull] IMethodFactory methodFactory,
             [NotNull] IMetadataProvider metadataProvider,
             [NotNull] IKeyFactory keyFactory)
         {
 #if DEBUG
             if (reflection == null) throw new ArgumentNullException(nameof(reflection));
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
-            if (instanceFactoryProvider == null) throw new ArgumentNullException(nameof(instanceFactoryProvider));
+            if (methodFactory == null) throw new ArgumentNullException(nameof(methodFactory));
             if (metadataProvider == null) throw new ArgumentNullException(nameof(metadataProvider));
 #endif
             if (!metadataProvider.TrySelectConstructor(reflection, implementationType, out ConstructorInfo constructor, out Exception error))
@@ -29,8 +31,9 @@
                 throw error;
             }
 
-            _parameters = metadataProvider.GetConstructorParameters(reflection, constructor);
-            _instanceFactory = instanceFactoryProvider.GetFactory(constructor);
+            var stateIndex = 0;
+            _parameters = metadataProvider.GetParameters(reflection, constructor, ref stateIndex);
+            _constructor = methodFactory.CreateConstructor(constructor);
             var len = _parameters.Length;
             _parametersArray = new object[len];
             _keys = new IKey[len];
@@ -44,6 +47,33 @@
 
                 _keys[i] = keyFactory.CreateCompositeKey(parameter.ContractKeys, parameter.TagKeys, parameter.StateKeys);
             }
+
+            foreach (var initMethod in metadataProvider.GetMethods(reflection, implementationType))
+            {
+                var methodData = new MethodData();
+                methodData.Parameters = metadataProvider.GetParameters(reflection, initMethod, ref stateIndex);
+                len = methodData.Parameters.Length;
+                methodData.ParametersArray = new object[len];
+                methodData.Keys = new IKey[len];
+                methodData.Method = methodFactory.CreateMethod(implementationType, initMethod);
+                for (var i = 0; i < len; i++)
+                {
+                    var parameter = methodData.Parameters[i];
+                    if (!parameter.IsDependency)
+                    {
+                        continue;
+                    }
+
+                    methodData.Keys[i] = keyFactory.CreateCompositeKey(parameter.ContractKeys, parameter.TagKeys, parameter.StateKeys);
+                }
+
+                if (_methods == null)
+                {
+                    _methods = new List<MethodData>();
+                }
+
+                _methods.Add(methodData);
+            }
         }
 
         public object Create(ICreationContext creationContext)
@@ -53,24 +83,39 @@
 #endif
             for (var i = 0; i < _parametersArray.Length; i++)
             {
-                _parametersArray[i] = ResolveParameter(i, creationContext);
+                _parametersArray[i] = ResolveParameter(i, creationContext, _parameters, _keys);
             }
 
-            return _instanceFactory.Create(_parametersArray);
+            var instance = _constructor(_parametersArray);
+            if (_methods != null)
+            {
+                foreach (var method in _methods)
+                {
+                    for (var i = 0; i < method.ParametersArray.Length; i++)
+                    {
+                        method.ParametersArray[i] = ResolveParameter(i, creationContext, method.Parameters, method.Keys);
+                    }
+
+                    method.Method(instance, method.ParametersArray);
+                }
+            }
+
+            return instance;
         }
 
         [CanBeNull]
-        private object ResolveParameter(
-            int index,
-            [NotNull] ICreationContext creationContext)
+        private static object ResolveParameter(int index, [NotNull] ICreationContext creationContext, [NotNull] IParameterMetadata[] parameters, [NotNull] IKey[] keys)
         {
 #if DEBUG
             if (creationContext == null) throw new ArgumentNullException(nameof(creationContext));
+            if (parameters == null) throw new ArgumentNullException(nameof(parameters));
+            if (keys == null) throw new ArgumentNullException(nameof(keys));
+            if (index < 0 || index >= keys.Length) throw new ArgumentOutOfRangeException(nameof(index));
 #endif
-            var parameterMetadata = _parameters[index];
+            var parameterMetadata = parameters[index];
             if (parameterMetadata.IsDependency)
             {
-                var key = _keys[index];
+                var key = keys[index];
                 var container = creationContext.ResolverContext.RegistryContext.Container;
                 if (!container.TryCreateResolverContext(key, out IResolverContext ctx))
                 {
@@ -88,9 +133,20 @@
             return creationContext.StateProvider.GetState(creationContext, parameterMetadata.StateKey);
         }
 
-        private string GetCantResolveErrorMessage(IResolver resolver, IKey key)
+        private static string GetCantResolveErrorMessage(IResolver resolver, IKey key)
         {
             return $"Can't resolve {key}.{Environment.NewLine}{Environment.NewLine}{resolver}";
+        }
+
+        private struct MethodData
+        {
+            public IParameterMetadata[] Parameters;
+
+            public object[] ParametersArray;
+
+            public IKey[] Keys;
+
+            public Method Method;
         }
     }
 }

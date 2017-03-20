@@ -284,7 +284,7 @@
                                     state.Add(value);
                                 }
 
-                                stateKey = new StateKey(ctorParam.State.Index, stateType);
+                                stateKey = new StateKey(reflection, ctorParam.State.Index, stateType, true);
                             }
                         }
                         else

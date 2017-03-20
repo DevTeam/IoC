@@ -160,8 +160,8 @@
             }
 
             var ctor = reflection.GetType(resolverType).Constructors.Single(i => i.GetParameters().Length == 1);
-            var factory = ctx.Container.Resolve().Instance<IInstanceFactoryProvider>(creationContext.StateProvider);
-            return factory.GetFactory(ctor).Create(ctx);
+            var factory = ctx.Container.Resolve().Instance<IMethodFactory>(creationContext.StateProvider);
+            return factory.CreateConstructor(ctor)(ctx);
         }
     }
 }

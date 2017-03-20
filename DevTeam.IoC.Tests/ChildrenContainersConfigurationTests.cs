@@ -14,7 +14,7 @@
             using (container.Configure().DependsOn(Wellknown.Feature.ChildContainers).ToSelf())
             {
                 // When
-                var childContainer = container.Resolve().Contract<IContainer>().Instance() as IContainer;
+                var childContainer = container.Resolve().Contract<IContainer>().Instance<IContainer>();
 
                 // Then
                 childContainer.ShouldNotBeNull();
@@ -29,7 +29,7 @@
             using (container.Configure().DependsOn(Wellknown.Feature.ChildContainers).ToSelf())
             {
                 // When
-                var childContainer = container.Resolve().Contract<IContainer>().State(0, typeof(object)).Instance("abc") as IContainer;
+                var childContainer = container.Resolve().Contract<IContainer>().Instance<IContainer>("abc");
 
                 // Then
                 childContainer.ShouldNotBeNull();

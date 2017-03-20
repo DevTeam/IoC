@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.4
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{0B72C074-8E0A-4E3D-9732-A4C873194F66}"
 EndProject
@@ -55,6 +55,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevTeam.IoC.Configurations.CSharp", "DevTeam.IoC.Configurations.CSharp\DevTeam.IoC.Configurations.CSharp.csproj", "{851D6AE6-3663-4017-9990-6F883512D479}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassLibrary", "Samples\CSharpConfig\ClassLibrary\ClassLibrary.csproj", "{2AFD2943-EEBA-409D-B470-E0DF7D219D4A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Profiled", "Profiled", "{B4FD33DA-3074-4F2F-A5DC-4BAB6A752FD1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "Samples\ToProfile\ConsoleApp\ConsoleApp.csproj", "{A1E18FA3-A69E-4050-869E-213649426574}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -126,6 +130,10 @@ Global
 		{2AFD2943-EEBA-409D-B470-E0DF7D219D4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2AFD2943-EEBA-409D-B470-E0DF7D219D4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2AFD2943-EEBA-409D-B470-E0DF7D219D4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1E18FA3-A69E-4050-869E-213649426574}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1E18FA3-A69E-4050-869E-213649426574}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1E18FA3-A69E-4050-869E-213649426574}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1E18FA3-A69E-4050-869E-213649426574}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -147,5 +155,7 @@ Global
 		{16F5973E-CC38-447B-B822-8CBC278A44B6} = {5C87348D-2684-4C0D-8F30-809459EF31A5}
 		{697E8A22-0027-4267-9006-5F7499A6B4DC} = {C7C11931-2AC2-45EB-8BE4-E5062DD34986}
 		{2AFD2943-EEBA-409D-B470-E0DF7D219D4A} = {C7C11931-2AC2-45EB-8BE4-E5062DD34986}
+		{B4FD33DA-3074-4F2F-A5DC-4BAB6A752FD1} = {0B72C074-8E0A-4E3D-9732-A4C873194F66}
+		{A1E18FA3-A69E-4050-869E-213649426574} = {B4FD33DA-3074-4F2F-A5DC-4BAB6A752FD1}
 	EndGlobalSection
 EndGlobal

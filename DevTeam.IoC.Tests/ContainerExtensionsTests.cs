@@ -18,7 +18,7 @@
                 // When
                 using (container.Register().Contract<ISimpleService>().FactoryMethod(ctx => simpleService.Object).Apply())
                 {
-                    var actualObj = container.Resolve().Contract<ISimpleService>().Instance();
+                    var actualObj = container.Resolve().Instance<ISimpleService>();
 
                     // Then
                     actualObj.ShouldBe(simpleService.Object);
@@ -35,7 +35,7 @@
                 // When
                 using (container.Register().FactoryMethod(ctx => new ClassWithMetadata(ctx.GetState<string>(0))).Apply())
                 {
-                    var actualObj = (ClassWithMetadata)container.Resolve().Contract<ISimpleService>().Tag("abc").State(0, typeof(string)).Instance("xyz");
+                    var actualObj = (ClassWithMetadata)container.Resolve().Tag("abc").State(0, typeof(string)).Instance<ISimpleService>("xyz");
 
                     // Then
                     actualObj.Str.ShouldBe("xyz");
@@ -52,7 +52,7 @@
                 // When
                 using (container.Register().Autowiring<ClassWithMetadata>().Apply())
                 {
-                    var actualObj = (ClassWithMetadata)container.Resolve().Contract<ISimpleService>().Tag("abc").State(0, typeof(string)).Instance("xyz");
+                    var actualObj = (ClassWithMetadata)container.Resolve().Tag("abc").State(0, typeof(string)).Instance<ISimpleService>("xyz");
 
                     // Then
                     actualObj.Str.ShouldBe("xyz");
@@ -70,7 +70,7 @@
                 // When
                 using (container.Register().Contract<ISimpleService>().Tag("abc").FactoryMethod(ctx => simpleService.Object).Apply())
                 {
-                    var actualObj = container.Resolve().Contract<ISimpleService>().Tag("abc").Instance();
+                    var actualObj = container.Resolve().Tag("abc").Instance<ISimpleService>();
 
                     // Then
                     var resolvingKey = KeyUtils.CreateCompositeKey(container, true, new[] {typeof(ISimpleService)}, new object[]{ "abc" });
@@ -90,7 +90,7 @@
                 // When
                 using (container.Register().Contract(typeof(IGenericService<>)).Tag("abc").FactoryMethod(ctx => genericService.Object).Apply())
                 {
-                    var actualObj = container.Resolve().Contract<IGenericService<string>>().Tag("abc").Instance();
+                    var actualObj = container.Resolve().Tag("abc").Instance<IGenericService<string>>();
 
                     // Then
                     var resolvingKey = KeyUtils.CreateCompositeKey(container, true, new [] { typeof(IGenericService<>) }, new object[] { "abc" });
@@ -110,7 +110,7 @@
                 // When
                 using (container.Register().Contract(typeof(IGenericService<string>)).Tag("abc").FactoryMethod(ctx => genericService.Object).Apply())
                 {
-                    var actualObj = container.Resolve().Contract<IGenericService<string>>().Tag("abc").Instance();
+                    var actualObj = container.Resolve().Tag("abc").Instance<IGenericService<string>>();
 
                     // Then
                     var resolvingKey = KeyUtils.CreateCompositeKey(container, true, new[] { typeof(IGenericService<string>) }, new object[] { "abc" });
@@ -130,7 +130,7 @@
                 // When
                 using (container.Register().Contract(typeof(IGenericService<>)).Tag("abc").FactoryMethod(ctx => genericService.Object).Apply())
                 {
-                    var actualObj = container.Resolve().Contract<IGenericService<string>>().Tag("abc").Instance();
+                    var actualObj = container.Resolve().Tag("abc").Instance<IGenericService<string>>();
 
                     // Then
                     var resolvingKey = KeyUtils.CreateCompositeKey(container, true, new[] { typeof(IGenericService<>) }, new object[] { "abc" });

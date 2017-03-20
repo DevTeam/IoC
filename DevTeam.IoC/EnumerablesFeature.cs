@@ -65,11 +65,11 @@
 
             var source =
                 from key in keys
-                select container.Resolve().Key(key).Instance();
+                select container.Resolve().Key(new [] { key }).Instance();
 
-            var factory = container.Resolve().Instance<IInstanceFactoryProvider>(creationContext.StateProvider);
+            var factory = container.Resolve().Instance<IMethodFactory>(creationContext.StateProvider);
             var ctor = reflection.GetType(enumType).Constructors.Single(i => i.GetParameters().Length == 1);
-            return factory.GetFactory(ctor).Create(source);
+            return factory.CreateConstructor(ctor)(source);
         }
 
         private static IEnumerable<IKey> GetAllRegistrations(IContainer container)

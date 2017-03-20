@@ -148,7 +148,7 @@
             }
         }
 
-        private static void PerformanceTest(IContainer rootResolver, int ticks)
+        public static void PerformanceTest(IContainer rootResolver, int ticks)
         {
             using (var childContainer = rootResolver.CreateChild("child")
                 .Configure().DependsOn(new EventsConfiguration(false)).ToSelf())

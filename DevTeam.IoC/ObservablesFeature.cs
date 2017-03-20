@@ -48,9 +48,9 @@
             var enumereble = container.Resolve().Contract(enumType).Instance();
             var observableType = typeof(Observable<>).MakeGenericType(itemType);
 
-            var factory = container.Resolve().Instance<IInstanceFactoryProvider>(ctx);
+            var factory = container.Resolve().Instance<IMethodFactory>();
             var ctor = reflection.GetType(observableType).Constructors.Single(i => i.GetParameters().Length == 1);
-            return factory.GetFactory(ctor).Create(enumereble);
+            return factory.CreateConstructor(ctor)(enumereble);
         }
 
         public override int GetHashCode()

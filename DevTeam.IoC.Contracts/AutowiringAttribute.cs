@@ -6,5 +6,6 @@
 
     public class AutowiringAttribute : Attribute
     {
+        [CanBeNull] public IComparable Order { get; set; }
     }
 }

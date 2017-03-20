@@ -52,13 +52,13 @@
 
         public IEnumerable<MethodInfo> GetMethods(IReflection reflection, Type implementationType)
         {
-            throw new NotImplementedException();
+            yield break;
         }
 
-        public IParameterMetadata[] GetConstructorParameters(IReflection reflection, ConstructorInfo constructor)
+        public IParameterMetadata[] GetParameters(IReflection reflection, MethodBase method, ref int stateIndex)
         {
 #if DEBUG
-            if (constructor == null) throw new ArgumentNullException(nameof(constructor));
+            if (method == null) throw new ArgumentNullException(nameof(method));
             if (reflection == null) throw new ArgumentNullException(nameof(reflection));
 #endif
             return _constructorParams;
@@ -106,7 +106,7 @@
                 return (
                     from contractKey in paramMetadata.ContractKeys ?? Enumerable.Empty<IContractKey>()
                     let contractTypeInfo = reflection.GetType(contractKey.ContractType)
-                    where parameterTypeInfo.IsAssignableFrom(contractTypeInfo) || (genericTypeInfo != null && genericTypeInfo.IsAssignableFrom(contractTypeInfo) && genericTypeArguments != null && contractKey.GenericTypeArguments.SequenceEqual(genericTypeArguments))
+                    where parameterTypeInfo.IsAssignableFrom(contractTypeInfo) || genericTypeInfo != null && genericTypeInfo.IsAssignableFrom(contractTypeInfo) && genericTypeArguments != null && contractKey.GenericTypeArguments.SequenceEqual(genericTypeArguments)
                     select contractKey).Any();
             }
 
@@ -116,7 +116,7 @@
             }
 
             var stateTypeInfo = reflection.GetType(paramMetadata.StateKey.StateType);
-            return parameterTypeInfo.IsAssignableFrom(stateTypeInfo) || (genericTypeInfo != null && genericTypeInfo.IsAssignableFrom(stateTypeInfo));
+            return parameterTypeInfo.IsAssignableFrom(stateTypeInfo) || genericTypeInfo != null && genericTypeInfo.IsAssignableFrom(stateTypeInfo);
         }
     }
 }

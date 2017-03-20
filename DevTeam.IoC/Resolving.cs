@@ -39,6 +39,14 @@
             return this;
         }
 
+        public override IResolving<T> State(int index, Type stateType)
+        {
+            if (stateType == null) throw new ArgumentNullException(nameof(stateType));
+            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
+            AddStateKey(Resolver.KeyFactory.CreateStateKey(index, stateType, true));
+            return this;
+        }
+
         public object Instance(IStateProvider stateProvider)
         {
             if (stateProvider == null) throw new ArgumentNullException(nameof(stateProvider));
@@ -68,7 +76,7 @@
         public TContract Instance<TContract>(IStateProvider stateProvider)
         {
             if (stateProvider == null) throw new ArgumentNullException(nameof(stateProvider));
-            if (_сontractKeys.Count == 0)
+            if (_contractKeysCount == 0)
             {
                 Contract<TContract>();
             }
@@ -84,7 +92,7 @@
         public bool TryInstance<TContract>(out TContract instance, IStateProvider stateProvider)
         {
             if (stateProvider == null) throw new ArgumentNullException(nameof(stateProvider));
-            if (_сontractKeys.Count == 0)
+            if (_contractKeysCount == 0)
             {
                 Contract<TContract>();
             }
@@ -104,31 +112,29 @@
         public object Instance(params object[] state)
         {
             if (state == null) throw new ArgumentNullException(nameof(state));
+            TrySpecifyState(state);
             return Instance(ParamsStateProvider.Create(state));
         }
 
         public bool TryInstance(out object instance, params object[] state)
         {
             if (state == null) throw new ArgumentNullException(nameof(state));
+            TrySpecifyState(state);
             return TryInstance(out instance, ParamsStateProvider.Create(state));
         }
 
         public bool TryInstance<TContract>(out TContract instance, params object[] state)
         {
             if (state == null) throw new ArgumentNullException(nameof(state));
+            TrySpecifyState(state);
             return TryInstance(out instance, ParamsStateProvider.Create(state));
         }
 
         public TContract Instance<TContract>(params object[] state)
         {
             if (state == null) throw new ArgumentNullException(nameof(state));
+            TrySpecifyState(state);
             return Instance<TContract>(ParamsStateProvider.Create(state));
-        }
-
-        public bool Instance<TContract>(out TContract instance, params object[] state)
-        {
-            if (state == null) throw new ArgumentNullException(nameof(state));
-            return TryInstance(out instance, ParamsStateProvider.Create(state));
         }
 
         protected override bool AddContractKey(IEnumerable<IContractKey> keys)
@@ -249,6 +255,27 @@
         private string GetCantResolveErrorMessage(IKey key)
         {
             return $"Can't resolve {key}.{Environment.NewLine}{Environment.NewLine}{Resolver}";
+        }
+
+        private void TrySpecifyState(params object[] state)
+        {
+            if (_stateKeys != null || state.Length == 0)
+            {
+                return;
+            }
+
+            for (var index = 0; index < state.Length; index++)
+            {
+                var value = state[index];
+                if (value != null)
+                {
+                    State(index, value.GetType());
+                }
+                else
+                {
+                    State<object>(index);
+                }
+            }
         }
     }
 }

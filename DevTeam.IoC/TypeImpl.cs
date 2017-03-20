@@ -3,6 +3,7 @@ namespace DevTeam.IoC
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
     using Contracts;
 
@@ -38,6 +39,8 @@ namespace DevTeam.IoC
 
         public IEnumerable<PropertyInfo> Properties => TypeInfo.DeclaredProperties;
 
+        public IEnumerable<MethodInfo> Methods => TypeInfo.DeclaredMethods.Where(i => !i.IsStatic);
+
         public bool IsEnum => TypeInfo.IsEnum;
 
         private TypeInfo TypeInfo
@@ -70,7 +73,7 @@ namespace DevTeam.IoC
 
         public Type[] GenericTypeArguments => Type.GenericTypeArguments;
 
-        public IEnumerable<MethodInfo> Methods => TypeInfo.DeclaredMethods;
+        public Type[] GenericTypeParameters => TypeInfo.GenericTypeParameters;
 
         public IEnumerable<T> GetCustomAttributes<T>()
             where T : Attribute

@@ -25,6 +25,8 @@ namespace DevTeam.IoC
 
         public IEnumerable<PropertyInfo> Properties => _type.GetProperties();
 
+        public IEnumerable<MethodInfo> Methods => _type.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.SetProperty);
+
         public bool IsEnum => _type.IsEnum;
 
         public Type Type => _type;
@@ -33,7 +35,7 @@ namespace DevTeam.IoC
 
         public Type[] GenericTypeArguments => _type.GetGenericArguments();
 
-        public IEnumerable<MethodInfo> Methods => _type.GetMethods();
+        public Type[] GenericTypeParameters => _type.GetGenericArguments();
 
         public IEnumerable<T> GetCustomAttributes<T>()
             where T : Attribute

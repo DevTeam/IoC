@@ -15,6 +15,6 @@
         IEnumerable<MethodInfo> GetMethods([NotNull] IReflection reflection, [NotNull] Type implementationType);
 
         [NotNull]
-        IParameterMetadata[] GetConstructorParameters([NotNull] IReflection reflection, [NotNull] ConstructorInfo constructor);
+        IParameterMetadata[] GetParameters([NotNull] IReflection reflection, [NotNull] MethodBase method, ref int stateIndex);
     }
 }

@@ -69,7 +69,7 @@
             if (ctx == null) throw new ArgumentNullException(nameof(ctx));
             if (stateType == null) throw new ArgumentNullException(nameof(stateType));
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
-            return ctx.StateProvider.GetState(ctx, ctx.ResolverContext.Container.KeyFactory.CreateStateKey(index, stateType));
+            return ctx.StateProvider.GetState(ctx, ctx.ResolverContext.Container.KeyFactory.CreateStateKey(index, stateType, true));
         }
 
         [NotNull]

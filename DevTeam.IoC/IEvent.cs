@@ -1,7 +1,8 @@
-﻿namespace DevTeam.IoC.Contracts
+﻿namespace DevTeam.IoC
 {
-    [PublicAPI]
-    public interface IEvent
+    using Contracts;
+
+    internal interface IEvent
     {
         EventStage Stage { [NotNull] get; }
 

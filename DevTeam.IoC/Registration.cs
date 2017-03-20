@@ -12,7 +12,7 @@
         private static readonly IExtension[] EmptyExtensions = new IExtension[0];
         private readonly List<HashSet<IContractKey>> _contractKeys = new List<HashSet<IContractKey>>();
         private readonly HashSet<IKey> _registrationKeys = new HashSet<IKey>();
-        private readonly Lazy<IInstanceFactoryProvider> _instanceFactoryProvider;
+        private readonly Lazy<IMethodFactory> _instanceFactoryProvider;
         private readonly RegistrationResult<T> _result;
         private readonly ICache<Type, IResolverFactory> _resolverFactoryCache;
         private readonly IReflection _reflection;
@@ -25,7 +25,7 @@
         {
             if (fluent == null) throw new ArgumentNullException(nameof(fluent));
             if (container == null) throw new ArgumentNullException(nameof(container));
-            _instanceFactoryProvider = new Lazy<IInstanceFactoryProvider>(GetInstanceFactoryProvider);
+            _instanceFactoryProvider = new Lazy<IMethodFactory>(GetInstanceFactoryProvider);
             _result = new RegistrationResult<T>(this);
             var cacheProvider = container as IProvider<ICache<Type, IResolverFactory>>;
             cacheProvider?.TryGet(out _resolverFactoryCache);
@@ -49,6 +49,14 @@
         {
             if (contractTypes == null) throw new ArgumentNullException(nameof(contractTypes));
             AddContractKey(contractTypes.Select(type => Resolver.KeyFactory.CreateContractKey(type, false)));
+            return this;
+        }
+
+        public override IRegistration<T> State(int index, Type stateType)
+        {
+            if (stateType == null) throw new ArgumentNullException(nameof(stateType));
+            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
+            AddStateKey(Resolver.KeyFactory.CreateStateKey(index, stateType, false));
             return this;
         }
 
@@ -244,11 +252,11 @@
             _result.AddResource(registration);
         }
 
-        private IInstanceFactoryProvider GetInstanceFactoryProvider()
+        private IMethodFactory GetInstanceFactoryProvider()
         {
-            if (!Resolver.TryResolve(out IInstanceFactoryProvider instanceFactoryProvider))
+            if (!Resolver.TryResolve(out IMethodFactory instanceFactoryProvider))
             {
-                throw new InvalidOperationException($"{typeof(IInstanceFactoryProvider)} was not registered.");
+                throw new InvalidOperationException($"{typeof(IMethodFactory)} was not registered.");
             }
 
             return instanceFactoryProvider;

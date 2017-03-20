@@ -13,6 +13,9 @@
         private readonly int _contractsHashCode;
         private readonly int _tagsHashCode;
         private readonly int _statesHashCode;
+        private readonly HashSet<IContractKey> _contractKeys;
+        private readonly HashSet<ITagKey> _tagKeys;
+        private readonly HashSet<IStateKey> _stateKeys;
 
         public CompositeKey(
             [NotNull] IEnumerable<IContractKey> contractKeys,
@@ -22,16 +25,16 @@
 #if DEBUG
             if (contractKeys == null) throw new ArgumentNullException(nameof(contractKeys));
 #endif
-            ContractKeys = CreateSet(contractKeys, out _contractsHashCode);
-            TagKeys = tagKeys != null ? CreateSet(tagKeys, out _tagsHashCode) : EmptyTagKeys;
-            StateKeys = stateKeys != null ? CreateSet(stateKeys, out _statesHashCode) : EmptyStateKeys;
+            _contractKeys = CreateSet(contractKeys, out _contractsHashCode);
+            _tagKeys = tagKeys != null ? CreateSet(tagKeys, out _tagsHashCode) : EmptyTagKeys;
+            _stateKeys = stateKeys != null ? CreateSet(stateKeys, out _statesHashCode) : EmptyStateKeys;
         }
 
-        public HashSet<IContractKey> ContractKeys { get; }
+        public IEnumerable<IContractKey> ContractKeys => _contractKeys;
 
-        public HashSet<ITagKey> TagKeys { get; }
+        public IEnumerable<ITagKey> TagKeys => _tagKeys;
 
-        public HashSet<IStateKey> StateKeys { get; }
+        public IEnumerable<IStateKey> StateKeys => _stateKeys;
 
         public override bool Equals(object obj)
         {
@@ -68,25 +71,25 @@
 
         public override string ToString()
         {
-            return $"{nameof(CompositeKey)} [Contracts: {string.Join(", ", ContractKeys.Select(i => i.ToString()).ToArray())}, Tags: {string.Join(", ", TagKeys.Select(i => i.ToString()).ToArray())}, States: {string.Join(", ", StateKeys.Select(i => i.ToString()).ToArray())}]";
+            return $"{nameof(CompositeKey)} [Contracts: {string.Join(", ", _contractKeys.Select(i => i.ToString()).ToArray())}, Tags: {string.Join(", ", _tagKeys.Select(i => i.ToString()).ToArray())}, States: {string.Join(", ", _stateKeys.Select(i => i.ToString()).ToArray())}]";
         }
 
         private bool Equals(ICompositeKey other)
         {
             var filter = KeyFilterContext.Current;
             return
-                ContractKeys.SetEquals(other.ContractKeys)
-                && (TagKeys.Count == 0 || filter.Filter(typeof(ITagKey)) || TagKeys.SetEquals(other.TagKeys))
-                && (StateKeys.Count == 0 || filter.Filter(typeof(IStateKey)) || StateKeys.SetEquals(other.StateKeys));
+                _contractKeys.SetEquals(other.ContractKeys)
+                && (_tagKeys.Count == 0 || filter.Filter(typeof(ITagKey)) || _tagKeys.SetEquals(other.TagKeys))
+                && (_stateKeys.Count == 0 || filter.Filter(typeof(IStateKey)) || _stateKeys.SetEquals(other.StateKeys));
         }
 
         private bool Equals(IContractKey other)
         {
             var filter = KeyFilterContext.Current;
             return
-                ContractKeys.Count == 1 && ContractKeys.Single().Equals(other)
-                && (TagKeys.Count == 0 || filter.Filter(typeof(ITagKey)))
-                && (StateKeys.Count == 0 || filter.Filter(typeof(IStateKey)));
+                _contractKeys.Count == 1 && _contractKeys.Single().Equals(other)
+                && (_tagKeys.Count == 0 || filter.Filter(typeof(ITagKey)))
+                && (_stateKeys.Count == 0 || filter.Filter(typeof(IStateKey)));
         }
 
         [NotNull]
