@@ -9,18 +9,23 @@
     internal class ManualMetadataProvider : IMetadataProvider
     {
         private readonly IMetadataProvider _defaultMetadataProvider;
-        private readonly IParameterMetadata[] _constructorParams;
+        [CanBeNull] private readonly IParameterMetadata[] _constructorParams;
+        [CanBeNull] private MethodMetadata[] _methods;
+        [CanBeNull] private PropertyMetadata[] _properties;
+        [CanBeNull] private IDictionary<MethodInfo, IParameterMetadata[]> _methodsDict;
 
         public ManualMetadataProvider(
             [NotNull] IMetadataProvider defaultMetadataProvider,
-            [NotNull] IEnumerable<IParameterMetadata> constructorParams)
+            [NotNull] TypeMetadata typeMetadata)
         {
 #if DEBUG
             if (defaultMetadataProvider == null) throw new ArgumentNullException(nameof(defaultMetadataProvider));
-            if (constructorParams == null) throw new ArgumentNullException(nameof(constructorParams));
+            if (typeMetadata == null) throw new ArgumentNullException(nameof(typeMetadata));
 #endif
             _defaultMetadataProvider = defaultMetadataProvider;
-            _constructorParams = constructorParams.ToArray();
+            _constructorParams = typeMetadata.Constructor?.Parameters.ToArray();
+            _methods = typeMetadata.Methods?.ToArray();
+            _properties = typeMetadata.Properties?.ToArray();
         }
 
         public bool TryResolveImplementationType(IReflection reflection, Type implementationType, out Type resolvedType, ICreationContext creationContext = null)
@@ -38,12 +43,16 @@
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
             if (reflection == null) throw new ArgumentNullException(nameof(reflection));
 #endif
+            if (_constructorParams == null)
+            {
+                return _defaultMetadataProvider.TrySelectConstructor(reflection, implementationType, out constructor, out error);
+            }
+
             var typeInfo = reflection.GetType(implementationType);
-            constructor = typeInfo.Constructors.FirstOrDefault(ctor => MatchConstructor(reflection, ctor));
+            constructor = typeInfo.Constructors.FirstOrDefault(ctor => MatchMethod(reflection, ctor));
             if (constructor == null)
             {
-                error = new InvalidOperationException("Constructor was not found.");
-                return false;
+                return _defaultMetadataProvider.TrySelectConstructor(reflection, implementationType, out constructor, out error);
             }
 
             error = default(Exception);
@@ -52,7 +61,53 @@
 
         public IEnumerable<MethodInfo> GetMethods(IReflection reflection, Type implementationType)
         {
-            yield break;
+            return GetMethodsInternal(reflection, implementationType).Keys;
+        }
+
+        private IDictionary<MethodInfo, IParameterMetadata[]> GetMethodsInternal(IReflection reflection, Type implementationType)
+        {
+            if (_methodsDict != null)
+            {
+                return _methodsDict;
+            }
+
+            _methodsDict = new Dictionary<MethodInfo, IParameterMetadata[]>();
+            var type = reflection.GetType(implementationType);
+            var methods = type.Methods.ToArray();
+
+            if (_methods != null)
+            {
+                var methodList =
+                    from methodMetadata in _methods
+                    join method in methods on methodMetadata.Name equals method.Name
+                    where
+                        method.GetParameters().Zip(methodMetadata.Parameters, (ctorParam, bindingParam) => new { ctorParam, bindingParam })
+                        .All(i => MatchParameter(reflection, i.ctorParam, i.bindingParam))
+                    select new { method, methodMetadata.Parameters };
+
+                foreach (var item in methodList)
+                {
+                    _methodsDict.Add(item.method, item.Parameters.ToArray());
+                }
+            }
+
+            if (_properties != null)
+            {
+                var methodList =
+                    from method in methods
+                    let pars = method.GetParameters()
+                    where pars.Length == 1
+                    join propertyMetadata in _properties on method.Name equals "set_" + propertyMetadata.Name
+                    where MatchParameter(reflection, pars[0], propertyMetadata.Parameter)
+                    select new { method, propertyMetadata.Parameter };
+
+                foreach (var item in methodList)
+                {
+                    _methodsDict.Add(item.method, new[] {item.Parameter});
+                }
+            }
+
+            return _methodsDict;
         }
 
         public IParameterMetadata[] GetParameters(IReflection reflection, MethodBase method, ref int stateIndex)
@@ -61,16 +116,31 @@
             if (method == null) throw new ArgumentNullException(nameof(method));
             if (reflection == null) throw new ArgumentNullException(nameof(reflection));
 #endif
-            return _constructorParams;
+            var methodInfo = method as MethodInfo;
+            if (methodInfo != null)
+            {
+                var methodsDict = GetMethodsInternal(reflection, method.DeclaringType);
+                if (methodsDict.TryGetValue(methodInfo, out IParameterMetadata[] pars))
+                {
+                    return pars;
+                }
+            }
+
+            return _constructorParams ?? _defaultMetadataProvider.GetParameters(reflection, method, ref stateIndex);
         }
 
-        private bool MatchConstructor([NotNull] IReflection reflection, [NotNull] ConstructorInfo ctor)
+        private bool MatchMethod([NotNull] IReflection reflection, [NotNull] MethodBase method)
         {
 #if DEBUG
             if (reflection == null) throw new ArgumentNullException(nameof(reflection));
-            if (ctor == null) throw new ArgumentNullException(nameof(ctor));
+            if (method == null) throw new ArgumentNullException(nameof(method));
 #endif
-            var ctorParams = ctor.GetParameters();
+            if (_constructorParams == null)
+            {
+                return false;
+            }
+
+            var ctorParams = method.GetParameters();
             if (ctorParams.Length != _constructorParams.Length)
             {
                 return false;

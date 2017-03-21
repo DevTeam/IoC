@@ -137,7 +137,7 @@
 
         private IMetadataProvider CreateInstance([NotNull] IEnumerable<IParameterMetadata> ctorParams)
         {
-            return new ManualMetadataProvider(_defaultMetadataProvider.Object, ctorParams);
+            return new ManualMetadataProvider(_defaultMetadataProvider.Object, new TypeMetadata(new MethodMetadata(".ctor", ctorParams), null, null));
         }
 
         private class AutowiringClass

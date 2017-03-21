@@ -56,12 +56,12 @@
                         typeof(LifetimeDto),
                         typeof(KeyComparerDto),
                         typeof(StateDto)),
-                    new JsonDerivedTypeConverter<ITagDto>(
-                        reflection,
-                        typeof(TagDto)),
+                    new JsonDerivedTypeConverter<ITagDto>(reflection, typeof(TagDto)),
                     new JsonDerivedTypeConverter<IParameterDto>(reflection, typeof(ParameterDto)),
                     new JsonDerivedTypeConverter<IValueDto>(reflection, typeof(ValueDto)),
-                    new JsonDerivedTypeConverter<IStateDto>(reflection, typeof(StateDto))
+                    new JsonDerivedTypeConverter<IStateDto>(reflection, typeof(StateDto)),
+                    new JsonDerivedTypeConverter<IMethodDto>(reflection, typeof(MethodDto)),
+                    new JsonDerivedTypeConverter<IPropertyDto>(reflection, typeof(PropertyDto)),
                 }
             };
         }

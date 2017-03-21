@@ -12,5 +12,9 @@
         string FactoryMethodName { [CanBeNull] get; }
 
         IEnumerable<IParameterDto> ConstructorParameters { [CanBeNull] get; }
+
+        IEnumerable<IMethodDto> Methods { [CanBeNull] get; }
+
+        IEnumerable<IPropertyDto> Properties { [CanBeNull] get; }
     }
 }

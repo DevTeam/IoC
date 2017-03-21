@@ -49,9 +49,9 @@
             yield return
                 container
                     .Register()
-                    .State<IEnumerable<IParameterMetadata>>(0)
+                    .State<TypeMetadata>(0)
                     .Contract<IMetadataProvider>()
-                    .FactoryMethod(ctx => new ManualMetadataProvider(MetadataProvider, ctx.GetState<IEnumerable<IParameterMetadata>>(0)))
+                    .FactoryMethod(ctx => new ManualMetadataProvider(MetadataProvider, ctx.GetState<TypeMetadata>(0)))
                     .Apply();
 
             yield return

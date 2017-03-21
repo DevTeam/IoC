@@ -17,6 +17,12 @@
         [JsonProperty("constructor", Required = Required.Default)]
         public IEnumerable<IParameterDto> ConstructorParameters { get; [CanBeNull] set; }
 
+        [JsonProperty("methods", Required = Required.Default)]
+        public IEnumerable<IMethodDto> Methods { get; [CanBeNull] set; }
+
+        [JsonProperty("properties", Required = Required.Default)]
+        public IEnumerable<IPropertyDto> Properties { get; }
+
         [JsonProperty("factoryMethod", Required = Required.Default)]
         public string FactoryMethodName { get; [CanBeNull] set; }
     }
