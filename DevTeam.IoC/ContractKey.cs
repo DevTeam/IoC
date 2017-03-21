@@ -9,31 +9,34 @@
     {
         private static readonly Type[] EmptyGenericTypeArguments = new Type[0];
         private readonly int _hashCode;
+        private readonly Type[] _genericTypeArguments;
+        private readonly Type _contractType;
+        private readonly bool _resolving;
 
         public ContractKey(IReflection reflection, Type contractType, bool resolving)
         {
             if (contractType == null) throw new ArgumentNullException(nameof(contractType));
-            Resolving = resolving;
+            _resolving = resolving;
             if (reflection.GetType(contractType).IsConstructedGenericType)
             {
-                ContractType = contractType.GetGenericTypeDefinition();
-                GenericTypeArguments = reflection.GetType(contractType).GenericTypeArguments;
+                _contractType = contractType.GetGenericTypeDefinition();
+                _genericTypeArguments = reflection.GetType(contractType).GenericTypeArguments;
             }
             else
             {
-                ContractType = contractType;
-                GenericTypeArguments = EmptyGenericTypeArguments;
+                _contractType = contractType;
+                _genericTypeArguments = EmptyGenericTypeArguments;
             }
 
-            if (ContractType == null) throw new InvalidOperationException(nameof(ContractType));
-            _hashCode = ContractType.GetHashCode();
+            if (_contractType == null) throw new InvalidOperationException(nameof(ContractType));
+            _hashCode = _contractType.GetHashCode();
         }
 
-        public Type ContractType { get; }
+        public Type ContractType => _contractType;
 
-        public Type[] GenericTypeArguments { get; }
+        public Type[] GenericTypeArguments => _genericTypeArguments;
 
-        public bool Resolving { get; }
+        public bool Resolving => _resolving;
 
         public override bool Equals(object obj)
         {
@@ -56,39 +59,38 @@
 
         private bool Equals(IContractKey other)
         {
-            if (ContractType != other.ContractType)
+            if (_contractType != other.ContractType)
             {
                 return false;
             }
 
-            var genericTypeArguments = GenericTypeArguments;
             var otherGenericTypeArguments = other.GenericTypeArguments;
-            if (genericTypeArguments.Length == otherGenericTypeArguments.Length)
+            if (_genericTypeArguments.Length == otherGenericTypeArguments.Length)
             {
-                if(genericTypeArguments.Length == 0)
+                if(_genericTypeArguments.Length == 0)
                 {
                     return true;
                 }
 
-                return genericTypeArguments.SequenceEqual(otherGenericTypeArguments);
+                return _genericTypeArguments.SequenceEqual(otherGenericTypeArguments);
             }
 
-            if (Resolving == other.Resolving)
+            if (_resolving == other.Resolving)
             {
-                return genericTypeArguments.SequenceEqual(otherGenericTypeArguments);
+                return _genericTypeArguments.SequenceEqual(otherGenericTypeArguments);
             }
 
-            if ((!Resolving && genericTypeArguments.Length == 0) || (!other.Resolving && otherGenericTypeArguments.Length == 0))
+            if ((!_resolving && _genericTypeArguments.Length == 0) || (!other.Resolving && otherGenericTypeArguments.Length == 0))
             {
                 return true;
             }
 
-            return GenericTypeArguments.SequenceEqual(otherGenericTypeArguments);
+            return _genericTypeArguments.SequenceEqual(otherGenericTypeArguments);
         }
 
         public override string ToString()
         {
-            return $"{nameof(ContractKey)} [ContractType: {ContractType.Name}, GenericTypeArguments: {string.Join(", ", GenericTypeArguments.Select(i => i.Name).ToArray())}, Resolving: {Resolving}]";
+            return $"{nameof(ContractKey)} [ContractType: {_contractType.Name}, GenericTypeArguments: {string.Join(", ", _genericTypeArguments.Select(i => i.Name).ToArray())}, Resolving: {_resolving}]";
         }
     }
 }

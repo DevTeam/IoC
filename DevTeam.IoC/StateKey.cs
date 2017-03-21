@@ -8,6 +8,9 @@
     {
         [NotNull] private readonly IReflection _reflection;
         private IType _type;
+        private readonly int _index;
+        private readonly Type _stateType;
+        private readonly bool _resolving;
 
         public StateKey([NotNull] IReflection reflection, int index, [NotNull] Type stateType, bool resolving)
         {
@@ -16,18 +19,18 @@
             if (stateType == null) throw new ArgumentNullException(nameof(stateType));
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
 #endif
-            Index = index;
-            StateType = stateType;
-            Resolving = resolving;
+            _index = index;
+            _stateType = stateType;
+            _resolving = resolving;
             _reflection = reflection;
-            _type = reflection.GetType(StateType);
+            _type = reflection.GetType(_stateType);
         }
 
-        public int Index { get; }
+        public int Index => _index;
 
-        public Type StateType { get; }
+        public Type StateType => _stateType;
 
-        public bool Resolving { get; }
+        public bool Resolving => _resolving;
 
         public override bool Equals(object obj)
         {
@@ -43,18 +46,18 @@
                 return 0;
             }
 
-            return Index;
+            return _index;
         }
 
         private bool Equals(IStateKey other)
         {
-            var eq = KeyFilterContext.Current.Filter(typeof(IStateKey)) || Index == other.Index;
+            var eq = KeyFilterContext.Current.Filter(typeof(IStateKey)) || _index == other.Index;
             if (!eq)
             {
                 return false;
             }
 
-            if (StateType == other.StateType)
+            if (_stateType == other.StateType)
             {
                 return true;
             }
@@ -63,12 +66,12 @@
 
             return 
                 (other.Resolving && _type.IsAssignableFrom(otherType))
-                || (Resolving && otherType.IsAssignableFrom(_type));
+                || (_resolving && otherType.IsAssignableFrom(_type));
         }
 
         public override string ToString()
         {
-            return $"{nameof(StateKey)} [Index: {Index}, StateType: {StateType.Name}, Resolving: {Resolving}]";
+            return $"{nameof(StateKey)} [Index: {_index}, StateType: {_stateType.Name}, Resolving: {_resolving}]";
         }
     }
 }

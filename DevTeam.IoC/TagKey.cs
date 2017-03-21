@@ -7,17 +7,18 @@
     internal struct TagKey : ITagKey
     {
         private readonly int _hashCode;
+        private readonly object _tag;
 
         public TagKey([NotNull] object tag)
         {
 #if DEBUG
             if (tag == null) throw new ArgumentNullException(nameof(tag));
 #endif
-            Tag = tag;
-            _hashCode = Tag.GetHashCode();
+            _tag = tag;
+            _hashCode = tag.GetHashCode();
         }
 
-        public object Tag { get; }
+        public object Tag => _tag;
 
         public override bool Equals(object obj)
         {
@@ -38,12 +39,12 @@
 
         private bool Equals(ITagKey other)
         {
-            return KeyFilterContext.Current.Filter(typeof(ITagKey)) || Tag.Equals(other.Tag);
+            return KeyFilterContext.Current.Filter(typeof(ITagKey)) || _tag.Equals(other.Tag);
         }
 
         public override string ToString()
         {
-            return $"{nameof(TagKey)} [Tag: {Tag}]";
+            return $"{nameof(TagKey)} [Tag: {_tag}]";
         }
     }
 }
