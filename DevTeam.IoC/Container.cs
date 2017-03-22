@@ -16,7 +16,7 @@
         private readonly Dictionary<IEqualityComparer<IKey>, Dictionary<IKey, RegistrationItem>> _registrations = new Dictionary<IEqualityComparer<IKey>, Dictionary<IKey, RegistrationItem>>();
         private readonly Subject<IRegistrationEvent> _registrationSubject = new Subject<IRegistrationEvent>();
         // ReSharper disable once MemberInitializerValueIgnored
-        private readonly IFluent _fluent = RootContainerConfiguration.Fluent;
+        private readonly IFluent _fluent;
         private readonly IKeyFactory _keyFactory;
         private readonly ICache<IKey, IResolverContext> _resolverContextCache = new Cache<IKey, IResolverContext>();
         private readonly ICache<Type, IResolverFactory> _resolverFactoryCache = new Cache<Type, IResolverFactory>();
@@ -24,6 +24,7 @@
         public Container([CanBeNull] object tag = null)
         {
             Tag = tag;
+            _fluent = Fluent.Shared;
             _resources.Add(new CompositeDisposable(RootContainerConfiguration.Shared.Apply(this)));
             _resources.Add(new CompositeDisposable(ContainerConfiguration.Shared.Apply(this)));
             if (!this.TryResolve(out _fluent))
@@ -43,6 +44,7 @@
         internal Container([NotNull] IContainer parentContainer, [CanBeNull] object tag = null, [CanBeNull] IResolverContext resolverContext = null)
         {
             Tag = tag;
+            _fluent = parentContainer.Resolve().Instance<IFluent>();
             Parent = parentContainer;
             _resources.Add(new CompositeDisposable(ContainerConfiguration.Shared.Apply(this)));
             if (!this.TryResolve(out _fluent))

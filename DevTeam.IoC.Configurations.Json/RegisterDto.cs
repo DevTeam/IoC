@@ -21,7 +21,7 @@
         public IEnumerable<IMethodDto> Methods { get; [CanBeNull] set; }
 
         [JsonProperty("properties", Required = Required.Default)]
-        public IEnumerable<IPropertyDto> Properties { get; }
+        public IEnumerable<IPropertyDto> Properties { get; [CanBeNull] set; }
 
         [JsonProperty("factoryMethod", Required = Required.Default)]
         public string FactoryMethodName { get; [CanBeNull] set; }

@@ -3,11 +3,12 @@
     using System;
     using Shouldly;
     using Xunit;
+    using DevTeam.IoC.Contracts;
 
     public class ContractKeyTests
     {
 #if !NET35
-        private readonly Reflection _reflection = new Reflection();
+        private readonly IReflection _reflection = Reflection.Shared;
 
         [Theory]
         [InlineData(typeof(string), false, typeof(string), true, true)]

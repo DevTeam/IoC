@@ -5,7 +5,6 @@
     using Shouldly;
     using Xunit;
 
-
     public class AutowiringInstanceFactoryTests
     {
         private readonly IContainer _container;
@@ -93,7 +92,7 @@
 
         private IResolverFactory CreateFactory<T>()
         {
-            return new MetadataFactory(new Reflection(), typeof(T), new ExpressionMethodFactory(), new AutowiringMetadataProvider(), _container.KeyFactory);
+            return new MetadataFactory(typeof(T), new ExpressionMethodFactory(), new AutowiringMetadataProvider(Reflection.Shared), _container.KeyFactory);
         }
 
         private ICreationContext CreateContext(params object[] state)

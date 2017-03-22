@@ -4,12 +4,13 @@
     using Shouldly;
     using Xunit;
     using System.Collections.Generic;
+    using Contracts;
 
     public class TagKeyTests
     {
-#if !NET35
-        private readonly Reflection _reflection = new Reflection();
+        private readonly IReflection _reflection = Reflection.Shared;
 
+#if !NET35
         [Theory]
         [InlineData(3, 3, true)]
         [InlineData(1, 3, false)]

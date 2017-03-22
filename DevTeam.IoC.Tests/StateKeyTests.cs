@@ -4,11 +4,12 @@
     using Shouldly;
     using Xunit;
     using System.Collections.Generic;
+    using DevTeam.IoC.Contracts;
 
     public class StateKeyTests
     {
 #if !NET35
-        private readonly Reflection _reflection = new Reflection();
+        private readonly IReflection _reflection = Reflection.Shared;
 
         [Theory]
         [InlineData(0, typeof(string), false, 0, typeof(string), true, true)]

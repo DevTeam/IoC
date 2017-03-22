@@ -5,6 +5,12 @@
 
     internal class Fluent : IFluent
     {
+        public static readonly IFluent Shared = new Fluent();
+
+        private Fluent()
+        {
+        }
+
         public IConfiguring<T> Configure<T>(T resolver)
               where T : IContainer
         {

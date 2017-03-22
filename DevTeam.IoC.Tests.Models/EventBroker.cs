@@ -2,25 +2,22 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Reflection;
     using Contracts;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class EventBroker : IEventBroker
     {
-        private readonly IReflection _reflection;
         private readonly ILog _log;
         private readonly Dictionary<Type, object> _sources = new Dictionary<Type, object>();
         private readonly Dictionary<Type, object> _listeners = new Dictionary<Type, object>();
         private readonly Dictionary<Type, List<IDisposable>> _subscriptions = new Dictionary<Type, List<IDisposable>>();
 
         public EventBroker(
-            [NotNull] IReflection reflection,
-            [State(0, typeof(string), Value = nameof(EventBroker))] ILog log)
+            [NotNull] [State(0, typeof(string), Value = nameof(EventBroker))] ILog log)
         {
-            if (reflection == null) throw new ArgumentNullException(nameof(reflection));
             if (log == null) throw new ArgumentNullException(nameof(log));
             log.Method("Ctor()");
-            _reflection = reflection;
             _log = log;
         }
 
@@ -73,8 +70,7 @@
         private void RefreshSubscriptions(Type eventType)
         {
             _log.Method($"RefreshSubscriptions({eventType})");
-            List<IDisposable> subscriptions;
-            if (_subscriptions.TryGetValue(eventType, out subscriptions))
+            if (_subscriptions.TryGetValue(eventType, out List<IDisposable> subscriptions))
             {
                 foreach (var subscription in subscriptions)
                 {
@@ -91,7 +87,7 @@
 
             foreach (var source in _sources)
             {
-                var subscribeMethod = _reflection.GetType(source.Value.GetType()).GetMethod("Subscribe");
+                var subscribeMethod = GetMethod(source.Value.GetType(), "Subscribe");
                 if (subscribeMethod == null)
                 {
                     continue;
@@ -109,5 +105,23 @@
         {
             return $"{nameof(EventBroker)} [Sources Count: {_sources.Count}, Listeners Count: {_listeners.Count}, Subscriptions Count: {_subscriptions.Count}]";
         }
+
+#if NET35 || NET40
+        private static MethodInfo GetMethod([NotNull] Type type, [NotNull] string methodName, [NotNull] params Type[] argumenTypes)
+        {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+            if (methodName == null) throw new ArgumentNullException(nameof(methodName));
+            if (argumenTypes == null) throw new ArgumentNullException(nameof(argumenTypes));
+            return type.GetMethod(methodName, argumenTypes);
+        }
+#else
+        private static MethodInfo GetMethod([NotNull] Type type, [NotNull] string methodName, [NotNull] params Type[] argumenTypes)
+        {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+            if (methodName == null) throw new ArgumentNullException(nameof(methodName));
+            if (argumenTypes == null) throw new ArgumentNullException(nameof(argumenTypes));
+            return type.GetRuntimeMethod(methodName, argumenTypes);
+        }
+#endif
     }
 }

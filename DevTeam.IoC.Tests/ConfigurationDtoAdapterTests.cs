@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
     using Configurations.Json;
     using Contracts;
     using Contracts.Dto;
@@ -15,8 +14,7 @@
     {
         private readonly MyTypeResolver _typeResolver;
         private readonly IContainer _container;
-        private readonly Reflection _reflection = new Reflection();
-
+        private readonly IReflection _reflection = Reflection.Shared;
 
         public ConfigurationDtoAdapterTests()
         {
@@ -76,7 +74,6 @@
             dependencies[0].ShouldBeOfType<MyConfiguration>();
         }
 
-#if !NET35
         [Fact]
         public void ShouldGetDependenciesWhenDependencyAssembly()
         {
@@ -92,7 +89,6 @@
             dependencies.Length.ShouldBe(1);
             dependencies[0].ShouldBeOfType<ConfigurationFromAssembly>();
         }
-#endif
 
         [Fact]
         public void ShouldGetDependenciesWhenDependencyReference()
@@ -347,6 +343,78 @@
             instance.ShouldBeOfType<SimpleService>();
         }
 
+        [Fact]
+        public void ShouldApplyWhenRegisterUsingConstructorParameters()
+        {
+            // Given
+            var configurationDto = new ConfigurationDto();
+            var configuration = CreateInstance(configurationDto);
+
+            // When
+            configurationDto.Add(
+                new RegisterDto
+                {
+                    Keys = new IRegisterStatementDto[]
+                    {
+                        new ContractDto { Contract = new []{ typeof(ISimpleService).FullName }},
+                        new StateDto { Index = 0, StateTypeName = typeof(int).FullName }
+                    },
+                    AutowiringTypeName = typeof(SimpleService2).FullName,
+                    ConstructorParameters = new List<IParameterDto> { new ParameterDto { TypeName = typeof(int).FullName, State = new StateDto { Index = 0, StateTypeName = typeof(int).FullName } } }
+                });
+
+            // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+            configuration.Apply(_container).ToArray();
+            var instance = _container.Resolve().Instance<ISimpleService>(33);
+
+            // Then
+            instance.ShouldBeOfType<SimpleService2>();
+            ((SimpleService2)instance).Val.ShouldBe(33);
+        }
+
+        [Fact]
+        public void ShouldApplyWhenRegisterUsingMethodAndPropertiesParameters()
+        {
+            // Given
+            var configurationDto = new ConfigurationDto();
+            var configuration = CreateInstance(configurationDto);
+
+            // When
+            configurationDto.Add(
+                new RegisterDto
+                {
+                    Keys = new IRegisterStatementDto[]
+                    {
+                        new ContractDto { Contract = new []{ typeof(ISimpleService).FullName }},
+                        new StateDto { Index = 0, StateTypeName = typeof(int).FullName }
+                    },
+                    AutowiringTypeName = typeof(SimpleService3).FullName,
+                    Methods = new List<IMethodDto>
+                    {
+                        new MethodDto { Name = nameof(SimpleService3.Init), MethodParameters = new List<IParameterDto> { new ParameterDto { TypeName = typeof(ISimpleService).FullName }}}
+                    },
+                    Properties = new List<IPropertyDto>
+                    {
+                        new PropertyDto { Name = nameof(SimpleService3.SimpleService2), Property = new ParameterDto { TypeName = typeof(ISimpleService).FullName, Dependency = new List<IRegisterStatementDto> { new TagDto {Value = "2" }}}}
+                    }
+                });
+
+            var simpleService = new Mock<ISimpleService>();
+            _container.Register().Contract<ISimpleService>().FactoryMethod(ctx => simpleService.Object);
+
+            var simpleService2 = new Mock<ISimpleService>();
+            _container.Register().Tag("2").Contract<ISimpleService>().FactoryMethod(ctx => simpleService2.Object);
+
+            // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+            configuration.Apply(_container).ToArray();
+            var instance = _container.Resolve().Instance<ISimpleService>(33);
+
+            // Then
+            instance.ShouldBeOfType<SimpleService3>();
+            ((SimpleService3)instance).SimpleService.ShouldBe(simpleService.Object);
+            ((SimpleService3)instance).SimpleService2.ShouldBe(simpleService2.Object);
+        }
+
         private ConfigurationDtoAdapter CreateInstance(IConfigurationDto configurationDto)
         {
             return new ConfigurationDtoAdapter(configurationDto);
@@ -411,6 +479,39 @@
 
         private class SimpleService : ISimpleService, IDisposable
         {
+            public void Dispose()
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        private class SimpleService2 : ISimpleService, IDisposable
+        {
+            public SimpleService2(int val)
+            {
+                Val = val;
+            }
+
+            public int Val { get; }
+
+            public void Dispose()
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        private class SimpleService3 : ISimpleService, IDisposable
+        {
+            public void Init([NotNull] ISimpleService simpleService)
+            {
+                if (simpleService == null) throw new ArgumentNullException(nameof(simpleService));
+                SimpleService = simpleService;
+            }
+
+            public ISimpleService SimpleService { get; private set; }
+
+            public ISimpleService SimpleService2 { get; private set; }
+
             public void Dispose()
             {
                 throw new NotImplementedException();

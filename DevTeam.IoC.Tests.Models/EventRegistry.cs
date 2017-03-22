@@ -18,9 +18,9 @@
 
 #if !NET35
         public EventRegistry(
-             Task<IResolver> resolver,
-             Task<IEventBroker> eventBroker,
-             [State(0, typeof(string))] Task<IResolver<string, ILog>> logResolver)
+             [NotNull] Task<IResolver> resolver,
+             [NotNull] Task<IEventBroker> eventBroker,
+             [NotNull] [State(0, typeof(string))] Task<IResolver<string, ILog>> logResolver)
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             if (eventBroker == null) throw new ArgumentNullException(nameof(eventBroker));
@@ -38,9 +38,9 @@
         }
 #else
         public EventRegistry(
-             IResolver resolver,
-             IEventBroker eventBroker,
-             [State(0, typeof(string))] IResolver<string, ILog> logResolver)
+             [NotNull] IResolver resolver,
+             [NotNull] IEventBroker eventBroker,
+             [NotNull] [State(0, typeof(string))] IResolver<string, ILog> logResolver)
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             if (eventBroker == null) throw new ArgumentNullException(nameof(eventBroker));

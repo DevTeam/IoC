@@ -13,7 +13,7 @@
     [SuppressMessage("ReSharper", "UnusedParameter.Local")]
     public class ManualMetadataProviderTests
     {
-        private readonly Reflection _reflection = new Reflection();
+        private readonly IReflection _reflection = Reflection.Shared;
         private readonly Mock<IMetadataProvider> _defaultMetadataProvider;
         private readonly IParameterMetadata[] _matchedConstructorParams;
         private readonly IParameterMetadata[] _notMatchedByStateTypeConstructorParams;
@@ -63,10 +63,10 @@
             // Given
             var metadataProvider = CreateInstance(Enumerable.Empty<IParameterMetadata>());
             Type resolvedType = typeof(IDisposable);
-            _defaultMetadataProvider.Setup(i => i.TryResolveImplementationType(_reflection, typeof(IEnumerable<string>), out resolvedType, _creationContext.Object)).Returns(true);
+            _defaultMetadataProvider.Setup(i => i.TryResolveType(typeof(IEnumerable<string>), out resolvedType, _creationContext.Object)).Returns(true);
 
             // When
-            var result =  metadataProvider.TryResolveImplementationType(_reflection, typeof(IEnumerable<string>), out resolvedType, _creationContext.Object);
+            var result =  metadataProvider.TryResolveType(typeof(IEnumerable<string>), out resolvedType, _creationContext.Object);
 
             // Then
             result.ShouldBeTrue();
@@ -82,7 +82,7 @@
             // When
             ConstructorInfo ctor;
             Exception error;
-            var result = metadataProvider.TrySelectConstructor(_reflection, typeof(AutowiringClass), out ctor, out error);
+            var result = metadataProvider.TrySelectConstructor(typeof(AutowiringClass), out ctor, out error);
 
             // Then
             result.ShouldBeTrue();
@@ -99,7 +99,7 @@
             // When
             ConstructorInfo ctor;
             Exception error;
-            var result = metadataProvider.TrySelectConstructor(_reflection, typeof(AutowiringClass), out ctor, out error);
+            var result = metadataProvider.TrySelectConstructor(typeof(AutowiringClass), out ctor, out error);
 
             // Then
             result.ShouldBeFalse();
@@ -114,7 +114,7 @@
             // When
             ConstructorInfo ctor;
             Exception error;
-            var result = metadataProvider.TrySelectConstructor(_reflection, typeof(AutowiringClass), out ctor, out error);
+            var result = metadataProvider.TrySelectConstructor(typeof(AutowiringClass), out ctor, out error);
 
             // Then
             result.ShouldBeFalse();
@@ -128,7 +128,7 @@
 
             // When
             var stateIndex = 0;
-            var constructorParameters = metadataProvider.GetParameters(_reflection, typeof(AutowiringClass).GetConstructors().First(), ref stateIndex);
+            var constructorParameters = metadataProvider.GetParameters(typeof(AutowiringClass).GetConstructors().First(), ref stateIndex);
 
             // Then
             constructorParameters.ShouldBe(_matchedConstructorParams);
@@ -137,7 +137,7 @@
 
         private IMetadataProvider CreateInstance([NotNull] IEnumerable<IParameterMetadata> ctorParams)
         {
-            return new ManualMetadataProvider(_defaultMetadataProvider.Object, new TypeMetadata(new MethodMetadata(".ctor", ctorParams), null, null));
+            return new ManualMetadataProvider(_defaultMetadataProvider.Object, _reflection, new TypeMetadata(new MethodMetadata(".ctor", ctorParams), null, null));
         }
 
         private class AutowiringClass

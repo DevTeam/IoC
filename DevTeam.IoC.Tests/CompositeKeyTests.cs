@@ -7,7 +7,7 @@
 
     public class CompositeKeyTests
     {
-        private readonly Reflection _refelction = new Reflection();
+        private readonly IReflection _refelction = Reflection.Shared;
         private readonly IContractKey _contractKey1;
         private readonly IContractKey _contractKey2;
         private readonly IContractKey _contractKey3;

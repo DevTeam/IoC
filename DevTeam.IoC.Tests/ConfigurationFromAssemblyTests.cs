@@ -9,7 +9,7 @@
 
     public class ConfigurationFromAssemblyTests
     {
-        private readonly Reflection _reflection = new Reflection();
+        private readonly IReflection _reflection = Reflection.Shared;
 
         [Fact]
         public void ShouldRegister()
@@ -24,7 +24,7 @@
             var registrations = container.Registrations.ToList();
 
             // Then
-            registrations.OfType<ICompositeKey>().Count(i => i.ContractKeys.Contains(new ContractKey(new Reflection(), typeof(ILog), true)) && i.StateKeys.Contains(new StateKey(_reflection, 0, typeof(string), true))).ShouldBe(1);
+            registrations.OfType<ICompositeKey>().Count(i => i.ContractKeys.Contains(new ContractKey(Reflection.Shared, typeof(ILog), true)) && i.StateKeys.Contains(new StateKey(_reflection, 0, typeof(string), true))).ShouldBe(1);
         }
 
         private static ConfigurationFromAssembly CreateInstance(Assembly assembly)

@@ -307,7 +307,7 @@
                 }
                 else
                 {
-                    yield return registration.Autowiring(autowiringType, false).Apply();
+                    yield return registration.Autowiring(autowiringType).Apply();
                 }
             }
 
@@ -419,11 +419,9 @@
                             hasContractKey = true;
                         }
 
-                        var stateDto = keyDto as IStateDto;
-                        if (stateDto != null)
+                        if (keyDto is IStateDto stateDto)
                         {
-                            Type stateType;
-                            if (!typeResolver.TryResolveType(stateDto.StateTypeName, out stateType))
+                            if (!typeResolver.TryResolveType(stateDto.StateTypeName, out Type stateType))
                             {
                                 throw new Exception($"Invalid state type {stateDto.StateTypeName}");
                             }

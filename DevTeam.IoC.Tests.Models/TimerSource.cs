@@ -14,9 +14,9 @@
         private readonly List<IEventListener<DateTimeOffset>> _listeners = new List<IEventListener<DateTimeOffset>>();
 
         public TimerSource(
-            ITimer timer,
-            [State(0, typeof(string), Value = nameof(TimerSource))] ILog log,
-            IResolver<DateTimeOffset, IEvent<DateTimeOffset>> eventResolver)
+            [NotNull] ITimer timer,
+            [NotNull] [State(0, typeof(string), Value = nameof(TimerSource))] ILog log,
+            [NotNull] IResolver<DateTimeOffset, IEvent<DateTimeOffset>> eventResolver)
         {
             if (timer == null) throw new ArgumentNullException(nameof(timer));
             if (log == null) throw new ArgumentNullException(nameof(log));

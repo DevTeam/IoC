@@ -14,25 +14,23 @@
         [CanBeNull] private List<MethodData> _methods;
 
         public MetadataFactory(
-            [NotNull] IReflection reflection,
             [NotNull] Type implementationType,
             [NotNull] IMethodFactory methodFactory,
             [NotNull] IMetadataProvider metadataProvider,
             [NotNull] IKeyFactory keyFactory)
         {
 #if DEBUG
-            if (reflection == null) throw new ArgumentNullException(nameof(reflection));
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
             if (methodFactory == null) throw new ArgumentNullException(nameof(methodFactory));
             if (metadataProvider == null) throw new ArgumentNullException(nameof(metadataProvider));
 #endif
-            if (!metadataProvider.TrySelectConstructor(reflection, implementationType, out ConstructorInfo constructor, out Exception error))
+            if (!metadataProvider.TrySelectConstructor(implementationType, out ConstructorInfo constructor, out Exception error))
             {
                 throw error;
             }
 
             var stateIndex = 0;
-            _parameters = metadataProvider.GetParameters(reflection, constructor, ref stateIndex);
+            _parameters = metadataProvider.GetParameters(constructor, ref stateIndex);
             _constructor = methodFactory.CreateConstructor(constructor);
             var len = _parameters.Length;
             _parametersArray = new object[len];
@@ -48,10 +46,10 @@
                 _keys[i] = keyFactory.CreateCompositeKey(parameter.ContractKeys, parameter.TagKeys, parameter.StateKeys);
             }
 
-            foreach (var initMethod in metadataProvider.GetMethods(reflection, implementationType))
+            foreach (var initMethod in metadataProvider.GetMethods(implementationType))
             {
                 var methodData = new MethodData();
-                methodData.Parameters = metadataProvider.GetParameters(reflection, initMethod, ref stateIndex);
+                methodData.Parameters = metadataProvider.GetParameters(initMethod, ref stateIndex);
                 len = methodData.Parameters.Length;
                 methodData.ParametersArray = new object[len];
                 methodData.Keys = new IKey[len];

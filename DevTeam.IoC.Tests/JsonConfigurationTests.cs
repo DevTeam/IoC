@@ -6,6 +6,7 @@
     using Newtonsoft.Json;
     using Shouldly;
     using Xunit;
+    using DevTeam.IoC.Contracts;
 
     public class JsonConfigurationTests
     {
@@ -13,7 +14,7 @@
         public void JsonShouldDeserializeAndSerialize()
         {
             // Given
-            var serializerSettings = JsonConfiguration.CreateSerializerSettings(new Reflection());
+            var serializerSettings = JsonConfiguration.CreateSerializerSettings(Reflection.Shared);
             var eventsConfigurationFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "EventsConfiguration.json");
             var json = File.ReadAllText(eventsConfigurationFile);
             var configurationDto = JsonConvert.DeserializeObject<ConfigurationDto>(json, serializerSettings);

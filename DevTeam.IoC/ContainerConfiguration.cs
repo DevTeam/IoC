@@ -7,7 +7,7 @@
     internal class ContainerConfiguration: IConfiguration
     {
         public static readonly IConfiguration Shared = new ContainerConfiguration();
-        private static readonly IEnumerable<IKey> InternalResourceStoreKeys = LowLevelRegistration.CreateKeys<IInternalResourceStore>(RootContainerConfiguration.Reflection);
+        private static readonly IEnumerable<IKey> InternalResourceStoreKeys = LowLevelRegistration.CreateKeys<IInternalResourceStore>();
         private static readonly InternalScope InternalScope = new InternalScope();
 
         private ContainerConfiguration()

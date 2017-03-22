@@ -8,7 +8,7 @@
 
     public class SingletonLifetimeTests
     {
-        private readonly Reflection _reflection = new Reflection();
+        private readonly IReflection _reflection = Reflection.Shared;
         private readonly Mock<IEnumerator<ILifetime>> _lifetimeEnumerator;
         private readonly Mock<ILifetime> _baseLifetime;
         private readonly Mock<ILifetimeContext> _lifetimeContext;

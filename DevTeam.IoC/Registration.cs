@@ -119,7 +119,7 @@
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
             metadataProvider = metadataProvider ?? Fluent.Resolve(Resolver).Instance<IMetadataProvider>();
             IResolverFactory resolverFactory;
-            if (!lazy && metadataProvider.TryResolveImplementationType(_reflection, implementationType, out Type resolvedType))
+            if (!lazy && metadataProvider.TryResolveType(implementationType, out Type resolvedType))
             {
                 resolverFactory = CreateFactory(resolvedType, metadataProvider);
                 FactoryMethodInternal(ctx => resolverFactory.Create(ctx), implementationType);
@@ -128,7 +128,7 @@
             {
                 FactoryMethodInternal(ctx =>
                 {
-                    if (!metadataProvider.TryResolveImplementationType(_reflection, implementationType, out Type currentResolvedType, ctx))
+                    if (!metadataProvider.TryResolveType(implementationType, out Type currentResolvedType, ctx))
                     {
                         throw new InvalidOperationException("Can not define type to resolve from type {currentResolvedType}");
                     }
@@ -272,12 +272,12 @@
                     return factory;
                 }
 
-                factory = new MetadataFactory(_reflection, resolvedType, _instanceFactoryProvider.Value, metadataProvider, Resolver.KeyFactory);
+                factory = new MetadataFactory(resolvedType, _instanceFactoryProvider.Value, metadataProvider, Resolver.KeyFactory);
                 _resolverFactoryCache.Set(resolvedType, factory);
             }
             else
             {
-                factory = new MetadataFactory(_reflection, resolvedType, _instanceFactoryProvider.Value, metadataProvider, Resolver.KeyFactory);
+                factory = new MetadataFactory(resolvedType, _instanceFactoryProvider.Value, metadataProvider, Resolver.KeyFactory);
             }
 
             return factory;

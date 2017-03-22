@@ -10,12 +10,15 @@
         private readonly ILog _log;
         private readonly List<Action> _tickActions = new List<Action>();
 
-        public Timer([State(0, typeof(string), Value = nameof(Timer))] ILog log)
+        public Timer(
+            [NotNull] [State(0, typeof(string), Value = nameof(Timer))] ILog log)
         {
             if (log == null) throw new ArgumentNullException(nameof(log));
             _log = log;
             _log.Method("Ctor()");
         }
+
+
 
         public void Tick()
         {

@@ -7,12 +7,9 @@
 
     internal static class LowLevelRegistration
     {
-        public static IEnumerable<IKey> CreateKeys<TContract>([NotNull] IReflection reflection)
+        public static IEnumerable<IKey> CreateKeys<TContract>()
         {
-#if DEBUG
-            if (reflection == null) throw new ArgumentNullException(nameof(reflection));
-#endif
-            return CreateKeys(reflection, typeof(TContract));
+            return CreateKeys(Reflection.Shared, typeof(TContract));
         }
 
         public static IDisposable RawRegister<TContract>(

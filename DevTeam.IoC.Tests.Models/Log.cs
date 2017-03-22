@@ -13,8 +13,8 @@
         private readonly string _name;
 
         public Log(
-            IConsole console,
-            [State] string name)
+            [NotNull] IConsole console,
+            [NotNull] [State] string name)
         {
             if (console == null) throw new ArgumentNullException(nameof(console));
             if (name == null) throw new ArgumentNullException(nameof(name));

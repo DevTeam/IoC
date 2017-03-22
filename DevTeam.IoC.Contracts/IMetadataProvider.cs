@@ -8,13 +8,13 @@
 
     public interface IMetadataProvider
     {
-        bool TryResolveImplementationType([NotNull] IReflection reflection, [NotNull] Type implementationType, out Type resolvedType, [CanBeNull] ICreationContext creationContext = null);
+        bool TryResolveType([NotNull] Type implementationType, out Type resolvedType, [CanBeNull] ICreationContext creationContext = null);
         
-        bool TrySelectConstructor([NotNull] IReflection reflection, [NotNull] Type implementationType, out ConstructorInfo constructor, out Exception error);
+        bool TrySelectConstructor([NotNull] Type implementationType, out ConstructorInfo constructor, out Exception error);
 
-        IEnumerable<MethodInfo> GetMethods([NotNull] IReflection reflection, [NotNull] Type implementationType);
+        IEnumerable<MethodInfo> GetMethods([NotNull] Type implementationType);
 
         [NotNull]
-        IParameterMetadata[] GetParameters([NotNull] IReflection reflection, [NotNull] MethodBase method, ref int stateIndex);
+        IParameterMetadata[] GetParameters([NotNull] MethodBase method, ref int stateIndex);
     }
 }

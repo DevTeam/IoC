@@ -16,7 +16,8 @@
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     public class AutowiringMetadataProviderTests
     {
-        private readonly Reflection _reflection = new Reflection();
+        private readonly IReflection _reflection = Reflection.Shared;
+
 #if !NET35
         [Theory]
         [InlineData(typeof(string), null, typeof(string))]
@@ -36,7 +37,7 @@
 
             // When
             Type actualResolveImplementationType;
-            var result = metadataProvider.TryResolveImplementationType(_reflection, implementationType, out actualResolveImplementationType, creationContext.Object);
+            var result = metadataProvider.TryResolveType(implementationType, out actualResolveImplementationType, creationContext.Object);
 
             // Then
             result.ShouldBeTrue();
@@ -57,7 +58,7 @@
 
             // When
             Type actualResolveImplementationType;
-            var result = metadataProvider.TryResolveImplementationType(_reflection, implementationType, out actualResolveImplementationType);
+            var result = metadataProvider.TryResolveType(implementationType, out actualResolveImplementationType);
 
             // Then
             result.ShouldBe(expectedResult);
@@ -85,7 +86,7 @@
             // When
             ConstructorInfo ctor;
             Exception exception;
-            var actualResult = metadataProvider.TrySelectConstructor(_reflection, implementationType, out ctor, out exception);
+            var actualResult = metadataProvider.TrySelectConstructor(implementationType, out ctor, out exception);
 
             // Then
             actualResult.ShouldBe(expectedResult);
@@ -123,7 +124,7 @@
 
             // When
             var stateIndex = 0;
-            var actualCtorParams = metadataProvider.GetParameters(_reflection, ctor, ref stateIndex);
+            var actualCtorParams = metadataProvider.GetParameters(ctor, ref stateIndex);
 
             // Then
             actualCtorParams.Length.ShouldBe(expectedCtorParams.Length);
@@ -137,7 +138,7 @@
 
         private AutowiringMetadataProvider CreateInstance()
         {
-            return new AutowiringMetadataProvider();
+            return new AutowiringMetadataProvider(_reflection);
         }
 
         private class DefaultCtorClass

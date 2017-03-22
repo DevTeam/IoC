@@ -9,6 +9,12 @@ namespace DevTeam.IoC
 
     internal class Reflection : IReflection
     {
+        public static readonly IReflection Shared = new Reflection();
+
+        private Reflection()
+        {
+        }
+
         public IEnumerable<IType> GetDefinedTypes(Assembly assembly)
         {
             return assembly.GetTypes().Select(type => (IType)new TypeImpl(type));
