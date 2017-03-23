@@ -30,16 +30,14 @@
                 .Contract(typeof(IResolver<>))
                 .Contract(typeof(IProvider<>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .FactoryMethod(ctx => ResolveResolver(ctx, reflection))
-                .Apply();
+                .FactoryMethod(ctx => ResolveResolver(ctx, reflection));
 
             yield return
                 container
                 .Register()
                 .Contract(typeof(Func<>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .FactoryMethod(ctx => ResolveFunc(ctx, reflection))
-                .Apply();
+                .FactoryMethod(ctx => ResolveFunc(ctx, reflection));
 
             yield return
                 container
@@ -47,16 +45,14 @@
                 .Contract(typeof(IResolver<,>))
                 .Contract(typeof(IProvider<,>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .FactoryMethod(ctx => ResolveResolver(ctx, reflection))
-                .Apply();
+                .FactoryMethod(ctx => ResolveResolver(ctx, reflection));
 
             yield return
                 container
                 .Register()
                 .Contract(typeof(Func<,>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .FactoryMethod(ctx => ResolveFunc(ctx, reflection))
-                .Apply();
+                .FactoryMethod(ctx => ResolveFunc(ctx, reflection));
 
             yield return
                 container
@@ -64,16 +60,14 @@
                 .Contract(typeof(IResolver<,,>))
                 .Contract(typeof(IProvider<,,>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .FactoryMethod(ctx => ResolveResolver(ctx, reflection))
-                .Apply();
+                .FactoryMethod(ctx => ResolveResolver(ctx, reflection));
 
             yield return
                 container
                 .Register()
                 .Contract(typeof(Func<,,>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .FactoryMethod(ctx => ResolveFunc(ctx, reflection))
-                .Apply();
+                .FactoryMethod(ctx => ResolveFunc(ctx, reflection));
 
             yield return
                 container
@@ -81,16 +75,14 @@
                 .Contract(typeof(IResolver<,,,>))
                 .Contract(typeof(IProvider<,,,>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .FactoryMethod(ctx => ResolveResolver(ctx, reflection))
-                .Apply();
+                .FactoryMethod(ctx => ResolveResolver(ctx, reflection));
 
             yield return
                 container
                 .Register()
                 .Contract(typeof(Func<,,,>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .FactoryMethod(ctx => ResolveFunc(ctx, reflection))
-                .Apply();
+                .FactoryMethod(ctx => ResolveFunc(ctx, reflection));
 
             yield return
                 container
@@ -98,16 +90,14 @@
                 .Contract(typeof(IResolver<,,,,>))
                 .Contract(typeof(IProvider<,,,,>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .FactoryMethod(ctx => ResolveResolver(ctx, reflection))
-                .Apply();
+                .FactoryMethod(ctx => ResolveResolver(ctx, reflection));
 
             yield return
                 container
                 .Register()
                 .Contract(typeof(Func<,,,,>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .FactoryMethod(ctx => ResolveFunc(ctx, reflection))
-                .Apply();
+                .FactoryMethod(ctx => ResolveFunc(ctx, reflection));
         }
 
         public override int GetHashCode()

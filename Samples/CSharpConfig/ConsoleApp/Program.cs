@@ -12,7 +12,7 @@
         {
             using (var container = new Container()
                 .Configure().DependsOn<CSharpConfiguration>(File.ReadAllText("Config.cs.txt")).ToSelf()
-                .Register().Contract<Program>().Autowiring(typeof(Program)).ToSelf())
+                .Register().Autowiring<Program, Program>().ToSelf())
             {
                 container.Resolve().Instance<IHelloWorld>().SayHello();
             }

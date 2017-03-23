@@ -38,8 +38,7 @@
                 .Tag(GetType())
                 .State<IConfigurationDescriptionDto>(0)
                 .Contract<IConfiguration>()
-                .FactoryMethod(ctx => CreateConfiguration(ctx.GetState<IConfigurationDescriptionDto>(0).Description))
-                .Apply();
+                .FactoryMethod(ctx => CreateConfiguration(ctx.GetState<IConfigurationDescriptionDto>(0).Description));
         }
 
         private IConfiguration CreateConfiguration(string description)

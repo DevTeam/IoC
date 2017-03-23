@@ -31,8 +31,7 @@
                 .Register()
                 .Contract(typeof(Task<>))
                 .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
-                .FactoryMethod(ctx => ResolveTask(ctx, reflection))
-                .Apply();
+                .FactoryMethod(ctx => ResolveTask(ctx, reflection));
         }
 
         public override int GetHashCode()

@@ -2,13 +2,10 @@
 {
     using System;
 
-    public interface IRegistrationResult<out T> where T : IContainer
+    public interface IRegistrationResult<out T>: IDisposable where T : IContainer
     {
         [NotNull]
         IRegistration<T> And();
-
-        [NotNull]
-        IDisposable Apply();
 
         [NotNull]
         T ToSelf();

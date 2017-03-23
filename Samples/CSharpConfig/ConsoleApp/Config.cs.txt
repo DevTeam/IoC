@@ -12,7 +12,7 @@ public class Config: IConfiguration
 
     public IEnumerable<IDisposable> Apply(IContainer container)
     {
-        yield return container.Register().Contract<ClassLibrary.IConsole>().Autowiring<ClassLibrary.Console>().Apply();
-        yield return container.Register().Contract<ClassLibrary.IHelloWorld>().Autowiring<ClassLibrary.HelloWorld>().Apply();
+        yield return container.Register().Contract<ClassLibrary.IConsole>().Autowiring<ClassLibrary.Console>();
+        yield return container.Register().Contract<ClassLibrary.IHelloWorld>().Autowiring<ClassLibrary.HelloWorld>();
     }
 }

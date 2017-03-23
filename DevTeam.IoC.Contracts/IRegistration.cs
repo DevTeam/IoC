@@ -19,6 +19,12 @@
         IRegistrationResult<T> Autowiring<TImplementation>(bool lazy = false);
 
         [NotNull]
+        IRegistrationResult<T> Autowiring([NotNull] Type contractType, [NotNull] Type implementationType, [NotNull] params object[] tags);
+
+        [NotNull]
+        IRegistrationResult<T> Autowiring<TContract, TImplementation>([NotNull] params object[] tags) where TImplementation : TContract;
+
+        [NotNull]
         IRegistration<T> Attributes([NotNull] Type implementationType);
 
         [NotNull]

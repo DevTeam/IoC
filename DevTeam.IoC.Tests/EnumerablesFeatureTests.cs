@@ -20,9 +20,9 @@
             using (container.Configure().DependsOn(Wellknown.Feature.Enumerables).Apply())
             {
                 // When
-                using (container.Register().Contract<ISimpleService>().FactoryMethod(ctx => simpleService1.Object).Apply())
-                using (container.Register().Tag(1).Contract<ISimpleService>().FactoryMethod(ctx => simpleService2.Object).Apply())
-                using (container.Register().Tag("a").Contract<ISimpleService>().FactoryMethod(ctx => simpleService3.Object).Apply())
+                using (container.Register().Contract<ISimpleService>().FactoryMethod(ctx => simpleService1.Object))
+                using (container.Register().Tag(1).Contract<ISimpleService>().FactoryMethod(ctx => simpleService2.Object))
+                using (container.Register().Tag("a").Contract<ISimpleService>().FactoryMethod(ctx => simpleService3.Object))
                 {
                     var actualList = container.Resolve().Instance<IEnumerable<ISimpleService>>().ToList();
 

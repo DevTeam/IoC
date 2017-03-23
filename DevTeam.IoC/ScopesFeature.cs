@@ -30,16 +30,14 @@
                 .Register()
                 .Tag(Wellknown.Scope.Internal)
                 .Contract<IScope>()
-                .FactoryMethod(ctx => _internalScope)
-                .Apply();
+                .FactoryMethod(ctx => _internalScope);
 
             yield return
                 container
                 .Register()
                 .Tag(Wellknown.Scope.Global)
                 .Contract<IScope>()
-                .FactoryMethod(ctx => _globalScope)
-                .Apply();
+                .FactoryMethod(ctx => _globalScope);
         }
 
         public override int GetHashCode()

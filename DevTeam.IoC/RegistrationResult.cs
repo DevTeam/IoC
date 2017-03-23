@@ -27,14 +27,17 @@
             return _registration;
         }
 
-        public IDisposable Apply()
-        {
-            return new CompositeDisposable(_resources);
-        }
-
         public T ToSelf()
         {
-            return _registration.ToSelf(Apply());
+            return _registration.ToSelf(this);
+        }
+
+        public void Dispose()
+        {
+            foreach (var resource in _resources)
+            {
+                resource.Dispose();
+            }
         }
     }
 }

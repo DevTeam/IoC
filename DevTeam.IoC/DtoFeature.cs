@@ -27,24 +27,21 @@
                 container
                 .Register()
                 .Contract<ITypeResolver>()
-                .Autowiring<TypeResolver>()
-                .Apply();
+                .Autowiring<TypeResolver>();
 
             yield return
                 container
                 .Register()
                 .Contract<IConfiguration>()
                 .State<IConfigurationDto>(0)
-                .Autowiring<ConfigurationDtoAdapter>()
-                .Apply();
+                .Autowiring<ConfigurationDtoAdapter>();
 
             yield return
                 container
                 .Register()
                 .State<string>(0)
                 .Contract<IConfigurationDescriptionDto>()
-                .FactoryMethod(ctx => new ConfigurationDescriptionDto(ctx.GetState<string>(0)))
-                .Apply();
+                .FactoryMethod(ctx => new ConfigurationDescriptionDto(ctx.GetState<string>(0)));
         }
     }
 }

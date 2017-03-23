@@ -303,11 +303,11 @@
                 if (!typeMetadata.IsEmpty)
                 {
                     var metadataProvider = container.Resolve().State<TypeMetadata>(0).Instance<IMetadataProvider>(typeMetadata);
-                    yield return registration.Autowiring(autowiringType, false, metadataProvider).Apply();
+                    yield return registration.Autowiring(autowiringType, false, metadataProvider);
                 }
                 else
                 {
-                    yield return registration.Autowiring(autowiringType).Apply();
+                    yield return registration.Autowiring(autowiringType);
                 }
             }
 
@@ -333,7 +333,7 @@
                     throw new Exception($"Factory method {registerDto.FactoryMethodName} was not found");
                 }
 
-                yield return registration.FactoryMethod(ctx => factoryMethod.Invoke(null, new object[] { ctx })).Apply();
+                yield return registration.FactoryMethod(ctx => factoryMethod.Invoke(null, new object[] { ctx }));
             }
         }
 

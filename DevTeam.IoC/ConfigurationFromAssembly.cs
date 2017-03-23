@@ -29,7 +29,7 @@
                 from typeInfo in reflection.GetDefinedTypes(_assembly)
                 where typeInfo.GetCustomAttributes<ContractAttribute>().Any()
                 let type = typeInfo.Type
-                select container.Register().Attributes(typeInfo.Type).Autowiring(type).Apply();
+                select (IDisposable)container.Register().Attributes(typeInfo.Type).Autowiring(type);
         }
     }
 }

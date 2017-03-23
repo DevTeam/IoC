@@ -60,9 +60,8 @@ class Glue: IConfiguration
     public IEnumerable<IDisposable> Apply(IContainer container)
     {
         yield return container.Register()
-            .Contract(typeof(IBox<>)).Autowiring(typeof(CardboardBox<>))
-            .And().Contract<ICat>().Autowiring<ShroedingersCat>()
-            .Apply();
+            .Autowiring(typeof(IBox<>), typeof(CardboardBox<>))
+            .And().Autowiring<ICat, ShroedingersCat>();
     }
 }
 ```

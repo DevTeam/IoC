@@ -24,8 +24,7 @@
                 .Tag(GetType())
                 .State<IConfigurationDescriptionDto>(0)
                 .Contract<IConfigurationDto>()
-                .FactoryMethod(ctx => JsonConvert.DeserializeObject<ConfigurationDto>(ctx.GetState<IConfigurationDescriptionDto>(0).Description, CreateSerializerSettings(reflection)))
-                .Apply();
+                .FactoryMethod(ctx => JsonConvert.DeserializeObject<ConfigurationDto>(ctx.GetState<IConfigurationDescriptionDto>(0).Description, CreateSerializerSettings(reflection)));
         }
 
         internal static JsonSerializerSettings CreateSerializerSettings(IReflection reflection)

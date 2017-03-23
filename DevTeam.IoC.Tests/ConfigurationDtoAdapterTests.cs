@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Configurations.Json;
     using Contracts;
@@ -10,11 +11,11 @@
     using Shouldly;
     using Xunit;
 
+    [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
     public class ConfigurationDtoAdapterTests
     {
         private readonly MyTypeResolver _typeResolver;
         private readonly IContainer _container;
-        private readonly IReflection _reflection = Reflection.Shared;
 
         public ConfigurationDtoAdapterTests()
         {
@@ -82,6 +83,7 @@
             var configuration = CreateInstance(configurationDto);
 
             // When
+            // ReSharper disable once PossibleMistakenCallToGetType.2
             configurationDto.Add(new DependencyAssemblyDto { AssemblyName = typeof(MyConfiguration).GetType().Assembly.FullName });
             var dependencies = configuration.GetDependencies(_container).ToArray();
 
@@ -99,8 +101,8 @@
             var referenceDescriptionResolver = new Mock<IReferenceDescriptionResolver>();
             referenceDescriptionResolver.Setup(i => i.ResolveReference("ref")).Returns("ref data");
             var configurationDepDto = Mock.Of<IConfigurationDto>();
-            using (_container.Register().Contract<IReferenceDescriptionResolver>().FactoryMethod(ctx => referenceDescriptionResolver.Object).Apply())
-            using (_container.Register().Contract<IConfigurationDto>().Tag(typeof(MyConfiguration)).State<IConfigurationDescriptionDto>(0).FactoryMethod(ctx => configurationDepDto).Apply())
+            using (_container.Register().Contract<IReferenceDescriptionResolver>().FactoryMethod(ctx => referenceDescriptionResolver.Object))
+            using (_container.Register().Contract<IConfigurationDto>().Tag(typeof(MyConfiguration)).State<IConfigurationDescriptionDto>(0).FactoryMethod(ctx => configurationDepDto))
             {
 
                 // When
@@ -471,6 +473,7 @@
             }
 
             // ReSharper disable once UnusedParameter.Local
+            // ReSharper disable once UnusedMember.Local
             public static string CreateAbcString(ICreationContext ctx)
             {
                 return "abc";

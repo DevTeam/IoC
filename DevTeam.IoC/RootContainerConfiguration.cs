@@ -67,8 +67,7 @@
                     .FactoryMethod(ctx => new ManualMetadataProvider(
                         ctx.ResolverContext.Container.Resolve().Instance<IMetadataProvider>(),
                         ctx.ResolverContext.Container.Resolve().Instance<IReflection>(),
-                        ctx.GetState<TypeMetadata>(0)))
-                    .Apply();
+                        ctx.GetState<TypeMetadata>(0)));
 
             yield return
                 container
@@ -99,16 +98,14 @@
                         ctx.ResolverContext.Container.KeyFactory);
                     factoryCache.Set(implementationType, factory);
                     return factory;
-                })
-                .Apply();
+                });
 
             yield return
                container
                .Register()
                .Contract<IConfiguration>()
                .State<Assembly>(0)
-               .FactoryMethod(ctx => new ConfigurationFromAssembly(ctx.GetState<Assembly>(0)))
-               .Apply();
+               .FactoryMethod(ctx => new ConfigurationFromAssembly(ctx.GetState<Assembly>(0)));
 
             yield return
                 container
@@ -116,8 +113,7 @@
                 .State<Type>(0)
                 .State<string>(1)
                 .Contract<IConfiguration>()
-                .FactoryMethod(ctx => new ConfigurationFromSringData(ctx.ResolverContext.Container, ctx.GetState<Type>(0), ctx.GetState<string>(1)))
-                .Apply();
+                .FactoryMethod(ctx => new ConfigurationFromSringData(ctx.ResolverContext.Container, ctx.GetState<Type>(0), ctx.GetState<string>(1)));
 
             foreach (var feature in Features)
             {
@@ -126,8 +122,7 @@
                     .Register()
                     .Tag(feature.Key)
                     .Contract<IConfiguration>()
-                    .FactoryMethod(ctx => feature.Value)
-                    .Apply();
+                    .FactoryMethod(ctx => feature.Value);
             }
         }
 

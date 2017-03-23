@@ -31,8 +31,7 @@
                 .Lifetime(Wellknown.Lifetime.PerResolve)
                 .Lifetime(Wellknown.Lifetime.AutoDisposing)
                 .Contract<IEventRegistry>()
-                .Autowiring<EventRegistry>()
-                .Apply();
+                .Autowiring<EventRegistry>();
 
             yield return childContainer
                 .Register()
@@ -40,24 +39,21 @@
                 .Lifetime(Wellknown.Lifetime.PerResolve)
                 .Lifetime(Wellknown.Lifetime.AutoDisposing)
                 .Contract<IEventBroker>()
-                .Autowiring<EventBroker>()
-                .Apply();
+                .Autowiring<EventBroker>();
 
             yield return childContainer
                 .Register()
                 .Scope(Wellknown.Scope.Internal)
                 .Contract(typeof(IEvent<>))
                 .KeyComparer(Wellknown.KeyComparer.AnyState)
-                .Autowiring(typeof(Event<>))
-                .Apply();
+                .Autowiring(typeof(Event<>));
 
             yield return childContainer
                 .Register()
                 .Scope(Wellknown.Scope.Internal)
                 .Contract<long>()
                 .Tag("IdGenerator")
-                .FactoryMethod(IdGenerator.GenerateId)
-                .Apply();
+                .FactoryMethod(IdGenerator.GenerateId);
 
             yield return childContainer
                 .Register()
@@ -65,16 +61,14 @@
                 .Lifetime(Wellknown.Lifetime.PerResolve)
                 .Lifetime(Wellknown.Lifetime.AutoDisposing)
                 .Contract<IEventSource<DateTimeOffset>>()
-                .Autowiring<TimerSource>()
-                .Apply();
+                .Autowiring<TimerSource>();
 
             yield return childContainer
                 .Register()
                 .Scope(Wellknown.Scope.Internal)
                 .Lifetime(Wellknown.Lifetime.PerResolve)
                 .Contract(typeof(IEventListener<>))
-                .Autowiring(typeof(ConsoleListener<>))
-                .Apply();
+                .Autowiring(typeof(ConsoleListener<>));
 
             yield return childContainer;
         }

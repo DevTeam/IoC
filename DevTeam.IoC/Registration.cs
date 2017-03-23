@@ -145,6 +145,26 @@
             return Autowiring(typeof(TImplementation), lazy);
         }
 
+        public IRegistrationResult<T> Autowiring<TContract, TImplementation>(params object[] tags)
+             where TImplementation : TContract
+        {
+            if (tags == null) throw new ArgumentNullException(nameof(tags));
+            Contract<TContract>();
+            Tag(tags);
+            return Autowiring(typeof(TImplementation));
+        }
+
+        public IRegistrationResult<T> Autowiring(Type contractType, Type implementationType, params object[] tags)
+        {
+            if (contractType == null) throw new ArgumentNullException(nameof(contractType));
+            if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
+            if (tags == null) throw new ArgumentNullException(nameof(tags));
+            if (tags == null) throw new ArgumentNullException(nameof(tags));
+            Contract(contractType);
+            Tag(tags);
+            return Autowiring(implementationType);
+        }
+
         internal T ToSelf(params IDisposable[] resource)
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));

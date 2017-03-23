@@ -29,8 +29,7 @@
                 container
                     .Register()
                     .Contract(typeof(IObservable<>))
-                    .FactoryMethod(ctx => ResolveObservable(ctx, reflection))
-                    .Apply();
+                    .FactoryMethod(ctx => ResolveObservable(ctx, reflection));
         }
 
         private object ResolveObservable(ICreationContext creationContext, IReflection reflection)
