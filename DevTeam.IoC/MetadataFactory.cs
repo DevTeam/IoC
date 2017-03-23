@@ -5,7 +5,7 @@
     using System.Reflection;
     using Contracts;
 
-    internal class MetadataFactory: IResolverFactory
+    internal class MetadataFactory: IInstanceFactory
     {
         private readonly Constructor _constructor;
         private readonly IParameterMetadata[] _parameters;

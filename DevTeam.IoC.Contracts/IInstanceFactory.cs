@@ -1,7 +1,7 @@
 ﻿namespace DevTeam.IoC.Contracts
 {
     [PublicAPI]
-    public interface IResolverFactory
+    public interface IInstanceFactory
     {
         [NotNull]
         object Create([NotNull] ICreationContext creationContext);

@@ -59,11 +59,11 @@
                 container
                 .Register()
                 .State<Type>(0)
-                .Contract<IResolverFactory>()
+                .Contract<IInstanceFactory>()
                 .FactoryMethod(ctx =>
                 {
                     var implementationType = ctx.GetState<Type>(0);
-                    if (!ctx.ResolverContext.Container.TryResolve(out ICache<Type, IResolverFactory> factoryCache))
+                    if (!ctx.ResolverContext.Container.TryResolve(out ICache<Type, IInstanceFactory> factoryCache))
                     {
                         return new MetadataFactory(
                             implementationType,
@@ -72,7 +72,7 @@
                             ctx.ResolverContext.Container.KeyFactory);
                     }
 
-                    if (factoryCache.TryGet(implementationType, out IResolverFactory factory))
+                    if (factoryCache.TryGet(implementationType, out IInstanceFactory factory))
                     {
                         return factory;
                     }

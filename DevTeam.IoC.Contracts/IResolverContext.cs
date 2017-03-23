@@ -7,7 +7,7 @@
 
         IKey Key { [NotNull] get; }
 
-        IResolverFactory InstanceFactory { [NotNull] get; }
+        IInstanceFactory InstanceFactory { [NotNull] get; }
 
         IRegistryContext RegistryContext { [NotNull] get; }
     }

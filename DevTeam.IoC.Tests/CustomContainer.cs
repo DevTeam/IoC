@@ -23,7 +23,7 @@
 
         public IKeyFactory KeyFactory => SharedKeyFactory;
 
-        public IRegistryContext CreateRegistryContext(IEnumerable<IKey> keys, IResolverFactory factory, params IExtension[] extensions)
+        public IRegistryContext CreateRegistryContext(IEnumerable<IKey> keys, IInstanceFactory factory, params IExtension[] extensions)
         {
             return Parent.CreateRegistryContext(keys, factory, extensions);
         }

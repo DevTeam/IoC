@@ -10,7 +10,7 @@
     {
         private readonly Mock<IEnumerator<ILifetime>> _lifetimeEnumerator;
         private readonly Mock<ILifetimeContext> _lifetimeContext;
-        private readonly Mock<IResolverFactory> _instanceFactory;
+        private readonly Mock<IInstanceFactory> _instanceFactory;
         private readonly Mock<ICreationContext> _creationContext;
 
         public TransientLifetimeTests()
@@ -20,7 +20,7 @@
             var resolverContext = new Mock<IResolverContext>();
             var registryContext = new Mock<IRegistryContext>();
             resolverContext.SetupGet(i => i.RegistryContext).Returns(registryContext.Object);
-            _instanceFactory = new Mock<IResolverFactory>();
+            _instanceFactory = new Mock<IInstanceFactory>();
             registryContext.SetupGet(i => i.InstanceFactory).Returns(_instanceFactory.Object);
             _creationContext = new Mock<ICreationContext>();
             _creationContext.SetupGet(i => i.ResolverContext).Returns(resolverContext.Object);

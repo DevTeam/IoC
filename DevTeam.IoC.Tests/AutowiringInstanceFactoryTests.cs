@@ -90,7 +90,7 @@
             instance.StateClass.Arg2.ShouldBe(5);
         }
 
-        private IResolverFactory CreateFactory<T>()
+        private IInstanceFactory CreateFactory<T>()
         {
             return new MetadataFactory(typeof(T), new ExpressionMethodFactory(), new AutowiringMetadataProvider(Reflection.Shared), _container.KeyFactory);
         }

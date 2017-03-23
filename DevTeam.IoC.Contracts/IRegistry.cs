@@ -9,7 +9,7 @@
         [NotNull]
         IRegistryContext CreateRegistryContext(
             [NotNull] IEnumerable<IKey> keys,
-            [NotNull] IResolverFactory factory,
+            [NotNull] IInstanceFactory factory,
             [NotNull] params IExtension[] extensions);
 
         bool TryRegister([NotNull] IRegistryContext context, out IDisposable registration);

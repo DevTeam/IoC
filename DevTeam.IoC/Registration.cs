@@ -14,7 +14,7 @@
         private readonly HashSet<IKey> _registrationKeys = new HashSet<IKey>();
         private readonly Lazy<IMethodFactory> _instanceFactoryProvider;
         private readonly RegistrationResult<T> _result;
-        private readonly ICache<Type, IResolverFactory> _resolverFactoryCache;
+        private readonly ICache<Type, IInstanceFactory> _resolverFactoryCache;
         private readonly IReflection _reflection;
         [CanBeNull] private HashSet<ITagKey> _tagKeys;
         [CanBeNull] private HashSet<IStateKey> _stateKeys;
@@ -27,7 +27,7 @@
             if (container == null) throw new ArgumentNullException(nameof(container));
             _instanceFactoryProvider = new Lazy<IMethodFactory>(GetInstanceFactoryProvider);
             _result = new RegistrationResult<T>(this);
-            var cacheProvider = container as IProvider<ICache<Type, IResolverFactory>>;
+            var cacheProvider = container as IProvider<ICache<Type, IInstanceFactory>>;
             cacheProvider?.TryGet(out _resolverFactoryCache);
             _reflection = container.Resolve().Instance<IReflection>();
         }
@@ -118,11 +118,11 @@
         {
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
             metadataProvider = metadataProvider ?? Fluent.Resolve(Resolver).Instance<IMetadataProvider>();
-            IResolverFactory resolverFactory;
+            IInstanceFactory instanceFactory;
             if (!lazy && metadataProvider.TryResolveType(implementationType, out Type resolvedType))
             {
-                resolverFactory = CreateFactory(resolvedType, metadataProvider);
-                FactoryMethodInternal(ctx => resolverFactory.Create(ctx), implementationType);
+                instanceFactory = CreateFactory(resolvedType, metadataProvider);
+                FactoryMethodInternal(ctx => instanceFactory.Create(ctx), implementationType);
             }
             else
             {
@@ -262,9 +262,9 @@
             return instanceFactoryProvider;
         }
 
-        private IResolverFactory CreateFactory(Type resolvedType, IMetadataProvider metadataProvider)
+        private IInstanceFactory CreateFactory(Type resolvedType, IMetadataProvider metadataProvider)
         {
-            IResolverFactory factory;
+            IInstanceFactory factory;
             if (_resolverFactoryCache != null)
             {
                 if (_resolverFactoryCache.TryGet(resolvedType, out factory))

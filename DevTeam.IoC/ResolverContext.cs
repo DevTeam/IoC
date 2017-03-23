@@ -8,7 +8,7 @@
         public ResolverContext(
             [NotNull] IContainer container,
             [NotNull] IRegistryContext registryContext,
-            [NotNull] IResolverFactory instanceFactory,
+            [NotNull] IInstanceFactory instanceFactory,
             [NotNull] IKey key)
         {
 #if DEBUG
@@ -27,7 +27,7 @@
 
         public IKey Key { get; }
 
-        public IResolverFactory InstanceFactory { get; }
+        public IInstanceFactory InstanceFactory { get; }
 
         public IRegistryContext RegistryContext { get; }
 

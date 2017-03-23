@@ -10,7 +10,7 @@
         public RegistryContext(
             [NotNull] IContainer container,
             [NotNull] IKey[] keys,
-            [NotNull] IResolverFactory factory,
+            [NotNull] IInstanceFactory factory,
             [NotNull] params IExtension[] extensions)
         {
 #if DEBUG
@@ -29,7 +29,7 @@
 
         public IEnumerable<IKey> Keys { get; }
 
-        public IResolverFactory InstanceFactory { get; }
+        public IInstanceFactory InstanceFactory { get; }
 
         public IEnumerable<IExtension> Extensions { get; }
 

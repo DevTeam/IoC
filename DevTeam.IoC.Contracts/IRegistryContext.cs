@@ -9,7 +9,7 @@
 
         IEnumerable<IKey> Keys { [NotNull] get; }
 
-        IResolverFactory InstanceFactory { [NotNull] get; }
+        IInstanceFactory InstanceFactory { [NotNull] get; }
 
         IEnumerable<IExtension> Extensions { [NotNull] get; }
     }

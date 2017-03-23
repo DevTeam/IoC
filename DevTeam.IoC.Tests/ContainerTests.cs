@@ -12,7 +12,7 @@
     public class ContainerTests
     {
         private readonly IReflection _reflection = Reflection.Shared;
-        private readonly Mock<IResolverFactory> _factory = new Mock<IResolverFactory>();
+        private readonly Mock<IInstanceFactory> _factory = new Mock<IInstanceFactory>();
 
         [Fact]
         public void ContainerShouldRegister()

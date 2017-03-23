@@ -9,7 +9,7 @@
     public class Container :
         IContainer,
         IObservable<IRegistrationEvent>,
-        IProvider<ICache<Type, IResolverFactory>>,
+        IProvider<ICache<Type, IInstanceFactory>>,
         IProvider<IFluent>
     {
         private readonly List<IDisposable> _resources = new List<IDisposable>();
@@ -19,7 +19,7 @@
         private readonly IFluent _fluent;
         private readonly IKeyFactory _keyFactory;
         private readonly ICache<IKey, IResolverContext> _resolverContextCache = new Cache<IKey, IResolverContext>();
-        private readonly ICache<Type, IResolverFactory> _resolverFactoryCache = new Cache<Type, IResolverFactory>();
+        private readonly ICache<Type, IInstanceFactory> _resolverFactoryCache = new Cache<Type, IInstanceFactory>();
 
         public Container([CanBeNull] object tag = null)
         {
@@ -83,7 +83,7 @@
 
         private object LockObject => _registrations;
 
-        public IRegistryContext CreateRegistryContext(IEnumerable<IKey> keys, IResolverFactory factory, params IExtension[] extensions)
+        public IRegistryContext CreateRegistryContext(IEnumerable<IKey> keys, IInstanceFactory factory, params IExtension[] extensions)
         {
             if (keys == null) throw new ArgumentNullException(nameof(keys));
             if (factory == null) throw new ArgumentNullException(nameof(factory));
@@ -260,7 +260,7 @@
             return _registrationSubject.Subscribe(observer);
         }
 
-        bool IProvider<ICache<Type, IResolverFactory>>.TryGet(out ICache<Type, IResolverFactory> instance)
+        bool IProvider<ICache<Type, IInstanceFactory>>.TryGet(out ICache<Type, IInstanceFactory> instance)
         {
             instance = _resolverFactoryCache;
             return true;

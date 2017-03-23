@@ -5,7 +5,7 @@
 
     using Contracts;
 
-    internal class LifetimesFactory: IResolverFactory, IDisposable
+    internal class LifetimesFactory: IInstanceFactory, IDisposable
     {
         private readonly IList<ILifetime> _lifetimes;
         private readonly Func<ICreationContext, object> _factory;
@@ -55,9 +55,14 @@
         {
             using (var lifetimesEnumerator = _lifetimes.GetEnumerator())
             {
-                lifetimesEnumerator.MoveNext();
+                if (!lifetimesEnumerator.MoveNext())
+                {
+                    throw new InvalidOperationException("Invalid chain of factories");
+                }
+
                 using (var lifetimeContext = new LifetimeContext())
                 {
+                    // ReSharper disable once PossibleNullReferenceException
                     return lifetimesEnumerator.Current.Create(lifetimeContext, creationContext, lifetimesEnumerator);
                 }
             }
