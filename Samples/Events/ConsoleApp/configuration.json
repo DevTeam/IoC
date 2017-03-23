@@ -11,17 +11,13 @@
 
     { "dependency.feature": "Default" },
 
-    { "register": [ { "contract": [ "IConsole" ] } ], "autowiring": "ConsoleApp.Console" },
-    { "register": [ { "contract": [ "IName<>" ] } ], "autowiring": "Name<>" },
-    { "register": [ { "contract": [ "ILogger<>" ] } ], "autowiring": "Logger<>" },
+    { "class": "ConsoleApp.Console: IConsole" },
+    { "class": "Name<>: IName<>" },
+    { "class": "Logger<>: ILogger<>" },
+    { "class": "Tracer<>: IEventConsumer<>", "configure": [ { "tag": "trace" }, { "lifetime": "AutoDisposing" } ] },
+    { "class": "Chronometer: IEventConsumer<DateTimeOffset>" },
     {
-        "register": [ { "contract": [ "IEventConsumer<>" ] }, { "tag": "trace" }, { "lifetime": "AutoDisposing" } ],
-        "autowiring": "Tracer<>"
-    },
-    { "register": [ { "contract": [ "IEventConsumer<DateTimeOffset>" ] } ], "autowiring": "Chronometer" },
-    {
-        "register": [ { "contract": [ "IEventProducer<DateTimeOffset>" ] } ],
-        "autowiring": "Timer",
+        "class": "Timer: IEventProducer<DateTimeOffset>",
         "constructor": [
             { "paramType": "ILogger<Timer>" },
             {
@@ -30,8 +26,5 @@
             }
         ]
     },
-    {
-        "register": [ { "lifetime": "Singleton" }, { "lifetime": "AutoDisposing" }, { "contract": [ "IEventBroker" ] } ],
-        "autowiring": "EventBroker<DateTimeOffset>"
-    }
+    { "class": "EventBroker<DateTimeOffset>: IEventBroker", "configure": [ { "lifetime": "Singleton" }, { "lifetime": "AutoDisposing" } ] }
 ]

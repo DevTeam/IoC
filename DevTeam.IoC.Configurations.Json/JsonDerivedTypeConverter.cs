@@ -29,16 +29,15 @@
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var jsonObject = JObject.Load(reader);
+            var names = jsonObject.Properties().Select(i => i.Name).ToArray();
 
             var type =  (
                 from derivedType in _derivedTypes
+                where !names.Except(derivedType.Value, StringComparer.OrdinalIgnoreCase).Any()
                 select new
                 {
                     derivedType,
-                    cnt = (
-                        from name in derivedType.Value
-                        join propName in jsonObject.Properties().Select(i => i.Name) on name equals propName
-                        select propName).Count()
+                    cnt = derivedType.Value.Intersect(names, StringComparer.OrdinalIgnoreCase).Count()
                 })
                 .OrderByDescending(i => i.cnt)
                 .Select(i => i.derivedType.Key)
@@ -60,11 +59,12 @@
         private string[] GetPropertiesNames(Type type)
         {
             var names = (
-                from prop in _reflection.GetType(type).Properties
-                let jsonIgnoreAttribute = _reflection.GetCustomAttributes<JsonIgnoreAttribute>(prop, true).FirstOrDefault()
+                from curType in GetTypes(type)
+                from prop in _reflection.GetType(curType).Properties
+                let jsonIgnoreAttribute = _reflection.GetCustomAttributes<JsonIgnoreAttribute>(prop, false).FirstOrDefault()
                 where jsonIgnoreAttribute == null
-                let jsonPropertyAttribute = _reflection.GetCustomAttributes<JsonPropertyAttribute>(prop, true).FirstOrDefault()
-                select jsonPropertyAttribute?.PropertyName ?? prop.Name).ToArray();
+                let jsonPropertyAttribute = _reflection.GetCustomAttributes<JsonPropertyAttribute>(prop, false).FirstOrDefault()
+                select jsonPropertyAttribute?.PropertyName ?? prop.Name).Distinct().ToArray();
 
             if (names.Length == 0)
             {
@@ -72,6 +72,15 @@
             }
 
             return names;
+        }
+
+        private IEnumerable<Type> GetTypes(Type type)
+        {
+            do {
+                yield return type;
+                type = _reflection.GetType(type).BaseType;
+            }
+            while (type != null && type != typeof(object));
         }
     }
 }

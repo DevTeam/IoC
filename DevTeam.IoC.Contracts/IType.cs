@@ -6,6 +6,8 @@
 
     public interface IType
     {
+        Type BaseType { get; }
+
         IEnumerable<ConstructorInfo> Constructors { [NotNull] get; }
 
         IEnumerable<PropertyInfo> Properties { [NotNull] get; }

@@ -1,8 +1,7 @@
 ﻿[
-    { "reference": "ClassLibrary" },
+  { "reference": "ClassLibrary" },
+  { "using": "ClassLibrary" },
 
-    { "using": "ClassLibrary" },
-
-    { "register": [ { "contract": [ "IConsole" ] } ], "autowiring": "Console" },
-    { "register": [ { "contract": [ "IHelloWorld" ] } ], "autowiring": "HelloWorld" }
+  { "class": "Console : IConsole" },
+  { "class": "HelloWorld : IHelloWorld" }
 ]

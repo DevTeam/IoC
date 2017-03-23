@@ -31,6 +31,8 @@ namespace DevTeam.IoC
             _type = type;
         }
 
+        public Type BaseType => TypeInfo.BaseType;
+
         public IEnumerable<ConstructorInfo> Constructors => TypeInfo.DeclaredConstructors;
 
         public bool IsGenericTypeDefinition => TypeInfo.IsGenericTypeDefinition;

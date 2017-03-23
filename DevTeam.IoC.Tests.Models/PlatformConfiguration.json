@@ -8,28 +8,25 @@
     { "dependency.feature": "Default" },
 
     {
-        "register": [ { "lifetime": "Singleton" }, { "contract": [ "ITrace" ] } ],
-        "autowiring": "Trace"
+        "class": "Trace: ITrace", "configure": [ { "lifetime": "Singleton" } ]
     },
 
     {
-        "register": [ { "lifetime": "Singleton" }, { "contract": [ "IConsole" ] } ],
-        "autowiring": "Console",
+        "class": "Console: IConsole", "configure": [ { "lifetime": "Singleton" } ],
         "constructor": [
             { "paramType": "IProvider<ITrace>" }
         ]
     },
 
     {
-        "register": [ { "lifetime": "Singleton" }, { "contract": [ "ITimer" ] }, { "contract": [ "ITimerManager" ] } ],
-        "autowiring": "Timer",
+        "class" : "Timer: ITimer, ITimerManager", "configure": [ { "lifetime": "Singleton" } ],
         "constructor": [
             { "paramType": "ILog", "dependency": [ { "stateType": "string", "index": "0", "value": { "valueType": "string", "data": "Abc" } } ] }
         ]
     },
 
     {
-        "autowiring": "Log",
+        "class": "Log", 
         "constructor": [
             { "paramType": "IConsole", "dependency": [ { "contract": [] } ] },
             { "paramType": "string", "state": { "stateType": "string" } }

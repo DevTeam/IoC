@@ -23,9 +23,11 @@
             var json2 = JsonConvert.SerializeObject(configurationDto, serializerSettings);
             var configurationDto2 = JsonConvert.DeserializeObject<ConfigurationDto>(json2, serializerSettings);
             var json3 = JsonConvert.SerializeObject(configurationDto2, serializerSettings);
+            var configurationDto3 = JsonConvert.DeserializeObject<ConfigurationDto>(json, serializerSettings);
+            var json4 = JsonConvert.SerializeObject(configurationDto2, serializerSettings);
 
             // Then
-            json3.ShouldBe(json2);
+            json4.ShouldBe(json3);
         }
     }
 }
