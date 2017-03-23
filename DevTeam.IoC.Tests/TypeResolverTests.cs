@@ -25,6 +25,11 @@
         [InlineData("DevTeam.IoC.Contracts", "DevTeam.IoC.Contracts", "IResolver<IResolver<string>>", true, typeof(IResolver<IResolver<string>>))]
         [InlineData("DevTeam.IoC.Contracts", "DevTeam.IoC.Contracts", "IResolver<IResolver<string, int, float>, double, IResolver<IResolver<IResolver<string, int, float>>>>", true, typeof(IResolver<IResolver<string, int, float>, double, IResolver<IResolver<IResolver<string, int, float>>>>))]
         [InlineData("DevTeam.IoC.Tests.Models", "DevTeam.IoC.Tests.Models", "ITimer", true, typeof(ITimer))]
+        [InlineData("DevTeam.IoC.Tests", "DevTeam.IoC.Tests", "SomeClass.NestedClass", true, typeof(SomeClass.NestedClass))]
+        [InlineData("DevTeam.IoC.Tests", "DevTeam.IoC.Tests", "SomeClass.NestedClass.NesteClass2", true, typeof(SomeClass.NestedClass.NesteClass2))]
+        [InlineData("DevTeam.IoC.Tests", "DevTeam.IoC", "Tests.SomeClass.NestedClass.NesteClass2", true, typeof(SomeClass.NestedClass.NesteClass2))]
+        [InlineData("DevTeam.IoC.Tests", "DevTeam.IoC.Tests", "SomeClass.NestedClass.NesteClass3<>", true, typeof(SomeClass.NestedClass.NesteClass3<>))]
+        [InlineData("DevTeam.IoC.Tests", "DevTeam.IoC.Tests", "SomeClass.NestedClass.NesteClass3<int>", true, typeof(SomeClass.NestedClass.NesteClass3<int>))]
         public void ShouldTryResolveType(
             string references,
             string usingStatements,
@@ -52,5 +57,19 @@
             actualType.ShouldBe(expectedType);
         }
 #endif
+    }
+
+    public class SomeClass
+    {
+        public class NestedClass
+        {
+            public class NesteClass2
+            {
+            }
+
+            public class NesteClass3<T>
+            {
+            }
+        }
     }
 }

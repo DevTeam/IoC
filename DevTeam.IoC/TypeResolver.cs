@@ -264,6 +264,67 @@
 
             private bool LoadType(string typeName, TypeResolver typeResolver)
             {
+                if (LoadTypeInternal(typeName, typeResolver))
+                {
+                    return true;
+                }
+
+                string newTypeName;
+                while (TryGetNestedTypeName(typeName, out newTypeName))
+                {
+                    if (LoadTypeInternal(newTypeName, typeResolver))
+                    {
+                        return true;
+                    }
+
+                    typeName = newTypeName;
+                }
+
+                return false;
+            }
+
+            private bool TryGetNestedTypeName([NotNull] string typeName, out string nestedTypeName)
+            {
+                if (typeName == null) throw new ArgumentNullException(nameof(typeName));
+                int pointIndex = -1;
+                int nested = 0;
+                for (var i = typeName.Length - 1; i >= 0; i--)
+                {
+                    switch (typeName[i])
+                    {
+                        case ']':
+                            nested++;
+                            continue;
+
+                        case '[':
+                            nested--;
+                            continue;
+                    }
+
+                    if (nested > 0)
+                    {
+                        continue;
+                    }
+
+                    if (typeName[i] == '.')
+                    {
+                        pointIndex = i;
+                        break;
+                    }
+                }
+
+                if (pointIndex < 0)
+                {
+                    nestedTypeName = default(string);
+                    return false;
+                }
+
+                nestedTypeName = typeName.Substring(0, pointIndex) + "+" + typeName.Substring(pointIndex + 1, typeName.Length - pointIndex - 1);
+                return true;
+            }
+
+            private bool LoadTypeInternal(string typeName, TypeResolver typeResolver)
+            {
                 Type type;
                 if (typeResolver.TryResolveSimpleType(typeName, out type))
                 {
