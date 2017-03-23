@@ -19,7 +19,7 @@
 
             // Support key comparers.
             // ReSharper disable once IdentifierTypo
-            KeyComaprers,
+            KeyComparers,
 
             // Support resolving via IEnumerable<>. Resolve all elements of specified contract.
             // ReSharper disable once IdentifierTypo

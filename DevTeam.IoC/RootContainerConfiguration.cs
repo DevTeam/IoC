@@ -20,6 +20,21 @@
         private static readonly IEnumerable<IKey> ResolvingKeys = LowLevelRegistration.CreateKeys<IResolving<IResolver>>();
         private static readonly IEnumerable<IKey> RegistrationKeys = LowLevelRegistration.CreateKeys<IRegistration<IContainer>>();
         private static readonly IEnumerable<IKey> MetadataProviderKeys = LowLevelRegistration.CreateKeys<IMetadataProvider>();
+        private static readonly Dictionary<Wellknown.Feature, IConfiguration> Features = new Dictionary<Wellknown.Feature, IConfiguration>
+        {
+            {Wellknown.Feature.Default, DefaultFeatures.Shared},
+            {Wellknown.Feature.ChildContainers, ChildContainersFeature.Shared},
+            {Wellknown.Feature.Dto, DtoFeature.Shared},
+            {Wellknown.Feature.Enumerables, EnumerablesFeature.Shared},
+            {Wellknown.Feature.KeyComparers, KeyComparersFeature.Shared},
+            {Wellknown.Feature.Lifetimes, LifetimesFeature.Shared},
+            {Wellknown.Feature.Observables, ObservablesFeature.Shared},
+            {Wellknown.Feature.Resolvers, ResolversFeature.Shared},
+            {Wellknown.Feature.Scopes, ScopesFeature.Shared},
+#if !NET35
+            {Wellknown.Feature.Tasks, TasksFeature.Shared},
+#endif
+        };
 
         private RootContainerConfiguration()
         {
@@ -104,87 +119,16 @@
                 .FactoryMethod(ctx => new ConfigurationFromSringData(ctx.ResolverContext.Container, ctx.GetState<Type>(0), ctx.GetState<string>(1)))
                 .Apply();
 
-            yield return
-                container
-                .Register()
-                .Tag(Wellknown.Feature.Default)
-                .Contract<IConfiguration>()
-                .FactoryMethod(ctx => DefaultFeatures.Shared)
-                .Apply();
-
-            yield return
-                container
-                .Register()
-                .Tag(Wellknown.Feature.ChildContainers)
-                .Contract<IConfiguration>()
-                .FactoryMethod(ctx => ChildContainersFeature.Shared)
-                .Apply();
-
-            yield return
-                container
-                .Register()
-                .Tag(Wellknown.Feature.Lifetimes)
-                .Contract<IConfiguration>()
-                .FactoryMethod(ctx => LifetimesFeature.Shared)
-                .Apply();
-
-            yield return
-                container
-                .Register()
-                .Tag(Wellknown.Feature.Scopes)
-                .Contract<IConfiguration>()
-                .FactoryMethod(ctx => ScopesFeature.Shared)
-                .Apply();
-
-            yield return
-                container
-                .Register()
-                .Tag(Wellknown.Feature.KeyComaprers)
-                .Contract<IConfiguration>()
-                .FactoryMethod(ctx => KeyComparersFeature.Shared)
-                .Apply();
-
-            yield return
-                container
-                .Register()
-                .Tag(Wellknown.Feature.Enumerables)
-                .Contract<IConfiguration>()
-                .FactoryMethod(ctx => EnumerablesFeature.Shared)
-                .Apply();
-
-            yield return
-                container
-                .Register()
-                .Tag(Wellknown.Feature.Observables)
-                .Contract<IConfiguration>()
-                .FactoryMethod(ctx => ObservablesFeature.Shared)
-                .Apply();
-
-            yield return
-                container
-                .Register()
-                .Tag(Wellknown.Feature.Resolvers)
-                .Contract<IConfiguration>()
-                .FactoryMethod(ctx => ResolversFeature.Shared)
-                .Apply();
-
-            yield return
-                container
-                .Register()
-                .Tag(Wellknown.Feature.Dto)
-                .Contract<IConfiguration>()
-                .FactoryMethod(ctx => DtoFeature.Shared)
-                .Apply();
-
-#if !NET35
-            yield return
-                container
-                .Register()
-                .Tag(Wellknown.Feature.Tasks)
-                .Contract<IConfiguration>()
-                .FactoryMethod(ctx => TasksFeature.Shared)
-                .Apply();
-#endif
+            foreach (var feature in Features)
+            {
+                yield return
+                    container
+                    .Register()
+                    .Tag(feature.Key)
+                    .Contract<IConfiguration>()
+                    .FactoryMethod(ctx => feature.Value)
+                    .Apply();
+            }
         }
 
         public override int GetHashCode()

@@ -120,7 +120,7 @@
         [InlineData(Wellknown.Feature.ChildContainers)]
         [InlineData(Wellknown.Feature.Dto)]
         [InlineData(Wellknown.Feature.Enumerables)]
-        [InlineData(Wellknown.Feature.KeyComaprers)]
+        [InlineData(Wellknown.Feature.KeyComparers)]
         [InlineData(Wellknown.Feature.Lifetimes)]
         [InlineData(Wellknown.Feature.Observables)]
         [InlineData(Wellknown.Feature.Resolvers)]

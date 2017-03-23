@@ -13,7 +13,7 @@
             // Given
             var mock = new Mock<ISimpleService>();
             using (var container = CreateContainer())
-            using (container.Configure().DependsOn(Wellknown.Feature.KeyComaprers).ToSelf())
+            using (container.Configure().DependsOn(Wellknown.Feature.KeyComparers).ToSelf())
             {
                 // When
                 using (

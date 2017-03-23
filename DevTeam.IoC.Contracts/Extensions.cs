@@ -1,14 +1,15 @@
 ﻿namespace DevTeam.IoC.Contracts
 {
     using System;
-    using System.Linq;
 
     [PublicAPI]
     public static class Extensions
     {
         [NotNull]
-        public static IConfiguration Feature([NotNull] this IResolver resolver, Wellknown.Feature feature)
+        public static IConfiguration Feature([NotNull] this IResolver resolver, [NotNull] object feature)
         {
+            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
+            if (feature == null) throw new ArgumentNullException(nameof(feature));
             return resolver.Resolve().Tag(feature).Instance<IConfiguration>();
         }
 
@@ -21,21 +22,6 @@
         }
 
         [NotNull]
-        public static IDisposable Register<T>([NotNull] this T registry, [NotNull] IRegistryContext context)
-            where T : IRegistry
-        {
-            if (registry == null) throw new ArgumentNullException(nameof(registry));
-            if (context == null) throw new ArgumentNullException(nameof(context));
-
-            if (!registry.TryRegister(context, out IDisposable registration))
-            {
-                throw new InvalidOperationException($"Can not register {string.Join(Environment.NewLine, context.Keys.Select(i => i.ToString()).ToArray())}.{Environment.NewLine}{Environment.NewLine}{registry}");
-            }
-
-            return registration;
-        }
-
-        [NotNull]
         public static IRegistration<T> Register<T>([NotNull] this T container)
               where T : IContainer
         {
@@ -44,23 +30,24 @@
         }
 
         [NotNull]
+        public static IResolving<T> Resolve<T>([NotNull] this T resolver)
+              where T : IResolver
+        {
+            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
+            return Fluent(resolver).Resolve(resolver);
+        }
+
+        [NotNull]
         public static IContainer CreateChild<T>([NotNull] this T container, [CanBeNull] object tag = null)
              where T : IContainer
         {
+            if (container == null) throw new ArgumentNullException(nameof(container));
             if (tag == null)
             {
                 return container.Resolve().Instance<IContainer>();
             }
 
             return container.Resolve().State<object>(0).Instance<IContainer>(tag);
-        }
-
-        [NotNull]
-        public static IResolving<T> Resolve<T>([NotNull] this T resolver)
-              where T : IResolver
-        {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            return Fluent(resolver).Resolve(resolver);
         }
 
         [CanBeNull]
@@ -113,7 +100,7 @@
             var fluentProvider = resolver as IProvider<IFluent>;
             if (fluentProvider == null || !fluentProvider.TryGet(out IFluent fluent))
             {
-                throw new InvalidOperationException($"{typeof(IProvider<IFluent>)} is not supported. Only \"{nameof(IContainer)}\" interface is uspported.");
+                throw new InvalidOperationException($"{typeof(IProvider<IFluent>)} is not supported. Only \"{nameof(IContainer)}\" is supported.");
             }
 
             return fluent;
