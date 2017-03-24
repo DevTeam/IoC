@@ -5,6 +5,8 @@
     using Models;
     using Shouldly;
     using Xunit;
+    using System.Collections.Generic;
+    using System.Reflection;
 
     public class TypeResolverTests
     {
@@ -39,18 +41,20 @@
         {
             // Given
             var typeResolver = new TypeResolver();
+            List<Assembly> refList = new List<Assembly>();
+            List<string> usingList = new List<string>();
             foreach (var reference in references.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
             {
-                typeResolver.AddReference(reference);
+                refList.Add(Assembly.Load(new AssemblyName(reference)));
             }
 
             foreach (var usingItem in usingStatements.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
             {
-                typeResolver.AddUsingStatement(usingItem);
+                usingList.Add(usingItem);
             }
 
             // When
-            var actualResult = typeResolver.TryResolveType(typeName, out Type actualType);
+            var actualResult = typeResolver.TryResolveType(refList, usingList, typeName, out Type actualType);
 
             // Then
             actualResult.ShouldBe(expectedResult);

@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using System.Reflection;
     using Configurations.Json;
     using Contracts;
     using Contracts.Dto;
@@ -24,7 +25,7 @@
             rootContainer.Configure().DependsOn(Wellknown.Feature.Dto).ToSelf();
             rootContainer.Configure().DependsOn(Wellknown.Feature.Scopes).ToSelf();
             _container = rootContainer.CreateChild();
-            _container.Register().Contract<ITypeResolver>().FactoryMethod(ctx => _typeResolver).ToSelf();
+
         }
 
         [Fact]
@@ -39,24 +40,6 @@
 
             // Then
             dependencies.Length.ShouldBe(0);
-        }
-
-        [Fact]
-        public void ShouldGetDependenciesWhenUsingAndReferences()
-        {
-            // Given
-            var configurationDto = new ConfigurationDto();
-            var configuration = CreateInstance(configurationDto);
-
-            // When
-            configurationDto.Add(new UsingDto { Using = "abc" });
-            configurationDto.Add(new ReferenceDto { Reference = "xyz" });
-            // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-            configuration.GetDependencies(_container).ToArray();
-
-            // Then
-            _typeResolver.UsingStatement.ShouldBe(new[] { "abc" });
-            _typeResolver.References.ShouldBe(new[] { "xyz" });
         }
 
         [Fact]
@@ -145,25 +128,6 @@
             dependencies[0].ShouldBe(_container.Feature(feature));
         }
 #endif
-
-        [Fact]
-        public void ShouldApplyWhenUsingAndReferences()
-        {
-            // Given
-            var configurationDto = new ConfigurationDto();
-            var configuration = CreateInstance(configurationDto);
-
-            // When
-            configurationDto.Add(new UsingDto { Using = "abc" });
-            configurationDto.Add(new ReferenceDto { Reference = "xyz" });
-            // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-            configuration.Apply(_container).ToArray();
-
-            // Then
-            _typeResolver.UsingStatement.ShouldBe(new[] { "abc" });
-            _typeResolver.References.ShouldBe(new[] { "xyz" });
-        }
-
         [Fact]
         public void ShouldApplyWhenChildContainer()
         {
@@ -419,27 +383,31 @@
 
         private ConfigurationDtoAdapter CreateInstance(IConfigurationDto configurationDto)
         {
-            return new ConfigurationDtoAdapter(configurationDto);
+            var converterStringToObject = new ConverterStringToObject(Reflection.Shared);
+            var сonverterValueDtoToObject = new ConverterValueDtoToObject(_typeResolver, converterStringToObject);
+            var converterTagDtoToObject = new ConverterTagDtoToObject(_typeResolver, converterStringToObject);
+            var converterParameterDtoToParameterMetadata = new ConverterParameterDtoToParameterMetadata(Reflection.Shared, _typeResolver, converterStringToObject, сonverterValueDtoToObject, converterTagDtoToObject);
+            var converterRegisterDtoToRegistationResult = new ConverterRegisterDtoToRegistations(Reflection.Shared, _typeResolver, converterTagDtoToObject, converterParameterDtoToParameterMetadata);
+            var converterConfigurationDtoToRegistrations = new ConverterConfigurationDtoToRegistrations(converterTagDtoToObject, converterRegisterDtoToRegistationResult);
+            var converterConfigurationDtoToDependencies = new ConverterConfigurationDtoToDependencies(_typeResolver);
+            return new ConfigurationDtoAdapter(
+                configurationDto,
+                converterConfigurationDtoToRegistrations,
+                converterConfigurationDtoToDependencies);
         }
 
         private class MyTypeResolver: ITypeResolver
         {
-            public IList<string> References { get; } = new List<string>();
+            public List<Assembly> References { get; } = new List<Assembly>();
 
-            public IList<string> UsingStatement { get; } = new List<string>();
+            public List<string> UsingStatement { get; } = new List<string>();
 
-            public void AddReference(string reference)
+            public bool TryResolveType(IEnumerable<Assembly> references, IEnumerable<string> usings, string typeName, out Type type)
             {
-                References.Add(reference);
-            }
+                References.Clear();
+                References.AddRange(references);
+                UsingStatement.AddRange(usings);
 
-            public void AddUsingStatement(string usingName)
-            {
-                UsingStatement.Add(usingName);
-            }
-
-            public bool TryResolveType(string typeName, out Type type)
-            {
                 if (typeName.IsNullOrWhiteSpace())
                 {
                     type = default(Type);

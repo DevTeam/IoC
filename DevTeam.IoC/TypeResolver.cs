@@ -28,31 +28,14 @@
             {"string", typeof(string)},
             {"decimal", typeof(decimal)}
         };
-        // ReSharper restore StringLiteralTypo
 
-        private readonly List<string> _usingStatements = new List<string>();
-        private readonly List<Assembly> _references = new List<Assembly>();
-
-        private IEnumerable<Assembly> References => _references;
-
-        private IEnumerable<string> UsingStatements => _usingStatements;
-
-        public void AddReference(string reference)
+        public bool TryResolveType(IEnumerable<Assembly> references, IEnumerable<string> usings, string typeName, out Type type)
         {
-            if (reference == null) throw new ArgumentNullException(nameof(reference));
-            if (reference.IsNullOrWhiteSpace()) throw new ArgumentException("Value cannot be null or whitespace.", nameof(reference));
-            _references.Add(Assembly.Load(new AssemblyName(reference)));
-        }
+            if (references == null) throw new ArgumentNullException(nameof(references));
+            if (usings == null) throw new ArgumentNullException(nameof(usings));
+            var refList = references.ToList();
+            var usingList = usings.ToList();
 
-        public void AddUsingStatement(string usingName)
-        {
-            if (usingName == null) throw new ArgumentNullException(nameof(usingName));
-            if (usingName.IsNullOrWhiteSpace()) throw new ArgumentException("Value cannot be null or whitespace.", nameof(usingName));
-            _usingStatements.Add(usingName);
-        }
-
-        public bool TryResolveType(string typeName, out Type type)
-        {
             if (typeName.IsNullOrWhiteSpace())
             {
                 type = default(Type);
@@ -64,7 +47,7 @@
                 return true;
             }
 
-            var typeDescription = new TypeDescription(typeName, this);
+            var typeDescription = new TypeDescription(refList, usingList, typeName, this);
             if (!typeDescription.IsValid)
             {
                 return false;
@@ -103,8 +86,13 @@
 
         private class TypeDescription
         {
-            public TypeDescription(string typeName, TypeResolver typeResolver)
+            private readonly ICollection<Assembly> _refList;
+            private readonly ICollection<string> _usingList;
+
+            public TypeDescription(ICollection<Assembly> refList, ICollection<string> usingList, string typeName, TypeResolver typeResolver)
             {
+                _refList = refList;
+                _usingList = usingList;
                 GenericTypeArgs = new List<TypeDescription>();
 
                 if (typeName == null)
@@ -177,7 +165,7 @@
 
                         foreach (var genericTypeArgStr in args)
                         {
-                            var genericTypeDescriptor = new TypeDescription(genericTypeArgStr, typeResolver);
+                            var genericTypeDescriptor = new TypeDescription(refList, usingList, genericTypeArgStr, typeResolver);
                             isValid &= genericTypeDescriptor.IsValid;
                             if (!isValid)
                             {
@@ -250,7 +238,7 @@
                     return true;
                 }
 
-                foreach (var usingName in typeResolver.UsingStatements)
+                foreach (var usingName in _usingList)
                 {
                     var fullTypeName = $"{usingName}.{typeName}";
                     if (LoadType(fullTypeName, typeResolver))
@@ -332,7 +320,7 @@
                     return true;
                 }
 
-                foreach (var reference in typeResolver.References)
+                foreach (var reference in _refList)
                 {
                     var assemblyQualifiedName = $"{typeName}, {reference.GetName()}";
                     type = Type.GetType(assemblyQualifiedName);
