@@ -1,6 +1,6 @@
 ﻿namespace DevTeam.IoC
 {
-    public enum EventStage
+    internal enum EventStage
     {
         Before,
 

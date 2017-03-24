@@ -11,7 +11,7 @@
             using (var rootResolver = new Container("root").Configure()
                 .DependsOn(Wellknown.Feature.Default).ToSelf())
             {
-                PerformanceTests.PerformanceTest(rootResolver, 1000000);
+                PerformanceTests.PerformanceTest(rootResolver, 100000);
             }
         }
     }

@@ -6,7 +6,7 @@
     using Contracts;
 
     // ReSharper disable once ClassNeverInstantiated.Global
-    internal class TimerSource: IEventSource<DateTimeOffset>, IDisposable
+    internal sealed class TimerSource: IEventSource<DateTimeOffset>, IDisposable
     {
         private readonly ILog _log;
         private readonly IResolver<DateTimeOffset, IEvent<DateTimeOffset>> _eventResolver;

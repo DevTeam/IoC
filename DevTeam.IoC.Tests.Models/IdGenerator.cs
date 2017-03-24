@@ -4,7 +4,7 @@
     using Contracts;
 
     // ReSharper disable once ClassNeverInstantiated.Global
-    internal class IdGenerator
+    internal sealed class IdGenerator
     {
         private static long _id;
 

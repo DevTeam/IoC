@@ -1,6 +1,6 @@
 ﻿namespace DevTeam.IoC
 {
-    public enum EventAction
+    internal enum EventAction
     {
         Add,
 

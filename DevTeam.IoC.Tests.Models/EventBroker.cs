@@ -6,7 +6,7 @@
     using Contracts;
 
     // ReSharper disable once ClassNeverInstantiated.Global
-    internal class EventBroker : IEventBroker
+    internal sealed class EventBroker : IEventBroker
     {
         private readonly ILog _log;
         private readonly Dictionary<Type, object> _sources = new Dictionary<Type, object>();

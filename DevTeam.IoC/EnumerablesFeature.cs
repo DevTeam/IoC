@@ -8,7 +8,7 @@
     using Contracts;
 
     [SuppressMessage("ReSharper", "IdentifierTypo")]
-    internal class EnumerablesFeature: IConfiguration
+    internal sealed class EnumerablesFeature: IConfiguration
     {
         public static readonly IConfiguration Shared = new EnumerablesFeature();
 
@@ -43,6 +43,9 @@
             return obj != null && GetType() == obj.GetType();
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         private static object ResolveEnumerable(ICreationContext creationContext, IReflection reflection)
         {
             var ctx = creationContext.ResolverContext;

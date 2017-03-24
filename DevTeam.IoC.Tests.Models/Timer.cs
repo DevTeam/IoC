@@ -5,7 +5,7 @@
     using Contracts;
 
     // ReSharper disable once ClassNeverInstantiated.Global
-    internal class Timer : ITimer, ITimerManager
+    internal sealed class Timer : ITimer, ITimerManager
     {
         private readonly ILog _log;
         private readonly List<Action> _tickActions = new List<Action>();

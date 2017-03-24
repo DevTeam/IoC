@@ -6,7 +6,7 @@
     using System.Reflection;
     using Contracts;
 
-    internal class Configuring<T> : IConfiguring<T>
+    internal sealed class Configuring<T> : IConfiguring<T>
         where T : IContainer
     {
         private readonly T _container;

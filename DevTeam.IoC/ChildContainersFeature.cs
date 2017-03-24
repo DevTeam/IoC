@@ -5,7 +5,7 @@
 
     using Contracts;
 
-    internal class ChildContainersFeature: IConfiguration
+    internal sealed class ChildContainersFeature: IConfiguration
     {
         public static readonly IConfiguration Shared = new ChildContainersFeature();
 

@@ -4,7 +4,7 @@
     using Contracts.Dto;
     using Newtonsoft.Json;
 
-    internal class ValueDto : IValueDto
+    internal sealed class ValueDto : IValueDto
     {
         [JsonProperty("data", Required = Required.Always)]
         public string Data { get; [NotNull] set; }

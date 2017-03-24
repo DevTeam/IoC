@@ -20,6 +20,9 @@
 
         public object Tag => _tag;
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
@@ -27,6 +30,9 @@
             return key != null && Equals(key);
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         public override int GetHashCode()
         {
             if (KeyFilterContext.Current.Filter(typeof(ITagKey)))
@@ -37,6 +43,9 @@
             return _hashCode;
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         private bool Equals(ITagKey other)
         {
             return KeyFilterContext.Current.Filter(typeof(ITagKey)) || _tag.Equals(other.Tag);

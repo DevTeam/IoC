@@ -4,7 +4,7 @@
     using Contracts.Dto;
     using Newtonsoft.Json;
 
-    internal class StateDto: IStateDto
+    internal sealed class StateDto: IStateDto
     {
         [JsonProperty("stateType", Required = Required.Always)]
         public string StateTypeName { [NotNull] get; set; }

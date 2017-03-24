@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using Contracts;
 
-    internal class RegistrationResult<T> : IRegistrationResult<T> where T : IContainer
+    internal sealed class RegistrationResult<T> : IRegistrationResult<T> where T : IContainer
     {
         private readonly Registration<T> _registration;
         private readonly List<IDisposable> _resources = new List<IDisposable>();

@@ -6,7 +6,7 @@
     using Contracts;
     using Contracts.Dto;
 
-    internal class ConverterConfigurationDtoToRegistrations: IConverter<IConfigurationDto, IEnumerable<IRegistrationResult<IContainer>>, ConverterConfigurationDtoToRegistrations.Context>
+    internal sealed class ConverterConfigurationDtoToRegistrations: IConverter<IConfigurationDto, IEnumerable<IRegistrationResult<IContainer>>, ConverterConfigurationDtoToRegistrations.Context>
     {
         [NotNull] private readonly IConverter<ITagDto, object, TypeResolverContext> _converterTagDtoToObject;
         [NotNull] private readonly IConverter<IRegisterDto, IEnumerable<IRegistrationResult<IContainer>>, ConverterRegisterDtoToRegistations.Context> _converterRegisterDtoToRegistationResult;
@@ -86,7 +86,7 @@
             }
         }
 
-        internal class Context
+        internal sealed class Context
         {
             public Context([NotNull] IContainer container, [NotNull] TypeResolverContext typeResolverContext)
             {

@@ -8,7 +8,7 @@
     using System.Threading.Tasks;
     using Contracts;
 
-    internal class TasksFeature: IConfiguration
+    internal sealed class TasksFeature: IConfiguration
     {
         public static readonly IConfiguration Shared = new TasksFeature();
 
@@ -44,6 +44,9 @@
             return obj != null && GetType() == obj.GetType();
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         private static object ResolveTask(ICreationContext creationContext, IReflection reflection)
         {
             var ctx = creationContext.ResolverContext;
@@ -60,13 +63,16 @@
             return factory.CreateConstructor(ctor)(ctx);
         }
 
-        private class ResolverTask<T> : Task<T>
+        private sealed class ResolverTask<T> : Task<T>
         {
             public ResolverTask(IResolverContext ctx) 
                 : base(CreateFunction(ctx))
             {
             }
 
+#if !NET35 && !NET40
+            [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
             private static Func<T> CreateFunction(IResolverContext ctx)
             {
                 var compositeKey = ctx.Key as ICompositeKey;

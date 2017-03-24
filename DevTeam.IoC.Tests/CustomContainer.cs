@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using Contracts;
 
-    internal class CustomContainer : IContainer, IProvider<IFluent>
+    internal sealed class CustomContainer : IContainer, IProvider<IFluent>
     {
         private static readonly IFluent SharedFluent = Fluent.Shared;
         private static readonly IKeyFactory SharedKeyFactory = new KeyFactory(Reflection.Shared);

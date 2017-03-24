@@ -5,7 +5,7 @@
 
     using Contracts;
 
-    internal class LifetimesFeature: IConfiguration
+    internal sealed class LifetimesFeature: IConfiguration
     {
         public static readonly IConfiguration Shared = new LifetimesFeature();
 

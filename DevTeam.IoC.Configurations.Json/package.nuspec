@@ -21,7 +21,7 @@ Supported platforms:
 		<tags>.NETStandard NETCore Core Portable DevTeam Pattern IoC Container DI dependencyinjection Inversion Control State Bind Factory</tags>
 		<dependencies>
 			<dependency id="DevTeam.IoC.Contracts" version="$ContractDependencyVersion$" />
-			<dependency id="Newtonsoft.Json" version="10.0.1" />
+			<dependency id="Newtonsoft.Json" version="10.0.2" />
 		</dependencies>
 	</metadata>
 	<files>

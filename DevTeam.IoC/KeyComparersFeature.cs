@@ -5,7 +5,7 @@
 
     using Contracts;
 
-    internal class KeyComparersFeature : IConfiguration
+    internal sealed class KeyComparersFeature : IConfiguration
     {
         public static readonly IConfiguration Shared = new KeyComparersFeature();
 

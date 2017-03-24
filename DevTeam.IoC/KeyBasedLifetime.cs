@@ -21,6 +21,9 @@
             _keySelector = keySelector;
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         public object Create(ILifetimeContext lifetimeContext, ICreationContext creationContext, IEnumerator<ILifetime> lifetimeEnumerator)
         {
 #if DEBUG
@@ -42,6 +45,9 @@
             return lifetime.Create(lifetimeContext, creationContext, lifetimeEnumerator);
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         public void Dispose()
         {
             lock (_lifetimes)

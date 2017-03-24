@@ -4,7 +4,7 @@
     using System.Linq;
     using Contracts;
 
-    internal class TypeMetadata
+    internal sealed class TypeMetadata
     {
         public TypeMetadata(MethodMetadata constructor, IEnumerable<MethodMetadata> methods, IEnumerable<PropertyMetadata> properties)
         {

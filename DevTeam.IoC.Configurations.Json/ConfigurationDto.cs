@@ -5,7 +5,7 @@
     using Newtonsoft.Json;
 
     [JsonArray(AllowNullItems = false)]
-    internal class ConfigurationDto: List<IConfigurationStatementDto>, IConfigurationDto
+    internal sealed class ConfigurationDto: List<IConfigurationStatementDto>, IConfigurationDto
     {
     }
 }

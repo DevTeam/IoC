@@ -4,7 +4,7 @@
     using DevTeam.IoC.Contracts;
 
     // ReSharper disable once ClassNeverInstantiated.Global
-    internal class LedLamp : ILamp
+    internal sealed class LedLamp : ILamp
     {
         private readonly ConsoleColor _color;
 

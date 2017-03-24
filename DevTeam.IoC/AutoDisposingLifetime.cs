@@ -5,7 +5,7 @@
     using System.Linq;
     using Contracts;
 
-    internal class AutoDisposingLifetime: ILifetime
+    internal sealed class AutoDisposingLifetime: ILifetime
     {
         private readonly HashSet<IDisposable> _instances = new HashSet<IDisposable>();
 

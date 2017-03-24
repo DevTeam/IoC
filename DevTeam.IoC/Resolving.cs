@@ -5,7 +5,7 @@
     using System.Linq;
     using Contracts;
 
-    internal class Resolving<T> : Token<T, IResolving<T>>, IResolving<T>
+    internal sealed class Resolving<T> : Token<T, IResolving<T>>, IResolving<T>
           where T : IResolver
     {
         private readonly HashSet<IContractKey> _сontractKeys = new HashSet<IContractKey>();
@@ -137,6 +137,9 @@
             return Instance<TContract>(ParamsStateProvider.Create(state));
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         protected override bool AddContractKey(IEnumerable<IContractKey> keys)
         {
             var changed = false;
@@ -191,6 +194,9 @@
             return false;
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         protected override bool AddCompositeKey(ICompositeKey compositeKey)
         {
             var changed = false;
@@ -214,6 +220,9 @@
             return false;
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         private IKey CreateResolvingKey()
         {
             if (_contractKeysCount == 1 && _tagKeys == null && _stateKeys == null)
@@ -224,11 +233,17 @@
             return Resolver.KeyFactory.CreateCompositeKey(_сontractKeys, _tagKeys, _stateKeys);
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         private void OnCompositeKeyChanged()
         {
             _resolverContext = null;
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         private bool TryCreateResolverContext(
             IStateProvider stateProvider,
             out IKey key,
@@ -257,6 +272,9 @@
             return $"Can't resolve {key}.{Environment.NewLine}{Environment.NewLine}{Resolver}";
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         private void TrySpecifyState(params object[] state)
         {
             if (_stateKeys != null || state.Length == 0)

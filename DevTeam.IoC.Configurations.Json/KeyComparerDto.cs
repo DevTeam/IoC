@@ -4,7 +4,7 @@
     using Contracts.Dto;
     using Newtonsoft.Json;
 
-    internal class KeyComparerDto : IKeyComparerDto
+    internal sealed class KeyComparerDto : IKeyComparerDto
     {
         [JsonProperty("keyComparer", Required = Required.Always)]
         public Wellknown.KeyComparer KeyComparer { get; [NotNull] set; }

@@ -5,7 +5,7 @@
 
     using Contracts;
 
-    internal class DefaultFeatures: IConfiguration
+    internal sealed class DefaultFeatures: IConfiguration
     {
         public static readonly IConfiguration Shared = new DefaultFeatures();
 

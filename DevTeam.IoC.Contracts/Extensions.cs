@@ -5,6 +5,9 @@
     [PublicAPI]
     public static class Extensions
     {
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         [NotNull]
         public static IConfiguration Feature([NotNull] this IResolver resolver, [NotNull] object feature)
         {
@@ -13,6 +16,9 @@
             return resolver.Resolve().Tag(feature).Instance<IConfiguration>();
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         [NotNull]
         public static IConfiguring<T> Configure<T>([NotNull] this T container)
             where T : IContainer
@@ -21,6 +27,9 @@
             return Fluent(container).Configure(container);
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         [NotNull]
         public static IRegistration<T> Register<T>([NotNull] this T container)
               where T : IContainer
@@ -29,6 +38,9 @@
             return Fluent(container).Register(container);
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         [NotNull]
         public static IResolving<T> Resolve<T>([NotNull] this T resolver)
               where T : IResolver
@@ -37,6 +49,9 @@
             return Fluent(resolver).Resolve(resolver);
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         [NotNull]
         public static IContainer CreateChild<T>([NotNull] this T container, [CanBeNull] object tag = null)
              where T : IContainer
@@ -50,6 +65,9 @@
             return container.Resolve().State<object>(0).Instance<IContainer>(tag);
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         [CanBeNull]
         public static object TryGetState([NotNull] this ICreationContext ctx, int index, [NotNull] Type stateType)
         {
@@ -59,6 +77,9 @@
             return ctx.StateProvider.GetState(ctx, ctx.ResolverContext.Container.KeyFactory.CreateStateKey(index, stateType, true));
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         [NotNull]
         public static object GetState([NotNull] this ICreationContext ctx, int index, [NotNull] Type stateType)
         {
@@ -76,6 +97,9 @@
             return value;
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         [CanBeNull]
         public static T TryGetState<T>([NotNull] this ICreationContext ctx, int index)
         {
@@ -84,6 +108,9 @@
             return (T)ctx.TryGetState(index, typeof(T));
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         [NotNull]
         public static T GetState<T>([NotNull] this ICreationContext ctx, int index)
         {
@@ -92,6 +119,9 @@
             return (T)GetState(ctx, index, typeof(T));
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         [NotNull]
         public static IFluent Fluent<T>([NotNull] this T resolver)
              where T : IResolver

@@ -6,7 +6,7 @@
     using Contracts.Dto;
     using Newtonsoft.Json;
 
-    public class JsonConfiguration: IConfiguration
+    public sealed class JsonConfiguration: IConfiguration
     {
         public IEnumerable<IConfiguration> GetDependencies(IContainer container)
         {

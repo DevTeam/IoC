@@ -5,7 +5,7 @@
     using System.Linq;
     using Contracts;
 
-    internal class Registration<T> : Token<T, IRegistration<T>>, IRegistration<T>
+    internal sealed class Registration<T> : Token<T, IRegistration<T>>, IRegistration<T>
           where T : IContainer
     {
         // ReSharper disable once StaticMemberInGenericType
@@ -272,6 +272,9 @@
             _result.AddResource(registration);
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         private IMethodFactory GetInstanceFactoryProvider()
         {
             if (!Resolver.TryResolve(out IMethodFactory instanceFactoryProvider))
@@ -282,6 +285,9 @@
             return instanceFactoryProvider;
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         private IInstanceFactory CreateFactory(Type resolvedType, IMetadataProvider metadataProvider)
         {
             IInstanceFactory factory;

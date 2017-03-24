@@ -6,7 +6,7 @@
     using System.Reflection;
     using Contracts;
 
-    internal class ManualMetadataProvider : IMetadataProvider
+    internal sealed class ManualMetadataProvider : IMetadataProvider
     {
         private readonly IMetadataProvider _defaultMetadataProvider;
         [NotNull] private readonly IReflection _reflection;
@@ -133,6 +133,9 @@
             return _methodsDict;
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         private bool MatchMethod([NotNull] MethodBase method)
         {
 #if DEBUG

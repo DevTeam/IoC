@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using Contracts;
 
-    internal class PlatformConfiguration: IConfiguration
+    internal sealed class PlatformConfiguration: IConfiguration
     {
         private readonly bool _trace;
 

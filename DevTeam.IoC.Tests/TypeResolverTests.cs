@@ -16,6 +16,11 @@
         [InlineData("", "", "System.Int32", true, typeof(int))]
         [InlineData("", "", "string", true, typeof(string))]
         [InlineData("", "", "System.String", true, typeof(string))]
+        [InlineData("", "System", "Func<>", true, typeof(Func<>))]
+        [InlineData("", "", "System.Func<>", true, typeof(Func<>))]
+        [InlineData("", "System", "Func<int, string>", true, typeof(Func<int,string>))]
+        [InlineData("", "", "System.Func<int, string>", true, typeof(Func<int, string>))]
+        [InlineData("DevTeam.IoC.Contracts", "DevTeam.IoC.Contracts;System", "Func<IResolver, string>", true, typeof(Func<IResolver, string>))]
         [InlineData("DevTeam.IoC.Contracts", "DevTeam.IoC.Contracts", "IResolver", true, typeof(IResolver))]
         [InlineData("DevTeam.IoC.Contracts", "", "DevTeam.IoC.Contracts.IResolver", true, typeof(IResolver))]
         [InlineData("DevTeam.IoC.Contracts", "DevTeam.IoC.Contracts", "IResolver<>", true, typeof(IResolver<>))]
@@ -40,7 +45,7 @@
             Type expectedType)
         {
             // Given
-            var typeResolver = new TypeResolver();
+            var typeResolver = new TypeResolver(Reflection.Shared);
             List<Assembly> refList = new List<Assembly>();
             List<string> usingList = new List<string>();
             foreach (var reference in references.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))

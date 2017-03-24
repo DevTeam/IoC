@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using Contracts;
 
-    internal class EventObserver<T> : IObserver<T>
+    internal sealed class EventObserver<T> : IObserver<T>
     {
         public IList<Event> Events { get; } = new List<Event>();
 
@@ -23,7 +23,7 @@
             Events.Add(new Event(EventType.OnCompleted, default(T)));
         }
 
-        internal class Event
+        internal sealed class Event
         {
             public Event(EventType eventType, [CanBeNull] T value, [CanBeNull] Exception error = null)
             {

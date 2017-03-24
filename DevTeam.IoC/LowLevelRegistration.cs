@@ -7,6 +7,9 @@
 
     internal static class LowLevelRegistration
     {
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         public static IEnumerable<IKey> CreateKeys<TContract>()
         {
             return CreateKeys(Reflection.Shared, typeof(TContract));
@@ -50,6 +53,9 @@
             return disposable;
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         private static IEnumerable<IKey> CreateKeys([NotNull] IReflection reflection, [NotNull] Type contractType)
         {
 #if DEBUG

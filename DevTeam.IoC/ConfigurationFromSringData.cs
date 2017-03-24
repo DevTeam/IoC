@@ -5,7 +5,7 @@
     using Contracts;
     using Contracts.Dto;
 
-    internal class ConfigurationFromSringData: IConfiguration
+    internal sealed class ConfigurationFromSringData: IConfiguration
     {
         private readonly IResolver _resolver;
         private readonly Type _configurationType;

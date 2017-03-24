@@ -7,7 +7,7 @@
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
-    internal class JsonDerivedTypeConverter<T>: JsonConverter
+    internal sealed class JsonDerivedTypeConverter<T>: JsonConverter
     {
         [NotNull] private readonly IReflection _reflection;
         [NotNull] private readonly IDictionary<Type, string[]> _derivedTypes;

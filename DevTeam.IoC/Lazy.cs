@@ -2,7 +2,7 @@
 // ReSharper disable once CheckNamespace
 namespace System
 {
-    public class Lazy<T>
+    internal sealed class Lazy<T>
     {
         private readonly Func<T> _factory;
         private bool _created;

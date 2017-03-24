@@ -5,7 +5,7 @@
     using Contracts.Dto;
     using Newtonsoft.Json;
 
-    internal class MethodDto : IMethodDto
+    internal sealed class MethodDto : IMethodDto
     {
         [JsonProperty("name", Required = Required.Default)]
         public string Name { get; [NotNull] set; }

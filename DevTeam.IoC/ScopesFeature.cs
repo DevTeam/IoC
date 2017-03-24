@@ -5,7 +5,7 @@
 
     using Contracts;
 
-    internal class ScopesFeature: IConfiguration
+    internal sealed class ScopesFeature: IConfiguration
     {
         public static readonly IConfiguration Shared = new ScopesFeature();
 

@@ -4,10 +4,13 @@
     using System.Collections.Generic;
     using Contracts;
 
-    internal class InternalResourceStore: IInternalResourceStore
+    internal sealed class InternalResourceStore: IInternalResourceStore
     {
         private readonly List<IDisposable> _resources = new List<IDisposable>();
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         public void AddResource([NotNull] IDisposable resource)
         {
 #if DEBUG
@@ -16,6 +19,9 @@
             _resources.Add(resource);
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         public void Dispose()
         {
             foreach (var resource in _resources)

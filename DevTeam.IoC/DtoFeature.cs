@@ -5,7 +5,7 @@
     using Contracts;
     using Contracts.Dto;
 
-    internal class DtoFeature: IConfiguration
+    internal sealed class DtoFeature: IConfiguration
     {
         public static readonly IConfiguration Shared = new DtoFeature();
 

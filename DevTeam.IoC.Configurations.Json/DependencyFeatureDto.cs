@@ -4,7 +4,7 @@
     using Contracts.Dto;
     using Newtonsoft.Json;
 
-    internal class DependencyFeatureDto: IDependencyFeatureDto
+    internal sealed class DependencyFeatureDto: IDependencyFeatureDto
     {
         [JsonProperty("dependency.feature", Required = Required.Always)]
         public Wellknown.Feature Feature { get; [NotNull] set; }

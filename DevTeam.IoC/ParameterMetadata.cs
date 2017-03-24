@@ -5,7 +5,7 @@
     using System.Linq;
     using Contracts;
 
-    internal class ParameterMetadata : IParameterMetadata
+    internal sealed class ParameterMetadata : IParameterMetadata
     {
         private static readonly object[] EmptyState = new object[0];
 
@@ -57,11 +57,17 @@
             return 0;
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         private bool Equals(IParameterMetadata other)
         {
             return IsDependency == other.IsDependency && Equals(ContractKeys, other.ContractKeys) && Equals(TagKeys, other.TagKeys) && Equals(StateKeys, other.StateKeys) && Equals(Value, other.Value) && Equals(StateKey, other.StateKey) && Equals(State, other.State);
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         private bool Equals<T>([CanBeNull] IEnumerable<T> s1, [CanBeNull] IEnumerable<T> s2)
         {
             if (Object.Equals(s1, s2))

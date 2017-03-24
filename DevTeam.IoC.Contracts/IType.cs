@@ -6,6 +6,8 @@
 
     public interface IType
     {
+        Assembly Assembly { [NotNull] get; }
+
         Type BaseType { get; }
 
         IEnumerable<ConstructorInfo> Constructors { [NotNull] get; }

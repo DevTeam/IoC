@@ -3,7 +3,7 @@
     using System;
     using Contracts;
 
-    internal class ConverterStringToObject: IConverter<string, object, Type>
+    internal sealed class ConverterStringToObject: IConverter<string, object, Type>
     {
         private readonly IReflection _reflection;
 

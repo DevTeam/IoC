@@ -3,7 +3,7 @@
     using System;
 
     // ReSharper disable once UnusedMember.Global
-    internal class Console : IConsole
+    internal sealed class Console : IConsole
     {
         public void WriteLine(string line)
         {

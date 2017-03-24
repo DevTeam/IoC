@@ -3,7 +3,7 @@
     using System;
     using Newtonsoft.Json;
 
-    internal class JsonEnumConverter<T>: JsonConverter
+    internal sealed class JsonEnumConverter<T>: JsonConverter
     {
         public override bool CanConvert(Type objectType)
         {

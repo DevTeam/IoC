@@ -5,7 +5,7 @@
     using System.Reflection;
     using Contracts;
 
-    internal class RootContainerConfiguration: IConfiguration
+    internal sealed class RootContainerConfiguration: IConfiguration
     {
         public static readonly IConfiguration Shared = new RootContainerConfiguration();
         public static readonly KeyFactory KeyFactory = new KeyFactory(Reflection.Shared);
@@ -50,14 +50,20 @@
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
             yield return LowLevelRegistration.RawRegister<IResolver>(container, ResolverKeys, ctx => ctx.ResolverContext.Container);
-            yield return LowLevelRegistration.RawRegister<IRegistry>(container, RegistryKeys, ctx => (Container)ctx.ResolverContext.Container);
+            yield return LowLevelRegistration.RawRegister<IRegistry>(container, RegistryKeys, ctx => ctx.ResolverContext.Container);
             yield return LowLevelRegistration.RawRegister<IKeyFactory>(container, KeyFactoryKeys, ctx => KeyFactory);
             yield return LowLevelRegistration.RawRegister(container, FluentKeys, ctx => Fluent.Shared);
             yield return LowLevelRegistration.RawRegister(container, ReflectionKeys, ctx => Reflection.Shared);
             yield return LowLevelRegistration.RawRegister(container, InstanceFactoryProviderKeys, ctx => ExpressionMethodFactory);
             yield return LowLevelRegistration.RawRegister(typeof(IResolving<>), container, ResolvingKeys, ctx => new Resolving<IResolver>(container));
             yield return LowLevelRegistration.RawRegister(typeof(IRegistration<>), container, RegistrationKeys, ctx => new Registration<IContainer>(ctx.ResolverContext.Container.Resolve().Instance<IFluent>(), container));
-            yield return LowLevelRegistration.RawRegister(container, MetadataProviderKeys, ctx => new AutowiringMetadataProvider(ctx.ResolverContext.Container.Resolve().Instance<IReflection>()));
+
+            var sharedAutowiringMetadataProvider = new AutowiringMetadataProvider(Reflection.Shared);
+            yield return LowLevelRegistration.RawRegister(container, MetadataProviderKeys, ctx =>
+            {
+                var reflection = ctx.ResolverContext.Container.Resolve().Instance<IReflection>();
+                return reflection == Reflection.Shared ? sharedAutowiringMetadataProvider : new AutowiringMetadataProvider(reflection);
+            });
 
             yield return
                 container

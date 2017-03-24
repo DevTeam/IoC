@@ -6,9 +6,10 @@
     using System.Reflection;
     using Contracts;
 
-    internal class AutowiringMetadataProvider : IMetadataProvider
+    internal sealed class AutowiringMetadataProvider : IMetadataProvider
     {
         [NotNull] private readonly IReflection _reflection;
+        [NotNull] private readonly Cache<Type, Cache<IContractKey, Type>> _resolvedTypes = new Cache<Type, Cache<IContractKey, Type>>();
 
         public AutowiringMetadataProvider([NotNull] IReflection reflection)
         {
@@ -21,26 +22,45 @@
 #if DEBUG
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
 #endif
-            var implementationTypeInfo = _reflection.GetType(implementationType);
-            if (implementationTypeInfo.IsGenericTypeDefinition)
+            var typeInfo = _reflection.GetType(implementationType);
+            if (!typeInfo.IsGenericTypeDefinition)
             {
-                if (creationContext == null)
+                resolvedType = implementationType;
+                return true;
+            }
+
+            if (creationContext == null)
+            {
+                resolvedType = default(Type);
+                return false;
+            }
+
+            var ctx = creationContext.ResolverContext;
+            var key = ctx.Key;
+            var contractKey = key as IContractKey ?? (key as ICompositeKey)?.ContractKeys.FirstOrDefault();
+            if (contractKey != null)
+            {
+                if (!_resolvedTypes.TryGet(implementationType, out Cache<IContractKey, Type> types))
                 {
-                    resolvedType = default(Type);
-                    return false;
+                    types = new Cache<IContractKey, Type>();
+                    _resolvedTypes.Set(implementationType, types);
                 }
 
-                var ctx = creationContext.ResolverContext;
-                var contractKey = ctx.Key as IContractKey ?? (ctx.Key as ICompositeKey)?.ContractKeys.FirstOrDefault();
-                if (contractKey != null && contractKey.GenericTypeArguments.Length > 0 && implementationTypeInfo.GenericTypeParameters.Length == contractKey.GenericTypeArguments.Length)
+                if (types.TryGet(contractKey, out resolvedType))
+                {
+                    return true;
+                }
+
+                if (contractKey.GenericTypeArguments.Length > 0 && typeInfo.GenericTypeParameters.Length == contractKey.GenericTypeArguments.Length)
                 {
                     resolvedType = implementationType.MakeGenericType(contractKey.GenericTypeArguments);
+                    types.Set(contractKey, resolvedType);
                     return true;
                 }
             }
 
-            resolvedType = implementationType;
-            return true;
+            resolvedType = default(Type);
+            return false;
         }
 
         public bool TrySelectConstructor(Type implementationType, out ConstructorInfo constructor, out Exception error)

@@ -4,7 +4,7 @@
     using Contracts;
 
     // ReSharper disable once UnusedMember.Global
-    internal class Chronometer: IEventConsumer<DateTimeOffset>
+    internal sealed class Chronometer: IEventConsumer<DateTimeOffset>
     {
         private readonly IConsole _console;
         private readonly ILogger<Chronometer> _logger;

@@ -32,6 +32,9 @@
 
         public bool Resolving => _resolving;
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
@@ -39,6 +42,9 @@
             return key != null && Equals(key);
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         public override int GetHashCode()
         {
             if (KeyFilterContext.Current.Filter(typeof(IStateKey)))
@@ -49,6 +55,9 @@
             return _index;
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         private bool Equals(IStateKey other)
         {
             var eq = KeyFilterContext.Current.Filter(typeof(IStateKey)) || _index == other.Index;

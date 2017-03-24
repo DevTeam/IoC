@@ -4,7 +4,7 @@
     using Contracts.Dto;
     using Newtonsoft.Json;
 
-    internal class LifetimeDto : ILifetimeDto
+    internal sealed class LifetimeDto : ILifetimeDto
     {
         [JsonProperty("lifetime", Required = Required.Always)]
         public Wellknown.Lifetime Lifetime { get; [NotNull] set; }

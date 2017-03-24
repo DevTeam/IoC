@@ -5,7 +5,7 @@
     using Contracts.Dto;
     using Newtonsoft.Json;
 
-    internal class ContainerDto: IContainerDto
+    internal sealed class ContainerDto: IContainerDto
     {
         [JsonProperty("container", Required = Required.Always)]
         public IEnumerable<IConfigurationStatementDto> Statements { get; [NotNull] set; }

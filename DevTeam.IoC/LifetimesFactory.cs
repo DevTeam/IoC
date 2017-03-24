@@ -5,7 +5,7 @@
 
     using Contracts;
 
-    internal class LifetimesFactory: IInstanceFactory, IDisposable
+    internal sealed class LifetimesFactory: IInstanceFactory, IDisposable
     {
         private readonly IList<ILifetime> _lifetimes;
         private readonly Func<ICreationContext, object> _factory;
@@ -43,7 +43,10 @@
             }
         }
 
-        private static object CreateSimple(ICreationContext creationContext)
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
+        private object CreateSimple(ICreationContext creationContext)
         {
             using (new LifetimeContext())
             {
@@ -51,6 +54,9 @@
             }
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         private object CreateUsingLifetimes(ICreationContext creationContext)
         {
             using (var lifetimesEnumerator = _lifetimes.GetEnumerator())

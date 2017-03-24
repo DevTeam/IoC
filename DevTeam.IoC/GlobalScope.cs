@@ -4,8 +4,11 @@
 
     using Contracts;
 
-    internal class GlobalScope: IScope
+    internal sealed class GlobalScope: IScope
     {
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         public bool AllowRegistration(IRegistryContext context, IContainer targetContainer)
         {
 #if DEBUG
@@ -15,6 +18,9 @@
             return targetContainer.Parent == null;
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         public bool AllowResolving(IResolverContext context)
         {
 #if DEBUG

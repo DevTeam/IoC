@@ -6,7 +6,7 @@
     using Contracts;
     using Contracts.Dto;
 
-    internal class ConverterRegisterDtoToRegistations: IConverter<IRegisterDto, IEnumerable<IRegistrationResult<IContainer>>, ConverterRegisterDtoToRegistations.Context>
+    internal sealed class ConverterRegisterDtoToRegistations: IConverter<IRegisterDto, IEnumerable<IRegistrationResult<IContainer>>, ConverterRegisterDtoToRegistations.Context>
     {
         [NotNull] private readonly IReflection _reflection;
         [NotNull] private readonly ITypeResolver _typeResolver;
@@ -238,7 +238,7 @@
             return paramMetadata;
         }
 
-        internal class Context
+        internal sealed class Context
         {
             public Context([NotNull] IContainer container, [NotNull] TypeResolverContext typeResolverContext)
             {

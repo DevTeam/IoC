@@ -5,7 +5,7 @@
     using System.Reflection;
     using Contracts;
 
-    internal class TypeResolverContext
+    internal sealed class TypeResolverContext
     {
         public TypeResolverContext([NotNull] ICollection<Assembly> references, [NotNull] ICollection<string> usings)
         {

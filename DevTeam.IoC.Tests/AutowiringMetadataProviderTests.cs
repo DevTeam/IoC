@@ -20,12 +20,13 @@
 
 #if !NET35
         [Theory]
-        [InlineData(typeof(string), null, typeof(string))]
-        [InlineData(typeof(IEnumerable<>), typeof(IEnumerable<string>), typeof(IEnumerable<string>))]
-        [InlineData(typeof(IEnumerable<>), typeof(IList<string>), typeof(IEnumerable<string>))]
-        [InlineData(typeof(IEnumerable<string>), typeof(IEnumerable<int>), typeof(IEnumerable<string>))]
-        [InlineData(typeof(IEnumerable<>), typeof(IDictionary<int, string>), typeof(IEnumerable<>))]
-        public void ShouldResolveImplementationType(Type implementationType, Type contractKeyType, Type expectedResolveImplementationType)
+        [InlineData(typeof(string), null, true, typeof(string))]
+        [InlineData(typeof(IEnumerable<>), typeof(IEnumerable<string>), true, typeof(IEnumerable<string>))]
+        [InlineData(typeof(IEnumerable<>), typeof(IList<string>), true, typeof(IEnumerable<string>))]
+        [InlineData(typeof(IEnumerable<string>), typeof(IEnumerable<int>), true, typeof(IEnumerable<string>))]
+        [InlineData(typeof(IEnumerable<>), typeof(IDictionary<int, string>), false, null)]
+        [InlineData(typeof(IDictionary<,>), typeof(IDictionary<int, string>), true, typeof(IDictionary<int, string>))]
+        public void ShouldResolveImplementationType(Type implementationType, Type contractKeyType, bool expectedResolved, Type expectedResolveImplementationType)
         {
             // Given
             var metadataProvider = CreateInstance();
@@ -40,8 +41,11 @@
             var result = metadataProvider.TryResolveType(implementationType, out actualResolveImplementationType, creationContext.Object);
 
             // Then
-            result.ShouldBeTrue();
-            actualResolveImplementationType.ShouldBe(expectedResolveImplementationType);
+            result.ShouldBe(expectedResolved);
+            if(expectedResolved)
+            {
+                actualResolveImplementationType.ShouldBe(expectedResolveImplementationType);
+            }
         }
 
         [Theory]

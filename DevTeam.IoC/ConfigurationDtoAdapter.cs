@@ -7,7 +7,7 @@
     using Contracts;
     using Contracts.Dto;
 
-    internal class ConfigurationDtoAdapter : IConfiguration
+    internal sealed class ConfigurationDtoAdapter : IConfiguration
     {
         [NotNull] private readonly IConfigurationDto _configurationDto;
         [NotNull] private readonly IConverter<IConfigurationDto, IEnumerable<IRegistrationResult<IContainer>>, ConverterConfigurationDtoToRegistrations.Context> _converterConfigurationDtoToRegistrations;

@@ -68,6 +68,11 @@ class Glue: IConfiguration
 
 The another way is to glue via [Json file](https://github.com/DevTeam/IoC/blob/master/Samples/ShroedingersCat/ConsoleApp/configuration.json):
 ```json
+[
+  { "reference": "ConsoleApp" },
+  { "using": "ConsoleApp" },
+
   { "class": "CardboardBox<> : IBox<>" },
   { "class": "ShroedingersCat : ICat" }
+]
 ```

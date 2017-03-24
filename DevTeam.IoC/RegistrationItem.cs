@@ -6,7 +6,7 @@
 
     using Contracts;
 
-    internal class RegistrationItem : IDisposable
+    internal sealed class RegistrationItem : IDisposable
     {
         private IEnumerable<IDisposable> _resources;
 

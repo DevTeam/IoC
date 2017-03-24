@@ -6,7 +6,7 @@
     using System.Reflection;
     using Contracts;
 
-    internal class ConfigurationFromAssembly: IConfiguration
+    internal sealed class ConfigurationFromAssembly: IConfiguration
     {
         private readonly Assembly _assembly;
 

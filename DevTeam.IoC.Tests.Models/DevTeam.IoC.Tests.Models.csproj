@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;net35</TargetFrameworks>
+    <TargetFrameworks>net35;netstandard1.0;net40;net45;netcoreapp1.0</TargetFrameworks>
     <AssemblyName>DevTeam.IoC.Tests.Models</AssemblyName>
     <PackageId>DevTeam.IoC.Tests.Models</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>

@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using Contracts;
 
-    internal class CompositeConfiguration : IConfiguration
+    internal sealed class CompositeConfiguration : IConfiguration
     {
         private readonly IEnumerable<IConfiguration> _configurations;
 

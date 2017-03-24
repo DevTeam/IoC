@@ -4,7 +4,7 @@
     using Contracts.Dto;
     using Newtonsoft.Json;
 
-    internal class ScopeDto: IScopeDto
+    internal sealed class ScopeDto: IScopeDto
     {
         [JsonProperty("scope", Required = Required.Always)]
         public Wellknown.Scope Scope { get; [NotNull] set; }

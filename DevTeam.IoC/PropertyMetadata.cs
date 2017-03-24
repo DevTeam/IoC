@@ -3,7 +3,7 @@
     using System;
     using Contracts;
 
-    internal class PropertyMetadata
+    internal sealed class PropertyMetadata
     {
         public PropertyMetadata([NotNull] string name, [NotNull] IParameterMetadata parameter)
         {

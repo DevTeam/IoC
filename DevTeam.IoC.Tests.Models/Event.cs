@@ -3,7 +3,7 @@
     using System;
     using Contracts;
 
-    internal class Event<T> : IEvent<T>
+    internal sealed class Event<T> : IEvent<T>
     {
         [NotNull] private readonly ILog _log;
 

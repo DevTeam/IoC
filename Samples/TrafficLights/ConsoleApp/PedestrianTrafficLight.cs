@@ -5,7 +5,7 @@
     using DevTeam.IoC.Contracts;
 
     // ReSharper disable once ClassNeverInstantiated.Global
-    internal class PedestrianTrafficLight: ITrafficLight
+    internal sealed class PedestrianTrafficLight: ITrafficLight
     {
         private readonly ILamp _redLamp;
         private readonly ILamp _greenLamp;

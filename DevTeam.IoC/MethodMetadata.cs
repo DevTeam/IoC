@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using Contracts;
 
-    internal class MethodMetadata
+    internal sealed class MethodMetadata
     {
         public MethodMetadata([NotNull] string name, [NotNull] IEnumerable<IParameterMetadata> parameters)
         {

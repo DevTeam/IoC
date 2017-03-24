@@ -7,7 +7,7 @@ namespace DevTeam.IoC
     using System.Reflection;
     using Contracts;
 
-    internal class TypeImpl : IType
+    internal sealed class TypeImpl : IType
     {
         private readonly Type _type;
 
@@ -16,6 +16,8 @@ namespace DevTeam.IoC
             if (type == null) throw new ArgumentNullException(nameof(type));
             _type = type;
         }
+
+        public Assembly Assembly => _type.Assembly;
 
         public Type BaseType => _type.BaseType;
 

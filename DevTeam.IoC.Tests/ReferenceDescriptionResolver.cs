@@ -4,7 +4,7 @@
     using System.IO;
     using Contracts;
 
-    internal class ReferenceDescriptionResolver: IReferenceDescriptionResolver
+    internal sealed class ReferenceDescriptionResolver: IReferenceDescriptionResolver
     {
         public string ResolveReference(string reference)
         {

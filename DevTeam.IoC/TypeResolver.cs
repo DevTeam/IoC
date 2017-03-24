@@ -8,7 +8,7 @@
     using Contracts;
     using static System.String;
 
-    internal class TypeResolver : ITypeResolver
+    internal sealed class TypeResolver : ITypeResolver
     {
         // ReSharper disable StringLiteralTypo
         private static readonly Dictionary<string, Type> PrimitiveTypes = new Dictionary<string, Type>
@@ -28,6 +28,14 @@
             {"string", typeof(string)},
             {"decimal", typeof(decimal)}
         };
+
+        private readonly IReflection _reflection;
+
+        public TypeResolver([NotNull] IReflection reflection)
+        {
+            if (reflection == null) throw new ArgumentNullException(nameof(reflection));
+            _reflection = reflection;
+        }
 
         public bool TryResolveType(IEnumerable<Assembly> references, IEnumerable<string> usings, string typeName, out Type type)
         {
@@ -75,8 +83,7 @@
                 return false;
             }
 
-            type = Type.GetType(typeName, false);
-            if (type != null)
+            if (ReflectionLoad(typeName, out type))
             {
                 return true;
             }
@@ -84,15 +91,30 @@
             return false;
         }
 
-        private class TypeDescription
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
+        private bool ReflectionLoad(string typeName, out Type type)
+        {
+            type = Type.GetType(typeName, false);
+            return type != null;
+        }
+
+        private sealed class TypeDescription
         {
             private readonly ICollection<Assembly> _refList;
             private readonly ICollection<string> _usingList;
+            private readonly TypeResolver _typeResolver;
 
-            public TypeDescription(ICollection<Assembly> refList, ICollection<string> usingList, string typeName, TypeResolver typeResolver)
+            public TypeDescription(
+                ICollection<Assembly> refList,
+                ICollection<string> usingList,
+                string typeName,
+                TypeResolver typeResolver)
             {
                 _refList = refList;
                 _usingList = usingList;
+                _typeResolver = typeResolver;
                 GenericTypeArgs = new List<TypeDescription>();
 
                 if (typeName == null)
@@ -212,14 +234,14 @@
                             typeName = typeName + genericArgsSb;
                         }
 
-                        IsValid = LoadTypeUsingVariants(typeName, typeResolver);
+                        IsValid = LoadTypeUsingVariants(typeName);
                         return;
                     }
                 }
 
                 if (genericStartIndex == -1 && genericFinishIndex == -1)
                 {
-                    IsValid = LoadTypeUsingVariants(typeName, typeResolver);
+                    IsValid = LoadTypeUsingVariants(typeName);
                 }
             }
 
@@ -231,9 +253,9 @@
 
             public Type Type { get; private set; }
 
-            private bool LoadTypeUsingVariants(string typeName, TypeResolver typeResolver)
+            private bool LoadTypeUsingVariants(string typeName)
             {
-                if (LoadType(typeName, typeResolver))
+                if (LoadType(typeName))
                 {
                     return true;
                 }
@@ -241,7 +263,7 @@
                 foreach (var usingName in _usingList)
                 {
                     var fullTypeName = $"{usingName}.{typeName}";
-                    if (LoadType(fullTypeName, typeResolver))
+                    if (LoadType(fullTypeName))
                     {
                         return true;
                     }
@@ -250,9 +272,15 @@
                 return false;
             }
 
-            private bool LoadType(string typeName, TypeResolver typeResolver)
+            private bool LoadType(string typeName)
             {
-                if (LoadTypeInternal(typeName, typeResolver))
+                if (_typeResolver.ReflectionLoad(typeName, out Type type))
+                {
+                    OnTypeLoaded(type);
+                    return true;
+                }
+
+                if (LoadTypeInternal(typeName))
                 {
                     return true;
                 }
@@ -260,7 +288,7 @@
                 string newTypeName;
                 while (TryGetNestedTypeName(typeName, out newTypeName))
                 {
-                    if (LoadTypeInternal(newTypeName, typeResolver))
+                    if (LoadTypeInternal(newTypeName))
                     {
                         return true;
                     }
@@ -271,6 +299,9 @@
                 return false;
             }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
             private bool TryGetNestedTypeName([NotNull] string typeName, out string nestedTypeName)
             {
                 if (typeName == null) throw new ArgumentNullException(nameof(typeName));
@@ -311,10 +342,9 @@
                 return true;
             }
 
-            private bool LoadTypeInternal(string typeName, TypeResolver typeResolver)
+            private bool LoadTypeInternal(string typeName)
             {
-                Type type;
-                if (typeResolver.TryResolveSimpleType(typeName, out type))
+                if (_typeResolver.TryResolveSimpleType(typeName, out Type type))
                 {
                     OnTypeLoaded(type);
                     return true;
@@ -341,6 +371,9 @@
                 return false;
             }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
             private void OnTypeLoaded(Type type)
             {
                 Type = type;

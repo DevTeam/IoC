@@ -3,7 +3,7 @@
     using System;
     using Contracts;
 
-    internal class Resolver<TState1, TState2, TState3, TContract> : Resolver<TContract>, IResolver<TState1, TState2, TState3, TContract>, IProvider<TState1, TState2, TState3, TContract>
+    internal sealed class Resolver<TState1, TState2, TState3, TContract> : Resolver<TContract>, IResolver<TState1, TState2, TState3, TContract>, IProvider<TState1, TState2, TState3, TContract>
     {
         private readonly IResolving<IResolver> _resolving;
 

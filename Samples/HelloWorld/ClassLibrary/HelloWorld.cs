@@ -3,7 +3,7 @@
     using System;
 
     // ReSharper disable once UnusedMember.Global
-    internal class HelloWorld : IHelloWorld
+    internal sealed class HelloWorld : IHelloWorld
     {
         private readonly IConsole _console;
 

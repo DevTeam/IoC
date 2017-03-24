@@ -4,15 +4,18 @@
     using System.Collections.Generic;
     using Contracts;
 
-    internal class Cache<TKey, TValue> : ICache<TKey, TValue>
+    internal sealed class Cache<TKey, TValue> : ICache<TKey, TValue>
         where TValue: class
     {
         private readonly Dictionary<TKey, TValue> _cache = new Dictionary<TKey, TValue>();
 
         internal int Count => _cache.Count;
 
-        protected IEnumerable<TValue> Values => _cache.Values;
+        internal IEnumerable<TValue> Values => _cache.Values;
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         public bool TryGet(TKey key, out TValue value)
         {
 #if DEBUG
@@ -26,6 +29,9 @@
             return false;
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         public void Set(TKey key, TValue value)
         {
 #if DEBUG
@@ -35,6 +41,9 @@
             _cache[key] = value;
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         public bool TryRemove(TKey key)
         {
 #if DEBUG

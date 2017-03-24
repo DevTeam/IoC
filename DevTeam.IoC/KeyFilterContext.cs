@@ -2,7 +2,7 @@
 {
     using System;
 
-    internal class KeyFilterContext
+    internal sealed class KeyFilterContext
     {
         private static readonly KeyFilterContext DefaultContext = new KeyFilterContext(key => false);
         [ThreadStatic] private static KeyFilterContext _current;

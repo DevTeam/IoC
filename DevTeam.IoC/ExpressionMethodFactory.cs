@@ -6,7 +6,7 @@
     using System.Reflection;
     using Contracts;
 
-    internal class ExpressionMethodFactory : IMethodFactory
+    internal sealed class ExpressionMethodFactory : IMethodFactory
     {
         public Constructor CreateConstructor(ConstructorInfo constructor)
         {
@@ -39,6 +39,9 @@
             return lambda.Compile();
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         private static Expression[] CreateParameterExpressions(MethodBase method, Expression argumentsParameter)
         {
             return method.GetParameters().Select(

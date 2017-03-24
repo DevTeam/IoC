@@ -3,13 +3,16 @@
     using System.Linq;
     using Contracts;
 
-    internal class ParamsStateProvider: IStateProvider
+    internal struct ParamsStateProvider: IStateProvider
     {
         private readonly object[] _state;
         private int? _hashCode;
 
-        public static readonly ParamsStateProvider Empty = new ParamsStateProvider();
+        public static readonly ParamsStateProvider Empty;
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         public static IStateProvider Create(params object[] state)
         {
             if (state.Length == 0)
@@ -23,10 +26,14 @@
         private ParamsStateProvider(params object[] state)
         {
             _state = state;
+            _hashCode = null;
         }
 
         public object Key => this;
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         public object GetState(ICreationContext creationContext, IStateKey stateKey)
         {
             return _state[stateKey.Index];
@@ -40,8 +47,13 @@
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            var stateProvider = obj as ParamsStateProvider;
-            return stateProvider != null && Equals(stateProvider);
+            if (!(obj is ParamsStateProvider))
+            {
+                return false;
+            }
+
+            var stateProvider = (ParamsStateProvider)obj;
+            return Equals(stateProvider);
         }
 
         public override int GetHashCode()
@@ -52,6 +64,9 @@
             // ReSharper restore NonReadonlyMemberInGetHashCode
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         private int GetHashInternal()
         {
             return _state.Aggregate(0, (code, key) =>

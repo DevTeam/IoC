@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using Contracts;
 
-    internal class Subject<T>: IObservable<T>, IObserver<T>
+    internal sealed class Subject<T>: IObservable<T>, IObserver<T>
     {
         [CanBeNull] private readonly Action<int> _onChange;
         private readonly List<IObserver<T>> _observers = new List<IObserver<T>>();

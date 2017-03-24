@@ -6,7 +6,7 @@
     using Contracts;
     using Contracts.Dto;
 
-    internal class ConverterConfigurationDtoToDependencies: IConverter<IConfigurationDto, IEnumerable<IConfiguration>, IContainer>
+    internal sealed class ConverterConfigurationDtoToDependencies: IConverter<IConfigurationDto, IEnumerable<IConfiguration>, IContainer>
     {
         [NotNull] private readonly ITypeResolver _typeResolver;
 

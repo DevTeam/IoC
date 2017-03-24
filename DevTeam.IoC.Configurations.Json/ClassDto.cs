@@ -6,7 +6,7 @@
     using Contracts.Dto;
     using Newtonsoft.Json;
 
-    internal class ClassDto: RegisterDto
+    internal sealed class ClassDto: RegisterDto
     {
         private string _class;
         private string _autowiringTypeName;

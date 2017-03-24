@@ -4,7 +4,7 @@
     using Contracts;
     using Contracts.Dto;
 
-    internal class ConfigurationDescriptionDto: IConfigurationDescriptionDto
+    internal sealed class ConfigurationDescriptionDto: IConfigurationDescriptionDto
     {
         public ConfigurationDescriptionDto([NotNull] string description)
         {

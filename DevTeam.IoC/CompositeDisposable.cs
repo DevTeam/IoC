@@ -5,7 +5,7 @@
     using System.Linq;
     using Contracts;
 
-    internal class CompositeDisposable : IDisposable
+    internal sealed class CompositeDisposable : IDisposable
     {
         private readonly IList<IDisposable> _configurations;
 

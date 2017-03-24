@@ -3,7 +3,7 @@
     using System;
     using Contracts;
 
-    internal class FilteredKeyComparer: IKeyComparer
+    internal sealed class FilteredKeyComparer: IKeyComparer
     {
         private readonly KeyFilterContext _keyFilterContext;
 
@@ -15,6 +15,9 @@
             _keyFilterContext = keyFilterContext;
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         public bool Equals(IKey x, IKey y)
         {
             _keyFilterContext.Activate();
@@ -28,6 +31,9 @@
             }
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         public int GetHashCode(IKey obj)
         {
             _keyFilterContext.Activate();

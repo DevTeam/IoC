@@ -5,7 +5,7 @@
     using System.Linq;
     using Contracts;
 
-    internal class CompositeKey: ICompositeKey
+    internal sealed class CompositeKey: ICompositeKey
     {
         private static readonly Cache<IContractKey, HashSet<IContractKey>> ContractSetCache = new Cache<IContractKey, HashSet<IContractKey>>();
         private static readonly HashSet<IStateKey> EmptyStateKeys = new HashSet<IStateKey>();
@@ -74,6 +74,9 @@
             return $"{nameof(CompositeKey)} [Contracts: {string.Join(", ", _contractKeys.Select(i => i.ToString()).ToArray())}, Tags: {string.Join(", ", _tagKeys.Select(i => i.ToString()).ToArray())}, States: {string.Join(", ", _stateKeys.Select(i => i.ToString()).ToArray())}]";
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         private bool Equals(ICompositeKey other)
         {
             var filter = KeyFilterContext.Current;
@@ -83,6 +86,9 @@
                 && (_stateKeys.Count == 0 || filter.Filter(typeof(IStateKey)) || _stateKeys.SetEquals(other.StateKeys));
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         private bool Equals(IContractKey other)
         {
             var filter = KeyFilterContext.Current;

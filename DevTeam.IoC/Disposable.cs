@@ -2,7 +2,7 @@
 {
     using System;
 
-    internal class Disposable: IDisposable
+    internal sealed class Disposable: IDisposable
     {
         private readonly Action _disposableAction;
         private readonly object _owner;
@@ -16,6 +16,9 @@
             _owner = owner;
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         public void Dispose()
         {
             _disposableAction();

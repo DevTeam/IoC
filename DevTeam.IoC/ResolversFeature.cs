@@ -5,7 +5,7 @@
     using System.Linq;
     using Contracts;
 
-    internal class ResolversFeature : IConfiguration
+    internal sealed class ResolversFeature : IConfiguration
     {
         public static readonly IConfiguration Shared = new ResolversFeature();
 

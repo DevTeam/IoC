@@ -7,7 +7,7 @@
     using Contracts;
 
     [SuppressMessage("ReSharper", "IdentifierTypo")]
-    internal class ObservablesFeature : IConfiguration
+    internal sealed class ObservablesFeature : IConfiguration
     {
         public static readonly IConfiguration Shared = new ObservablesFeature();
 
@@ -32,6 +32,9 @@
                     .FactoryMethod(ctx => ResolveObservable(ctx, reflection));
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         private object ResolveObservable(ICreationContext creationContext, IReflection reflection)
         {
             var ctx = creationContext.ResolverContext;

@@ -4,7 +4,7 @@
     using System.Threading;
     using Contracts;
 
-    internal class LifetimeContext : IDisposable, ILifetimeContext
+    internal sealed class LifetimeContext : IDisposable, ILifetimeContext
     {
         private static long _curId;
         private static LifetimeContext _current;
@@ -54,7 +54,10 @@
             _current = _previous;
         }
 
-        private static long GenerateId()
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
+        private long GenerateId()
         {
             return Interlocked.Increment(ref _curId);
         }

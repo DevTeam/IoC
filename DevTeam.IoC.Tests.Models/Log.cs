@@ -7,7 +7,7 @@
     [Contract(typeof(ILog))]
     [State(0, typeof(string))]
     // ReSharper disable once ClassNeverInstantiated.Global
-    internal class Log : ILog
+    internal sealed class Log : ILog
     {
         private readonly IConsole _console;
         private readonly string _name;

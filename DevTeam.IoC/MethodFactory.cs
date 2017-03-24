@@ -4,7 +4,7 @@ namespace DevTeam.IoC
 
     using Contracts;
 
-    internal class MethodFactory<TContract> : IInstanceFactory
+    internal sealed class MethodFactory<TContract> : IInstanceFactory
     {
         private readonly Func<ICreationContext, TContract> _factoryMethod;
 

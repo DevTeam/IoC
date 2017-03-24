@@ -4,7 +4,7 @@
     using Contracts;
     using Contracts.Dto;
 
-    internal class ConverterValueDtoToObject: IConverter<IValueDto, object, TypeResolverContext>
+    internal sealed class ConverterValueDtoToObject: IConverter<IValueDto, object, TypeResolverContext>
     {
         [NotNull] private readonly ITypeResolver _typeResolver;
         [NotNull] private readonly IConverter<string, object, Type> _converterStringToObject;

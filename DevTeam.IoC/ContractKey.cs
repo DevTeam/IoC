@@ -17,10 +17,11 @@
         {
             if (contractType == null) throw new ArgumentNullException(nameof(contractType));
             _resolving = resolving;
-            if (reflection.GetType(contractType).IsConstructedGenericType)
+            var typeInfo = reflection.GetType(contractType);
+            if (typeInfo.IsConstructedGenericType)
             {
                 _contractType = contractType.GetGenericTypeDefinition();
-                _genericTypeArguments = reflection.GetType(contractType).GenericTypeArguments;
+                _genericTypeArguments = typeInfo.GenericTypeArguments;
             }
             else
             {
@@ -57,6 +58,9 @@
             return _hashCode;
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         private bool Equals(IContractKey other)
         {
             if (_contractType != other.ContractType)
@@ -72,12 +76,20 @@
                     return true;
                 }
 
+#if !NET35
+                return ((System.Collections.IStructuralEquatable)_genericTypeArguments).Equals(otherGenericTypeArguments, System.Collections.StructuralComparisons.StructuralEqualityComparer);
+#else
                 return _genericTypeArguments.SequenceEqual(otherGenericTypeArguments);
+#endif
             }
 
             if (_resolving == other.Resolving)
             {
+#if !NET35
+                return ((System.Collections.IStructuralEquatable)_genericTypeArguments).Equals(otherGenericTypeArguments, System.Collections.StructuralComparisons.StructuralEqualityComparer);
+#else
                 return _genericTypeArguments.SequenceEqual(otherGenericTypeArguments);
+#endif
             }
 
             if ((!_resolving && _genericTypeArguments.Length == 0) || (!other.Resolving && otherGenericTypeArguments.Length == 0))
@@ -85,7 +97,11 @@
                 return true;
             }
 
+#if !NET35
+            return ((System.Collections.IStructuralEquatable)_genericTypeArguments).Equals(otherGenericTypeArguments, System.Collections.StructuralComparisons.StructuralEqualityComparer);
+#else
             return _genericTypeArguments.SequenceEqual(otherGenericTypeArguments);
+#endif
         }
 
         public override string ToString()

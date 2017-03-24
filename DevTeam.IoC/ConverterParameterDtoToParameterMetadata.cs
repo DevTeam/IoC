@@ -6,7 +6,7 @@
     using Contracts;
     using Contracts.Dto;
 
-    internal class ConverterParameterDtoToParameterMetadata: IConverter<IParameterDto, IParameterMetadata, ConverterParameterDtoToParameterMetadata.Context>
+    internal sealed class ConverterParameterDtoToParameterMetadata: IConverter<IParameterDto, IParameterMetadata, ConverterParameterDtoToParameterMetadata.Context>
     {
         [NotNull] private readonly IReflection _reflection;
         [NotNull] private readonly ITypeResolver _typeResolver;
@@ -165,7 +165,7 @@
             return true;
         }
 
-        public class Context
+        internal sealed class Context
         {
             public Context([NotNull] IContainer container, int stateIndex, [NotNull] TypeResolverContext typeResolverContext)
             {

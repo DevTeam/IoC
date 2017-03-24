@@ -4,7 +4,7 @@
     using Contracts.Dto;
     using Newtonsoft.Json;
 
-    internal class TagDto: ITagDto
+    internal sealed class TagDto: ITagDto
     {
         [JsonProperty("tag", Required = Required.Always)]
         public string Value { get; [NotNull] set; }

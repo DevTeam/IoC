@@ -1,7 +1,7 @@
 ﻿namespace ClassLibrary
 {
     // ReSharper disable once UnusedMember.Global
-    internal class Name<T> : IName<T>
+    internal sealed class Name<T> : IName<T>
     {
         // ReSharper disable once StaticMemberInGenericType
         private static int _curId;

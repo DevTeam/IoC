@@ -3,7 +3,7 @@
     using System;
     using Contracts;
 
-    internal class Subscription : IDisposable
+    internal sealed class Subscription : IDisposable
     {
         private readonly Action _disposeAction;
 

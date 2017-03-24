@@ -18,6 +18,9 @@
             _resolving = context.Container.Resolve<IResolver>().Key(ExcludeContractKeys(context.Key)).Contract<TContract>();
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         public TContract Resolve()
         {
             return (TContract)_resolving.Instance();
@@ -69,6 +72,9 @@
             return new Func<TContract>(Resolve);
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         protected IResolving<IResolver> CreateResolving()
         {
             return _resolving;
@@ -79,6 +85,9 @@
             return ParamsStateProvider.Create(state);
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         private static IEnumerable<IKey> ExcludeContractKeys(IKey key)
         {
 #if DEBUG

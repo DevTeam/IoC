@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using Contracts;
 
-    internal class ContainerConfiguration: IConfiguration
+    internal sealed class ContainerConfiguration: IConfiguration
     {
         public static readonly IConfiguration Shared = new ContainerConfiguration();
         private static readonly IEnumerable<IKey> InternalResourceStoreKeys = LowLevelRegistration.CreateKeys<IInternalResourceStore>();

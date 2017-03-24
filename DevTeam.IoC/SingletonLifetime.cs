@@ -5,7 +5,7 @@
     using System.Linq;
     using Contracts;
 
-    internal class SingletonLifetime: KeyBasedLifetime<SingletonLifetime.Key>
+    internal sealed class SingletonLifetime: KeyBasedLifetime<SingletonLifetime.Key>
     {
         private static readonly ILifetime TransientLifetime = new TransientLifetime();
         private readonly Dictionary<ICompositeKey, object> _instances = new Dictionary<ICompositeKey, object>();
@@ -15,6 +15,9 @@
         {
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         protected override ILifetime CreateBaseLifetime(IEnumerator<ILifetime> lifetimeEnumerator)
         {
             if (!lifetimeEnumerator.MoveNext())
@@ -25,17 +28,20 @@
             return new Lifetime(lifetimeEnumerator.Current);
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         private static Key KeySelector(ILifetimeContext lifetimeContext, ICreationContext creationContext)
         {
 #if DEBUG
             if (lifetimeContext == null) throw new ArgumentNullException(nameof(lifetimeContext));
             if (creationContext == null) throw new ArgumentNullException(nameof(creationContext));
 #endif
-            var genericTypes = (creationContext.ResolverContext.Key as IContractKey)?.GenericTypeArguments ?? ((creationContext.ResolverContext.Key as ICompositeKey)?.ContractKeys).FirstOrDefault(i => i.GenericTypeArguments.Length > 0)?.GenericTypeArguments;
+            var genericTypes = (creationContext.ResolverContext.Key as IContractKey)?.GenericTypeArguments ?? (creationContext.ResolverContext.Key as ICompositeKey)?.ContractKeys?.FirstOrDefault(i => i.GenericTypeArguments.Length > 0)?.GenericTypeArguments;
             return genericTypes != null ? new Key(genericTypes) : Key.Empty;
         }
 
-        internal class Key
+        internal sealed class Key
         {
             public static readonly Key Empty = new Key();
             private readonly Type[] _types;
@@ -69,13 +75,16 @@
                 return Equals((Key) obj);
             }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
             private bool Equals(Key other)
             {
                 return _types.SequenceEqual(other._types);
             }
         }
 
-        private class Lifetime: ILifetime
+        private sealed class Lifetime: ILifetime
         {
             private readonly ILifetime _baseLifetime;
             private readonly object _lockObject = new object();
@@ -86,11 +95,17 @@
                 _baseLifetime = baseLifetime;
             }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
             public void Dispose()
             {
                 _baseLifetime.Dispose();
             }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
             public object Create(ILifetimeContext lifetimeContext, ICreationContext creationContext, IEnumerator<ILifetime> lifetimeEnumerator)
             {
                 lock (_lockObject)

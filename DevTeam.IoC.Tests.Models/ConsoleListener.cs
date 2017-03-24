@@ -3,7 +3,7 @@
     using System;
     using Contracts;
 
-    internal class ConsoleListener<TEvent>: IEventListener<TEvent>
+    internal sealed class ConsoleListener<TEvent>: IEventListener<TEvent>
     {
         private readonly IConsole _console;
         private readonly ILog _log;

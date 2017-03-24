@@ -18,8 +18,8 @@
         // ReSharper disable once MemberInitializerValueIgnored
         private readonly IFluent _fluent;
         private readonly IKeyFactory _keyFactory;
-        private readonly ICache<IKey, IResolverContext> _resolverContextCache = new Cache<IKey, IResolverContext>();
-        private readonly ICache<Type, IInstanceFactory> _resolverFactoryCache = new Cache<Type, IInstanceFactory>();
+        private readonly Cache<IKey, IResolverContext> _resolverContextCache = new Cache<IKey, IResolverContext>();
+        private readonly Cache<Type, IInstanceFactory> _resolverFactoryCache = new Cache<Type, IInstanceFactory>();
 
         public Container([CanBeNull] object tag = null)
         {
@@ -225,7 +225,7 @@
             if (context == null) throw new ArgumentNullException(nameof(context));
             if (context.Container == this)
             {
-                return context.InstanceFactory.Create(new CreationContext(context, stateProvider ?? EmptyStateProvider.Shared));
+                return context.InstanceFactory.Create(new CreationContext(context, stateProvider ?? ParamsStateProvider.Empty));
             }
 
             if (Parent != null)
@@ -266,6 +266,9 @@
             return true;
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         bool IProvider<IFluent>.TryGet(out IFluent instance)
         {
             instance = _fluent;

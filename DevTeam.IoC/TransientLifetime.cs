@@ -5,10 +5,13 @@
 
     using Contracts;
 
-    internal class TransientLifetime : ILifetime
+    internal sealed class TransientLifetime : ILifetime
     {
         public static readonly ILifetime Shared = new TransientLifetime();
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         public object Create(ILifetimeContext lifetimeContext, ICreationContext creationContext, IEnumerator<ILifetime> lifetimeEnumerator)
         {
 #if DEBUG
@@ -19,6 +22,9 @@
             return creationContext.ResolverContext.RegistryContext.InstanceFactory.Create(creationContext);
         }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         public void Dispose()
         {
         }

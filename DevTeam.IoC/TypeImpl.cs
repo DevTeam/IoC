@@ -7,7 +7,7 @@ namespace DevTeam.IoC
     using System.Reflection;
     using Contracts;
 
-    internal class TypeImpl : IType
+    internal sealed class TypeImpl : IType
     {
         [CanBeNull]
         private TypeInfo _typeInfo;
@@ -30,6 +30,9 @@ namespace DevTeam.IoC
 #endif
             _type = type;
         }
+
+
+        public Assembly Assembly => TypeInfo.Assembly;
 
         public Type BaseType => TypeInfo.BaseType;
 
@@ -77,17 +80,20 @@ namespace DevTeam.IoC
 
         public Type[] GenericTypeParameters => TypeInfo.GenericTypeParameters;
 
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public IEnumerable<T> GetCustomAttributes<T>()
             where T : Attribute
         {
             return TypeInfo.GetCustomAttributes<T>();
         }
 
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public bool IsAssignableFrom(IType type)
         {
             return TypeInfo.IsAssignableFrom(((TypeImpl) type).TypeInfo);
         }
 
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public MethodInfo GetMethod(string methodName, params Type[] argumenTypes)
         {
             return Type.GetRuntimeMethod(methodName, argumenTypes);

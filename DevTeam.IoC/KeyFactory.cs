@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using Contracts;
 
-    internal class KeyFactory: IKeyFactory
+    internal sealed class KeyFactory: IKeyFactory
     {
         private readonly IReflection _reflection;
 

@@ -7,7 +7,7 @@ namespace DevTeam.IoC
     using System.Reflection;
     using Contracts;
 
-    internal class Reflection : IReflection
+    internal sealed class Reflection : IReflection
     {
         public static readonly IReflection Shared = new Reflection();
 
