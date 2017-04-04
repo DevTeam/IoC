@@ -1,52 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<Import Project="Utils.targets" />  
-	<Import Project="C:\Program Files\dotnet\sdk\1.0.0\Microsoft.TestPlatform.targets" Condition="Exists('C:\Program Files\dotnet\sdk\1.0.0\Microsoft.TestPlatform.targets')"/>
 
 	<PropertyGroup>
-		<BuildNumber Condition=" '$(BuildNumber)' == '' ">0</BuildNumber>
-		<BuildType Condition=" '$(BuildType)' == '' ">-beta</BuildType>		
-
-		<ContractAssemblyVersion>1.0.$(BuildNumber)</ContractAssemblyVersion>		
-		<AssemblyVersion>1.0.$(BuildNumber)</AssemblyVersion>		
-		<ContractDependencyVersion>(,$(ContractAssemblyVersion)]</ContractDependencyVersion>
-
-		<ContractVersion>$(ContractAssemblyVersion)$(BuildType)</ContractVersion>
-		<Version>$(AssemblyVersion)$(BuildType)</Version>
 		<Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
 		<PackagesDirectory>packages</PackagesDirectory>	
+		<BuildNumber Condition=" '$(BuildNumber)' == '' ">0</BuildNumber>
 
-		<TargetFrameworks10>netstandard1.0;netstandard1.1;netstandard1.2;netstandard1.3;netstandard1.4;netstandard1.5;netstandard1.6;net40;net45;net451;net452;net46;net461;net462;netcoreapp1.0;netcoreapp1.1</TargetFrameworks10>
-		<TargetFrameworks15>netstandard1.5;netstandard1.6;net462;netcoreapp1.0;netcoreapp1.1</TargetFrameworks15>
+		<ContractBaseVersion>1.0.0</ContractBaseVersion>
+		<BaseVersion>1.0.0</BaseVersion>
+		
+		<ContractPackageVersion>$(ContractBaseVersion).$(BuildNumber)-beta</ContractPackageVersion>
+		<PackageVersion>$(BaseVersion).$(BuildNumber)-beta</PackageVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<TestAssembly Include="DevTeam.IoC.Tests"/>
 
 		<Package Include="DevTeam.IoC.Contracts">
-			<AssemblyVersion>$(ContractAssemblyVersion)</AssemblyVersion>
-			<Version>$(ContractVersion)</Version>
+			<AssemblyVersion>$(ContractBaseVersion).$(BuildNumber)</AssemblyVersion>
 			<AssemblyInfoFile>DevTeam.IoC.Contracts\Properties\AssemblyInfo.cs</AssemblyInfoFile>
 		</Package>
 		<Package Include="DevTeam.IoC">
-			<AssemblyVersion>$(AssemblyVersion)</AssemblyVersion>
-			<Version>$(Version)</Version>
-			<ContractDependencyVersion>$(ContractDependencyVersion)</ContractDependencyVersion>
+			<AssemblyVersion>$(BaseVersion).$(BuildNumber)</AssemblyVersion>
 			<AssemblyInfoFile>DevTeam.IoC\Properties\AssemblyInfo.cs</AssemblyInfoFile>
 		</Package>
 		<Package Include="DevTeam.IoC.Configurations.Json">
-			<AssemblyVersion>$(AssemblyVersion)</AssemblyVersion>
-			<Version>$(Version)</Version>
-			<ContractDependencyVersion>$(ContractDependencyVersion)</ContractDependencyVersion>
+			<AssemblyVersion>$(BaseVersion).$(BuildNumber)</AssemblyVersion>
 			<AssemblyInfoFile>DevTeam.IoC.Configurations.Json\Properties\AssemblyInfo.cs</AssemblyInfoFile>
 		</Package>
 		<Package Include="DevTeam.IoC.Configurations.CSharp">
-			<AssemblyVersion>$(AssemblyVersion)</AssemblyVersion>
-			<Version>$(Version)</Version>
-			<ContractDependencyVersion>$(ContractDependencyVersion)</ContractDependencyVersion>
+			<AssemblyVersion>$(BaseVersion).$(BuildNumber)</AssemblyVersion>
 			<AssemblyInfoFile>DevTeam.IoC.Configurations.CSharp\Properties\AssemblyInfo.cs</AssemblyInfoFile>
 		</Package>
 	</ItemGroup>
+
+	<Target Name="Clear">
+	    <RemoveDir Directories="%(Package.Identity)\bin\$(Configuration)" /> 
+	</Target>
+
+	<Target Name="Build">
+		<Replace
+	    	FilePath='%(Package.AssemblyInfoFile)'
+			Pattern='(\[assembly:\s(AssemblyVersion|AssemblyFileVersion)\()"(\d+\.\d+\.\d+)"(\)\])'
+			Replacement='$1"$(AssemblyVersion)"$4'/>		
+
+		<MSBuild Projects="DevTeam.IoC.sln" Targets="Restore;Build" BuildInParallel="true" Properties="Configuration=$(Configuration);PackageVersion=$(PackageVersion);ContractPackageVersion=$(ContractPackageVersion)"/>
+
+		<Message Text="##teamcity[publishArtifacts '%(Package.Identity)\bin\$(Configuration)\%(Package.FileName)%(Package.Extension).$(BaseVersion)*.nupkg=>$(PackagesDirectory)']" />
+	</Target>	
 
 	<Target Name="GetNuGet">
 		<DownloadFile
@@ -54,39 +56,10 @@
 	    	LocalFilePath="packages\nuget.exe"/>
 	</Target>
 
-	<Target Name="Clear">
-	    <RemoveDir Directories="%(Package.Identity)\bin\$(Configuration)" /> 
-	</Target>
-
-	<Target Name="Build">
-		<Message Text="Contract Assembly Version: $(ContractAssemblyVersion)"/>
-		<Message Text="Contract Version: $(ContractVersion)"/>
-		<Message Text="Assembly Version: $(AssemblyVersion)"/>
-		<Message Text="Version: $(Version)"/>
-		<Replace
-	    	FilePath='%(Package.AssemblyInfoFile)'
-			Pattern='(\[assembly:\s(AssemblyVersion|AssemblyFileVersion)\()"(\d+\.\d+\.\d+)"(\)\])'
-			Replacement='$1"$(AssemblyVersion)"$4'/>
-		<MSBuild Projects="DevTeam.IoC.sln" Targets="Restore;Build" BuildInParallel="true" Properties="Configuration=$(Configuration);TargetFrameworks10=$(TargetFrameworks10);TargetFrameworks15=$(TargetFrameworks15)"/>
-	</Target>	
-
 	<Target Name="Test" DependsOnTargets="GetNuGet">
 		<Exec Command="dotnet test DevTeam.IoC.Tests\DevTeam.IoC.Tests.csproj /p:TargetFramework=net452"/>
 		<Exec Command="packages\nuget.exe install xunit.runner.console -version 2.2.0 -o packages"/>		
 		<Exec Command="packages\xunit.runner.console.2.2.0\tools\xunit.console.exe DevTeam.IoC.Tests\bin\$(Configuration)\net35\DevTeam.IoC.Tests.dll"/>
-	</Target>
-
-	<Target Name="CreatePackages" DependsOnTargets="Clear;GetNuGet;Build;Test">
-		<Exec Command="packages\nuget.exe pack %(Package.Identity)\package.nuspec -Version %(Package.Version) -properties ContractDependencyVersion=%(Package.ContractDependencyVersion) -OutputDirectory $(PackagesDirectory)"/>
-		<Message Text="##teamcity[publishArtifacts '$(PackagesDirectory)\%(Package.FileName)%(Package.Extension).%(Package.Version).nupkg=>$(PackagesDirectory)']" />
-	</Target>
-
-	<Target Name="PushPackagesToNuGet" DependsOnTargets="GetNuGet">
-		<Exec Command="packages\nuget.exe push $(PackagesDirectory)\%(Package.FileName)%(Package.Extension).%(Package.Version).nupkg -ApiKey $(NuGetApiKey) -Source https://nuget.org/"/>
-	</Target>
-
-	<Target Name="PushPackagesToMyGet" DependsOnTargets="GetNuGet">
-		<Exec Command="packages\nuget.exe push $(PackagesDirectory)\%(Package.FileName)%(Package.Extension).%(Package.Version).nupkg -ApiKey $(MyGetApiKey) -Source https://www.myget.org/F/dev_team/api/v2/package"/>
 	</Target>
 
 </Project>

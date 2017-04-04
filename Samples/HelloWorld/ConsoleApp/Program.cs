@@ -5,9 +5,8 @@
     using ClassLibrary;
     using DevTeam.IoC;
     using DevTeam.IoC.Configurations.Json;
-    using DevTeam.IoC.Contracts;
+	using DevTeam.IoC.Contracts;
 
-    [Contract(typeof(Program))]
     public class Program
     {
         public static void Main()
@@ -16,7 +15,7 @@
 
             using (var container = new Container()
                 .Configure().DependsOn<JsonConfiguration>(jsonConfigStr).ToSelf()
-                .Register().Autowiring(typeof(Program)).ToSelf())
+                .Register().Autowiring<Program, Program>().ToSelf())
             {
                 container.Resolve().Instance<Program>();
             }

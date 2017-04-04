@@ -10,9 +10,9 @@ namespace ConsoleApp
         public static void Main()
         {
             using (var container = new Container()
-                .Register().Contract<IContact>().State<string>(0).Autowiring(typeof(Contact)).ToSelf())
+                .Register().State<string>(0).Autowiring<IContact, Contact>().ToSelf())
             {
-                var johnContact = container.Resolve().State<string>(0).Instance<IContact>("John");
+                var johnContact = container.Resolve().Instance<IContact>("John");
                 Console.WriteLine(johnContact.Name);
             }
         }

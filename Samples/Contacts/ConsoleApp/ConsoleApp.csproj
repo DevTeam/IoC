@@ -24,8 +24,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DevTeam.IoC" Version="1.0.147-beta" />
-    <PackageReference Include="DevTeam.IoC.Contracts" Version="1.0.147-beta" />
+    <PackageReference Include="DevTeam.IoC" Version="1.0.168-beta" />
+    <PackageReference Include="DevTeam.IoC.Contracts" Version="1.0.168-beta" />
   </ItemGroup>
 
 </Project>

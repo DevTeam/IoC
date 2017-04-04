@@ -17,6 +17,17 @@
     <AssemblyOriginatorKeyFile>DevTeam.snk</AssemblyOriginatorKeyFile>
 	<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <TreatSpecificWarningsAsErrors />
+	<Authors>NikolayP</Authors>
+	<Description>Provides the configuring of IoC containers via CSharp files compiled in realtime.</Description>
+    <PackageLicenseUrl>https://github.com/DevTeam/IoC/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/DevTeam/IoC/</PackageProjectUrl>
+    <PackageIconUrl>https://avatars0.githubusercontent.com/u/12184234?v=3&amp;amp;s=200</PackageIconUrl>
+    <RepositoryUrl>https://github.com/DevTeam/IoC.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>IoC inversionofcontrol Container DI dependencyinjection</PackageTags>
+    <PackageVersion Condition=" '$(PackageVersion)' == '' ">1.0.0</PackageVersion>
+    <Version>$(PackageVersion)</Version>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>

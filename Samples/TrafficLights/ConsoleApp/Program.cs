@@ -9,15 +9,13 @@
     {
         public static void Main()
         {
-            using (var container = new Container()
-                    .Configure()
-                        .DependsOn(Wellknown.Feature.Enumerables)
-                    .ToSelf()
+            using (var container = new Container().Configure()
+                    .DependsOn(Wellknown.Feature.Enumerables).ToSelf()
                     .Register()
-                        .Contract<ILamp>().State<ConsoleColor>(0).Autowiring<LedLamp>()
-                        .And().Contract<ITrafficLight>().Tag("pedestrian").Autowiring<PedestrianTrafficLight>()
-                        .And().Contract<ITrafficLight>().Tag("standard").Autowiring<StandardTrafficLight>()
-                        .And().Contract<Program>().Autowiring<Program>()
+                        .State<ConsoleColor>(0).Autowiring<ILamp, LedLamp>()
+                        .And().Tag("pedestrian").Autowiring<ITrafficLight, PedestrianTrafficLight>()
+                        .And().Tag("standard").Autowiring<ITrafficLight, StandardTrafficLight>()
+                        .And().Autowiring<Program, Program>()
                     .ToSelf())
             {
                 container.Resolve().Instance<Program>();
