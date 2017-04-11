@@ -2,9 +2,6 @@
 
   <PropertyGroup>
 	<TargetFrameworks>netstandard1.5;net462;netcoreapp1.0</TargetFrameworks>
-	<NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
-	<NetCoreAppImplicitPackageVersion>1.0.0</NetCoreAppImplicitPackageVersion>
-	<RuntimeFrameworkVersion>1.0.0</RuntimeFrameworkVersion>
     <AssemblyName>DevTeam.IoC.Configurations.CSharp</AssemblyName>
     <PackageId>DevTeam.IoC.Configurations.CSharp</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
