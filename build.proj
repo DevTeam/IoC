@@ -7,8 +7,8 @@
 		<PackagesDirectory>packages</PackagesDirectory>	
 		<BuildNumber Condition=" '$(BuildNumber)' == '' ">0</BuildNumber>
 
-		<ContractBaseVersion>1.0.0</ContractBaseVersion>
-		<BaseVersion>1.0.0</BaseVersion>
+		<ContractBaseVersion>1.0</ContractBaseVersion>
+		<BaseVersion>1.0</BaseVersion>
 		
 		<ContractPackageVersion>$(ContractBaseVersion).$(BuildNumber)-beta</ContractPackageVersion>
 		<PackageVersion>$(BaseVersion).$(BuildNumber)-beta</PackageVersion>
@@ -58,6 +58,8 @@
 
 	<Target Name="Test" DependsOnTargets="GetNuGet">
 		<Exec Command="dotnet test DevTeam.IoC.Tests\DevTeam.IoC.Tests.csproj /p:TargetFramework=net452"/>
+		<Exec Command="dotnet test DevTeam.IoC.Tests\DevTeam.IoC.Tests.csproj /p:TargetFramework=net462"/>
+		<Exec Command="dotnet test DevTeam.IoC.Tests\DevTeam.IoC.Tests.csproj /p:TargetFramework=netcoreapp1.0"/>
 		<Exec Command="packages\nuget.exe install xunit.runner.console -version 2.2.0 -o packages"/>		
 		<Exec Command="packages\xunit.runner.console.2.2.0\tools\xunit.console.exe DevTeam.IoC.Tests\bin\$(Configuration)\net35\DevTeam.IoC.Tests.dll"/>
 	</Target>

@@ -1,7 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<TargetFrameworks>net35;netstandard1.0;net40;net45;netcoreapp1.0</TargetFrameworks>
+	<TargetFrameworks>net35;netstandard1.0;net40;net45;net462;netcoreapp1.0</TargetFrameworks>
+	<NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
+	<NetCoreAppImplicitPackageVersion>1.0.0</NetCoreAppImplicitPackageVersion>
+	<RuntimeFrameworkVersion>1.0.0</RuntimeFrameworkVersion>
     <AssemblyName>DevTeam.IoC</AssemblyName>    
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
@@ -18,7 +21,7 @@
     <TreatSpecificWarningsAsErrors />
 	<PackageId>DevTeam.IoC</PackageId>
 	<Authors>NikolayP</Authors>
-	<Description>Simple, flexible and fast IoC container.</Description>
+	<Description>Simple, flexible and fast IoC container</Description>
     <PackageLicenseUrl>https://github.com/DevTeam/IoC/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/DevTeam/IoC/</PackageProjectUrl>
     <PackageIconUrl>https://avatars0.githubusercontent.com/u/12184234?v=3&amp;amp;s=200</PackageIconUrl>

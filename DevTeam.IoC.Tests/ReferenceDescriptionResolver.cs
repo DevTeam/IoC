@@ -10,7 +10,7 @@
         {
             if (reference == null) throw new ArgumentNullException(nameof(reference));
             if (reference.IsNullOrWhiteSpace()) throw new ArgumentException("Value cannot be null or whitespace.", nameof(reference));
-            var fileContent = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, reference));
+            var fileContent = File.ReadAllText(Path.Combine(TestsExtensions.GetBinDirectory(), reference));
             if (fileContent.IsNullOrWhiteSpace()) throw new ArgumentException("Value cannot be null or whitespace.", nameof(fileContent));
             return fileContent;
         }

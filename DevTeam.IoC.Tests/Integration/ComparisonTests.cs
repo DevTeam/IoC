@@ -7,8 +7,9 @@ namespace DevTeam.IoC.Tests.Integration
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using Contracts;
-#if !NET35
+#if !NET35 && !NETCOREAPP1_0
     using Microsoft.Practices.Unity;
 #endif
     using Ninject;
@@ -18,7 +19,7 @@ namespace DevTeam.IoC.Tests.Integration
     {
         private static readonly Dictionary<string, Func<int, long>> Iocs = new Dictionary<string, Func<int, long>>()
         {
-#if !NET35
+#if !NET35 && !NETCOREAPP1_0
             {"Unity", Unity},
 #endif
             {"DevTeam", DevTeam},
@@ -54,7 +55,7 @@ namespace DevTeam.IoC.Tests.Integration
 
             var actualElapsedMilliseconds = results["DevTeam"];
             var resultsStr = string.Join("\n", results.Select(i => $"{i.Key}: {i.Value}").ToArray());
-            var resultFileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ComparisonTest.txt");
+            var resultFileName = Path.Combine(TestsExtensions.GetBinDirectory(), "ComparisonTest.txt");
             File.WriteAllText(resultFileName, resultsStr);
             foreach (var result in results)
             {
@@ -81,7 +82,7 @@ namespace DevTeam.IoC.Tests.Integration
             }
         }
 
-#if !NET35
+#if !NET35 && !NETCOREAPP1_0
         private static long Unity(int series)
         {
             using (var container = new UnityContainer())
@@ -102,7 +103,9 @@ namespace DevTeam.IoC.Tests.Integration
 
         private static long Ninject(int series)
         {
+#pragma warning disable 618
             using (var kernel = new StandardKernel())
+#pragma warning restore 618
             {
                 kernel.Bind<IService1>().To<Service1>();
                 kernel.Bind<IService2>().To<Service2>().InSingletonScope();

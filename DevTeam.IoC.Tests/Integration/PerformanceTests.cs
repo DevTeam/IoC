@@ -103,7 +103,7 @@
         [Fact]
         public void TestWhenJsonConfiguration()
         {
-            var eventsConfigurationFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "EventsConfiguration.json");
+            var eventsConfigurationFile = Path.Combine(TestsExtensions.GetBinDirectory(), "EventsConfiguration.json");
             var json = File.ReadAllText(eventsConfigurationFile);
             ITrace trace;
             using (var container = new Container("root")

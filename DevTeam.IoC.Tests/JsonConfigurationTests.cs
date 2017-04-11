@@ -1,12 +1,10 @@
 ﻿namespace DevTeam.IoC.Tests
 {
-    using System;
     using System.IO;
     using Configurations.Json;
     using Newtonsoft.Json;
     using Shouldly;
     using Xunit;
-    using DevTeam.IoC.Contracts;
 
     public class JsonConfigurationTests
     {
@@ -15,7 +13,7 @@
         {
             // Given
             var serializerSettings = JsonConfiguration.CreateSerializerSettings(Reflection.Shared);
-            var eventsConfigurationFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "EventsConfiguration.json");
+            var eventsConfigurationFile = Path.Combine(TestsExtensions.GetBinDirectory(), "EventsConfiguration.json");
             var json = File.ReadAllText(eventsConfigurationFile);
             var configurationDto = JsonConvert.DeserializeObject<ConfigurationDto>(json, serializerSettings);
 

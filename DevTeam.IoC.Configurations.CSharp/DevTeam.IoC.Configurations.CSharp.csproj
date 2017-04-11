@@ -2,6 +2,9 @@
 
   <PropertyGroup>
 	<TargetFrameworks>netstandard1.5;net462;netcoreapp1.0</TargetFrameworks>
+	<NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
+	<NetCoreAppImplicitPackageVersion>1.0.0</NetCoreAppImplicitPackageVersion>
+	<RuntimeFrameworkVersion>1.0.0</RuntimeFrameworkVersion>
     <AssemblyName>DevTeam.IoC.Configurations.CSharp</AssemblyName>
     <PackageId>DevTeam.IoC.Configurations.CSharp</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
@@ -18,7 +21,7 @@
 	<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <TreatSpecificWarningsAsErrors />
 	<Authors>NikolayP</Authors>
-	<Description>Provides the configuring of IoC containers via CSharp files compiled in realtime.</Description>
+	<Description>Provides the configuring of IoC containers via CSharp files compiled in realtime</Description>
     <PackageLicenseUrl>https://github.com/DevTeam/IoC/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/DevTeam/IoC/</PackageProjectUrl>
     <PackageIconUrl>https://avatars0.githubusercontent.com/u/12184234?v=3&amp;amp;s=200</PackageIconUrl>

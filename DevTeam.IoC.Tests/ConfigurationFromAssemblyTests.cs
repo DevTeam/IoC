@@ -15,7 +15,7 @@
         public void ShouldRegister()
         {
             // Given
-            var config = CreateInstance(typeof(Console).Assembly);
+            var config = CreateInstance(TestsExtensions.GetAssembly(typeof(Console)));
             var container = 
                 new Container().Configure().DependsOn(Wellknown.Feature.ChildContainers).ToSelf()
                 .CreateChild().Configure().DependsOn(config).ToSelf();

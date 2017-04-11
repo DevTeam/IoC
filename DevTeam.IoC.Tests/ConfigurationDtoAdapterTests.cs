@@ -67,7 +67,12 @@
 
             // When
             // ReSharper disable once PossibleMistakenCallToGetType.2
-            configurationDto.Add(new DependencyAssemblyDto { AssemblyName = typeof(MyConfiguration).GetType().Assembly.FullName });
+#if !NETCOREAPP1_0
+            var assembly = typeof(MyConfiguration).GetType().Assembly;
+#else
+            var assembly = typeof(MyConfiguration).GetTypeInfo().Assembly;
+#endif
+            configurationDto.Add(new DependencyAssemblyDto { AssemblyName = assembly.FullName });
             var dependencies = configuration.GetDependencies(_container).ToArray();
 
             // Then
