@@ -28,9 +28,9 @@
   </ItemGroup>
 
   <ItemGroup>
-	<PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
+	<PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
 	<PackageReference Include="Shouldly" Version="2.8.2" />
-	<PackageReference Include="TeamCity.VSTest.TestAdapter" Version="1.0.0.43-beta" />
+	<PackageReference Include="TeamCity.VSTest.TestAdapter" Version="1.0.0.50-beta" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)'!='net35'">
