@@ -6,7 +6,10 @@
 
     internal sealed class TypeMetadata
     {
-        public TypeMetadata(MethodMetadata constructor, IEnumerable<MethodMetadata> methods, IEnumerable<PropertyMetadata> properties)
+        public TypeMetadata(
+            [CanBeNull] MethodMetadata constructor,
+            [CanBeNull] IEnumerable<MethodMetadata> methods,
+            [CanBeNull] IEnumerable<PropertyMetadata> properties)
         {
             Constructor = constructor;
             Methods = methods;

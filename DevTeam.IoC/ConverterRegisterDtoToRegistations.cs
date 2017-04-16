@@ -125,6 +125,7 @@
                     {
                         var param = ResolveParameterMetadata(context.Container, context.TypeResolverContext, paramDto, stateIndex);
                         constructorParameters.Add(param);
+                        registration.Key(Enumerable.Repeat<IKey>(param.StateKey, 1));
                         if (!param.IsDependency)
                         {
                             stateIndex++;

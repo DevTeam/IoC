@@ -344,6 +344,34 @@
         }
 
         [Fact]
+        public void ShouldConfigureStateKeysWhenRegisterUsingConstructorParametersWithStates()
+        {
+            // Given
+            var configurationDto = new ConfigurationDto();
+            var configuration = CreateInstance(configurationDto);
+
+            // When
+            configurationDto.Add(
+                new RegisterDto
+                {
+                    Keys = new IRegisterStatementDto[]
+                    {
+                        new ContractDto { Contract = new []{ typeof(ISimpleService).FullName }}
+                    },
+                    AutowiringTypeName = typeof(SimpleService2).FullName,
+                    ConstructorParameters = new List<IParameterDto> { new ParameterDto { TypeName = typeof(int).FullName, State = new StateDto { Index = 0, StateTypeName = typeof(int).FullName } } }
+                });
+
+            // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+            configuration.Apply(_container).ToArray();
+            var instance = _container.Resolve().Instance<ISimpleService>(33);
+
+            // Then
+            instance.ShouldBeOfType<SimpleService2>();
+            ((SimpleService2)instance).Val.ShouldBe(33);
+        }
+
+        [Fact]
         public void ShouldApplyWhenRegisterUsingMethodAndPropertiesParameters()
         {
             // Given

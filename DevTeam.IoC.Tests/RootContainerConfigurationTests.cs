@@ -50,7 +50,7 @@
             }
         }
 
-        private IContainer CreateContainer()
+        private static IContainer CreateContainer()
         {
             return new Container();
         }
