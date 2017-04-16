@@ -20,6 +20,9 @@
         private static readonly IEnumerable<IKey> ResolvingKeys = LowLevelRegistration.CreateKeys<IResolving<IResolver>>();
         private static readonly IEnumerable<IKey> RegistrationKeys = LowLevelRegistration.CreateKeys<IRegistration<IContainer>>();
         private static readonly IEnumerable<IKey> MetadataProviderKeys = LowLevelRegistration.CreateKeys<IMetadataProvider>();
+        private static readonly IEnumerable<IKey> CreationContextKeys = LowLevelRegistration.CreateKeys<ICreationContext>();
+        private static readonly IEnumerable<IKey> ResolverContextKeys = LowLevelRegistration.CreateKeys<IResolverContext>();
+        private static readonly IEnumerable<IKey> RegistryContextKeys = LowLevelRegistration.CreateKeys<IRegistryContext>();
         private static readonly Dictionary<Wellknown.Feature, IConfiguration> Features = new Dictionary<Wellknown.Feature, IConfiguration>
         {
             {Wellknown.Feature.Default, DefaultFeatures.Shared},
@@ -57,6 +60,9 @@
             yield return LowLevelRegistration.RawRegister(container, InstanceFactoryProviderKeys, ctx => ExpressionMethodFactory);
             yield return LowLevelRegistration.RawRegister(typeof(IResolving<>), container, ResolvingKeys, ctx => new Resolving<IResolver>(container));
             yield return LowLevelRegistration.RawRegister(typeof(IRegistration<>), container, RegistrationKeys, ctx => new Registration<IContainer>(ctx.ResolverContext.Container.Resolve().Instance<IFluent>(), container));
+            yield return LowLevelRegistration.RawRegister(container, CreationContextKeys, ctx => ctx);
+            yield return LowLevelRegistration.RawRegister(container, ResolverContextKeys, ctx => ctx.ResolverContext);
+            yield return LowLevelRegistration.RawRegister(container, RegistryContextKeys, ctx => ctx.ResolverContext.RegistryContext);
 
             var sharedAutowiringMetadataProvider = new AutowiringMetadataProvider(Reflection.Shared);
             yield return LowLevelRegistration.RawRegister(container, MetadataProviderKeys, ctx =>
