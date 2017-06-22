@@ -1,5 +1,6 @@
 ﻿namespace DevTeam.IoC.Tests
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
     using Contracts;
     using Moq;
@@ -8,7 +9,7 @@
 
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
-    public class ResolversConfigurationTests
+    public class ResolversFeatureTests
     {
         [Fact]
         public void ContainerShouldResolveViaTypedResolver()
@@ -72,6 +73,46 @@
             }
         }
 
+        [Fact]
+        public void ContainerShouldResolveViaFunc()
+        {
+            // Given
+            var simpleService = new Mock<ISimpleService>();
+            using (var container = CreateContainer())
+            using (container.Configure().DependsOn(Wellknown.Feature.Resolvers).ToSelf())
+            {
+                // When
+                using (container.Register().Contract<ISimpleService>().Tag("abc").FactoryMethod(ctx => simpleService.Object))
+                {
+                    var func = container.Resolve().Tag("abc").Instance<Func<ISimpleService>>();
+                    var actualObj = func();
+
+                    // Then
+                    actualObj.ShouldBe(simpleService.Object);
+                }
+            }
+        }
+
+        [Fact]
+        public void ContainerShouldResolveViaLazy()
+        {
+            // Given
+            var simpleService = new Mock<ISimpleService>();
+            using (var container = CreateContainer())
+            using (container.Configure().DependsOn(Wellknown.Feature.Resolvers).ToSelf())
+            {
+                // When
+                using (container.Register().Contract<ISimpleService>().Tag("abc").FactoryMethod(ctx => simpleService.Object))
+                {
+                    var lazy = container.Resolve().Tag("abc").Instance<Lazy<ISimpleService>>();
+                    var actualObj = lazy.Value;
+
+                    // Then
+                    actualObj.ShouldBe(simpleService.Object);
+                }
+            }
+        }
+
         private IContainer CreateContainer()
         {
             return new Container();
@@ -97,6 +138,10 @@
             public string Arg1 { get; }
 
             public int Arg2 { get; }
+        }
+
+        private class SimpleService : ISimpleService
+        {
         }
     }
 }

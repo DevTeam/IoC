@@ -7,7 +7,7 @@
     using Shouldly;
     using Xunit;
 
-    public class EnumConfigurationTests
+    public class EnumFeatureTests
     {
         [Fact]
         public void ContainerShouldResolveAllInstancesWhenResolveEnumerable()

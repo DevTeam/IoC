@@ -4,7 +4,7 @@
     using Shouldly;
     using Xunit;
 
-    public class ChildrenContainersConfigurationTests
+    public class ChildrenContainersFeatureTests
     {
         [Fact]
         public void ShouldCreateChildContainer()

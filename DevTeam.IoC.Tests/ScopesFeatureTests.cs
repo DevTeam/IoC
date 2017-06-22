@@ -6,7 +6,7 @@
     using Shouldly;
     using Xunit;
 
-    public class ScopesConfigurationTests
+    public class ScopesFeatureTests
     {
         [Fact]
         public void ContainerShouldResolveWhenGlobalScope()

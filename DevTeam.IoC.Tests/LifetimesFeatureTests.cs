@@ -6,7 +6,7 @@
     using Shouldly;
     using Xunit;
 
-    public class LifetimesConfigurationTests
+    public class LifetimesFeatureTests
     {
         [Fact]
         public void ContainerShouldResolveSingleInstanceWhenSingletone()

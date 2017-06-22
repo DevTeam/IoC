@@ -41,6 +41,13 @@
 
             yield return
                 container
+                    .Register()
+                    .Contract(typeof(Lazy<>))
+                    .KeyComparer(Wellknown.KeyComparer.AnyTagAnyState)
+                    .FactoryMethod(ctx => ResolveLazy(ctx, reflection));
+
+            yield return
+                container
                 .Register()
                 .Contract(typeof(IResolver<,>))
                 .Contract(typeof(IProvider<,>))
@@ -115,16 +122,39 @@
             return ((IFuncProvider)ResolveResolver(ctx, reflection)).GetFunc();
         }
 
-        private static object ResolveResolver(ICreationContext creationContext, IReflection reflection)
+        private static object ResolveLazy(ICreationContext creationContext, IReflection reflection)
         {
-            var ctx = creationContext.ResolverContext;
-            var genericContractKey = ctx.Key as IContractKey ?? (ctx.Key as ICompositeKey)?.ContractKeys.SingleOrDefault();
-            if (genericContractKey == null)
+            var resolverContext = creationContext.ResolverContext;
+            var genericTypeArguments = GetGenericTypeArguments(resolverContext);
+            if (genericTypeArguments.Length != 1)
             {
                 throw new InvalidOperationException();
             }
 
-            var genericTypeArguments = genericContractKey.GenericTypeArguments.ToArray();
+            var lazyType = typeof(Lazy<>).MakeGenericType(genericTypeArguments);
+            var factory = resolverContext.Container.Resolve().Instance<IMethodFactory>(creationContext.StateProvider);
+
+#if NET35
+            var ctors = 
+                from ctor in reflection.GetType(lazyType).Constructors
+                let parameters = ctor.GetParameters()
+                where parameters.Length == 1
+                select ctor;
+            return factory.CreateConstructor(ctors.Single())(ResolveFunc(creationContext, reflection));
+#else
+            var ctors = 
+                from ctor in reflection.GetType(lazyType).Constructors
+                let parameters = ctor.GetParameters()
+                where parameters.Length == 2 && parameters[1].ParameterType == typeof(bool)
+                select ctor;
+            return factory.CreateConstructor(ctors.Single())(ResolveFunc(creationContext, reflection), true /*thread safe Lazy<>*/);
+#endif
+        }
+
+        private static object ResolveResolver(ICreationContext creationContext, IReflection reflection)
+        {
+            var resolverContext = creationContext.ResolverContext;
+            var genericTypeArguments = GetGenericTypeArguments(resolverContext);
             Type resolverType;
             switch (genericTypeArguments.Length)
             {
@@ -145,13 +175,25 @@
                     break;
 
                 default:
-                    resolverType = typeof(Resolver<>).MakeGenericType(genericContractKey.GenericTypeArguments.ToArray());
+                    resolverType = typeof(Resolver<>).MakeGenericType(genericTypeArguments);
                     break;
             }
 
             var ctor = reflection.GetType(resolverType).Constructors.Single(i => i.GetParameters().Length == 1);
-            var factory = ctx.Container.Resolve().Instance<IMethodFactory>(creationContext.StateProvider);
-            return factory.CreateConstructor(ctor)(ctx);
+            var factory = resolverContext.Container.Resolve().Instance<IMethodFactory>(creationContext.StateProvider);
+            return factory.CreateConstructor(ctor)(resolverContext);
+        }
+
+        private static Type[] GetGenericTypeArguments(IResolverContext resolverContext)
+        {
+            var genericContractKey = resolverContext.Key as IContractKey ?? (resolverContext.Key as ICompositeKey)?.ContractKeys.SingleOrDefault();
+            if (genericContractKey == null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            var genericTypeArguments = genericContractKey.GenericTypeArguments.ToArray();
+            return genericTypeArguments;
         }
     }
 }
