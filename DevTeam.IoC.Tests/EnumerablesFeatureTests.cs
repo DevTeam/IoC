@@ -33,6 +33,52 @@
             }
         }
 
+        [Fact]
+        public void ContainerShouldResolveAllInstancesWhenResolveEnumerable()
+        {
+            // Given
+            var mock1 = new Mock<ISimpleService>();
+            var mock2 = new Mock<ISimpleService>();
+            using (var container = CreateContainer())
+            using (container.Configure().DependsOn(Wellknown.Feature.Enumerables).ToSelf())
+            {
+                // When
+                using (
+                    container.Register()
+                        .Tag("a")
+                        .Contract<ISimpleService>()
+                        .FactoryMethod(ctx => mock1.Object))
+                using (
+                    container.Register()
+                        .Tag("b")
+                        .Contract<ISimpleService>()
+                        .FactoryMethod(ctx => mock2.Object))
+                {
+                    var listOfObj = container.Resolve().Instance<IEnumerable<ISimpleService>>().ToList();
+
+                    // Then
+                    listOfObj.Count.ShouldBe(2);
+                    listOfObj.ShouldContain(mock1.Object);
+                    listOfObj.ShouldContain(mock2.Object);
+                }
+            }
+        }
+
+        [Fact]
+        public void ContainerShouldResolveEmptyWhenNoRegistrations()
+        {
+            // Given
+            using (var container = CreateContainer())
+            using (container.Configure().DependsOn(Wellknown.Feature.Enumerables).ToSelf())
+            {
+                // When
+                var listOfObj = container.Resolve().Instance<IEnumerable<ISimpleService>>().ToList();
+
+                // Then
+                listOfObj.Count.ShouldBe(0);
+            }
+        }
+
         private static IContainer CreateContainer()
         {
             return new Container();
