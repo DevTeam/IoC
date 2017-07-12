@@ -6,7 +6,7 @@ namespace DevTeam.IoC.Tests
     using Shouldly;
     using Xunit;
 
-    public class TuplesFeatureTests
+    public class TuplesTests
     {
         [Fact]
         public void ContainerShouldResolveTuple()

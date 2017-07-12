@@ -3,6 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
+#if !NET35
+    using System.Threading.Tasks;
+#endif
     using Contracts;
 
     internal sealed class Resolving<T> : Token<T, IResolving<T>>, IResolving<T>
@@ -136,6 +140,44 @@
             TrySpecifyState(state);
             return Instance<TContract>(ParamsStateProvider.Create(state));
         }
+
+#if !NET35
+#if !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
+        public Task AsyncInstance(CancellationToken cancellationToken, params object[] state)
+        {
+            if (state == null) throw new ArgumentNullException(nameof(state));
+            return new Task(() => Instance(state));
+        }
+
+#if !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
+        public Task AsyncInstance(CancellationToken cancellationToken, IStateProvider stateProvider)
+        {
+            if (stateProvider == null) throw new ArgumentNullException(nameof(stateProvider));
+            return new Task(() => Instance(stateProvider), cancellationToken);
+        }
+
+#if !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
+        public Task<TContract> AsyncInstance<TContract>(CancellationToken cancellationToken, params object[] state)
+        {
+            if (state == null) throw new ArgumentNullException(nameof(state));
+            return new Task<TContract>(() => Instance<TContract>(state));
+        }
+
+#if !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
+        public Task<TContract> AsyncInstance<TContract>(CancellationToken cancellationToken, IStateProvider stateProvider)
+        {
+            if (stateProvider == null) throw new ArgumentNullException(nameof(stateProvider));
+            return new Task<TContract>(() => Instance<TContract>(stateProvider));
+        }
+#endif
 
 #if !NET35 && !NET40
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]

@@ -1,6 +1,7 @@
 ﻿namespace ConsoleApp
 {
     using System.IO;
+    using System.Threading;
     using Contracts;
     using DevTeam.IoC;
     using DevTeam.IoC.Configurations.Json;
@@ -8,12 +9,15 @@
 
     public class Program
     {
+        // TODO: use async main with C# 7.1
         public static void Main()
         {
             using (var container = new Container()
                 .Configure().DependsOn<JsonConfiguration>(File.ReadAllText("configuration.json")).ToSelf())
             {
-                container.Resolve().Instance<IEventBroker>();
+                var eventBrokerCreation = container.Resolve().AsyncInstance<IEventBroker>(CancellationToken.None);
+                eventBrokerCreation.Start();
+                eventBrokerCreation.Wait();
                 System.Console.ReadLine();
             }
 

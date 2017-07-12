@@ -5,7 +5,7 @@
     using ClassLibrary;
     using DevTeam.IoC;
     using DevTeam.IoC.Configurations.Json;
-	using DevTeam.IoC.Contracts;
+    using DevTeam.IoC.Contracts;
 
     public class Program
     {
