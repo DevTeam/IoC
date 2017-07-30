@@ -21,16 +21,11 @@
             [NotNull] IConverter<IValueDto, object, TypeResolverContext> converterValueDtoToObject,
             [NotNull] IConverter<ITagDto, object, TypeResolverContext> converterTagDtoToObject)
         {
-            if (reflection == null) throw new ArgumentNullException(nameof(reflection));
-            if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
-            if (converterStringToObject == null) throw new ArgumentNullException(nameof(converterStringToObject));
-            if (converterValueDtoToObject == null) throw new ArgumentNullException(nameof(converterValueDtoToObject));
-            if (converterTagDtoToObject == null) throw new ArgumentNullException(nameof(converterTagDtoToObject));
-            _reflection = reflection;
-            _typeResolver = typeResolver;
-            _converterStringToObject = converterStringToObject;
-            _converterValueDtoToObject = converterValueDtoToObject;
-            _converterTagDtoToObject = converterTagDtoToObject;
+            _reflection = reflection ?? throw new ArgumentNullException(nameof(reflection));
+            _typeResolver = typeResolver ?? throw new ArgumentNullException(nameof(typeResolver));
+            _converterStringToObject = converterStringToObject ?? throw new ArgumentNullException(nameof(converterStringToObject));
+            _converterValueDtoToObject = converterValueDtoToObject ?? throw new ArgumentNullException(nameof(converterValueDtoToObject));
+            _converterTagDtoToObject = converterTagDtoToObject ?? throw new ArgumentNullException(nameof(converterTagDtoToObject));
         }
 
         public bool TryConvert(IParameterDto paramDto, out IParameterMetadata paramMetadata, Context context)
@@ -42,8 +37,7 @@
                 return false;
             }
 
-            Type parameterType;
-            if (!_typeResolver.TryResolveType(context.TypeResolverContext.References, context.TypeResolverContext.Usings, paramDto.TypeName, out parameterType))
+            if (!_typeResolver.TryResolveType(context.TypeResolverContext.References, context.TypeResolverContext.Usings, paramDto.TypeName, out Type parameterType))
             {
                 throw new Exception($"Invalid parameter type {paramDto.TypeName}");
             }
@@ -63,8 +57,7 @@
             {
                 if (paramDto.State != null)
                 {
-                    Type stateType;
-                    if (!_typeResolver.TryResolveType(context.TypeResolverContext.References, context.TypeResolverContext.Usings, paramDto.State.StateTypeName, out stateType))
+                    if (!_typeResolver.TryResolveType(context.TypeResolverContext.References, context.TypeResolverContext.Usings, paramDto.State.StateTypeName, out Type stateType))
                     {
                         throw new Exception($"Invalid state type {paramDto.State.StateTypeName}");
                     }
@@ -90,59 +83,57 @@
                     var hasContractKey = false;
                     foreach (var keyDto in paramDto.Dependency)
                     {
-                        if (keyDto is IContractDto contractDto)
+                        switch (keyDto)
                         {
-                            var contractTypes = new List<Type>();
-                            foreach (var typeName in contractDto.Contract)
-                            {
-                                if (!_typeResolver.TryResolveType(context.TypeResolverContext.References, context.TypeResolverContext.Usings, typeName, out Type contractType))
+
+                            case IContractDto contractDto:
+                                var contractTypes = new List<Type>();
+                                foreach (var typeName in contractDto.Contract)
                                 {
-                                    throw new Exception($"Invalid contract type {typeName}");
+                                    if (!_typeResolver.TryResolveType(context.TypeResolverContext.References, context.TypeResolverContext.Usings, typeName, out Type contractType))
+                                    {
+                                        throw new Exception($"Invalid contract type {typeName}");
+                                    }
+
+                                    contractTypes.Add(contractType);
                                 }
 
-                                contractTypes.Add(contractType);
-                            }
-
-                            if (contractTypes.Count == 0)
-                            {
-                                contractTypes.Add(parameterType);
-                            }
-
-                            resolving.Contract(contractTypes.ToArray());
-                            hasContractKey = true;
-                        }
-
-                        if (keyDto is IStateDto stateDto)
-                        {
-                            if (!_typeResolver.TryResolveType(context.TypeResolverContext.References, context.TypeResolverContext.Usings, stateDto.StateTypeName, out Type stateType))
-                            {
-                                throw new Exception($"Invalid state type {stateDto.StateTypeName}");
-                            }
-
-                            if (stateDto.Value != null)
-                            {
-                                object stetItem;
-                                if (!_converterValueDtoToObject.TryConvert(stateDto.Value, out stetItem, context.TypeResolverContext))
+                                if (contractTypes.Count == 0)
                                 {
-                                    throw new Exception($"Invalid state {stateDto.Value.Data}");
+                                    contractTypes.Add(parameterType);
                                 }
 
-                                state.Add(stetItem);
-                            }
+                                resolving.Contract(contractTypes.ToArray());
+                                hasContractKey = true;
+                                break;
 
-                            resolving.State(stateDto.Index, stateType);
-                        }
+                            case IStateDto stateDto:
+                                if (!_typeResolver.TryResolveType(context.TypeResolverContext.References, context.TypeResolverContext.Usings, stateDto.StateTypeName, out Type stateType))
+                                {
+                                    throw new Exception($"Invalid state type {stateDto.StateTypeName}");
+                                }
 
-                        var tagDto = keyDto as ITagDto;
-                        if (tagDto != null)
-                        {
-                            object tag;
-                            if (!_converterTagDtoToObject.TryConvert(tagDto, out tag, context.TypeResolverContext))
-                            {
-                                throw new Exception($"Invalid tag {tagDto.Value}");
-                            }
+                                if (stateDto.Value != null)
+                                {
+                                    if (!_converterValueDtoToObject.TryConvert(stateDto.Value, out object stetItem, context.TypeResolverContext))
+                                    {
+                                        throw new Exception($"Invalid state {stateDto.Value.Data}");
+                                    }
 
-                            resolving.Tag(tag);
+                                    state.Add(stetItem);
+                                }
+
+                                resolving.State(stateDto.Index, stateType);
+                                break;
+
+                            case ITagDto tagDto:
+                                if (!_converterTagDtoToObject.TryConvert(tagDto, out object tag, context.TypeResolverContext))
+                                {
+                                    throw new Exception($"Invalid tag {tagDto.Value}");
+                                }
+
+                                resolving.Tag(tag);
+                                break;
                         }
                     }
 
@@ -169,16 +160,14 @@
         {
             public Context([NotNull] IContainer container, int stateIndex, [NotNull] TypeResolverContext typeResolverContext)
             {
-                if (container == null) throw new ArgumentNullException(nameof(container));
-                if (typeResolverContext == null) throw new ArgumentNullException(nameof(typeResolverContext));
-                Container = container;
+                Container = container ?? throw new ArgumentNullException(nameof(container));
                 StateIndex = stateIndex;
-                TypeResolverContext = typeResolverContext;
+                TypeResolverContext = typeResolverContext ?? throw new ArgumentNullException(nameof(typeResolverContext));
             }
 
             public IContainer Container { get; }
 
-            public int StateIndex { get; set; }
+            public int StateIndex { get; }
 
             public TypeResolverContext TypeResolverContext { get; }
         }

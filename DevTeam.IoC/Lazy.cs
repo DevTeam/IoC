@@ -2,12 +2,15 @@
 // ReSharper disable once CheckNamespace
 namespace System
 {
+    using Diagnostics.CodeAnalysis;
+
     internal sealed class Lazy<T>
     {
         private readonly Func<T> _factory;
         private bool _created;
         private T _value;
 
+        [SuppressMessage("ReSharper", "JoinNullCheckWithUsage")]
         public Lazy(Func<T> factory)
         {
 #if DEBUG

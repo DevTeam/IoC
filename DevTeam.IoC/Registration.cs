@@ -5,28 +5,28 @@
     using System.Linq;
     using Contracts;
 
-    internal sealed class Registration<T> : Token<T, IRegistration<T>>, IRegistration<T>
-          where T : IContainer
+    internal sealed class Registration<TContainer> : Token<TContainer, IRegistration<TContainer>>, IRegistration<TContainer>
+          where TContainer : IContainer
     {
         // ReSharper disable once StaticMemberInGenericType
         private static readonly IExtension[] EmptyExtensions = new IExtension[0];
         private readonly List<HashSet<IContractKey>> _contractKeys = new List<HashSet<IContractKey>>();
         private readonly HashSet<IKey> _registrationKeys = new HashSet<IKey>();
         private readonly Lazy<IMethodFactory> _instanceFactoryProvider;
-        private readonly RegistrationResult<T> _result;
+        private readonly RegistrationResult<TContainer> _result;
         private readonly ICache<Type, IInstanceFactory> _resolverFactoryCache;
         private readonly IReflection _reflection;
         [CanBeNull] private HashSet<ITagKey> _tagKeys;
         [CanBeNull] private HashSet<IStateKey> _stateKeys;
         [CanBeNull] private List<IExtension> _extensions;
 
-        internal Registration([NotNull] IFluent fluent, [NotNull] T container)
+        internal Registration([NotNull] IFluent fluent, [NotNull] TContainer container)
             : base(container)
         {
             if (fluent == null) throw new ArgumentNullException(nameof(fluent));
             if (container == null) throw new ArgumentNullException(nameof(container));
             _instanceFactoryProvider = new Lazy<IMethodFactory>(GetInstanceFactoryProvider);
-            _result = new RegistrationResult<T>(this);
+            _result = new RegistrationResult<TContainer>(this);
             var cacheProvider = container as IProvider<ICache<Type, IInstanceFactory>>;
             cacheProvider?.TryGet(out _resolverFactoryCache);
             _reflection = container.Resolve().Instance<IReflection>();
@@ -34,25 +34,25 @@
 
         private List<IExtension> Extensions => _extensions ?? (_extensions = new List<IExtension>());
 
-        public IRegistration<T> Attributes(Type implementationType)
+        public IRegistration<TContainer> Attributes(Type implementationType)
         {
             ExtractMetadata(implementationType);
             return this;
         }
 
-        public IRegistration<T> Attributes<TImplementation>()
+        public IRegistration<TContainer> Attributes<TImplementation>()
         {
             return Attributes(typeof(TImplementation));
         }
 
-        public override IRegistration<T> Contract(params Type[] contractTypes)
+        public override IRegistration<TContainer> Contract(params Type[] contractTypes)
         {
             if (contractTypes == null) throw new ArgumentNullException(nameof(contractTypes));
             AddContractKey(contractTypes.Select(type => Resolver.KeyFactory.CreateContractKey(type, false)));
             return this;
         }
 
-        public override IRegistration<T> State(int index, Type stateType)
+        public override IRegistration<TContainer> State(int index, Type stateType)
         {
             if (stateType == null) throw new ArgumentNullException(nameof(stateType));
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
@@ -60,33 +60,33 @@
             return this;
         }
 
-        public IRegistration<T> Lifetime(ILifetime lifetime)
+        public IRegistration<TContainer> Lifetime(ILifetime lifetime)
         {
             if (lifetime == null) throw new ArgumentNullException(nameof(lifetime));
             Extensions.Add(lifetime);
             return this;
         }
 
-        public IRegistration<T> Lifetime(Wellknown.Lifetime lifetime)
+        public IRegistration<TContainer> Lifetime(Wellknown.Lifetime lifetime)
         {
             Extensions.Add(Fluent.Resolve(Resolver).Tag(lifetime).Instance<ILifetime>());
             return this;
         }
 
-        public IRegistration<T> KeyComparer(IKeyComparer keyComparer)
+        public IRegistration<TContainer> KeyComparer(IKeyComparer keyComparer)
         {
             if (keyComparer == null) throw new ArgumentNullException(nameof(keyComparer));
             Extensions.Add(keyComparer);
             return this;
         }
 
-        public IRegistration<T> KeyComparer(Wellknown.KeyComparer keyComparer)
+        public IRegistration<TContainer> KeyComparer(Wellknown.KeyComparer keyComparer)
         {
             Extensions.Add(Fluent.Resolve(Resolver).Tag(keyComparer).Instance<IKeyComparer>());
             return this;
         }
 
-        public IRegistration<T> Scope(IScope scope)
+        public IRegistration<TContainer> Scope(IScope scope)
         {
             if (scope == null) throw new ArgumentNullException(nameof(scope));
             if (Extensions.OfType<IScope>().Any()) throw new InvalidOperationException();
@@ -94,27 +94,27 @@
             return this;
         }
 
-        public IRegistration<T> Scope(Wellknown.Scope scope)
+        public IRegistration<TContainer> Scope(Wellknown.Scope scope)
         {
             Extensions.Add(Fluent.Resolve(Resolver).Tag(scope).Instance<IScope>());
             return this;
         }
 
-        public IRegistrationResult<T> FactoryMethod(Func<ICreationContext, object> factoryMethod)
+        public IRegistrationResult<TContainer> FactoryMethod(Func<ICreationContext, object> factoryMethod)
         {
             if (factoryMethod == null) throw new ArgumentNullException(nameof(factoryMethod));
             FactoryMethodInternal(factoryMethod);
             return _result;
         }
 
-        public IRegistrationResult<T> FactoryMethod<TImplementation>(Func<ICreationContext, TImplementation> factoryMethod)
+        public IRegistrationResult<TContainer> FactoryMethod<TImplementation>(Func<ICreationContext, TImplementation> factoryMethod)
         {
             if (factoryMethod == null) throw new ArgumentNullException(nameof(factoryMethod));
             FactoryMethodInternal(factoryMethod, typeof(TImplementation));
             return _result;
         }
 
-        public IRegistrationResult<T> Autowiring(Type implementationType, bool lazy = false, IMetadataProvider metadataProvider = null)
+        public IRegistrationResult<TContainer> Autowiring(Type implementationType, bool lazy = false, IMetadataProvider metadataProvider = null)
         {
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
             metadataProvider = metadataProvider ?? Fluent.Resolve(Resolver).Instance<IMetadataProvider>();
@@ -140,12 +140,12 @@
             return _result;
         }
 
-        public IRegistrationResult<T> Autowiring<TImplementation>(bool lazy = false)
+        public IRegistrationResult<TContainer> Autowiring<TImplementation>(bool lazy = false)
         {
             return Autowiring(typeof(TImplementation), lazy);
         }
 
-        public IRegistrationResult<T> Autowiring<TContract, TImplementation>(params object[] tags)
+        public IRegistrationResult<TContainer> Autowiring<TContract, TImplementation>(params object[] tags)
              where TImplementation : TContract
         {
             if (tags == null) throw new ArgumentNullException(nameof(tags));
@@ -154,7 +154,7 @@
             return Autowiring(typeof(TImplementation));
         }
 
-        public IRegistrationResult<T> Autowiring(Type contractType, Type implementationType, params object[] tags)
+        public IRegistrationResult<TContainer> Autowiring(Type contractType, Type implementationType, params object[] tags)
         {
             if (contractType == null) throw new ArgumentNullException(nameof(contractType));
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
@@ -165,7 +165,7 @@
             return Autowiring(implementationType);
         }
 
-        internal T ToSelf(params IDisposable[] resource)
+        internal TContainer ToSelf(params IDisposable[] resource)
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
             Resolver.Resolve().Instance<IInternalResourceStore>().AddResource(new CompositeDisposable(resource));

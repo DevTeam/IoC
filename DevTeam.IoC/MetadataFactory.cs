@@ -123,7 +123,7 @@
                 return container.Resolve(ctx, ParamsStateProvider.Create(parameterMetadata.State));
             }
 
-            if(parameterMetadata.Value != null)
+            if (parameterMetadata.Value != null)
             {
                 return parameterMetadata.Value;
             }

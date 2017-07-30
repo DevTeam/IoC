@@ -39,8 +39,7 @@
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            var contractKey = obj as IContractKey;
-            if (contractKey != null)
+            if (obj is IContractKey contractKey)
             {
                 return Equals(contractKey);
             }

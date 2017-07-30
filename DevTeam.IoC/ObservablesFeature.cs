@@ -71,12 +71,12 @@
 
             public Observable([NotNull] IEnumerable<T> enumerable)
             {
-                if (enumerable == null) throw new ArgumentNullException(nameof(enumerable));
-                _enumerable = enumerable;
+                _enumerable = enumerable ?? throw new ArgumentNullException(nameof(enumerable));
             }
 
-            public IDisposable Subscribe(IObserver<T> observer)
+            public IDisposable Subscribe([NotNull] IObserver<T> observer)
             {
+                if (observer == null) throw new ArgumentNullException(nameof(observer));
                 foreach (var item in _enumerable)
                 {
                     observer.OnNext(item);

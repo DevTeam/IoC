@@ -1,12 +1,14 @@
 ﻿namespace DevTeam.IoC
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using Contracts;
 
     internal sealed class FilteredKeyComparer: IKeyComparer
     {
         private readonly KeyFilterContext _keyFilterContext;
 
+        [SuppressMessage("ReSharper", "JoinNullCheckWithUsage")]
         public FilteredKeyComparer(KeyFilterContext keyFilterContext)
         {
 #if DEBUG

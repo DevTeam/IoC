@@ -29,8 +29,7 @@
                 _genericTypeArguments = EmptyGenericTypeArguments;
             }
 
-            if (_contractType == null) throw new InvalidOperationException(nameof(ContractType));
-            _hashCode = _contractType.GetHashCode();
+            _hashCode = _contractType?.GetHashCode() ?? throw new InvalidOperationException(nameof(ContractType));
         }
 
         public Type ContractType => _contractType;

@@ -9,8 +9,7 @@
 
         public ConverterStringToObject([NotNull] IReflection reflection)
         {
-            if (reflection == null) throw new ArgumentNullException(nameof(reflection));
-            _reflection = reflection;
+            _reflection = reflection ?? throw new ArgumentNullException(nameof(reflection));
         }
 
         public bool TryConvert(string valueText, out object value, Type type)

@@ -13,8 +13,7 @@
 
         public AutowiringMetadataProvider([NotNull] IReflection reflection)
         {
-            if (reflection == null) throw new ArgumentNullException(nameof(reflection));
-            _reflection = reflection;
+            _reflection = reflection ?? throw new ArgumentNullException(nameof(reflection));
         }
 
         public bool TryResolveType(Type implementationType, out Type resolvedType, ICreationContext creationContext = null)

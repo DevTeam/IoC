@@ -9,10 +9,8 @@
     {
         public TypeResolverContext([NotNull] ICollection<Assembly> references, [NotNull] ICollection<string> usings)
         {
-            if (references == null) throw new ArgumentNullException(nameof(references));
-            if (usings == null) throw new ArgumentNullException(nameof(usings));
-            References = references;
-            Usings = usings;
+            References = references ?? throw new ArgumentNullException(nameof(references));
+            Usings = usings ?? throw new ArgumentNullException(nameof(usings));
         }
 
         public ICollection<Assembly> References { [NotNull] get; }

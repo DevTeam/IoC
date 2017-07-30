@@ -1,13 +1,14 @@
 namespace DevTeam.IoC
 {
     using System;
-
+    using System.Diagnostics.CodeAnalysis;
     using Contracts;
 
     internal sealed class MethodFactory<TContract> : IInstanceFactory
     {
         private readonly Func<ICreationContext, TContract> _factoryMethod;
 
+        [SuppressMessage("ReSharper", "JoinNullCheckWithUsage")]
         public MethodFactory(Func<ICreationContext, TContract> factoryMethod)
         {
 #if DEBUG

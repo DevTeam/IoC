@@ -48,24 +48,13 @@ namespace DevTeam.IoC
 
         public bool IsEnum => TypeInfo.IsEnum;
 
-        private TypeInfo TypeInfo
-        {
-            get
-            {
-                if (_typeInfo == null)
-                {
-                    _typeInfo = _type.GetTypeInfo();
-                }
-
-                return _typeInfo;
-            }
-        }
+        private TypeInfo TypeInfo => _typeInfo ?? (_typeInfo = _type.GetTypeInfo());
 
         public Type Type
         {
             get
             {
-                if (_type == null)
+                if (_type == null && _typeInfo != null)
                 {
                     _type = _typeInfo.AsType();
                 }

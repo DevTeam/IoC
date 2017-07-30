@@ -10,7 +10,7 @@
         IEnumerable<T> GetCustomAttributes<T>([NotNull] ParameterInfo parameterInfo) where T : Attribute;
 
         [NotNull]
-        IEnumerable<T> GetCustomAttributes<T>(MemberInfo memberInfo, bool inherit) where T : Attribute;
+        IEnumerable<T> GetCustomAttributes<T>([NotNull] MemberInfo memberInfo, bool inherit) where T : Attribute;
 
         [NotNull]
         IEnumerable<IType> GetDefinedTypes([NotNull] Assembly assembly);

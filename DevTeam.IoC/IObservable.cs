@@ -6,6 +6,5 @@ namespace System
     {
         IDisposable Subscribe(IObserver<T> observer);
     }
-
 }
 #endif

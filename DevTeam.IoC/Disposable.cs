@@ -1,12 +1,14 @@
 ﻿namespace DevTeam.IoC
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
 
     internal sealed class Disposable: IDisposable
     {
         private readonly Action _disposableAction;
         private readonly object _owner;
 
+        [SuppressMessage("ReSharper", "JoinNullCheckWithUsage")]
         public Disposable(Action disposableAction, object owner = null)
         {
 #if DEBUG

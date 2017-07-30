@@ -7,54 +7,57 @@
     using Contracts;
 
     [SuppressMessage("ReSharper", "StaticMemberInGenericType")]
-    internal abstract class Token<T, TToken> : IToken<TToken>
-         where T : IResolver
+    internal abstract class Token<TResolver, TToken> : IToken<TToken>
+         where TResolver : IResolver
     {
         protected static readonly IContractKey[] EmptyContractKeys = new IContractKey[0];
         protected static readonly ITagKey[] EmptyTagKeys = new ITagKey[0];
         protected static readonly IStateKey[] EmptyStateKeys = new IStateKey[0];
 
-        protected Token([NotNull] T container)
+        protected Token([NotNull] TResolver resolver)
         {
 #if DEBUG
-            if (container == null) throw new ArgumentNullException(nameof(container));
+            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
 #endif
-            Fluent = container.Fluent();
-            Resolver = container;
+
+            if (resolver is IProvider<IFluent> fluentProvider && fluentProvider.TryGet(out IFluent fluent))
+            {
+                Fluent = fluent;
+            }
+            else
+            {
+                throw new InvalidOperationException($"{typeof(IProvider<IFluent>)} is not supported. Only \"{nameof(IContainer)}\" is supported.");
+            }
+
+            Resolver = resolver;
         }
 
         protected IFluent Fluent;
 
-        protected T Resolver;
+        protected TResolver Resolver;
 
         public TToken Key(IEnumerable<IKey> keys)
         {
-
             if (keys == null) throw new ArgumentNullException(nameof(keys));
             foreach (var key in keys)
             {
-                var contractKey = key as IContractKey;
-                if (contractKey != null)
+                switch (key)
                 {
-                    AddContractKey(Enumerable.Repeat(contractKey, 1));
-                }
+                    case IContractKey contractKey:
+                        AddContractKey(Enumerable.Repeat(contractKey, 1));
+                        break;
 
-                var stateKey = key as IStateKey;
-                if (stateKey != null)
-                {
-                    AddStateKey(stateKey);
-                }
+                    case IStateKey stateKey:
+                        AddStateKey(stateKey);
+                        break;
 
-                var tagKey = key as ITagKey;
-                if (tagKey != null)
-                {
-                    AddTagKey(tagKey);
-                }
+                    case ITagKey tagKey:
+                        AddTagKey(tagKey);
+                        break;
 
-                var compositeKey = key as ICompositeKey;
-                if (compositeKey != null)
-                {
-                    AddCompositeKey(compositeKey);
+                    case ICompositeKey compositeKey:
+                        AddCompositeKey(compositeKey);
+                        break;
                 }
             }
 

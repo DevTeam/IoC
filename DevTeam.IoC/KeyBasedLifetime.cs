@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-
+    using System.Diagnostics.CodeAnalysis;
     using Contracts;
 
     internal abstract class KeyBasedLifetime<TKey> : ILifetime
@@ -12,6 +12,7 @@
 
         internal int Count => _lifetimes.Count;
 
+        [SuppressMessage("ReSharper", "JoinNullCheckWithUsage")]
         protected KeyBasedLifetime(
             [NotNull] Func<ILifetimeContext, ICreationContext, TKey> keySelector)
         {

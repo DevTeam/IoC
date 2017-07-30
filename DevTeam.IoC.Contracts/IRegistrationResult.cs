@@ -2,7 +2,7 @@
 {
     using System;
 
-    public interface IRegistrationResult<out T>: IDisposable where T : IContainer
+    public interface IRegistrationResult<out T>: IDisposable where T : IResolver
     {
         [NotNull]
         IRegistration<T> And();

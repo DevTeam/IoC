@@ -12,6 +12,7 @@
         public CompositeDisposable([NotNull] IEnumerable<IDisposable> configurations)
         {
 #if DEBUG
+            // ReSharper disable once JoinNullCheckWithUsage
             if (configurations == null) throw new ArgumentNullException(nameof(configurations));
 #endif
             _configurations = configurations.ToList();

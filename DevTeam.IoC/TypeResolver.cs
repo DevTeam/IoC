@@ -33,8 +33,7 @@
 
         public TypeResolver([NotNull] IReflection reflection)
         {
-            if (reflection == null) throw new ArgumentNullException(nameof(reflection));
-            _reflection = reflection;
+            _reflection = reflection ?? throw new ArgumentNullException(nameof(reflection));
         }
 
         public bool TryResolveType(IEnumerable<Assembly> references, IEnumerable<string> usings, string typeName, out Type type)
@@ -305,8 +304,8 @@
             private bool TryGetNestedTypeName([NotNull] string typeName, out string nestedTypeName)
             {
                 if (typeName == null) throw new ArgumentNullException(nameof(typeName));
-                int pointIndex = -1;
-                int nested = 0;
+                var pointIndex = -1;
+                var nested = 0;
                 for (var i = typeName.Length - 1; i >= 0; i--)
                 {
                     switch (typeName[i])

@@ -2,11 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Contracts;
 
     internal struct RegistryContext : IRegistryContext
     {
+        [SuppressMessage("ReSharper", "JoinNullCheckWithUsage")]
         public RegistryContext(
             [NotNull] IContainer container,
             [NotNull] IKey[] keys,

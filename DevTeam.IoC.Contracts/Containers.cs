@@ -3,7 +3,7 @@
     using System;
 
     [PublicAPI]
-    public static class Extensions
+    public static class Containers
     {
 #if !NET35 && !NET40
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
@@ -20,56 +20,78 @@
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
         [NotNull]
-        public static IConfiguring<T> Configure<T>([NotNull] this T container)
-            where T : IContainer
+        public static IConfiguring<TContainer> Configure<TContainer>([NotNull] this TContainer container)
+            where TContainer : IContainer
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
-            return Fluent(container).Configure(container);
+            return GetFluent(container).Configure(container);
         }
 
 #if !NET35 && !NET40
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
         [NotNull]
-        public static IRegistration<T> Register<T>([NotNull] this T container)
-              where T : IContainer
+        public static IRegistration<TContainer> Register<TContainer>([NotNull] this TContainer container)
+              where TContainer : IContainer
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
-            return Fluent(container).Register(container);
+            return GetFluent(container).Register(container);
         }
 
 #if !NET35 && !NET40
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
         [NotNull]
-        public static IResolving<T> Resolve<T>([NotNull] this T resolver)
-              where T : IResolver
+        public static IResolving<TResolver> Resolve<TResolver>([NotNull] this TResolver resolver)
+              where TResolver : IResolver
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            return Fluent(resolver).Resolve(resolver);
+            return GetFluent(resolver).Resolve(resolver);
         }
 
 #if !NET35 && !NET40
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
         [NotNull]
-        public static IContainer CreateChild<T>([NotNull] this T container, [CanBeNull] object tag = null)
-             where T : IContainer
+        public static IContainer CreateChild<TResolver>([NotNull] this TResolver resolver, [CanBeNull] object tag = null)
+             where TResolver : IResolver
         {
-            if (container == null) throw new ArgumentNullException(nameof(container));
+            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             if (tag == null)
             {
-                return container.Resolve().Instance<IContainer>();
+                return resolver.Resolve().Instance<IContainer>();
             }
 
-            return container.Resolve().State<object>(0).Instance<IContainer>(tag);
+            return resolver.Resolve().State<object>(0).Instance<IContainer>(tag);
+        }
+
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
+        [NotNull]
+        public static T GetState<T>([NotNull] this ICreationContext ctx, int index)
+        {
+            if (ctx == null) throw new ArgumentNullException(nameof(ctx));
+            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
+            return (T)GetState(ctx, index, typeof(T));
         }
 
 #if !NET35 && !NET40
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
         [CanBeNull]
-        public static object TryGetState([NotNull] this ICreationContext ctx, int index, [NotNull] Type stateType)
+        public static T TryGetState<T>([NotNull] this ICreationContext ctx, int index)
+        {
+            if (ctx == null) throw new ArgumentNullException(nameof(ctx));
+            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
+            return (T)ctx.TryGetState(index, typeof(T));
+        }
+
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
+        [CanBeNull]
+        private static object TryGetState([NotNull] this ICreationContext ctx, int index, [NotNull] Type stateType)
         {
             if (ctx == null) throw new ArgumentNullException(nameof(ctx));
             if (stateType == null) throw new ArgumentNullException(nameof(stateType));
@@ -81,7 +103,7 @@
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
         [NotNull]
-        public static object GetState([NotNull] this ICreationContext ctx, int index, [NotNull] Type stateType)
+        private static object GetState([NotNull] this ICreationContext ctx, int index, [NotNull] Type stateType)
         {
             if (ctx == null) throw new ArgumentNullException(nameof(ctx));
             if (stateType == null) throw new ArgumentNullException(nameof(stateType));
@@ -100,31 +122,9 @@
 #if !NET35 && !NET40
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
-        [CanBeNull]
-        public static T TryGetState<T>([NotNull] this ICreationContext ctx, int index)
-        {
-            if (ctx == null) throw new ArgumentNullException(nameof(ctx));
-            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
-            return (T)ctx.TryGetState(index, typeof(T));
-        }
-
-#if !NET35 && !NET40
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-#endif
         [NotNull]
-        public static T GetState<T>([NotNull] this ICreationContext ctx, int index)
-        {
-            if (ctx == null) throw new ArgumentNullException(nameof(ctx));
-            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
-            return (T)GetState(ctx, index, typeof(T));
-        }
-
-#if !NET35 && !NET40
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-#endif
-        [NotNull]
-        public static IFluent Fluent<T>([NotNull] this T resolver)
-             where T : IResolver
+        private static IFluent GetFluent<TResolver>([NotNull] this TResolver resolver)
+             where TResolver : IResolver
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             var fluentProvider = resolver as IProvider<IFluent>;

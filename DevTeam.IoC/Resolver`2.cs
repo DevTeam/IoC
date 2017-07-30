@@ -23,8 +23,7 @@
 
         public bool TryGet(out TContract instance, TState1 state1)
         {
-            object objInstance;
-            if (_resolving.TryInstance(out objInstance, state1))
+            if (_resolving.TryInstance(out object objInstance, state1))
             {
                 instance = (TContract)objInstance;
                 return true;

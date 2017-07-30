@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     using Contracts;
@@ -10,6 +11,7 @@
     {
         private IEnumerable<IDisposable> _resources;
 
+        [SuppressMessage("ReSharper", "JoinNullCheckWithUsage")]
         public RegistrationItem(
             [NotNull] IRegistryContext registryContext,
             [NotNull] IEnumerable<IDisposable> resources)
@@ -21,19 +23,17 @@
             _resources = resources;
             RegistryContext = registryContext;
             InstanceFactory = new LifetimesFactory(registryContext.Extensions.OfType<ILifetime>().ToList());
-            Key = new object();
             foreach (var extension in registryContext.Extensions)
             {
-                var scope = extension as IScope;
-                if (scope != null)
+                switch (extension)
                 {
-                    Scope = scope;
-                }
+                    case IScope scope:
+                        Scope = scope;
+                        break;
 
-                var keyComparer = extension as IKeyComparer;
-                if (keyComparer != null)
-                {
-                    KeyComparer = keyComparer;
+                    case IKeyComparer keyComparer:
+                        KeyComparer = keyComparer;
+                        break;
                 }
             }
         }
@@ -46,14 +46,13 @@
 
         public IKeyComparer KeyComparer { [CanBeNull] get; }
 
-        public object Key { [NotNull] get; }
-
         public void Dispose()
         {
             foreach (var disposable in _resources)
             {
                 disposable.Dispose();
             }
+
             _resources = Enumerable.Empty<IDisposable>();
             InstanceFactory.Dispose();
         }

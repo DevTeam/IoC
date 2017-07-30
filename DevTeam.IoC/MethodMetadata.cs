@@ -8,10 +8,8 @@
     {
         public MethodMetadata([NotNull] string name, [NotNull] IEnumerable<IParameterMetadata> parameters)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
-            if (parameters == null) throw new ArgumentNullException(nameof(parameters));
-            Name = name;
-            Parameters = parameters;
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
         }
 
         public string Name { [NotNull] get; }

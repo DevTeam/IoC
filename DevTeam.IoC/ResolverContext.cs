@@ -1,10 +1,12 @@
 ﻿namespace DevTeam.IoC
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using Contracts;
 
     internal struct ResolverContext: IResolverContext
     {
+        [SuppressMessage("ReSharper", "JoinNullCheckWithUsage")]
         public ResolverContext(
             [NotNull] IContainer container,
             [NotNull] IRegistryContext registryContext,

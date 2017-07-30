@@ -19,14 +19,10 @@
             [NotNull] IConverter<ITagDto, object, TypeResolverContext> converterTagDtoToObject,
             [NotNull] IConverter<IParameterDto, IParameterMetadata, ConverterParameterDtoToParameterMetadata.Context> converterParameterDtoToParameterMetadata)
         {
-            if (reflection == null) throw new ArgumentNullException(nameof(reflection));
-            if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
-            if (converterTagDtoToObject == null) throw new ArgumentNullException(nameof(converterTagDtoToObject));
-            if (converterParameterDtoToParameterMetadata == null) throw new ArgumentNullException(nameof(converterParameterDtoToParameterMetadata));
-            _reflection = reflection;
-            _typeResolver = typeResolver;
-            _converterTagDtoToObject = converterTagDtoToObject;
-            _converterParameterDtoToParameterMetadata = converterParameterDtoToParameterMetadata;
+            _reflection = reflection ?? throw new ArgumentNullException(nameof(reflection));
+            _typeResolver = typeResolver ?? throw new ArgumentNullException(nameof(typeResolver));
+            _converterTagDtoToObject = converterTagDtoToObject ?? throw new ArgumentNullException(nameof(converterTagDtoToObject));
+            _converterParameterDtoToParameterMetadata = converterParameterDtoToParameterMetadata ?? throw new ArgumentNullException(nameof(converterParameterDtoToParameterMetadata));
         }
 
         public bool TryConvert(IRegisterDto registerDto, out IEnumerable<IRegistrationResult<IContainer>> value, Context context)
@@ -41,76 +37,58 @@
             var registration = context.Container.Register();
             foreach (var registerStatementDto in registerDto.Keys ?? Enumerable.Empty<IRegisterStatementDto>())
             {
-                var contractDto = registerStatementDto as IContractDto;
-                if (contractDto != null)
+                switch (registerStatementDto)
                 {
-                    var contractTypes = new List<Type>();
-                    foreach (var typeName in contractDto.Contract)
-                    {
-                        Type contractType;
-                        if (!_typeResolver.TryResolveType(context.TypeResolverContext.References, context.TypeResolverContext.Usings, typeName, out contractType))
+                    case IContractDto contractDto:
+                        var contractTypes = new List<Type>();
+                        foreach (var typeName in contractDto.Contract)
                         {
-                            throw new Exception($"Invalid contract type {typeName}");
+                            if (!_typeResolver.TryResolveType(context.TypeResolverContext.References, context.TypeResolverContext.Usings, typeName, out Type contractType))
+                            {
+                                throw new Exception($"Invalid contract type {typeName}");
+                            }
+
+                            contractTypes.Add(contractType);
                         }
 
-                        contractTypes.Add(contractType);
-                    }
+                        registration.Contract(contractTypes.ToArray());
+                        break;
 
-                    registration.Contract(contractTypes.ToArray());
-                    continue;
-                }
+                    case IStateDto stateDto:
+                        if (!_typeResolver.TryResolveType(context.TypeResolverContext.References, context.TypeResolverContext.Usings, stateDto.StateTypeName, out Type stateType))
+                        {
+                            throw new Exception($"Invalid state type {stateDto.StateTypeName}");
+                        }
 
-                var stateDto = registerStatementDto as IStateDto;
-                if (stateDto != null)
-                {
-                    Type stateType;
-                    if (!_typeResolver.TryResolveType(context.TypeResolverContext.References, context.TypeResolverContext.Usings, stateDto.StateTypeName, out stateType))
-                    {
-                        throw new Exception($"Invalid state type {stateDto.StateTypeName}");
-                    }
+                        registration.State(stateDto.Index, stateType);
+                        break;
 
-                    registration.State(stateDto.Index, stateType);
-                    continue;
-                }
+                    case ITagDto tagDto:
+                        if (!TryGetTagValue(context.TypeResolverContext, tagDto, out object tag))
+                        {
+                            throw new Exception($"Invalid tag {tagDto.Value}");
+                        }
 
-                var tagDto = registerStatementDto as ITagDto;
-                if (tagDto != null)
-                {
-                    object tag;
-                    if (!TryGetTagValue(context.TypeResolverContext, tagDto, out tag))
-                    {
-                        throw new Exception($"Invalid tag {tagDto.Value}");
-                    }
+                        registration.Tag(tag);
+                        break;
 
-                    registration.Tag(tag);
-                    continue;
-                }
+                    case ILifetimeDto lifetimeDto:
+                        registration.Lifetime(lifetimeDto.Lifetime);
+                        break;
 
-                var lifetimeDto = registerStatementDto as ILifetimeDto;
-                if (lifetimeDto != null)
-                {
-                    registration.Lifetime(lifetimeDto.Lifetime);
-                    continue;
-                }
+                    case IScopeDto scopeDto:
+                        registration.Scope(scopeDto.Scope);
+                        break;
 
-                var scopeDto = registerStatementDto as IScopeDto;
-                if (scopeDto != null)
-                {
-                    registration.Scope(scopeDto.Scope);
-                    continue;
-                }
-
-                var keyComparerDto = registerStatementDto as IKeyComparerDto;
-                if (keyComparerDto != null)
-                {
-                    registration.KeyComparer(keyComparerDto.KeyComparer);
+                    case IKeyComparerDto keyComparerDto:
+                        registration.KeyComparer(keyComparerDto.KeyComparer);
+                        break;
                 }
             }
 
             if (!registerDto.AutowiringTypeName.IsNullOrWhiteSpace())
             {
-                Type autowiringType;
-                if (!_typeResolver.TryResolveType(context.TypeResolverContext.References, context.TypeResolverContext.Usings, registerDto.AutowiringTypeName, out autowiringType))
+                if (!_typeResolver.TryResolveType(context.TypeResolverContext.References, context.TypeResolverContext.Usings, registerDto.AutowiringTypeName, out Type autowiringType))
                 {
                     throw new Exception($"Invalid autowiring type {registerDto.AutowiringTypeName}");
                 }
@@ -199,8 +177,7 @@
 
                 var factoryMethodTypeName = string.Join(".", parts.Reverse().Skip(1).Reverse().ToArray());
                 var factoryMethodName = parts.Last();
-                Type factoryMethodType;
-                if (!_typeResolver.TryResolveType(context.TypeResolverContext.References, context.TypeResolverContext.Usings, factoryMethodTypeName, out factoryMethodType))
+                if (!_typeResolver.TryResolveType(context.TypeResolverContext.References, context.TypeResolverContext.Usings, factoryMethodTypeName, out Type factoryMethodType))
                 {
                     throw new Exception($"Invalid factory method type {factoryMethodName}");
                 }
@@ -230,8 +207,7 @@
             if (container == null) throw new ArgumentNullException(nameof(container));
             if (paramDto == null) throw new ArgumentNullException(nameof(paramDto));
             if (stateIndex < 0) throw new ArgumentOutOfRangeException(nameof(stateIndex));
-            IParameterMetadata paramMetadata;
-            if (!_converterParameterDtoToParameterMetadata.TryConvert(paramDto, out paramMetadata, new ConverterParameterDtoToParameterMetadata.Context(container, stateIndex, typeResolverContext)))
+            if (!_converterParameterDtoToParameterMetadata.TryConvert(paramDto, out IParameterMetadata paramMetadata, new ConverterParameterDtoToParameterMetadata.Context(container, stateIndex, typeResolverContext)))
             {
                 throw new Exception($"Invalid parameter {paramDto.TypeName}");
             }
@@ -243,10 +219,8 @@
         {
             public Context([NotNull] IContainer container, [NotNull] TypeResolverContext typeResolverContext)
             {
-                if (container == null) throw new ArgumentNullException(nameof(container));
-                if (typeResolverContext == null) throw new ArgumentNullException(nameof(typeResolverContext));
-                Container = container;
-                TypeResolverContext = typeResolverContext;
+                Container = container ?? throw new ArgumentNullException(nameof(container));
+                TypeResolverContext = typeResolverContext ?? throw new ArgumentNullException(nameof(typeResolverContext));
             }
 
             public IContainer Container { [NotNull] get; }

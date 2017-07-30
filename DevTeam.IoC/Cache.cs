@@ -36,6 +36,7 @@
         {
 #if DEBUG
             if (key == null) throw new ArgumentNullException(nameof(key));
+            // ReSharper disable once JoinNullCheckWithUsage
             if (value == null) throw new ArgumentNullException(nameof(value));
 #endif
             _cache[key] = value;

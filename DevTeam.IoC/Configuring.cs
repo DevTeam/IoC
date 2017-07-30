@@ -6,21 +6,21 @@
     using System.Reflection;
     using Contracts;
 
-    internal sealed class Configuring<T> : IConfiguring<T>
-        where T : IContainer
+    internal sealed class Configuring<TContainer> : IConfiguring<TContainer>
+        where TContainer : IContainer
     {
-        private readonly T _container;
+        private readonly TContainer _container;
         private readonly List<HashSet<IConfiguration>> _configurations = new List<HashSet<IConfiguration>>();
         private readonly List<IDisposable> _registrations = new List<IDisposable>();
         private readonly HashSet<IConfiguration> _appliedConfiguration = new HashSet<IConfiguration>();
 
-        public Configuring(T container)
+        public Configuring(TContainer container)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
             _container = container;
         }
 
-        public IConfiguring<T> DependsOn(params IConfiguration[] configurations)
+        public IConfiguring<TContainer> DependsOn(params IConfiguration[] configurations)
         {
             if (configurations == null) throw new ArgumentNullException(nameof(configurations));
             if (configurations.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(configurations));
@@ -28,12 +28,12 @@
             return this;
         }
 
-        public IConfiguring<T> DependsOn<TConfiguration>() where TConfiguration : IConfiguration, new()
+        public IConfiguring<TContainer> DependsOn<TConfiguration>() where TConfiguration : IConfiguration, new()
         {
             return DependsOn(new TConfiguration());
         }
 
-        public IConfiguring<T> DependsOn(params Wellknown.Feature[] features)
+        public IConfiguring<TContainer> DependsOn(params Wellknown.Feature[] features)
         {
             if (features == null) throw new ArgumentNullException(nameof(features));
             if (features.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(features));
@@ -41,7 +41,7 @@
             return this;
         }
 
-        public IConfiguring<T> DependsOn(Type configurationType, string description)
+        public IConfiguring<TContainer> DependsOn(Type configurationType, string description)
         {
             if (configurationType == null) throw new ArgumentNullException(nameof(configurationType));
             if (description == null) throw new ArgumentNullException(nameof(description));
@@ -52,14 +52,14 @@
             return this;
         }
 
-        public IConfiguring<T> DependsOn<TConfiguration>(string description) where TConfiguration : IConfiguration, new()
+        public IConfiguring<TContainer> DependsOn<TConfiguration>(string description) where TConfiguration : IConfiguration, new()
         {
             if (description == null) throw new ArgumentNullException(nameof(description));
             if (description.IsNullOrWhiteSpace()) throw new ArgumentException("Value cannot be null or whitespace.", nameof(description));
             return DependsOn(typeof(TConfiguration), description);
         }
 
-        public IConfiguring<T> DependsOn([NotNull] params Assembly[] assemblies)
+        public IConfiguring<TContainer> DependsOn([NotNull] params Assembly[] assemblies)
         {
             if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
             if (assemblies.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(assemblies));
@@ -75,7 +75,7 @@
             return registration;
         }
 
-        public T ToSelf()
+        public TContainer ToSelf()
         {
             _container.Resolve().Instance<IInternalResourceStore>().AddResource(Apply());
             return _container;
@@ -106,7 +106,8 @@
                         continue;
                     }
 
-                    foreach (var config in GetConfigurations(enumerator.Current.GetDependencies(_container), allConfigurations))
+                    var curConfig = enumerator.Current ?? throw new InvalidOperationException("Invalid state of configuration");
+                    foreach (var config in GetConfigurations(curConfig.GetDependencies(_container), allConfigurations))
                     {
                         yield return config;
                     }

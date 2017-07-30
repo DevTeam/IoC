@@ -7,10 +7,8 @@
     {
         public PropertyMetadata([NotNull] string name, [NotNull] IParameterMetadata parameter)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
-            if (parameter == null) throw new ArgumentNullException(nameof(parameter));
-            Name = name;
-            Parameter = parameter;
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Parameter = parameter ?? throw new ArgumentNullException(nameof(parameter));
         }
 
         public string Name { [NotNull] get; }

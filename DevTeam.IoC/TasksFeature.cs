@@ -4,7 +4,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
     using System.Threading.Tasks;
     using Contracts;
 
@@ -79,7 +78,7 @@
                 var resolver = ctx.Container.Resolve();
                 if (compositeKey != null)
                 {
-                    resolver.Key(compositeKey.TagKeys.Cast<IKey>()).Key(compositeKey.StateKeys.Cast<IKey>());
+                    resolver.Key(compositeKey.TagKeys).Key(compositeKey.StateKeys);
                 }
 
                 return () => resolver.Instance<T>();

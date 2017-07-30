@@ -8,8 +8,7 @@
     {
         public ConfigurationDescriptionDto([NotNull] string description)
         {
-            if (description == null) throw new ArgumentNullException(nameof(description));
-            Description = description;
+            Description = description ?? throw new ArgumentNullException(nameof(description));
         }
 
         public string Description { get; }

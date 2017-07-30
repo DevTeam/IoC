@@ -10,8 +10,7 @@
 
         public KeyFactory([NotNull] IReflection reflection)
         {
-            if (reflection == null) throw new ArgumentNullException(nameof(reflection));
-            _reflection = reflection;
+            _reflection = reflection ?? throw new ArgumentNullException(nameof(reflection));
         }
 
         public ICompositeKey CreateCompositeKey(IEnumerable<IContractKey> contractKey, IEnumerable<ITagKey> tagKeys = null, IEnumerable<IStateKey> stateKeys = null)

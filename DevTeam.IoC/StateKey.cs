@@ -1,6 +1,7 @@
 ﻿namespace DevTeam.IoC
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Contracts;
 
@@ -12,6 +13,7 @@
         private readonly Type _stateType;
         private readonly bool _resolving;
 
+        [SuppressMessage("ReSharper", "JoinNullCheckWithUsage")]
         public StateKey([NotNull] IReflection reflection, int index, [NotNull] Type stateType, bool resolving)
         {
 #if DEBUG
@@ -74,8 +76,8 @@
             var otherType = _reflection.GetType(other.StateType);
 
             return 
-                (other.Resolving && _type.IsAssignableFrom(otherType))
-                || (_resolving && otherType.IsAssignableFrom(_type));
+                other.Resolving && _type.IsAssignableFrom(otherType)
+                || _resolving && otherType.IsAssignableFrom(_type);
         }
 
         public override string ToString()

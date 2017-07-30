@@ -10,8 +10,7 @@
 
         public CompositeConfiguration([NotNull] IEnumerable<IConfiguration> configurations)
         {
-            if (configurations == null) throw new ArgumentNullException(nameof(configurations));
-            _configurations = configurations;
+            _configurations = configurations ?? throw new ArgumentNullException(nameof(configurations));
         }
 
         public IEnumerable<IConfiguration> GetDependencies(IContainer container)

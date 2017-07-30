@@ -7,7 +7,10 @@
     public interface IKeyFactory
     {
         [NotNull]
-        ICompositeKey CreateCompositeKey([NotNull] IEnumerable<IContractKey> contractKey, [CanBeNull] IEnumerable<ITagKey> tagKeys = null, [CanBeNull] IEnumerable<IStateKey> stateKeys = null);
+        ICompositeKey CreateCompositeKey(
+            [NotNull] IEnumerable<IContractKey> contractKey,
+            [CanBeNull] IEnumerable<ITagKey> tagKeys = null,
+            [CanBeNull] IEnumerable<IStateKey> stateKeys = null);
 
         [NotNull]
         IContractKey CreateContractKey([NotNull] Type contractType, bool toResolve);

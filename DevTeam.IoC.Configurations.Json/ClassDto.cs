@@ -15,10 +15,7 @@
         [JsonProperty("class", Required = Required.Always)]
         public string Class
         {
-            get
-            {
-                return _class;
-            }
+            get => _class;
 
             set
             {
@@ -61,22 +58,15 @@
         [JsonIgnore]
         public override string AutowiringTypeName
         {
-            get
-            {
-                return _autowiringTypeName ?? base.AutowiringTypeName;
-            }
-
-            set
-            {
-                base.AutowiringTypeName = value;
-            }
+            get => _autowiringTypeName ?? base.AutowiringTypeName;
+            set => base.AutowiringTypeName = value;
         }
 
         [JsonProperty("configure", Required = Required.Default)]
         public override IEnumerable<IRegisterStatementDto> Keys
         {
-            get { return (base.Keys ?? Enumerable.Empty<IRegisterStatementDto>()).Concat(_keys ?? Enumerable.Empty<IRegisterStatementDto>()).ToArray(); }
-            set { base.Keys = value; }
+            get => (base.Keys ?? Enumerable.Empty<IRegisterStatementDto>()).Concat(_keys ?? Enumerable.Empty<IRegisterStatementDto>()).ToArray();
+            set => base.Keys = value;
         }
 
         private void ThrowCommonException(string value)

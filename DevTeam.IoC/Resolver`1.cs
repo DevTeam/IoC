@@ -29,8 +29,7 @@
         public bool TryGet(out object instance, IStateProvider stateProvider)
         {
             if (stateProvider == null) throw new ArgumentNullException(nameof(stateProvider));
-            object objInstance;
-            if (_resolving.TryInstance(out objInstance, stateProvider))
+            if (_resolving.TryInstance(out object objInstance, stateProvider))
             {
                 instance = objInstance;
                 return true;
@@ -43,8 +42,7 @@
         public bool TryGet(out object instance, params object[] state)
         {
             if (state == null) throw new ArgumentNullException(nameof(state));
-            object objInstance;
-            if (_resolving.TryInstance(out objInstance, state))
+            if (_resolving.TryInstance(out object objInstance, state))
             {
                 instance = objInstance;
                 return true;
@@ -56,10 +54,9 @@
 
         public bool TryGet(out TContract instance)
         {
-            object instanceObj;
-            if (TryGet(out instanceObj))
+            if (TryGet(out object instanceObj))
             {
-                instance = (TContract) instanceObj;
+                instance = (TContract)instanceObj;
                 return true;
             }
 
@@ -93,33 +90,25 @@
 #if DEBUG
             if (key == null) throw new ArgumentNullException(nameof(key));
 #endif
-            var contractKey = key as IContractKey;
-            if (contractKey != null)
+            switch (key)
             {
-                yield break;
-            }
+                case IContractKey _:
+                    yield break;
 
-            var stateKey = key as IStateKey;
-            if (stateKey != null)
-            {
-                yield return stateKey;
-                yield break;
-            }
+                case IStateKey stateKey:
+                    yield return stateKey;
+                    yield break;
 
-            var tagKey = key as ITagKey;
-            if (tagKey != null)
-            {
-                yield return tagKey;
-                yield break;
-            }
+                case ITagKey tagKey:
+                    yield return tagKey;
+                    yield break;
 
-            var compositeKey = key as ICompositeKey;
-            if (compositeKey != null)
-            {
-                foreach (var subKey in compositeKey.StateKeys.Cast<IKey>().Concat(compositeKey.TagKeys.Cast<IKey>()))
-                {
-                    yield return subKey;
-                }
+                case ICompositeKey compositeKey:
+                    foreach (var subKey in compositeKey.StateKeys.Cast<IKey>().Concat(compositeKey.TagKeys.Cast<IKey>()))
+                    {
+                        yield return subKey;
+                    }
+                    yield break;
             }
         }
     }

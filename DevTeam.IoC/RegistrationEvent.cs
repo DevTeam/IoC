@@ -1,10 +1,12 @@
 ﻿namespace DevTeam.IoC
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using Contracts;
 
     internal struct RegistrationEvent : IRegistrationEvent
     {
+        [SuppressMessage("ReSharper", "JoinNullCheckWithUsage")]
         public RegistrationEvent(
             EventStage stage,
             EventAction action,

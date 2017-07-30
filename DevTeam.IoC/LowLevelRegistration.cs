@@ -28,8 +28,7 @@
             if (extensions == null) throw new ArgumentNullException(nameof(extensions));
 #endif
             var registryContext = registry.CreateRegistryContext(keys, new MethodFactory<TContract>(factoryMethod), extensions);
-            IDisposable disposable;
-            registry.TryRegister(registryContext, out disposable);
+            registry.TryRegister(registryContext, out IDisposable disposable);
             return disposable;
         }
 
@@ -48,8 +47,7 @@
             if (extensions == null) throw new ArgumentNullException(nameof(extensions));
 #endif
             var registryContext = registry.CreateRegistryContext(keys, new MethodFactory<object>(factoryMethod), extensions);
-            IDisposable disposable;
-            registry.TryRegister(registryContext, out disposable);
+            registry.TryRegister(registryContext, out IDisposable disposable);
             return disposable;
         }
 

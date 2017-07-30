@@ -15,10 +15,8 @@
             [NotNull] IConverter<ITagDto, object, TypeResolverContext> converterTagDtoToObject,
             [NotNull] IConverter<IRegisterDto, IEnumerable<IRegistrationResult<IContainer>>, ConverterRegisterDtoToRegistations.Context> converterRegisterDtoToRegistationResult)
         {
-            if (converterTagDtoToObject == null) throw new ArgumentNullException(nameof(converterTagDtoToObject));
-            if (converterRegisterDtoToRegistationResult == null) throw new ArgumentNullException(nameof(converterRegisterDtoToRegistationResult));
-            _converterTagDtoToObject = converterTagDtoToObject;
-            _converterRegisterDtoToRegistationResult = converterRegisterDtoToRegistationResult;
+            _converterTagDtoToObject = converterTagDtoToObject ?? throw new ArgumentNullException(nameof(converterTagDtoToObject));
+            _converterRegisterDtoToRegistationResult = converterRegisterDtoToRegistationResult ?? throw new ArgumentNullException(nameof(converterRegisterDtoToRegistationResult));
         }
 
         public bool TryConvert(IConfigurationDto configurationElements, out IEnumerable<IRegistrationResult<IContainer>> value, Context context)
@@ -33,55 +31,46 @@
             var usings = new List<string>(context.TypeResolverContext.Usings);
             foreach (var configurationStatement in configurationElements)
             {
-                var referenceDto = configurationStatement as IReferenceDto;
-                if (referenceDto != null)
+                switch (configurationStatement)
                 {
-                    references.Add(Assembly.Load(new AssemblyName(referenceDto.Reference)));
-                    continue;
-                }
+                    case IReferenceDto referenceDto:
+                        references.Add(Assembly.Load(new AssemblyName(referenceDto.Reference)));
+                        break;
 
-                var usingDto = configurationStatement as IUsingDto;
-                if (usingDto != null)
-                {
-                    usings.Add(usingDto.Using);
-                    continue;
-                }
+                    case IUsingDto usingDto:
+                        usings.Add(usingDto.Using);
+                        break;
 
-                var containerDto = configurationStatement as IContainerDto;
-                if (containerDto != null)
-                {
-                    var curTypeResolverContext = new TypeResolverContext(references, usings);
-                    object containerTag = null;
-                    if (containerDto.Tag != null)
-                    {
-                        if (!_converterTagDtoToObject.TryConvert(containerDto.Tag, out containerTag, curTypeResolverContext))
+                    case IContainerDto containerDto:
+                        var curTypeResolverContext = new TypeResolverContext(references, usings);
+                        object containerTag = null;
+                        if (containerDto.Tag != null)
                         {
-                            throw new Exception($"Invalid container tag {containerDto.Tag.Value}");
+                            if (!_converterTagDtoToObject.TryConvert(containerDto.Tag, out containerTag, curTypeResolverContext))
+                            {
+                                throw new Exception($"Invalid container tag {containerDto.Tag.Value}");
+                            }
                         }
-                    }
 
-                    //foreach (var registration in Apply(container.CreateChild(containerTag), reflection, curTypeResolverContext, containerDto.Statements))
-                    foreach (var registration in Convert(containerDto.Statements, new Context(context.Container.CreateChild(containerTag), new TypeResolverContext(references, usings))))
-                    {
-                        yield return registration;
-                    }
+                        //foreach (var registration in Apply(container.CreateChild(containerTag), reflection, curTypeResolverContext, containerDto.Statements))
+                        foreach (var registration in Convert(containerDto.Statements, new Context(context.Container.CreateChild(containerTag), new TypeResolverContext(references, usings))))
+                        {
+                            yield return registration;
+                        }
+                        break;
 
-                    continue;
-                }
+                    case IRegisterDto registerDto:
+                        IEnumerable<IRegistrationResult<IContainer>> registrations;
+                        if (!_converterRegisterDtoToRegistationResult.TryConvert(registerDto, out registrations, new ConverterRegisterDtoToRegistations.Context(context.Container, new TypeResolverContext(references, usings))))
+                        {
+                            throw new Exception($"Invalid defenition of {registerDto.AutowiringTypeName}");
+                        }
 
-                var registerDto = configurationStatement as IRegisterDto;
-                if (registerDto != null)
-                {
-                    IEnumerable<IRegistrationResult<IContainer>> registrations;
-                    if (!_converterRegisterDtoToRegistationResult.TryConvert(registerDto, out registrations, new ConverterRegisterDtoToRegistations.Context(context.Container, new TypeResolverContext(references, usings))))
-                    {
-                        throw new Exception($"Invalid defenition of {registerDto.AutowiringTypeName}");
-                    }
-
-                    foreach (var registration in registrations)
-                    {
-                        yield return registration;
-                    }
+                        foreach (var registration in registrations)
+                        {
+                            yield return registration;
+                        }
+                        break;
                 }
             }
         }
@@ -90,10 +79,8 @@
         {
             public Context([NotNull] IContainer container, [NotNull] TypeResolverContext typeResolverContext)
             {
-                if (container == null) throw new ArgumentNullException(nameof(container));
-                if (typeResolverContext == null) throw new ArgumentNullException(nameof(typeResolverContext));
-                Container = container;
-                TypeResolverContext = typeResolverContext;
+                Container = container ?? throw new ArgumentNullException(nameof(container));
+                TypeResolverContext = typeResolverContext ?? throw new ArgumentNullException(nameof(typeResolverContext));
             }
 
             public IContainer Container { get; }

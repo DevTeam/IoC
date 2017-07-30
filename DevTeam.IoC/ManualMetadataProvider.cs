@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Reflection;
     using Contracts;
@@ -15,6 +16,7 @@
         [CanBeNull] private PropertyMetadata[] _properties;
         [CanBeNull] private IDictionary<MethodInfo, IParameterMetadata[]> _methodsDict;
 
+        [SuppressMessage("ReSharper", "JoinNullCheckWithUsage")]
         public ManualMetadataProvider(
             [NotNull] IMetadataProvider defaultMetadataProvider,
             [NotNull] IReflection reflection,
@@ -71,8 +73,7 @@
 #if DEBUG
             if (method == null) throw new ArgumentNullException(nameof(method));
 #endif
-            var methodInfo = method as MethodInfo;
-            if (methodInfo != null && method.DeclaringType != null)
+            if (method is MethodInfo methodInfo && method.DeclaringType != null)
             {
                 var methodsDict = GetMethodsInternal(method.DeclaringType);
                 if (methodsDict.TryGetValue(methodInfo, out IParameterMetadata[] pars))

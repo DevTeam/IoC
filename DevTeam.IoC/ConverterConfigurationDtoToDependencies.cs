@@ -13,8 +13,7 @@
         public ConverterConfigurationDtoToDependencies(
             [NotNull] ITypeResolver typeResolver)
         {
-            if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
-            _typeResolver = typeResolver;
+            _typeResolver = typeResolver ?? throw new ArgumentNullException(nameof(typeResolver));
         }
 
         public bool TryConvert(IConfigurationDto configurationDto, out IEnumerable<IConfiguration> value, IContainer container)
@@ -23,7 +22,7 @@
             return true;
         }
 
-        public IEnumerable<IConfiguration> Convert(IConfigurationDto configurationDto, IContainer container)
+        private IEnumerable<IConfiguration> Convert(IConfigurationDto configurationDto, IContainer container)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
             var reflection = container.Resolve().Instance<IReflection>();
@@ -31,71 +30,54 @@
             var usings = new List<string>();
             foreach (var configurationStatement in configurationDto)
             {
-                var referenceDto = configurationStatement as IReferenceDto;
-                if (referenceDto != null)
+                Type configurationType;
+                switch (configurationStatement)
                 {
-                    references.Add(Assembly.Load(new AssemblyName(referenceDto.Reference)));
-                    continue;
-                }
+                    case IReferenceDto referenceDto:
+                        references.Add(Assembly.Load(new AssemblyName(referenceDto.Reference)));
+                        break;
 
-                var usingDto = configurationStatement as IUsingDto;
-                if (usingDto != null)
-                {
-                    usings.Add(usingDto.Using);
-                    continue;
-                }
+                    case IUsingDto usingDto:
+                        usings.Add(usingDto.Using);
+                        break;
 
-                var dependencyFeatureDto = configurationStatement as IDependencyFeatureDto;
-                if (dependencyFeatureDto != null)
-                {
-                    yield return container.Feature(dependencyFeatureDto.Feature);
-                    continue;
-                }
+                    case IDependencyFeatureDto dependencyFeatureDto:
+                        yield return container.Feature(dependencyFeatureDto.Feature);
+                        break;
 
-                var dependencyConfigurationDto = configurationStatement as IDependencyConfigurationDto;
-                if (dependencyConfigurationDto != null)
-                {
-                    Type configurationType;
-                    if (!_typeResolver.TryResolveType(references, usings, dependencyConfigurationDto.ConfigurationTypeName, out configurationType) || !reflection.GetType(typeof(IConfiguration)).IsAssignableFrom(reflection.GetType(configurationType)))
-                    {
-                        throw new Exception($"Invalid configuration type {configurationType}");
-                    }
+                    case IDependencyConfigurationDto dependencyConfigurationDto:
+                        if (!_typeResolver.TryResolveType(references, usings, dependencyConfigurationDto.ConfigurationTypeName, out configurationType) || !reflection.GetType(typeof(IConfiguration)).IsAssignableFrom(reflection.GetType(configurationType)))
+                        {
+                            throw new Exception($"Invalid configuration type {configurationType}");
+                        }
 
-                    using (
-                        var childContainer = container.CreateChild()
-                        .Register().Contract<IConfiguration>().Autowiring(configurationType).ToSelf())
-                    {
-                        yield return childContainer.Resolve().Instance<IConfiguration>();
-                    }
+                        using (var childContainer = container.CreateChild()
+                                .Register().Contract<IConfiguration>().Autowiring(configurationType).ToSelf())
+                        {
+                            yield return childContainer.Resolve().Instance<IConfiguration>();
+                        }
+                        break;
 
-                    continue;
-                }
+                    case IDependencyAssemblyDto dependencyAssemblyDto:
+                        var assembly = Assembly.Load(new AssemblyName(dependencyAssemblyDto.AssemblyName));
+                        yield return container.Resolve().State<Assembly>(0).Instance<IConfiguration>(assembly);
+                        break;
 
-                var dependencyAssemblyDto = configurationStatement as IDependencyAssemblyDto;
-                if (dependencyAssemblyDto != null)
-                {
-                    var assembly = Assembly.Load(new AssemblyName(dependencyAssemblyDto.AssemblyName));
-                    yield return container.Resolve().State<Assembly>(0).Instance<IConfiguration>(assembly);
-                    continue;
-                }
+                    case IDependencyReferenceDto dependencyReferenceDto:
+                        if (!_typeResolver.TryResolveType(references, usings, dependencyReferenceDto.ConfigurationTypeName, out configurationType) || !reflection.GetType(typeof(IConfiguration)).IsAssignableFrom(reflection.GetType(configurationType)))
+                        {
+                            throw new Exception($"Invalid configuration type {configurationType}");
+                        }
 
-                var dependencyReferenceDto = configurationStatement as IDependencyReferenceDto;
-                if (dependencyReferenceDto != null)
-                {
-                    Type configurationType;
-                    if (!_typeResolver.TryResolveType(references, usings, dependencyReferenceDto.ConfigurationTypeName, out configurationType) || !reflection.GetType(typeof(IConfiguration)).IsAssignableFrom(reflection.GetType(configurationType)))
-                    {
-                        throw new Exception($"Invalid configuration type {configurationType}");
-                    }
-
-                    using (var childContainer = container.CreateChild())
-                    {
-                        var referenceDescriptionResolver = childContainer.Resolve().Instance<IReferenceDescriptionResolver>();
-                        var reference = referenceDescriptionResolver.ResolveReference(dependencyReferenceDto.Reference);
-                        var configurationDescriptionDto = childContainer.Resolve().State<string>(0).Instance<IConfigurationDescriptionDto>(reference);
-                        var nestedConfigurationDto = childContainer.Resolve().Tag(configurationType).State<IConfigurationDescriptionDto>(0).Instance<IConfigurationDto>(configurationDescriptionDto);
-                        yield return container.Resolve().Instance<IConfiguration>(nestedConfigurationDto);
-                    }
+                        using (var childContainer = container.CreateChild())
+                        {
+                            var referenceDescriptionResolver = childContainer.Resolve().Instance<IReferenceDescriptionResolver>();
+                            var reference = referenceDescriptionResolver.ResolveReference(dependencyReferenceDto.Reference);
+                            var configurationDescriptionDto = childContainer.Resolve().State<string>(0).Instance<IConfigurationDescriptionDto>(reference);
+                            var nestedConfigurationDto = childContainer.Resolve().Tag(configurationType).State<IConfigurationDescriptionDto>(0).Instance<IConfigurationDto>(configurationDescriptionDto);
+                            yield return container.Resolve().Instance<IConfiguration>(nestedConfigurationDto);
+                        }
+                        break;
                 }
             }
         }

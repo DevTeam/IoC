@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-
+    using System.Diagnostics.CodeAnalysis;
     using Contracts;
 
     internal sealed class LifetimesFactory: IInstanceFactory, IDisposable
@@ -10,6 +10,7 @@
         private readonly IList<ILifetime> _lifetimes;
         private readonly Func<ICreationContext, object> _factory;
 
+        [SuppressMessage("ReSharper", "JoinNullCheckWithUsage")]
         public LifetimesFactory(IList<ILifetime> lifetimes)
         {
 #if DEBUG

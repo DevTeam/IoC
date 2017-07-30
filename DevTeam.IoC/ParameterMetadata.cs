@@ -70,7 +70,7 @@
 #endif
         private bool Equals<T>([CanBeNull] IEnumerable<T> s1, [CanBeNull] IEnumerable<T> s2)
         {
-            if (Object.Equals(s1, s2))
+            if (object.Equals(s1, s2))
             {
                 return true;
             }

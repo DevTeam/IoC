@@ -14,10 +14,9 @@
 
         public JsonDerivedTypeConverter([NotNull] IReflection reflection, params Type[] derivedTypes)
         {
-            if (reflection == null) throw new ArgumentNullException(nameof(reflection));
             if (derivedTypes == null) throw new ArgumentNullException(nameof(derivedTypes));
             if (derivedTypes.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(derivedTypes));
-            _reflection = reflection;
+            _reflection = reflection ?? throw new ArgumentNullException(nameof(reflection));
             _derivedTypes = derivedTypes.ToDictionary(i => i, GetPropertiesNames);
         }
 
@@ -48,7 +47,7 @@
                     return jsonObject.ToObject(type, serializer);
                 }
 
-            throw new NotImplementedException();
+            throw new InvalidOperationException("Type was not found");
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

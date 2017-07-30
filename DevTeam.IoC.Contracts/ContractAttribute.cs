@@ -8,8 +8,7 @@
     {
         public ContractAttribute([NotNull][ItemNotNull] params Type[] contractTypes)
         {
-            if (contractTypes == null) throw new ArgumentNullException(nameof(contractTypes));
-            ContractTypes = contractTypes;
+            ContractTypes = contractTypes ?? throw new ArgumentNullException(nameof(contractTypes));
         }
 
         public Type[] ContractTypes { [NotNull] get; }

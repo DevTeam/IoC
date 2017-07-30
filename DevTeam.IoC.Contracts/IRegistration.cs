@@ -4,7 +4,7 @@
 
     [PublicAPI]
     public interface IRegistration<out T> : IToken<IRegistration<T>>
-          where T : IContainer
+          where T : IResolver
     {
         [NotNull]
         IRegistrationResult<T> FactoryMethod([NotNull] Func<ICreationContext, object> factoryMethod);

@@ -16,11 +16,9 @@
             [NotNull] Type configurationType,
             [NotNull] string description)
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            if (configurationType == null) throw new ArgumentNullException(nameof(configurationType));
             if (description.IsNullOrWhiteSpace()) throw new ArgumentException("Value cannot be null or whitespace.", nameof(description));
-            _resolver = resolver;
-            _configurationType = configurationType;
+            _resolver = resolver ?? throw new ArgumentNullException(nameof(resolver));
+            _configurationType = configurationType ?? throw new ArgumentNullException(nameof(configurationType));
             _configuration = new Lazy<IConfiguration>(() => CreateConfiguration(description));
         }
 

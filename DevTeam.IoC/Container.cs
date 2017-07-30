@@ -62,8 +62,7 @@
             var parent = Parent;
             do
             {
-                var observableParent = parent as IObservable<IRegistrationEvent>;
-                if (observableParent != null)
+                if (parent is IObservable<IRegistrationEvent> observableParent)
                 {
                     _resources.Add(observableParent.Subscribe(cacheTracker));
                 }
@@ -120,8 +119,7 @@
                 }
 
                 var comparer = registrationItem.KeyComparer != null ? (IEqualityComparer<IKey>)registrationItem.KeyComparer : EqualityComparer<IKey>.Default;
-                Dictionary<IKey, RegistrationItem> registrations;
-                if (!_registrations.TryGetValue(comparer, out registrations))
+                if (!_registrations.TryGetValue(comparer, out Dictionary<IKey, RegistrationItem> registrations))
                 {
                     registrations = new Dictionary<IKey, RegistrationItem>(comparer);
                     _registrations.Add(comparer, registrations);
@@ -255,7 +253,7 @@
             }
         }
 
-        IDisposable IObservable<IRegistrationEvent>.Subscribe([NotNull] IObserver<IRegistrationEvent> observer)
+        IDisposable IObservable<IRegistrationEvent>.Subscribe(IObserver<IRegistrationEvent> observer)
         {
             return _registrationSubject.Subscribe(observer);
         }

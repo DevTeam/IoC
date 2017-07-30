@@ -13,10 +13,8 @@
             [NotNull] ITypeResolver typeResolver,
             [NotNull] IConverter<string, object, Type> converterStringToObject)
         {
-            if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
-            if (converterStringToObject == null) throw new ArgumentNullException(nameof(converterStringToObject));
-            _typeResolver = typeResolver;
-            _converterStringToObject = converterStringToObject;
+            _typeResolver = typeResolver ?? throw new ArgumentNullException(nameof(typeResolver));
+            _converterStringToObject = converterStringToObject ?? throw new ArgumentNullException(nameof(converterStringToObject));
         }
 
         public bool TryConvert(ITagDto tagDto, out object value, TypeResolverContext context)
@@ -28,8 +26,7 @@
                 return false;
             }
 
-            Type type;
-            if (!_typeResolver.TryResolveType(context.References, context.Usings, tagDto.TypeName, out type))
+            if (!_typeResolver.TryResolveType(context.References, context.Usings, tagDto.TypeName, out Type type))
             {
                 type = typeof(string);
             }

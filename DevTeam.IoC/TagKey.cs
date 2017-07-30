@@ -1,6 +1,7 @@
 ﻿namespace DevTeam.IoC
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Contracts;
 
@@ -9,6 +10,7 @@
         private readonly int _hashCode;
         private readonly object _tag;
 
+        [SuppressMessage("ReSharper", "JoinNullCheckWithUsage")]
         public TagKey([NotNull] object tag)
         {
 #if DEBUG

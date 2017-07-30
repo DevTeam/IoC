@@ -10,14 +10,13 @@
 
         public static KeyFilterContext Current
         {
-            get { return _current ?? DefaultContext; }
-            private set { _current = value; }
+            get => _current ?? DefaultContext;
+            private set => _current = value;
         }
 
         public KeyFilterContext(Predicate<Type> filter)
         {
-            if (filter == null) throw new ArgumentNullException(nameof(filter));
-            Filter = filter;
+            Filter = filter ?? throw new ArgumentNullException(nameof(filter));
         }
 
         public Predicate<Type> Filter { get; }

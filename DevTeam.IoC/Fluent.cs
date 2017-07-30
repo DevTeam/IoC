@@ -17,20 +17,20 @@
 #if !NET35 && !NET40
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
-        public IConfiguring<T> Configure<T>(T resolver)
-              where T : IContainer
+        public IConfiguring<TContainer> Configure<TContainer>(TContainer container)
+              where TContainer : IContainer
         {
-            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            return new Configuring<T>(resolver);
+            if (container == null) throw new ArgumentNullException(nameof(container));
+            return new Configuring<TContainer>(container);
         }
 
 #if !NET35 && !NET40
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
-        public IRegistration<T> Register<T>(T resolver)
+        public IRegistration<T> Register<T>(T container)
               where T : IContainer
         {
-            return new Registration<T>(this, resolver);
+            return new Registration<T>(this, container);
         }
 
 #if !NET35 && !NET40

@@ -96,20 +96,21 @@
         {
             foreach (var key in keys)
             {
-                var curContractKey = key as IContractKey;
-                if (curContractKey != null && curContractKey.ContractType == contractKey.ContractType)
+                switch (key)
                 {
-                    yield return contractKey;
-                    continue;
-                }
+                    case IContractKey curContractKey:
+                        if (curContractKey.ContractType == contractKey.ContractType)
+                        {
+                            yield return contractKey;
+                        }
+                        break;
 
-                var compositeKey = key as ICompositeKey;
-                if (compositeKey != null)
-                {
-                    if (compositeKey.ContractKeys.Contains(contractKey))
-                    {
-                        yield return RootContainerConfiguration.KeyFactory.CreateCompositeKey(compositeKey.ContractKeys.Where(i => i.ContractType != contractKey.ContractType).Concat(Enumerable.Repeat(contractKey, 1)), compositeKey.TagKeys, compositeKey.StateKeys);
-                    }
+                    case ICompositeKey compositeKey:
+                        if (compositeKey.ContractKeys.Contains(contractKey))
+                        {
+                            yield return RootContainerConfiguration.KeyFactory.CreateCompositeKey(compositeKey.ContractKeys.Where(i => i.ContractType != contractKey.ContractType).Concat(Enumerable.Repeat(contractKey, 1)), compositeKey.TagKeys, compositeKey.StateKeys);
+                        }
+                        break;
                 }
             }
         }
@@ -120,9 +121,7 @@
 
             public Enumerable(IEnumerable<object> source)
             {
-                if (source == null) throw new ArgumentNullException(nameof(source));
-
-                _source = source;
+                _source = source ?? throw new ArgumentNullException(nameof(source));
             }
 
             public IEnumerator<T> GetEnumerator()
@@ -142,8 +141,7 @@
 
             public Enumerator(IEnumerator<object> source)
             {
-                if (source == null) throw new ArgumentNullException(nameof(source));
-                _source = source;
+                _source = source ?? throw new ArgumentNullException(nameof(source));
             }
 
             public T Current => (T)_source.Current;

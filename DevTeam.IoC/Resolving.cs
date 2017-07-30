@@ -9,8 +9,8 @@
 #endif
     using Contracts;
 
-    internal sealed class Resolving<T> : Token<T, IResolving<T>>, IResolving<T>
-          where T : IResolver
+    internal sealed class Resolving<TResolver> : Token<TResolver, IResolving<TResolver>>, IResolving<TResolver>
+          where TResolver : IResolver
     {
         private readonly HashSet<IContractKey> _сontractKeys = new HashSet<IContractKey>();
         [CanBeNull] private HashSet<ITagKey> _tagKeys;
@@ -19,11 +19,11 @@
         private IContractKey _singleContractKey;
         private int _contractKeysCount;
 
-        internal Resolving([NotNull] T container)
-            : base(container)
+        internal Resolving([NotNull] TResolver resolver)
+            : base(resolver)
         {
 #if DEBUG
-            if (container == null) throw new ArgumentNullException(nameof(container));
+            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
 #endif
         }
 
@@ -36,14 +36,14 @@
         [CanBeNull]
         internal IEnumerable<IStateKey> StateKeys => _stateKeys;
 
-        public override IResolving<T> Contract(params Type[] contractTypes)
+        public override IResolving<TResolver> Contract(params Type[] contractTypes)
         {
             if (contractTypes == null) throw new ArgumentNullException(nameof(contractTypes));
             AddContractKey(contractTypes.Select(type => Resolver.KeyFactory.CreateContractKey(type, true)));
             return this;
         }
 
-        public override IResolving<T> State(int index, Type stateType)
+        public override IResolving<TResolver> State(int index, Type stateType)
         {
             if (stateType == null) throw new ArgumentNullException(nameof(stateType));
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
@@ -66,7 +66,7 @@
         {
             if (stateProvider == null) throw new ArgumentNullException(nameof(stateProvider));
 #pragma warning disable 168
-            if (!TryCreateResolverContext(stateProvider, out IKey key, out IResolverContext ctx))
+            if (!TryCreateResolverContext(stateProvider, out IKey _, out IResolverContext ctx))
 #pragma warning restore 168
             {
                 instance = default(object);
@@ -102,7 +102,7 @@
             }
 
 #pragma warning disable 168
-            if (!TryCreateResolverContext(stateProvider, out IKey key, out IResolverContext ctx))
+            if (!TryCreateResolverContext(stateProvider, out IKey _, out IResolverContext ctx))
 #pragma warning restore 168
             {
                 instance = default(TContract);

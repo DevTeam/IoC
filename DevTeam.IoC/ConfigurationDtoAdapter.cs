@@ -20,12 +20,9 @@
             [NotNull] IConverter<IConfigurationDto, IEnumerable<IRegistrationResult<IContainer>>, ConverterConfigurationDtoToRegistrations.Context> converterConfigurationDtoToRegistrations,
             [NotNull] IConverter<IConfigurationDto, IEnumerable<IConfiguration>, IContainer> converterConfigurationDtoToDependencies)
         {
-            if (configurationDto == null) throw new ArgumentNullException(nameof(configurationDto));
-            if (converterConfigurationDtoToRegistrations == null) throw new ArgumentNullException(nameof(converterConfigurationDtoToRegistrations));
-            if (converterConfigurationDtoToDependencies == null) throw new ArgumentNullException(nameof(converterConfigurationDtoToDependencies));
-            _configurationDto = configurationDto;
-            _converterConfigurationDtoToRegistrations = converterConfigurationDtoToRegistrations;
-            _converterConfigurationDtoToDependencies = converterConfigurationDtoToDependencies;
+            _configurationDto = configurationDto ?? throw new ArgumentNullException(nameof(configurationDto));
+            _converterConfigurationDtoToRegistrations = converterConfigurationDtoToRegistrations ?? throw new ArgumentNullException(nameof(converterConfigurationDtoToRegistrations));
+            _converterConfigurationDtoToDependencies = converterConfigurationDtoToDependencies ?? throw new ArgumentNullException(nameof(converterConfigurationDtoToDependencies));
         }
 
         public IEnumerable<IConfiguration> GetDependencies(IContainer container)
