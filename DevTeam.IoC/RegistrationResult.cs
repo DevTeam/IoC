@@ -19,6 +19,8 @@
             _registration = registration;
         }
 
+        internal Registration<TContainer> Registration => _registration;
+
         public void AddResource(IDisposable resource)
         {
             _resources.Add(resource);
@@ -26,7 +28,7 @@
 
         public IRegistration<TContainer> And()
         {
-            return _registration;
+            return _registration.New();
         }
 
         public TContainer ToSelf()

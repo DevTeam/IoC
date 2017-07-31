@@ -46,5 +46,8 @@
         IRegistration<T> Scope([NotNull] IScope scope);
 
         IRegistration<T> Scope(Wellknown.Scope scope);
+
+        [NotNull]
+        IRegistration<T> To();
     }
 }

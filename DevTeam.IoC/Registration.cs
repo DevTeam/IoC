@@ -10,29 +10,66 @@
     {
         // ReSharper disable once StaticMemberInGenericType
         private static readonly IExtension[] EmptyExtensions = new IExtension[0];
-        private readonly List<HashSet<IContractKey>> _contractKeys = new List<HashSet<IContractKey>>();
-        private readonly HashSet<IKey> _registrationKeys = new HashSet<IKey>();
-        private readonly Lazy<IMethodFactory> _instanceFactoryProvider;
-        private readonly RegistrationResult<TContainer> _result;
-        private readonly ICache<Type, IInstanceFactory> _resolverFactoryCache;
-        private readonly IReflection _reflection;
+
+        [NotNull] private readonly IFluent _fluent;
+        [NotNull] private readonly TContainer _container;
+        [CanBeNull] private Registration<TContainer> _defaultRegistration;
+        [NotNull] private readonly Lazy<IMethodFactory> _instanceFactoryProvider;
+        [NotNull] private readonly RegistrationResult<TContainer> _result;
+        [NotNull] private readonly IReflection _reflection;
+        [CanBeNull] private readonly ICache<Type, IInstanceFactory> _resolverFactoryCache;
+
+        [NotNull] private readonly HashSet<IKey> _registrationKeys;
+        [NotNull] private readonly List<HashSet<IContractKey>> _contractKeys;
         [CanBeNull] private HashSet<ITagKey> _tagKeys;
         [CanBeNull] private HashSet<IStateKey> _stateKeys;
         [CanBeNull] private List<IExtension> _extensions;
 
-        internal Registration([NotNull] IFluent fluent, [NotNull] TContainer container)
+        internal Registration(
+            [NotNull] IFluent fluent,
+            [NotNull] TContainer container,
+            [CanBeNull] Registration<TContainer> defaultRegistration = null)
             : base(container)
         {
-            if (fluent == null) throw new ArgumentNullException(nameof(fluent));
             if (container == null) throw new ArgumentNullException(nameof(container));
+            _fluent = fluent ?? throw new ArgumentNullException(nameof(fluent));
+            _container = container;
             _instanceFactoryProvider = new Lazy<IMethodFactory>(GetInstanceFactoryProvider);
             _result = new RegistrationResult<TContainer>(this);
             var cacheProvider = container as IProvider<ICache<Type, IInstanceFactory>>;
             cacheProvider?.TryGet(out _resolverFactoryCache);
             _reflection = container.Resolve().Instance<IReflection>();
+
+            if (defaultRegistration != null)
+            {
+                _defaultRegistration = defaultRegistration;
+                _registrationKeys = new HashSet<IKey>(defaultRegistration._registrationKeys);
+                _contractKeys = new List<HashSet<IContractKey>>(defaultRegistration._contractKeys);
+                if (defaultRegistration._stateKeys != null)
+                {
+                    _stateKeys = new HashSet<IStateKey>(defaultRegistration._stateKeys);
+                }
+
+                if (defaultRegistration._tagKeys != null)
+                {
+                    _tagKeys = new HashSet<ITagKey>(defaultRegistration._tagKeys);
+                }
+
+                if (defaultRegistration._extensions != null)
+                {
+                    _extensions = new List<IExtension>(defaultRegistration._extensions);
+                }
+            }
+            else
+            {
+                _registrationKeys = new HashSet<IKey>();
+                _contractKeys = new List<HashSet<IContractKey>>();
+            }
         }
 
-        private List<IExtension> Extensions => _extensions ?? (_extensions = new List<IExtension>());
+        internal IEnumerable<IKey> Keys => GetRegistryKeys();
+
+        internal List<IExtension> Extensions => _extensions ?? (_extensions = new List<IExtension>());
 
         public IRegistration<TContainer> Attributes(Type implementationType)
         {
@@ -127,14 +164,15 @@
             else
             {
                 FactoryMethodInternal(ctx =>
-                {
-                    if (!metadataProvider.TryResolveType(implementationType, out Type currentResolvedType, ctx))
                     {
-                        throw new InvalidOperationException("Can not define type to resolve from type {currentResolvedType}");
-                    }
+                        if (!metadataProvider.TryResolveType(implementationType, out Type currentResolvedType, ctx))
+                        {
+                            throw new InvalidOperationException("Can not define type to resolve from type {currentResolvedType}");
+                        }
 
-                    return CreateFactory(currentResolvedType, metadataProvider).Create(ctx);
-                }, implementationType);
+                        return CreateFactory(currentResolvedType, metadataProvider).Create(ctx);
+                    },
+                    implementationType);
             }
 
             return _result;
@@ -165,11 +203,22 @@
             return Autowiring(implementationType);
         }
 
+        public IRegistration<TContainer> To()
+        {
+            _defaultRegistration = new Registration<TContainer>(_fluent, _container, this);
+            return new Registration<TContainer>(_fluent, _container, _defaultRegistration);
+        }
+
         internal TContainer ToSelf(params IDisposable[] resource)
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
             Resolver.Resolve().Instance<IInternalResourceStore>().AddResource(new CompositeDisposable(resource));
             return Resolver;
+        }
+
+        internal Registration<TContainer> New()
+        {
+            return new Registration<TContainer>(_fluent, _container, _defaultRegistration);
         }
 
         protected override bool AddContractKey([NotNull] IEnumerable<IContractKey> keys)
@@ -233,18 +282,26 @@
             return hasMetadata;
         }
 
-        private void AppendRegistryKeys()
+        private IEnumerable<IKey> GetRegistryKeys()
         {
             foreach (var contractKeys in _contractKeys)
             {
                 if (contractKeys.Count == 1 && _tagKeys == null && _stateKeys == null)
                 {
-                    _registrationKeys.Add(contractKeys.Single());
+                    yield return contractKeys.Single();
                 }
                 else
                 {
-                    _registrationKeys.Add(Resolver.KeyFactory.CreateCompositeKey(contractKeys, _tagKeys, _stateKeys));
+                    yield return Resolver.KeyFactory.CreateCompositeKey(contractKeys, _tagKeys, _stateKeys);
                 }
+            }
+        }
+
+        private void AppendRegistryKeys()
+        {
+            foreach (var registryKey in GetRegistryKeys())
+            {
+                _registrationKeys.Add(registryKey);
             }
 
             _contractKeys.Clear();
