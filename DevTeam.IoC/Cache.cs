@@ -32,11 +32,11 @@
 #if !NET35 && !NET40
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
+        // ReSharper disable once JoinNullCheckWithUsage
         public void Set(TKey key, TValue value)
         {
 #if DEBUG
             if (key == null) throw new ArgumentNullException(nameof(key));
-            // ReSharper disable once JoinNullCheckWithUsage
             if (value == null) throw new ArgumentNullException(nameof(value));
 #endif
             _cache[key] = value;

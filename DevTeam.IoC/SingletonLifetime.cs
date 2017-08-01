@@ -37,25 +37,30 @@
             if (lifetimeContext == null) throw new ArgumentNullException(nameof(lifetimeContext));
             if (creationContext == null) throw new ArgumentNullException(nameof(creationContext));
 #endif
-            var genericTypes = (creationContext.ResolverContext.Key as IContractKey)?.GenericTypeArguments ?? (creationContext.ResolverContext.Key as ICompositeKey)?.ContractKeys?.FirstOrDefault(i => i.GenericTypeArguments.Length > 0)?.GenericTypeArguments;
-            return genericTypes != null ? new Key(genericTypes) : Key.Empty;
+            var compositeKey = creationContext.ResolverContext.Key as ICompositeKey;
+            var genericTypes = (creationContext.ResolverContext.Key as IContractKey)?.GenericTypeArguments ?? compositeKey?.ContractKeys?.FirstOrDefault(i => i.GenericTypeArguments.Length > 0)?.GenericTypeArguments;
+            return new Key(creationContext.ResolverContext.RegistryContext, genericTypes);
         }
 
         internal sealed class Key
         {
-            public static readonly Key Empty = new Key();
-            private readonly Type[] _types;
+            private readonly IRegistryContext _registryContext;
+            [CanBeNull] private readonly Type[] _types;
             private readonly int _hashCode;
 
-            public Key(params Type[] types)
+            public Key(IRegistryContext registryContext, [CanBeNull] params Type[] types)
             {
+                _registryContext = registryContext;
                 _types = types;
-                _hashCode = 1;
-                foreach (var type in _types)
+                _hashCode = registryContext.GetHashCode();
+                if (_types != null)
                 {
-                    unchecked
+                    foreach (var type in _types)
                     {
-                        _hashCode = (type.GetHashCode() * 397) ^ _hashCode;
+                        unchecked
+                        {
+                            _hashCode = (type.GetHashCode() * 397) ^ _hashCode;
+                        }
                     }
                 }
             }
@@ -80,7 +85,7 @@
 #endif
             private bool Equals(Key other)
             {
-                return _types.SequenceEqual(other._types);
+                return _registryContext.Equals(other._registryContext) && (_types == other._types || (_types != null && other._types != null && _types.SequenceEqual(other._types)));
             }
         }
 

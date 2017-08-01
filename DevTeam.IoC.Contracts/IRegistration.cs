@@ -48,6 +48,6 @@
         IRegistration<T> Scope(Wellknown.Scope scope);
 
         [NotNull]
-        IRegistration<T> To();
+        IRegistration<T> With();
     }
 }

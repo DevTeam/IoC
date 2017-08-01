@@ -11,8 +11,6 @@
         // ReSharper disable once StaticMemberInGenericType
         private static readonly IExtension[] EmptyExtensions = new IExtension[0];
 
-        [NotNull] private readonly IFluent _fluent;
-        [NotNull] private readonly TContainer _container;
         [CanBeNull] private Registration<TContainer> _defaultRegistration;
         [NotNull] private readonly Lazy<IMethodFactory> _instanceFactoryProvider;
         [NotNull] private readonly RegistrationResult<TContainer> _result;
@@ -31,9 +29,6 @@
             [CanBeNull] Registration<TContainer> defaultRegistration = null)
             : base(container)
         {
-            if (container == null) throw new ArgumentNullException(nameof(container));
-            _fluent = fluent ?? throw new ArgumentNullException(nameof(fluent));
-            _container = container;
             _instanceFactoryProvider = new Lazy<IMethodFactory>(GetInstanceFactoryProvider);
             _result = new RegistrationResult<TContainer>(this);
             var cacheProvider = container as IProvider<ICache<Type, IInstanceFactory>>;
@@ -203,10 +198,10 @@
             return Autowiring(implementationType);
         }
 
-        public IRegistration<TContainer> To()
+        public IRegistration<TContainer> With()
         {
-            _defaultRegistration = new Registration<TContainer>(_fluent, _container, this);
-            return new Registration<TContainer>(_fluent, _container, _defaultRegistration);
+            _defaultRegistration = new Registration<TContainer>(Fluent, Resolver, this);
+            return new Registration<TContainer>(Fluent, Resolver, _defaultRegistration);
         }
 
         internal TContainer ToSelf(params IDisposable[] resource)
@@ -218,7 +213,7 @@
 
         internal Registration<TContainer> New()
         {
-            return new Registration<TContainer>(_fluent, _container, _defaultRegistration);
+            return new Registration<TContainer>(Fluent, Resolver, _defaultRegistration);
         }
 
         protected override bool AddContractKey([NotNull] IEnumerable<IContractKey> keys)

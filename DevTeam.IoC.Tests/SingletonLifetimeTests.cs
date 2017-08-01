@@ -14,6 +14,7 @@
         private readonly Mock<ILifetimeContext> _lifetimeContext;
         private readonly Mock<IResolverContext> _resolverContext;
         private readonly Mock<ICreationContext> _creationContext;
+        private Mock<IRegistryContext> _registryContext;
 
         public SingletonLifetimeTests()
         {
@@ -21,8 +22,10 @@
             _baseLifetime = new Mock<ILifetime>();
             _lifetimeContext = new Mock<ILifetimeContext>();
             _resolverContext = new Mock<IResolverContext>();
+            _registryContext = new Mock<IRegistryContext>();
             _creationContext = new Mock<ICreationContext>();
             _creationContext.SetupGet(i => i.ResolverContext).Returns(_resolverContext.Object);
+            _resolverContext.SetupGet(i => i.RegistryContext).Returns(_registryContext.Object);
         }
 
         [Fact]
@@ -89,7 +92,7 @@
         }
 
         [Fact]
-        public void ShouldReturnTheSameObjectWhenDifferentTags()
+        public void ShouldReturnSameObjectWhenDifferentTags()
         {
             // Given
             var obj = new object();
