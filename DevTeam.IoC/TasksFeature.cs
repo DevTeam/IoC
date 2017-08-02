@@ -52,7 +52,7 @@
             var genericContractKey = ctx.Key as IContractKey ?? (ctx.Key as ICompositeKey)?.ContractKeys.SingleOrDefault();
             if (genericContractKey == null)
             {
-                throw new InvalidOperationException();
+                throw new ContainerException($"Can not define a generic type argument for Task<>.\nDetails:\n{creationContext}");
             }
 
             var taskValueType = genericContractKey.GenericTypeArguments.First();

@@ -79,9 +79,9 @@
         // Constructor with AutowiringAttribute
         [InlineData(typeof(CtorClassWithAutowiringAttribute), true, ".ctor(System.Int32)", null)]
         // Several ctor with AutowiringAttribute
-        [InlineData(typeof(SeveralCtorClassWithAutowiringAttribute), false, null, "Too many resolving constructors")]
+        [InlineData(typeof(SeveralCtorClassWithAutowiringAttribute), false, null, "Too many public resolving constructors in the type")]
         // Several ctor
-        [InlineData(typeof(SeveralCtorClass), false, null, "Resolving constructor was not found")]
+        [InlineData(typeof(SeveralCtorClass), false, null, "Any public resolving constructor was not found in the type")]
         public void ShouldSelectConstructor(Type implementationType, bool expectedResult, string expectedCtorName, string expectedExceptionPattern)
         {
             // Given

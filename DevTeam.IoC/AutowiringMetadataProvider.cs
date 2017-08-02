@@ -101,12 +101,12 @@
             }
             catch (InvalidOperationException)
             {
-                error = new InvalidOperationException("Too many resolving constructors.");
+                error = new ContainerException($"Too many public resolving constructors in the type \"{implementationType}\".");
                 constructor = default(ConstructorInfo);
                 return false;
             }
 
-            error = new InvalidOperationException("Resolving constructor was not found.");
+            error = new ContainerException($"Any public resolving constructor was not found in the type \"{implementationType}\".");
             constructor = default(ConstructorInfo);
             return false;
         }

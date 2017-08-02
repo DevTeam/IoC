@@ -56,7 +56,7 @@
             if (stateProvider == null) throw new ArgumentNullException(nameof(stateProvider));
             if (!TryCreateResolverContext(stateProvider, out IKey key, out IResolverContext ctx))
             {
-                throw new InvalidOperationException(GetCantResolveErrorMessage(key));
+                throw new ContainerException(GetCantResolveErrorMessage(key));
             }
 
             return Resolver.Resolve(ctx, stateProvider);
@@ -87,7 +87,7 @@
 
             if (!TryCreateResolverContext(stateProvider, out IKey key, out IResolverContext ctx))
             {
-                throw new InvalidOperationException(GetCantResolveErrorMessage(key));
+                throw new ContainerException(GetCantResolveErrorMessage(key));
             }
 
             return (TContract)Resolver.Resolve(ctx, stateProvider);
@@ -311,7 +311,7 @@
 
         private string GetCantResolveErrorMessage(IKey key)
         {
-            return $"Can't resolve {key}.{Environment.NewLine}{Environment.NewLine}{Resolver}";
+            return $"Can't resolve {key}.\nDetails:\n{Resolver}";
         }
 
 #if !NET35 && !NET40

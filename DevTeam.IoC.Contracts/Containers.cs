@@ -113,7 +113,7 @@
             var value = TryGetState(ctx, index, stateType);
             if (value == null)
             {
-                throw new InvalidOperationException($"State {index} of type \"{stateType.FullName}\" can not be null.");
+                throw new ContainerException($"State {index} of type \"{stateType.FullName}\" can not be null.");
             }
 
             return value;
@@ -130,7 +130,7 @@
             var fluentProvider = resolver as IProvider<IFluent>;
             if (fluentProvider == null || !fluentProvider.TryGet(out IFluent fluent))
             {
-                throw new InvalidOperationException($"{typeof(IProvider<IFluent>)} is not supported. Only \"{nameof(IContainer)}\" is supported.");
+                throw new ContainerException($"{typeof(IProvider<IFluent>)} is not supported.\nDetails:\n{resolver}");
             }
 
             return fluent;

@@ -84,9 +84,23 @@
                 _parametersArray[i] = ResolveParameter(i, creationContext, _parameters, _keys);
             }
 
-            var instance = _constructor(_parametersArray);
-            if (_methods != null)
+            try
             {
+                object instance;
+                try
+                {
+                    instance = _constructor(_parametersArray);
+                }
+                catch (Exception ex)
+                {
+                    throw new ContainerException($"Error during creation of object using constructor {_constructor}.\nDetails:\n{creationContext}", ex);
+                }
+
+                if (_methods == null)
+                {
+                    return instance;
+                }
+
                 foreach (var method in _methods)
                 {
                     for (var i = 0; i < method.ParametersArray.Length; i++)
@@ -94,11 +108,22 @@
                         method.ParametersArray[i] = ResolveParameter(i, creationContext, method.Parameters, method.Keys);
                     }
 
-                    method.Method(instance, method.ParametersArray);
+                    try
+                    {
+                        method.Method(instance, method.ParametersArray);
+                    }
+                    catch (Exception exception)
+                    {
+                        throw new ContainerException($"Error during an invokation of method {method}.\nDetails:\n{creationContext}", exception);
+                    }
                 }
-            }
 
-            return instance;
+                return instance;
+            }
+            catch (Exception ex)
+            {
+                throw new ContainerException($"Error during creation of object.\nDetails:\n{creationContext}", ex);
+            }
         }
 
         [CanBeNull]
@@ -117,7 +142,7 @@
                 var container = creationContext.ResolverContext.RegistryContext.Container;
                 if (!container.TryCreateResolverContext(key, out IResolverContext ctx))
                 {
-                    throw new InvalidOperationException(GetCantResolveErrorMessage(container, key));
+                    throw new ContainerException(GetCantResolveErrorMessage(container, key));
                 }
 
                 return container.Resolve(ctx, ParamsStateProvider.Create(parameterMetadata.State));
@@ -133,7 +158,7 @@
 
         private static string GetCantResolveErrorMessage(IResolver resolver, IKey key)
         {
-            return $"Can't resolve {key}.{Environment.NewLine}{Environment.NewLine}{resolver}";
+            return $"Can't resolve {key}.\nDetails:\n{resolver}";
         }
 
         private struct MethodData

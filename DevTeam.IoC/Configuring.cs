@@ -106,7 +106,7 @@
                         continue;
                     }
 
-                    var curConfig = enumerator.Current ?? throw new InvalidOperationException("Invalid state of configuration");
+                    var curConfig = enumerator.Current ?? throw new ContainerException("Invalid state of configuration");
                     foreach (var config in GetConfigurations(curConfig.GetDependencies(_container), allConfigurations))
                     {
                         yield return config;

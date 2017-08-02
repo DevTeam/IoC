@@ -21,6 +21,11 @@
             if (typeInfo.IsConstructedGenericType)
             {
                 _contractType = contractType.GetGenericTypeDefinition();
+                if (_contractType == null)
+                {
+                    throw new ContainerException($"Generic type defenition for type \"{contractType}\" is not defined.");
+                }
+
                 _genericTypeArguments = typeInfo.GenericTypeArguments;
             }
             else
@@ -29,7 +34,7 @@
                 _genericTypeArguments = EmptyGenericTypeArguments;
             }
 
-            _hashCode = _contractType?.GetHashCode() ?? throw new InvalidOperationException(nameof(ContractType));
+            _hashCode = _contractType.GetHashCode();
         }
 
         public Type ContractType => _contractType;

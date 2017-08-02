@@ -125,10 +125,10 @@
         private static object ResolveLazy(ICreationContext creationContext, IReflection reflection)
         {
             var resolverContext = creationContext.ResolverContext;
-            var genericTypeArguments = GetGenericTypeArguments(resolverContext);
+            var genericTypeArguments = GetGenericTypeArguments(creationContext);
             if (genericTypeArguments.Length != 1)
             {
-                throw new InvalidOperationException();
+                throw new ContainerException($"Can not define a generic type argument for Lazy<>.\nDetails:\n{creationContext}");
             }
 
             var lazyType = typeof(Lazy<>).MakeGenericType(genericTypeArguments);
@@ -154,7 +154,7 @@
         private static object ResolveResolver(ICreationContext creationContext, IReflection reflection)
         {
             var resolverContext = creationContext.ResolverContext;
-            var genericTypeArguments = GetGenericTypeArguments(resolverContext);
+            var genericTypeArguments = GetGenericTypeArguments(creationContext);
             Type resolverType;
             switch (genericTypeArguments.Length)
             {
@@ -184,12 +184,12 @@
             return factory.CreateConstructor(ctor)(resolverContext);
         }
 
-        private static Type[] GetGenericTypeArguments(IResolverContext resolverContext)
+        private static Type[] GetGenericTypeArguments(ICreationContext creationContext)
         {
-            var genericContractKey = resolverContext.Key as IContractKey ?? (resolverContext.Key as ICompositeKey)?.ContractKeys.SingleOrDefault();
+            var genericContractKey = creationContext.ResolverContext.Key as IContractKey ?? (creationContext.ResolverContext.Key as ICompositeKey)?.ContractKeys.SingleOrDefault();
             if (genericContractKey == null)
             {
-                throw new InvalidOperationException();
+                throw new ContainerException($"Can not define a generic type arguments for Lazy<>.\nDetails:\n{creationContext}");
             }
 
             var genericTypeArguments = genericContractKey.GenericTypeArguments.ToArray();

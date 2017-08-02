@@ -47,7 +47,7 @@
                     return jsonObject.ToObject(type, serializer);
                 }
 
-            throw new InvalidOperationException("Type was not found");
+            throw new ContainerException("Type was not found");
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
@@ -67,7 +67,7 @@
 
             if (names.Length == 0)
             {
-                throw new InvalidOperationException($"{type.Name} does not containt any properties");
+                throw new ContainerException($"{type.Name} does not containt any properties");
             }
 
             return names;

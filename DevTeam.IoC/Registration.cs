@@ -121,7 +121,11 @@
         public IRegistration<TContainer> Scope(IScope scope)
         {
             if (scope == null) throw new ArgumentNullException(nameof(scope));
-            if (Extensions.OfType<IScope>().Any()) throw new InvalidOperationException();
+            if (Extensions.OfType<IScope>().Any())
+            {
+                throw new ContainerException($"Only one scope is allowed. {string.Join(", ", Extensions.Select(i => i.ToString()).ToArray())} are already defined.");
+            }
+
             Extensions.Add(scope);
             return this;
         }
@@ -162,7 +166,7 @@
                     {
                         if (!metadataProvider.TryResolveType(implementationType, out Type currentResolvedType, ctx))
                         {
-                            throw new InvalidOperationException("Can not define type to resolve from type {currentResolvedType}");
+                            throw new ContainerException($"Can not define a type to resolve from type \"{implementationType}\"");
                         }
 
                         return CreateFactory(currentResolvedType, metadataProvider).Create(ctx);
@@ -317,7 +321,7 @@
             var context = Resolver.CreateRegistryContext(_registrationKeys, new MethodFactory<TImplementation>(factoryMethod), _extensions?.ToArray() ?? EmptyExtensions);
             if (!Resolver.TryRegister(context, out IDisposable registration))
             {
-                throw new InvalidOperationException($"Can't register {string.Join(Environment.NewLine, context.Keys.Select(i => i.ToString()).ToArray())}.{Environment.NewLine}{Environment.NewLine}{Resolver}");
+                throw new ContainerException($"Can't register {string.Join(Environment.NewLine, context.Keys.Select(i => i.ToString()).ToArray())}.\nDetails:\n{Resolver}");
             }
 
             _registrationKeys.Clear();
@@ -331,7 +335,7 @@
         {
             if (!Resolver.TryResolve(out IMethodFactory instanceFactoryProvider))
             {
-                throw new InvalidOperationException($"{typeof(IMethodFactory)} was not registered.");
+                throw new ContainerException($"{typeof(IMethodFactory)} was not registered.");
             }
 
             return instanceFactoryProvider;

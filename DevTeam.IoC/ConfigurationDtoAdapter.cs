@@ -27,10 +27,12 @@
 
         public IEnumerable<IConfiguration> GetDependencies(IContainer container)
         {
-            IEnumerable<IConfiguration> dependencies;
-            if (!_converterConfigurationDtoToDependencies.TryConvert(_configurationDto, out dependencies, container))
+            if (!_converterConfigurationDtoToDependencies.TryConvert(
+                _configurationDto,
+                out IEnumerable<IConfiguration> dependencies,
+                container))
             {
-                throw new InvalidOperationException("Error during getting configurations");
+                throw new ContainerException($"Error during getting dependencies.\nDetails:\n{container}");
             }
 
             return dependencies;
@@ -39,9 +41,16 @@
         public IEnumerable<IDisposable> Apply(IContainer container)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
-            if (!_converterConfigurationDtoToRegistrations.TryConvert(_configurationDto, out IEnumerable<IRegistrationResult<IContainer>> registrations, new ConverterConfigurationDtoToRegistrations.Context(container, new TypeResolverContext(new List<Assembly>(), new List<string>()))))
+            if (!_converterConfigurationDtoToRegistrations.TryConvert(
+                _configurationDto,
+                out IEnumerable<IRegistrationResult<IContainer>> registrations,
+                new ConverterConfigurationDtoToRegistrations.Context(
+                    container,
+                    new TypeResolverContext(
+                        new List<Assembly>(),
+                        new List<string>()))))
             {
-                throw new InvalidOperationException("Error during applieng a configuration");
+                throw new ContainerException($"Error during getting registrations.\nDetails:\n{container}");
             }
 
             return registrations.Cast<IDisposable>();

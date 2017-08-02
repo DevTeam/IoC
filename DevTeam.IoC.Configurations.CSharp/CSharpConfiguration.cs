@@ -80,7 +80,7 @@
                         where diagnostic.IsWarningAsError || diagnostic.Severity == DiagnosticSeverity.Error
                         select $"{diagnostic.Id}: {diagnostic.GetMessage()}";
 
-                    throw new InvalidOperationException(string.Join(Environment.NewLine, errors));
+                    throw new ContainerException(string.Join(Environment.NewLine, errors));
                 }
 
                 ms.Seek(0, SeekOrigin.Begin);

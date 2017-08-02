@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Contracts;
     using Contracts.Dto;
     using Newtonsoft.Json;
 
@@ -30,7 +31,7 @@
                 _autowiringTypeName = parts[0].Trim();
                 if (_autowiringTypeName == string.Empty)
                 {
-                    throw new InvalidOperationException($"Invalid \"{nameof(AutowiringTypeName)}\" in the class defenition {value}");
+                    throw new ContainerException($"Invalid \"{nameof(AutowiringTypeName)}\" in the class defenition {value}");
                 }
 
                 if (parts.Length > 1)
@@ -71,7 +72,7 @@
 
         private void ThrowCommonException(string value)
         {
-            throw new InvalidOperationException($"Invalid class defenition {value}. Should be \"class_name: interface_name\"");
+            throw new ContainerException($"Invalid class defenition {value}. Should be \"class_name: interface_name\"");
         }
     }
 }

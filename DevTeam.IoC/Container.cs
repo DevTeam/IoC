@@ -27,14 +27,9 @@
             _fluent = Fluent.Shared;
             _resources.Add(new CompositeDisposable(RootContainerConfiguration.Shared.Apply(this)));
             _resources.Add(new CompositeDisposable(ContainerConfiguration.Shared.Apply(this)));
-            if (!this.TryResolve(out _fluent))
-            {
-                throw new InvalidOperationException("Can not resolve fluent");
-            }
-
             if (!this.TryResolve(out _keyFactory))
             {
-                throw new InvalidOperationException("Can not resolve key's factory");
+                throw new ContainerException($"Can not resolve IKeyFactory.\nDetails:\n{this}");
             }
 
             var cacheTracker = new CacheTracker(this);
@@ -49,12 +44,12 @@
             _resources.Add(new CompositeDisposable(ContainerConfiguration.Shared.Apply(this)));
             if (!this.TryResolve(out _fluent))
             {
-                throw new InvalidOperationException("Can not resolve fluent");
+                throw new ContainerException($"Can not resolve IFluent.\nDetails:\n{this}");
             }
 
             if (!this.TryResolve(out _keyFactory))
             {
-                throw new InvalidOperationException("Can not resolve key's factory");
+                throw new ContainerException($"Can not resolve IKeyFactory.\nDetails:\n{this}");
             }
 
             var cacheTracker = new CacheTracker(this);
@@ -231,7 +226,7 @@
                 return Parent.Resolve(context, stateProvider);
             }
 
-            throw new InvalidOperationException("Invalid container context.");
+            throw new ContainerException($"Invalid container context.\nDetails:\n{this}");
         }
 
         public void Dispose()

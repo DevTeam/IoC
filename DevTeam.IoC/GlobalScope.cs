@@ -28,5 +28,10 @@
 #endif
             return true;
         }
+
+        public override string ToString()
+        {
+            return "Global Scope";
+        }
     }
 }

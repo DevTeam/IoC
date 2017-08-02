@@ -26,7 +26,7 @@
             }
             else
             {
-                throw new InvalidOperationException($"{typeof(IProvider<IFluent>)} is not supported. Only \"{nameof(IContainer)}\" is supported.");
+                throw new ContainerException($"{typeof(IProvider<IFluent>)} is not supported. Only \"{nameof(IContainer)}\" is supported.");
             }
 
             Resolver = resolver;

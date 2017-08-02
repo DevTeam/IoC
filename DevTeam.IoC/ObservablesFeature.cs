@@ -41,7 +41,7 @@
             var genericContractKey = ctx.Key as IContractKey ?? (ctx.Key as ICompositeKey)?.ContractKeys.SingleOrDefault();
             if (genericContractKey == null)
             {
-                throw new InvalidOperationException();
+                throw new ContainerException($"Can not define contract type.\nDetails:\n{creationContext}");
             }
 
             var itemType = genericContractKey.GenericTypeArguments.First();

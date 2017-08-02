@@ -64,7 +64,7 @@
             {
                 if (!lifetimesEnumerator.MoveNext())
                 {
-                    throw new InvalidOperationException("Invalid chain of factories");
+                    throw new ContainerException($"Invalid chain of lifetimes.\nDetails:\n{creationContext}");
                 }
 
                 using (var lifetimeContext = new LifetimeContext())

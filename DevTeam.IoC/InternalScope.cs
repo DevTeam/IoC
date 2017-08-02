@@ -28,5 +28,10 @@
 #endif
             return context.Container == context.RegistryContext.Container;
         }
+
+        public override string ToString()
+        {
+            return "Internal Scope";
+        }
     }
 }

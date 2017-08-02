@@ -53,18 +53,17 @@ namespace DevTeam.IoC.Tests
             // Given
             using (var container = CreateContainer().Configure().DependsOn(Wellknown.Feature.Default).ToSelf()
                 .Register()
-                .Autowiring<ISimpleService, MyClass3>()
-                .And().Lifetime(Wellknown.Lifetime.Singleton).State<string>(0).With()
-                .Tag(1).Autowiring<ISimpleService, MyClass1>()
-                .And().Tag(2).Autowiring<ISimpleService, MyClass2>()
+                .Lifetime(Wellknown.Lifetime.Singleton).With()
+                .Autowiring<MyClass3, MyClass3>()
+                .And().Autowiring<ISimpleService, MyClass1>()
+                .And().Autowiring<IDisposableService, MyClass2>()
                 .ToSelf())
             {
                 // When
-                var obj = container.Resolve().Instance<ISimpleService>();
-                var obj2 = container.Resolve().Instance<ISimpleService>();
+                var obj = container.Resolve().Instance<MyClass3>();
+                var obj2 = container.Resolve().Instance<MyClass3>();
 
                 // Then
-                obj.ShouldBeOfType<MyClass3>();
             }
         }
 
@@ -77,29 +76,33 @@ namespace DevTeam.IoC.Tests
         {
             private static int _counter;
 
-            public MyClass1([State] string str)
+            public MyClass1()
             {
                 _counter++;
                 _counter.ShouldBe(1);
             }
         }
 
-        private class MyClass2 : ISimpleService
+        private class MyClass2 : IDisposableService
         {
             private static int _counter;
 
-            public MyClass2([State] string str)
+            public MyClass2()
             {
                 _counter++;
                 _counter.ShouldBe(1);
             }
+
+            public void Dispose()
+            {
+            }
         }
 
-        private class MyClass3 : ISimpleService
+        private class MyClass3
         {
             public MyClass3(
-                [Tag(1), State(0, typeof(string), Value = "abc1")] ISimpleService myClass1,
-                [Tag(2), State(0, typeof(string), Value = "abc2")] ISimpleService myClass2)
+                ISimpleService myClass1,
+                IDisposableService myClass2)
             {
                 myClass1.ShouldBeOfType<MyClass1>();
                 myClass2.ShouldBeOfType<MyClass2>();

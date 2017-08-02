@@ -22,7 +22,7 @@
         {
             if (!lifetimeEnumerator.MoveNext())
             {
-                throw new InvalidOperationException("Should have another one lifetime in the chain");
+                throw new ContainerException("Should have another one lifetime in the chain.");
             }
 
             return new Lifetime(lifetimeEnumerator.Current);

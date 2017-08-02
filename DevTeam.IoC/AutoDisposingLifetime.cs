@@ -20,12 +20,12 @@
 #endif
             if (!lifetimeEnumerator.MoveNext())
             {
-                throw new InvalidOperationException();
+                throw new ContainerException("Has no any lifetimes");
             }
 
             lock (_instances)
             {
-                var instance = lifetimeEnumerator.Current?.Create(lifetimeContext, creationContext, lifetimeEnumerator) ?? throw new InvalidOperationException("Invalid state of lifetime enumerator");
+                var instance = lifetimeEnumerator.Current?.Create(lifetimeContext, creationContext, lifetimeEnumerator) ?? throw new ContainerException("Invalid state of lifetime enumerator");
                 if (instance is IDisposable disposable)
                 {
                     _instances.Add(disposable);
