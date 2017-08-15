@@ -1,37 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<TargetFrameworks>netstandard1.5;net462;netcoreapp1.0</TargetFrameworks>
+    <TargetFrameworks>netstandard1.5;net462;netcoreapp1.0;netcoreapp2.0</TargetFrameworks>
     <AssemblyName>DevTeam.IoC.Configurations.CSharp</AssemblyName>
     <PackageId>DevTeam.IoC.Configurations.CSharp</PackageId>
-    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
-    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
-    <GenerateNeutralResourcesLanguageAttribute>false</GenerateNeutralResourcesLanguageAttribute>
-    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
-    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>DevTeam.snk</AssemblyOriginatorKeyFile>
-	<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <TreatSpecificWarningsAsErrors />
-	<Authors>NikolayP</Authors>
-	<Description>Provides the configuring of IoC containers via CSharp files compiled in realtime</Description>
+    <Authors>NikolayP</Authors>
+    <Description>Provides the configuring of IoC containers via CSharp files compiled in realtime</Description>
     <PackageLicenseUrl>https://github.com/DevTeam/IoC/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/DevTeam/IoC/</PackageProjectUrl>
     <PackageIconUrl>https://avatars0.githubusercontent.com/u/12184234?v=3&amp;amp;s=200</PackageIconUrl>
     <RepositoryUrl>https://github.com/DevTeam/IoC.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>IoC inversionofcontrol Container DI dependencyinjection</PackageTags>
-    <PackageVersion Condition=" '$(PackageVersion)' == '' ">1.0.0</PackageVersion>
-    <Version>$(PackageVersion)</Version>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.3.1" />
     <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
   </ItemGroup>
 

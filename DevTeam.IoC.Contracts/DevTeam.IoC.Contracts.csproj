@@ -1,33 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<TargetFrameworks>net35;netstandard1.0;netstandard1.5;net40;net45;net462;netcoreapp1.0</TargetFrameworks>
+    <TargetFrameworks>net35;netstandard1.0;netstandard1.5;net40;net45;net462;netcoreapp1.0;netcoreapp2.0</TargetFrameworks>
     <AssemblyName>DevTeam.IoC.Contracts</AssemblyName>
     <PackageId>DevTeam.IoC.Contracts</PackageId>
-    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
-    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
-    <GenerateNeutralResourcesLanguageAttribute>false</GenerateNeutralResourcesLanguageAttribute>
-    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
-    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>DevTeam.snk</AssemblyOriginatorKeyFile>
-	<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <TreatSpecificWarningsAsErrors />
-	<Authors>NikolayP</Authors>
-	<Description>Contracts for IoC container</Description>
+    <Authors>NikolayP</Authors>
+    <Description>Contracts for IoC container</Description>
     <PackageLicenseUrl>https://github.com/DevTeam/IoC/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/DevTeam/IoC/</PackageProjectUrl>
     <PackageIconUrl>https://avatars0.githubusercontent.com/u/12184234?v=3&amp;amp;s=200</PackageIconUrl>
     <RepositoryUrl>https://github.com/DevTeam/IoC.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>IoC inversionofcontrol Container DI dependencyinjection</PackageTags>
-	<ContractPackageVersion Condition=" '$(ContractPackageVersion)' == '' ">1.0.0</ContractPackageVersion>
-    <Version>$(ContractPackageVersion)</Version>
-	<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">True</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">True</GeneratePackageOnBuild>
   </PropertyGroup>
 
  </Project>

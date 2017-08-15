@@ -33,31 +33,4 @@
       	</Code>
     	</Task>
 	</UsingTask>
-
-	<UsingTask TaskName="Replace" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
-		<ParameterGroup>
-			<FilePath ParameterType="System.String" Required="true"/>
-			<Pattern ParameterType="System.String" Required="true" />
-			<Replacement ParameterType="System.String" Required="true" />
-		</ParameterGroup>
-		<Task>
-		<Using Namespace="System"/>
-		<Using Namespace="System.IO"/>
-		<Using Namespace="System.Linq"/>
-		<Using Namespace="System.Text.RegularExpressions"/>
-      	<Code Type="Fragment" Language="cs">
-			<![CDATA[		
-				try
-				{	
-					File.WriteAllLines(FilePath, File.ReadAllLines(FilePath).Select(line => Regex.Replace(line, Pattern, Replacement)).ToList());
-				}
-				catch(Exception ex)
-				{
-					Log.LogMessage(MessageImportance.High, string.Format("##teamcity[buildProblem description='{0}' identity='{0}']", ex.Message));
-					throw;
-				}
-			]]>
-      	</Code>
-    	</Task>
-	</UsingTask>
 </Project>

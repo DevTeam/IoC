@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<TargetFrameworks>net452;net462;net35;netcoreapp1.0</TargetFrameworks>
+    <TargetFrameworks>net452;net462;net35;netcoreapp1.0;netcoreapp2.0</TargetFrameworks>
     <AssemblyName>DevTeam.IoC.Tests</AssemblyName>
     <PackageId>DevTeam.IoC.Tests</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
@@ -17,7 +17,7 @@
     <AssemblyOriginatorKeyFile>DevTeam.snk</AssemblyOriginatorKeyFile>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <TreatSpecificWarningsAsErrors></TreatSpecificWarningsAsErrors>
-	<NoWarn>1701;1702;1705</NoWarn>
+    <NoWarn>1701;1702;1705</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,15 +28,15 @@
   </ItemGroup>
 
   <ItemGroup>
-	<PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
-	<PackageReference Include="Shouldly" Version="2.8.2" />
-	<PackageReference Include="TeamCity.VSTest.TestAdapter" Version="1.0.0.50-beta" />
+	<PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+	<PackageReference Include="Shouldly" Version="2.8.3" />
+	<!--PackageReference Include="TeamCity.VSTest.TestAdapter" Version="1.0.0" /-->
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)'!='net35'">
 	<PackageReference Include="Ninject" Version="4.0.0-beta-0134" />
 	<PackageReference Include="Moq" Version="4.7.8" />
-	<PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />	
+	<PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />	
 	<PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
     <PackageReference Include="xunit" Version="2.2.0" />	
   </ItemGroup>
@@ -54,20 +54,20 @@
   <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
 	<PackageReference Include="unity" Version="4.0.1" />
     <PackageReference Include="System.ValueTuple">
-      <Version>4.3.0</Version>
+      <Version>4.4.0</Version>
     </PackageReference>
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net452'">
 	<PackageReference Include="unity" Version="4.0.1" />
     <PackageReference Include="System.ValueTuple">
-      <Version>4.3.0</Version>
+      <Version>4.4.0</Version>
     </PackageReference>
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp1.0'">
     <PackageReference Include="System.ValueTuple">
-      <Version>4.3.0</Version>
+      <Version>4.4.0</Version>
     </PackageReference>
   </ItemGroup>
 

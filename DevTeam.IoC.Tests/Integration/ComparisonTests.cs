@@ -9,7 +9,7 @@ namespace DevTeam.IoC.Tests.Integration
     using System.Linq;
     using System.Reflection;
     using Contracts;
-#if !NET35 && !NETCOREAPP1_0
+#if !NET35 && !NETCOREAPP1_0&& !NETCOREAPP2_0
     using Microsoft.Practices.Unity;
 #endif
     using Ninject;
@@ -19,7 +19,7 @@ namespace DevTeam.IoC.Tests.Integration
     {
         private static readonly Dictionary<string, Func<int, long>> Iocs = new Dictionary<string, Func<int, long>>()
         {
-#if !NET35 && !NETCOREAPP1_0
+#if !NET35 && !NETCOREAPP1_0&& !NETCOREAPP2_0
             {"Unity", Unity},
 #endif
             {"DevTeam", DevTeam},
@@ -82,7 +82,7 @@ namespace DevTeam.IoC.Tests.Integration
             }
         }
 
-#if !NET35 && !NETCOREAPP1_0
+#if !NET35 && !NETCOREAPP1_0 && !NETCOREAPP2_0
         private static long Unity(int series)
         {
             using (var container = new UnityContainer())
