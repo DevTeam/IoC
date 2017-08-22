@@ -8,14 +8,13 @@
     internal sealed class CompositeKey: ICompositeKey
     {
         private static readonly Cache<IContractKey, HashSet<IContractKey>> ContractSetCache = new Cache<IContractKey, HashSet<IContractKey>>();
-        private static readonly HashSet<IStateKey> EmptyStateKeys = new HashSet<IStateKey>();
-        private static readonly HashSet<ITagKey> EmptyTagKeys = new HashSet<ITagKey>();
+        private static readonly KeySet<IStateKey> EmptyStateKeys = new KeySet<IStateKey>();
+        private static readonly KeySet<ITagKey> EmptyTagKeys = new KeySet<ITagKey>();
         private readonly int _contractsHashCode;
-        private readonly int _tagsHashCode;
         private readonly int _statesHashCode;
-        private readonly HashSet<IContractKey> _contractKeys;
-        private readonly HashSet<ITagKey> _tagKeys;
-        private readonly HashSet<IStateKey> _stateKeys;
+        private readonly IKeySet<IContractKey> _contractKeys;
+        private readonly IKeySet<ITagKey> _tagKeys;
+        private readonly IKeySet<IStateKey> _stateKeys;
 
         public CompositeKey(
             [NotNull] IEnumerable<IContractKey> contractKeys,
@@ -26,15 +25,15 @@
             if (contractKeys == null) throw new ArgumentNullException(nameof(contractKeys));
 #endif
             _contractKeys = CreateSet(contractKeys, out _contractsHashCode);
-            _tagKeys = tagKeys != null ? CreateSet(tagKeys, out _tagsHashCode) : EmptyTagKeys;
+            _tagKeys = tagKeys != null ? new KeySet<ITagKey>(tagKeys) : EmptyTagKeys;
             _stateKeys = stateKeys != null ? CreateSet(stateKeys, out _statesHashCode) : EmptyStateKeys;
         }
 
-        public IEnumerable<IContractKey> ContractKeys => _contractKeys;
+        public IKeySet<IContractKey> ContractKeys => _contractKeys;
 
-        public IEnumerable<ITagKey> TagKeys => _tagKeys;
+        public IKeySet<ITagKey> TagKeys => _tagKeys;
 
-        public IEnumerable<IStateKey> StateKeys => _stateKeys;
+        public IKeySet<IStateKey> StateKeys => _stateKeys;
 
         public override bool Equals(object obj)
         {
@@ -54,11 +53,6 @@
             var hashCode = _contractsHashCode;
             unchecked
             {
-                if (_tagsHashCode != 0 && !filter.Filter(typeof(ITagKey)))
-                {
-                    hashCode = (hashCode*397) ^ _tagsHashCode;
-                }
-
                 if (_statesHashCode != 0 && !filter.Filter(typeof(IStateKey)))
                 {
                     hashCode = (hashCode*397) ^ _statesHashCode;
@@ -80,9 +74,9 @@
         {
             var filter = KeyFilterContext.Current;
             return
-                _contractKeys.SetEquals(other.ContractKeys)
-                && (_tagKeys.Count == 0 || filter.Filter(typeof(ITagKey)) || _tagKeys.SetEquals(other.TagKeys))
-                && (_stateKeys.Count == 0 || filter.Filter(typeof(IStateKey)) || _stateKeys.SetEquals(other.StateKeys));
+                _contractKeys.IsEqual(other.ContractKeys)
+                && ((_tagKeys.Count == 0 && other.TagKeys.Count == 0) || filter.Filter(typeof(ITagKey)) || _tagKeys.IsIntersecting(other.TagKeys))
+                && ((_stateKeys.Count == 0 && other.StateKeys.Count == 0) || filter.Filter(typeof(IStateKey)) || _stateKeys.IsEqual(other.StateKeys));
         }
 
 #if !NET35 && !NET40
@@ -98,9 +92,10 @@
         }
 
         [NotNull]
-        private HashSet<T> CreateSet<T>([NotNull] IEnumerable<T> keys, out int hashCode)
+        private IKeySet<T> CreateSet<T>([NotNull] IEnumerable<T> keys, out int hashCode)
+            where T: IKey
         {
-            var resultSet = new HashSet<T>(keys);
+            var resultSet = new KeySet<T>(keys);
             hashCode = 0;
             foreach (var key in resultSet)
             {
@@ -111,6 +106,29 @@
             }
 
             return resultSet;
+        }
+
+        private class KeySet<T> : HashSet<T>, IKeySet<T>
+            where T : IKey
+        {
+            public KeySet()
+            {
+            }
+
+            public KeySet(IEnumerable<T> keys)
+                :base(keys)
+            {
+            }
+
+            public bool IsEqual(IKeySet<T> keys)
+            {
+                return base.SetEquals(keys);
+            }
+
+            public bool IsIntersecting(IKeySet<T> keys)
+            {
+                return Enumerable.Intersect(this, keys).Any();
+            }
         }
     }
 }

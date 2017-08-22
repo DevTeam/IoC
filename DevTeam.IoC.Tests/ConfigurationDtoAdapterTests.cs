@@ -394,7 +394,7 @@
                     },
                     Properties = new List<IPropertyDto>
                     {
-                        new PropertyDto { Name = nameof(SimpleService3.SimpleService2), Property = new ParameterDto { TypeName = typeof(ISimpleService).FullName, Dependency = new List<IRegisterStatementDto> { new TagDto {Value = "2" }}}}
+                        new PropertyDto { Name = nameof(SimpleService3.SimpleService2), Property = new ParameterDto { TypeName = typeof(ISimpleService).FullName, Dependency = new List<IRegisterStatementDto> { new TagDto { Value = "2" } } } }
                     }
                 });
 
@@ -441,7 +441,7 @@
                 References.AddRange(references);
                 UsingStatement.AddRange(usings);
 
-                if (typeName.IsNullOrWhiteSpace())
+                if (Strings.IsNullOrWhiteSpace(typeName))
                 {
                     type = default(Type);
                     return false;
@@ -508,8 +508,7 @@
         {
             public void Init([NotNull] ISimpleService simpleService)
             {
-                if (simpleService == null) throw new ArgumentNullException(nameof(simpleService));
-                SimpleService = simpleService;
+                SimpleService = simpleService ?? throw new ArgumentNullException(nameof(simpleService));
             }
 
             public ISimpleService SimpleService { get; private set; }

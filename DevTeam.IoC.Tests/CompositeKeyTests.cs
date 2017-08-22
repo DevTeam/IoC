@@ -72,7 +72,7 @@
         }
 
         [Fact]
-        public void ShouldSupportEqForNotIdenticalByTag()
+        public void ShouldSupportEqForPartialTags()
         {
             // Given
 
@@ -81,7 +81,49 @@
             var key2 = CreateInstance(new[] { _contractKey1, _contractKey2, _contractKey3 }, new[] { _tagKey2 }, new[] { _stateKey1, _stateKey2 });
 
             // Then
-            key1.GetHashCode().ShouldNotBe(key2.GetHashCode());
+            key1.GetHashCode().ShouldBe(key2.GetHashCode());
+            key1.Equals(key2).ShouldBeTrue();
+        }
+
+        [Fact]
+        public void ShouldSupportEqForNotIdenticalByTag()
+        {
+            // Given
+
+            // When
+            var key1 = CreateInstance(new[] { _contractKey1, _contractKey2, _contractKey3 }, new[] { _tagKey1 }, new[] { _stateKey1, _stateKey2 });
+            var key2 = CreateInstance(new[] { _contractKey1, _contractKey2, _contractKey3 }, new[] { _tagKey2 }, new[] { _stateKey1, _stateKey2 });
+
+            // Then
+            key1.GetHashCode().ShouldBe(key2.GetHashCode());
+            key1.Equals(key2).ShouldBeFalse();
+        }
+
+        [Fact]
+        public void ShouldSupportEqForNotIdenticalByTag1()
+        {
+            // Given
+
+            // When
+            var key1 = CreateInstance(new[] { _contractKey1, _contractKey2, _contractKey3 }, new ITagKey[] { }, new[] { _stateKey1, _stateKey2 });
+            var key2 = CreateInstance(new[] { _contractKey1, _contractKey2, _contractKey3 }, new[] { _tagKey2 }, new[] { _stateKey1, _stateKey2 });
+
+            // Then
+            key1.GetHashCode().ShouldBe(key2.GetHashCode());
+            key1.Equals(key2).ShouldBeFalse();
+        }
+
+        [Fact]
+        public void ShouldSupportEqForNotIdenticalByTag2()
+        {
+            // Given
+
+            // When
+            var key1 = CreateInstance(new[] { _contractKey1, _contractKey2, _contractKey3 }, new[] { _tagKey1 }, new[] { _stateKey1, _stateKey2 });
+            var key2 = CreateInstance(new[] { _contractKey1, _contractKey2, _contractKey3 }, new ITagKey[] { }, new[] { _stateKey1, _stateKey2 });
+
+            // Then
+            key1.GetHashCode().ShouldBe(key2.GetHashCode());
             key1.Equals(key2).ShouldBeFalse();
         }
 
@@ -93,6 +135,34 @@
             // When
             var key1 = CreateInstance(new[] { _contractKey1, _contractKey2, _contractKey3 }, new[] { _tagKey1, _tagKey2 }, new[] { _stateKey1, _stateKey2 });
             var key2 = CreateInstance(new[] { _contractKey1, _contractKey2, _contractKey3 }, new[] { _tagKey1, _tagKey2 }, new[] { _stateKey1 });
+
+            // Then
+            key1.GetHashCode().ShouldNotBe(key2.GetHashCode());
+            key1.Equals(key2).ShouldBeFalse();
+        }
+
+        [Fact]
+        public void ShouldSupportEqForNotIdenticalByState1()
+        {
+            // Given
+
+            // When
+            var key1 = CreateInstance(new[] { _contractKey1, _contractKey2, _contractKey3 }, new[] { _tagKey1, _tagKey2 }, new IStateKey[] { });
+            var key2 = CreateInstance(new[] { _contractKey1, _contractKey2, _contractKey3 }, new[] { _tagKey1, _tagKey2 }, new[] { _stateKey1 });
+
+            // Then
+            key1.GetHashCode().ShouldNotBe(key2.GetHashCode());
+            key1.Equals(key2).ShouldBeFalse();
+        }
+
+        [Fact]
+        public void ShouldSupportEqForNotIdenticalByState2()
+        {
+            // Given
+
+            // When
+            var key1 = CreateInstance(new[] { _contractKey1, _contractKey2, _contractKey3 }, new[] { _tagKey1, _tagKey2 }, new[] { _stateKey1 });
+            var key2 = CreateInstance(new[] { _contractKey1, _contractKey2, _contractKey3 }, new[] { _tagKey1, _tagKey2 }, new IStateKey[] { });
 
             // Then
             key1.GetHashCode().ShouldNotBe(key2.GetHashCode());

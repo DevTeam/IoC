@@ -6,16 +6,16 @@
         <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
         <PackagesDirectory>packages</PackagesDirectory>
         <BuildNumber Condition=" '$(BuildNumber)' == '' ">0</BuildNumber>
-	<AssemblyVersion>1.0.$(BuildNumber)</AssemblyVersion>
+        <AssemblyVersion>1.0.$(BuildNumber)</AssemblyVersion>
         <Version>$(AssemblyVersion)-beta</Version>
     </PropertyGroup>
 
     <Target Name="Build">
         <MSBuild Projects="DevTeam.IoC.sln" Targets="Restore;Build" BuildInParallel="true" Properties="Configuration=$(Configuration);Version=$(Version);AssemblyVersion=$(AssemblyVersion)"/>
         <Message Text="##teamcity[publishArtifacts 'DevTeam.IoC.Contracts\bin\$(Configuration)\*.nupkg=>$(PackagesDirectory)']" />
-	<Message Text="##teamcity[publishArtifacts 'DevTeam.IoC\bin\$(Configuration)\*.nupkg=>$(PackagesDirectory)']" />
-	<Message Text="##teamcity[publishArtifacts 'DevTeam.IoC.Configurations.CSharp\bin\$(Configuration)\*.nupkg=>$(PackagesDirectory)']" />
-	<Message Text="##teamcity[publishArtifacts 'DevTeam.IoC.Configurations.Json\bin\$(Configuration)\*.nupkg=>$(PackagesDirectory)']" />
+        <Message Text="##teamcity[publishArtifacts 'DevTeam.IoC\bin\$(Configuration)\*.nupkg=>$(PackagesDirectory)']" />
+        <Message Text="##teamcity[publishArtifacts 'DevTeam.IoC.Configurations.CSharp\bin\$(Configuration)\*.nupkg=>$(PackagesDirectory)']" />
+        <Message Text="##teamcity[publishArtifacts 'DevTeam.IoC.Configurations.Json\bin\$(Configuration)\*.nupkg=>$(PackagesDirectory)']" />
     </Target>
 
     <Target Name="GetNuGet">

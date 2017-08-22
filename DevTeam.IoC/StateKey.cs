@@ -54,7 +54,7 @@
                 return 0;
             }
 
-            return _index;
+            return _index + 1;
         }
 
 #if !NET35 && !NET40
