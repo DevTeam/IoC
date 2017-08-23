@@ -20,6 +20,7 @@
         private readonly IKeyFactory _keyFactory;
         private readonly Cache<IKey, IResolverContext> _resolverContextCache = new Cache<IKey, IResolverContext>();
         private readonly Cache<Type, IInstanceFactory> _resolverFactoryCache = new Cache<Type, IInstanceFactory>();
+        private readonly HashSet<IResolverContext> _resolverContexts = new HashSet<IResolverContext>();
 
         public Container([CanBeNull] object tag = null)
         {
@@ -100,7 +101,7 @@
             lock (LockObject)
             {
                 var scope = registrationItem.Scope;
-                if (scope!= null && !scope.AllowRegistration(context, this))
+                if (scope != null && !scope.AllowRegistration(context, this))
                 {
                     var parent = Parent;
                     if (parent == null)
@@ -216,9 +217,28 @@
         public object Resolve(IResolverContext context, IStateProvider stateProvider = null)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
+
             if (context.Container == this)
             {
-                return context.InstanceFactory.Create(new CreationContext(context, stateProvider ?? ParamsStateProvider.Empty));
+                lock (LockObject)
+                {
+                    if (!_resolverContexts.Add(context))
+                    {
+                        throw new ContainerException($"Circular dependency for {context.Key}.\nDetails:\n{this}");
+                    }
+                }
+
+                try
+                {
+                    return context.InstanceFactory.Create(new CreationContext(context, stateProvider ?? ParamsStateProvider.Empty));
+                }
+                finally
+                {
+                    lock (_resolverContexts)
+                    {
+                        _resolverContexts.Remove(context);
+                    }
+                }
             }
 
             if (Parent != null)
