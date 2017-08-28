@@ -15,6 +15,8 @@
         private readonly IKeySet<IContractKey> _contractKeys;
         private readonly IKeySet<ITagKey> _tagKeys;
         private readonly IKeySet<IStateKey> _stateKeys;
+        private int _tagKeysCount;
+        private int _stateKeysCount;
 
         public CompositeKey(
             [NotNull] IEnumerable<IContractKey> contractKeys,
@@ -24,9 +26,13 @@
 #if DEBUG
             if (contractKeys == null) throw new ArgumentNullException(nameof(contractKeys));
 #endif
-            _contractKeys = CreateSet(contractKeys, out _contractsHashCode);
+            _contractKeys = new KeySet<IContractKey>(contractKeys);
+            _contractsHashCode = _contractKeys.GetHashCode();
             _tagKeys = tagKeys != null ? new KeySet<ITagKey>(tagKeys) : EmptyTagKeys;
-            _stateKeys = stateKeys != null ? CreateSet(stateKeys, out _statesHashCode) : EmptyStateKeys;
+            _stateKeys = stateKeys != null ? new KeySet<IStateKey>(stateKeys) : EmptyStateKeys;
+            _statesHashCode = _stateKeys.GetHashCode();
+            _tagKeysCount = _tagKeys.Count;
+            _stateKeysCount = _stateKeys.Count;
         }
 
         public IKeySet<IContractKey> ContractKeys => _contractKeys;
@@ -38,13 +44,19 @@
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            if (obj is IContractKey contractKey)
+            switch (obj)
             {
-                return Equals(contractKey);
-            }
+                case CompositeKey compositeKey:
+                    return Equals(compositeKey);
 
-            var compositeKey = obj as ICompositeKey;
-            return compositeKey != null && Equals(compositeKey);
+                case ICompositeKey compositeKey:
+                    return Equals(compositeKey);
+
+                case IContractKey contractKey:
+                    return Equals(contractKey);
+
+                default: throw new ContainerException($"Ivalid ${obj} to compare");
+            }
         }
 
         public override int GetHashCode()
@@ -70,13 +82,25 @@
 #if !NET35 && !NET40
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
+        private bool Equals(CompositeKey other)
+        {
+            var filter = KeyFilterContext.Current;
+            return
+                _contractKeys.Equals(other.ContractKeys)
+                && ((_tagKeysCount == 0 && other._tagKeysCount == 0) || filter.Filter(typeof(ITagKey)) || (_tagKeysCount > 0 && other._tagKeysCount > 0 && _tagKeys.Intersect(other._tagKeys).Any()))
+                && ((_stateKeysCount == 0 && other._stateKeysCount == 0) || filter.Filter(typeof(IStateKey)) || _stateKeys.Equals(other._stateKeys));
+        }
+
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         private bool Equals(ICompositeKey other)
         {
             var filter = KeyFilterContext.Current;
             return
-                _contractKeys.IsEqual(other.ContractKeys)
-                && ((_tagKeys.Count == 0 && other.TagKeys.Count == 0) || filter.Filter(typeof(ITagKey)) || _tagKeys.IsIntersecting(other.TagKeys))
-                && ((_stateKeys.Count == 0 && other.StateKeys.Count == 0) || filter.Filter(typeof(IStateKey)) || _stateKeys.IsEqual(other.StateKeys));
+                _contractKeys.Equals(other.ContractKeys)
+                && ((_tagKeysCount == 0 && other.TagKeys.Count == 0) || filter.Filter(typeof(ITagKey)) || (_tagKeysCount > 0 && other.TagKeys.Count > 0 && _tagKeys.Intersect(other.TagKeys).Any()))
+                && ((_stateKeysCount == 0 && other.StateKeys.Count == 0) || filter.Filter(typeof(IStateKey)) || _stateKeys.Equals(other.StateKeys));
         }
 
 #if !NET35 && !NET40
@@ -87,30 +111,16 @@
             var filter = KeyFilterContext.Current;
             return
                 _contractKeys.Count == 1 && _contractKeys.Single().Equals(other)
-                && (_tagKeys.Count == 0 || filter.Filter(typeof(ITagKey)))
-                && (_stateKeys.Count == 0 || filter.Filter(typeof(IStateKey)));
+                && (_tagKeysCount == 0 || filter.Filter(typeof(ITagKey)))
+                && (_stateKeysCount == 0 || filter.Filter(typeof(IStateKey)));
         }
 
-        [NotNull]
-        private IKeySet<T> CreateSet<T>([NotNull] IEnumerable<T> keys, out int hashCode)
-            where T: IKey
-        {
-            var resultSet = new KeySet<T>(keys);
-            hashCode = 0;
-            foreach (var key in resultSet)
-            {
-                unchecked
-                {
-                    hashCode += key.GetHashCode();
-                }
-            }
-
-            return resultSet;
-        }
 
         private class KeySet<T> : HashSet<T>, IKeySet<T>
             where T : IKey
         {
+            private readonly int _hashCode;
+
             public KeySet()
             {
             }
@@ -118,16 +128,24 @@
             public KeySet(IEnumerable<T> keys)
                 :base(keys)
             {
+                foreach (var key in this)
+                {
+                    unchecked
+                    {
+                        _hashCode += key.GetHashCode();
+                    }
+                }
             }
 
-            public bool IsEqual(IKeySet<T> keys)
+            public bool Equals(IKeySet<T> keys)
             {
-                return base.SetEquals(keys);
+                // ReSharper disable once AssignNullToNotNullAttribute
+                return SetEquals(keys);
             }
 
-            public bool IsIntersecting(IKeySet<T> keys)
+            public override int GetHashCode()
             {
-                return Enumerable.Intersect(this, keys).Any();
+                return _hashCode;
             }
         }
     }

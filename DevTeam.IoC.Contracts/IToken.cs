@@ -9,7 +9,7 @@
         [NotNull]
         TToken Key([NotNull] IEnumerable<IKey> keys);
 
-       [NotNull]
+        [NotNull]
         TToken Contract([NotNull] params Type[] contractTypes);
 
         [NotNull]

@@ -11,11 +11,10 @@
             EventStage stage,
             EventAction action,
             [NotNull] IKey key,
-            [NotNull] IRegistryContext registryContext)
+            RegistryContext registryContext)
         {
 #if DEBUG
             if (key == null) throw new ArgumentNullException(nameof(key));
-            if (registryContext == null) throw new ArgumentNullException(nameof(registryContext));
 #endif
             Stage = stage;
             Action = action;
@@ -29,7 +28,7 @@
 
         public IKey Key { get; }
 
-        public IRegistryContext RegistryContext { get; }
+        public RegistryContext RegistryContext { get; }
 
         public override string ToString()
         {

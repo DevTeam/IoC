@@ -1,4 +1,5 @@
-﻿namespace DevTeam.IoC.Tests
+﻿// ReSharper disable RedundantUsingDirective
+namespace DevTeam.IoC.Tests
 {
     using System;
     using System.Linq;
@@ -17,10 +18,10 @@
         [InlineData(typeof(IReflection))]
         [InlineData(typeof(IMethodFactory))]
         [InlineData(typeof(IMetadataProvider))]
-        [InlineData(typeof(IRegistryContext))]
-        [InlineData(typeof(ICreationContext))]
-        [InlineData(typeof(IResolverContext))]
-        [InlineData(typeof(IRegistryContext))]
+        [InlineData(typeof(RegistryContext))]
+        [InlineData(typeof(CreationContext))]
+        [InlineData(typeof(ResolverContext))]
+        [InlineData(typeof(RegistryContext))]
         public void ShouldRegisterContracts(Type type)
         {
             // Given
@@ -46,6 +47,7 @@
 
                 // Then
                 // ReSharper disable once AccessToDisposedClosure
+                // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
                 features.Select(feature => container.Resolve().Tag(feature).Instance<IConfiguration>()).ToArray();
             }
         }

@@ -6,6 +6,7 @@
     using DevTeam.IoC.Configurations.CSharp;
     using DevTeam.IoC.Contracts;
 
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class Program
     {
         public static void Main()

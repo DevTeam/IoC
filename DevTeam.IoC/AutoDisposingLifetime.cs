@@ -9,13 +9,21 @@
     {
         private readonly HashSet<IDisposable> _instances = new HashSet<IDisposable>();
 
-        internal int Count => _instances.Count;
+        internal int Count
+        {
+            get
+            {
+                lock (_instances)
+                {
+                    return _instances.Count;
+                }
+            }
+        }
 
-        public object Create(ILifetimeContext lifetimeContext, ICreationContext creationContext, IEnumerator<ILifetime> lifetimeEnumerator)
+        public object Create(ILifetimeContext lifetimeContext, CreationContext creationContext, IEnumerator<ILifetime> lifetimeEnumerator)
         {
 #if DEBUG
             if (lifetimeContext == null) throw new ArgumentNullException(nameof(lifetimeContext));
-            if (creationContext == null) throw new ArgumentNullException(nameof(creationContext));
             if (lifetimeEnumerator == null) throw new ArgumentNullException(nameof(lifetimeEnumerator));
 #endif
             if (!lifetimeEnumerator.MoveNext())

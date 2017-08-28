@@ -48,8 +48,7 @@
 
             foreach (var initMethod in metadataProvider.GetMethods(implementationType))
             {
-                var methodData = new MethodData();
-                methodData.Parameters = metadataProvider.GetParameters(initMethod, ref stateIndex);
+                var methodData = new MethodData {Parameters = metadataProvider.GetParameters(initMethod, ref stateIndex)};
                 len = methodData.Parameters.Length;
                 methodData.ParametersArray = new object[len];
                 methodData.Keys = new IKey[len];
@@ -74,11 +73,8 @@
             }
         }
 
-        public object Create(ICreationContext creationContext)
+        public object Create(CreationContext creationContext)
         {
-#if DEBUG
-            if (creationContext == null) throw new ArgumentNullException(nameof(creationContext));
-#endif
             for (var i = 0; i < _parametersArray.Length; i++)
             {
                 _parametersArray[i] = ResolveParameter(i, creationContext, _parameters, _keys);
@@ -127,10 +123,9 @@
         }
 
         [CanBeNull]
-        private static object ResolveParameter(int index, [NotNull] ICreationContext creationContext, [NotNull] IParameterMetadata[] parameters, [NotNull] IKey[] keys)
+        private static object ResolveParameter(int index, CreationContext creationContext, [NotNull] IParameterMetadata[] parameters, [NotNull] IKey[] keys)
         {
 #if DEBUG
-            if (creationContext == null) throw new ArgumentNullException(nameof(creationContext));
             if (parameters == null) throw new ArgumentNullException(nameof(parameters));
             if (keys == null) throw new ArgumentNullException(nameof(keys));
             if (index < 0 || index >= keys.Length) throw new ArgumentOutOfRangeException(nameof(index));
@@ -140,7 +135,7 @@
             {
                 var key = keys[index];
                 var container = creationContext.ResolverContext.RegistryContext.Container;
-                if (!container.TryCreateResolverContext(key, out IResolverContext ctx))
+                if (!container.TryCreateResolverContext(key, out var ctx))
                 {
                     throw new ContainerException(GetCantResolveErrorMessage(container, key));
                 }

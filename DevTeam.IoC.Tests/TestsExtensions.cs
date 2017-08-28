@@ -1,6 +1,7 @@
 ﻿namespace DevTeam.IoC.Tests
 {
     using System;
+    // ReSharper disable once RedundantUsingDirective
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -14,12 +15,12 @@
             return container.Resolve().Instance<IKeyFactory>();
         }
 
-        public static IResolverContext CreateContext(this IResolver resolver, IKey key)
+        public static ResolverContext CreateContext(this IResolver resolver, IKey key)
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             if (key == null) throw new ArgumentNullException(nameof(key));
 
-            IResolverContext context;
+            ResolverContext context;
             if (resolver.TryCreateResolverContext(key, out context))
             {
                 return context;
@@ -29,12 +30,10 @@
         }
 
         [NotNull]
-        public static IDisposable Register<T>([NotNull] this T registry, [NotNull] IRegistryContext context)
+        public static IDisposable Register<T>([NotNull] this T registry, RegistryContext context)
             where T : IRegistry
         {
             if (registry == null) throw new ArgumentNullException(nameof(registry));
-            if (context == null) throw new ArgumentNullException(nameof(context));
-
             if (!registry.TryRegister(context, out IDisposable registration))
             {
                 throw new ContainerException($"Can not register {string.Join(Environment.NewLine, context.Keys.Select(i => i.ToString()).ToArray())}.\nDetails:\n{registry}");

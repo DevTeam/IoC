@@ -14,7 +14,7 @@
             _onChange = onChange;
         }
 
-        public IDisposable Subscribe([NotNull] IObserver<T> observer)
+        public IDisposable Subscribe(IObserver<T> observer)
         {
 #if DEBUG
             if (observer == null) throw new ArgumentNullException(nameof(observer));
@@ -36,7 +36,7 @@
             }
         }
 
-        public void OnError([NotNull] Exception error)
+        public void OnError(Exception error)
         {
 #if DEBUG
             if (error == null) throw new ArgumentNullException(nameof(error));
@@ -47,11 +47,8 @@
             }
         }
 
-        public void OnNext([NotNull] T value)
+        public void OnNext(T value)
         {
-#if DEBUG
-            if (value == null) throw new ArgumentNullException(nameof(value));
-#endif
             foreach (var observer in _observers)
             {
                 observer.OnNext(value);

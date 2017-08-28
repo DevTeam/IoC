@@ -46,7 +46,7 @@
 #if !NET35 && !NET40
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
-        private static object ResolveEnumerable(ICreationContext creationContext, IReflection reflection)
+        private static object ResolveEnumerable(CreationContext creationContext, IReflection reflection)
         {
             var ctx = creationContext.ResolverContext;
             var genericContractKey = ctx.Key as IContractKey ?? (ctx.Key as ICompositeKey)?.ContractKeys.SingleOrDefault();

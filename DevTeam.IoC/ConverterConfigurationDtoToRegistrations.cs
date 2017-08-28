@@ -60,8 +60,7 @@
                         break;
 
                     case IRegisterDto registerDto:
-                        IEnumerable<IRegistrationResult<IContainer>> registrations;
-                        if (!_converterRegisterDtoToRegistationResult.TryConvert(registerDto, out registrations, new ConverterRegisterDtoToRegistations.Context(context.Container, new TypeResolverContext(references, usings))))
+                        if (!_converterRegisterDtoToRegistationResult.TryConvert(registerDto, out var registrations, new ConverterRegisterDtoToRegistations.Context(context.Container, new TypeResolverContext(references, usings))))
                         {
                             throw new Exception($"Invalid defenition of {registerDto.AutowiringTypeName}");
                         }

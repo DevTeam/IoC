@@ -7,6 +7,7 @@
     using DevTeam.IoC.Configurations.Json;
     using DevTeam.IoC.Contracts;
 
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class Program
     {
         // TODO: use async main with C# 7.1

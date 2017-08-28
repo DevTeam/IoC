@@ -1,13 +1,16 @@
-﻿namespace DevTeam.IoC
+﻿namespace DevTeam.IoC.Contracts
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using Contracts;
+    using System.Threading;
 
-    internal struct RegistryContext : IRegistryContext
+    [PublicAPI]
+    public struct RegistryContext
     {
+        private static long _currentId;
+        
         [SuppressMessage("ReSharper", "JoinNullCheckWithUsage")]
         public RegistryContext(
             [NotNull] IContainer container,
@@ -21,23 +24,27 @@
             if (factory == null) throw new ArgumentNullException(nameof(factory));
             if (extensions == null) throw new ArgumentNullException(nameof(extensions));
 #endif
+            Id = Interlocked.Increment(ref _currentId);
             Container = container;
             Keys = keys;
             InstanceFactory = factory;
             Extensions = extensions;
         }
 
-        public IContainer Container { get; }
+        public readonly long Id;
 
-        public IEnumerable<IKey> Keys { get; }
+        public readonly IContainer Container;
 
-        public IInstanceFactory InstanceFactory { get; }
+        public readonly IEnumerable<IKey> Keys;
 
-        public IEnumerable<IExtension> Extensions { get; }
+        public readonly IInstanceFactory InstanceFactory;
+
+        public readonly IEnumerable<IExtension> Extensions;
 
         public override string ToString()
         {
             return $"{nameof(RegistryContext)} [Keys: {string.Join(", ", Keys.Select(i => i.ToString()).ToArray())}, InstanceFactory: {InstanceFactory}, Extensions: {string.Join(", ", Extensions.Select(i => i.ToString()).ToArray())}, Container: {Container}]";
         }
+
     }
 }

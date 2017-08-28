@@ -1,13 +1,13 @@
-﻿namespace DevTeam.IoC.Tests
+﻿#if !NET35
+namespace DevTeam.IoC.Tests
 {
     using System;
     using Shouldly;
     using Xunit;
-    using DevTeam.IoC.Contracts;
+    using Contracts;
 
     public class ContractKeyTests
     {
-#if !NET35
         private readonly IReflection _reflection = Reflection.Shared;
 
         [Theory]
@@ -41,6 +41,6 @@
             actualEq1.ShouldBe(expectedEq);
             actualEq2.ShouldBe(expectedEq);
         }
-#endif
     }
 }
+#endif

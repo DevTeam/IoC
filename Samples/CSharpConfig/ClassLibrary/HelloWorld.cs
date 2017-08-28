@@ -9,8 +9,7 @@
 
         public HelloWorld(IConsole console)
         {
-            if (console == null) throw new ArgumentNullException(nameof(console));
-            _console = console;
+            _console = console ?? throw new ArgumentNullException(nameof(console));
         }
 
         public void SayHello()

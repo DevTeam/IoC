@@ -11,8 +11,7 @@
 #if DEBUG
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
 #endif
-            IResolverContext resolverContext;
-            if (!resolver.TryCreateResolverContext(StaticContractKey<TContract>.Shared, out resolverContext))
+            if (!resolver.TryCreateResolverContext(StaticContractKey<TContract>.Shared, out var resolverContext))
             {
                 instance = default(TContract);
                 return false;

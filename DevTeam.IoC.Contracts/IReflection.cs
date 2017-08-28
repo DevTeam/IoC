@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Reflection;
 
+    [PublicAPI]
     public interface IReflection
     {
         [NotNull]

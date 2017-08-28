@@ -1,4 +1,5 @@
-﻿namespace DevTeam.IoC.Tests
+﻿#if !NET35
+namespace DevTeam.IoC.Tests
 {
     using System.Linq;
     using Configurations.Json;
@@ -7,7 +8,6 @@
 
     public class ClassDtoTests
     {
-#if !NET35
         [Theory]
         [InlineData("Cat")]
         [InlineData(" Cat    ")]
@@ -59,6 +59,6 @@
             classDto.Keys.OfType<ContractDto>().Count(i => i.Contract.Contains("ICat")).ShouldBe(1);
             classDto.Keys.OfType<ContractDto>().Count(i => i.Contract.Contains("IDisposable")).ShouldBe(1);
         }
-#endif
     }
 }
+#endif

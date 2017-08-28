@@ -1,9 +1,10 @@
-﻿namespace DevTeam.IoC.Contracts
+﻿#if !NET35
+namespace DevTeam.IoC.Contracts
 {
-#if !NET35
     using System.Threading;
     using System.Threading.Tasks;
 
+    [PublicAPI]
     public interface IAsyncResolving
     {
         [NotNull]
@@ -18,5 +19,5 @@
         [NotNull]
         Task<TContract> AsyncInstance<TContract>(CancellationToken cancellationToken, [NotNull] IStateProvider stateProvider);
     }
-#endif
 }
+#endif

@@ -5,7 +5,6 @@
     using Contracts;
 
     internal sealed class Cache<TKey, TValue> : ICache<TKey, TValue>
-        where TValue: class
     {
         private readonly Dictionary<TKey, TValue> _cache = new Dictionary<TKey, TValue>();
 
@@ -21,12 +20,7 @@
 #if DEBUG
             if (key == null) throw new ArgumentNullException(nameof(key));
 #endif
-            if (_cache.TryGetValue(key, out value))
-            {
-                return true;
-            }
-
-            return false;
+            return _cache.TryGetValue(key, out value);
         }
 
 #if !NET35 && !NET40

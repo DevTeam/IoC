@@ -34,7 +34,7 @@
             _properties = typeMetadata.Properties?.ToArray();
         }
 
-        public bool TryResolveType(Type implementationType, out Type resolvedType, ICreationContext creationContext = null)
+        public bool TryResolveType(Type implementationType, out Type resolvedType, CreationContext? creationContext = null)
         {
 #if DEBUG
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
@@ -111,6 +111,7 @@
 
                 foreach (var item in methodList)
                 {
+                    // ReSharper disable once PossibleNullReferenceException
                     _methodsDict.Add(item.method, item.Parameters.ToArray());
                 }
             }
@@ -127,6 +128,7 @@
 
                 foreach (var item in methodList)
                 {
+                    // ReSharper disable once PossibleNullReferenceException
                     _methodsDict.Add(item.method, new[] { item.Parameter });
                 }
             }
@@ -182,7 +184,7 @@
                 return (
                     from contractKey in paramMetadata.ContractKeys ?? Enumerable.Empty<IContractKey>()
                     let contractTypeInfo = _reflection.GetType(contractKey.ContractType)
-                    where parameterTypeInfo.IsAssignableFrom(contractTypeInfo) || genericTypeInfo != null && genericTypeInfo.IsAssignableFrom(contractTypeInfo) && genericTypeArguments != null && contractKey.GenericTypeArguments.SequenceEqual(genericTypeArguments)
+                    where parameterTypeInfo.IsAssignableFrom(contractTypeInfo) || genericTypeInfo != null && genericTypeInfo.IsAssignableFrom(contractTypeInfo) && genericTypeArguments != null && Arrays.SequenceEqual(contractKey.GenericTypeArguments, genericTypeArguments)
                     select contractKey).Any();
             }
 

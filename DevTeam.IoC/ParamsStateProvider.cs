@@ -15,12 +15,7 @@
 #endif
         public static IStateProvider Create(params object[] state)
         {
-            if (state.Length == 0)
-            {
-                return Empty;
-            }
-
-            return new ParamsStateProvider(state);
+            return state.Length == 0 ? Empty : new ParamsStateProvider(state);
         }
 
         private ParamsStateProvider(params object[] state)
@@ -34,14 +29,14 @@
 #if !NET35 && !NET40
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
-        public object GetState(ICreationContext creationContext, IStateKey stateKey)
+        public object GetState(CreationContext creationContext, IStateKey stateKey)
         {
             return _state[stateKey.Index];
         }
 
         public bool Equals(ParamsStateProvider other)
         {
-            return _state.SequenceEqual(other._state);
+            return Arrays.SequenceEqual(_state, other._state);
         }
 
         public override bool Equals(object obj)

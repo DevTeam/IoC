@@ -182,7 +182,7 @@
                     throw new Exception($"Invalid factory method type {factoryMethodName}");
                 }
 
-                var factoryMethod = _reflection.GetType(factoryMethodType).GetMethod(factoryMethodName, typeof(ICreationContext));
+                var factoryMethod = _reflection.GetType(factoryMethodType).GetMethod(factoryMethodName, typeof(CreationContext));
                 if (factoryMethod == null)
                 {
                     throw new Exception($"Factory method {registerDto.FactoryMethodName} was not found");

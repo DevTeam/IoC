@@ -23,12 +23,13 @@ namespace System
         {
             get
             {
-                if (!_created)
+                if (_created)
                 {
-                    _created = true;
-                    _value = _factory();
+                    return _value;
                 }
 
+                _created = true;
+                _value = _factory();
                 return _value;
             }
         }

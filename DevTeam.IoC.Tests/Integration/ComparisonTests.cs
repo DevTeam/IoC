@@ -1,4 +1,5 @@
 ﻿// ReSharper disable HeuristicUnreachableCode
+// ReSharper disable RedundantUsingDirective
 #pragma warning disable 162
 namespace DevTeam.IoC.Tests.Integration
 {
@@ -29,9 +30,6 @@ namespace DevTeam.IoC.Tests.Integration
         [Fact]
         public void ComparisonTest()
         {
-#if DEBUG
-            return;
-#endif
             const int warmupSeries = 10;
             const int series = 100000;
             const int pressure = 1 << 32;
@@ -53,14 +51,16 @@ namespace DevTeam.IoC.Tests.Integration
                 results.Add(ioc.Key, elapsedMilliseconds);
             }
 
-            var actualElapsedMilliseconds = results["DevTeam"];
             var resultsStr = string.Join("\n", results.Select(i => $"{i.Key}: {i.Value}").ToArray());
             var resultFileName = Path.Combine(TestsExtensions.GetBinDirectory(), "ComparisonTest.txt");
             File.WriteAllText(resultFileName, resultsStr);
+#if !DEBUG
+            var actualElapsedMilliseconds = results["DevTeam"];
             foreach (var result in results)
             {
                 Assert.True(actualElapsedMilliseconds <= result.Value, $"{result.Key} is better: {result.Value}, our result is : {actualElapsedMilliseconds}.\nResults:\n{resultsStr}");
             }
+#endif
         }
 
         private static long DevTeam(int series)
@@ -70,8 +70,8 @@ namespace DevTeam.IoC.Tests.Integration
                 .Register().Contract<IService1>().Autowiring<Service1>()
                 .And().Contract<IService2>().Lifetime(Wellknown.Lifetime.Singleton).Autowiring<Service2>().ToSelf())
             {
-                var resolver = container.Resolve().Contract<IService1>();
                 var stopwatch = Stopwatch.StartNew();
+                var resolver = container.Resolve().Contract<IService1>();
                 for (var i = 0; i < series; i++)
                 {
                     resolver.Instance<IService1>();

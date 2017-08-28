@@ -7,10 +7,10 @@
           where T : IResolver
     {
         [NotNull]
-        IRegistrationResult<T> FactoryMethod([NotNull] Func<ICreationContext, object> factoryMethod);
+        IRegistrationResult<T> FactoryMethod([NotNull] Func<CreationContext, object> factoryMethod);
 
         [NotNull]
-        IRegistrationResult<T> FactoryMethod<TImplementation>([NotNull] Func<ICreationContext, TImplementation> factoryMethod);
+        IRegistrationResult<T> FactoryMethod<TImplementation>([NotNull] Func<CreationContext, TImplementation> factoryMethod);
 
         [NotNull]
         IRegistrationResult<T> Autowiring([NotNull] Type implementationType, bool lazy = false, [CanBeNull] IMetadataProvider metadataProvider = null);

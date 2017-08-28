@@ -12,11 +12,10 @@
 #if !NET35 && !NET40
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
-        public object Create(ILifetimeContext lifetimeContext, ICreationContext creationContext, IEnumerator<ILifetime> lifetimeEnumerator)
+        public object Create(ILifetimeContext lifetimeContext, CreationContext creationContext, IEnumerator<ILifetime> lifetimeEnumerator)
         {
 #if DEBUG
             if (lifetimeContext == null) throw new ArgumentNullException(nameof(lifetimeContext));
-            if (creationContext == null) throw new ArgumentNullException(nameof(creationContext));
             if (lifetimeEnumerator == null) throw new ArgumentNullException(nameof(lifetimeEnumerator));
 #endif
             return creationContext.ResolverContext.RegistryContext.InstanceFactory.Create(creationContext);

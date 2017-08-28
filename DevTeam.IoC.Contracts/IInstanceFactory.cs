@@ -4,6 +4,6 @@
     public interface IInstanceFactory
     {
         [NotNull]
-        object Create([NotNull] ICreationContext creationContext);
+        object Create(CreationContext creationContext);
     }
 }

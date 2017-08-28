@@ -1,4 +1,5 @@
-﻿namespace DevTeam.IoC.Tests
+﻿// ReSharper disable RedundantUsingDirective
+namespace DevTeam.IoC.Tests
 {
     using System;
     using System.Collections.Generic;
@@ -6,8 +7,8 @@
     using System.Linq;
     using System.Reflection;
     using System.Text.RegularExpressions;
-    using Contracts;
     using Moq;
+    using Contracts;
     using Shouldly;
     using Xunit;
 
@@ -31,14 +32,12 @@
             // Given
             var metadataProvider = CreateInstance();
             var key = new CompositeKey((contractKeyType != null ? Enumerable.Repeat(contractKeyType, 1) : Enumerable.Empty<Type>()).Select(i => new ContractKey(_reflection, i, true)).Cast<IContractKey>().ToArray());
-            var resolverContext = new Mock<IResolverContext>();
-            resolverContext.SetupGet(i => i.Key).Returns(key);
-            var creationContext = new Mock<ICreationContext>();
-            creationContext.SetupGet(i => i.ResolverContext).Returns(resolverContext.Object);
+            var registryContext = new RegistryContext();
+            var resolverContext = new ResolverContext(Mock.Of<IContainer>(), registryContext, Mock.Of<IInstanceFactory>(), key);
+            var creationContext = new CreationContext(resolverContext, Mock.Of<IStateProvider>());
 
             // When
-            Type actualResolveImplementationType;
-            var result = metadataProvider.TryResolveType(implementationType, out actualResolveImplementationType, creationContext.Object);
+            var result = metadataProvider.TryResolveType(implementationType, out var actualResolveImplementationType, creationContext);
 
             // Then
             result.ShouldBe(expectedResolved);
@@ -61,8 +60,7 @@
             var metadataProvider = CreateInstance();
 
             // When
-            Type actualResolveImplementationType;
-            var result = metadataProvider.TryResolveType(implementationType, out actualResolveImplementationType);
+            var result = metadataProvider.TryResolveType(implementationType, out var actualResolveImplementationType);
 
             // Then
             result.ShouldBe(expectedResult);

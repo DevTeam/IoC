@@ -6,6 +6,6 @@
         object Key { [NotNull] get; }
 
         [CanBeNull]
-        object GetState([NotNull] ICreationContext creationContext, [NotNull] IStateKey stateKey);
+        object GetState(CreationContext creationContext, [NotNull] IStateKey stateKey);
     }
 }

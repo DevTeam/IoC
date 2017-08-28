@@ -18,7 +18,7 @@
         public static IDisposable RawRegister<TContract>(
             [NotNull] IRegistry registry,
             [NotNull] IEnumerable<IKey> keys,
-            [NotNull] Func<ICreationContext, TContract> factoryMethod,
+            [NotNull] Func<CreationContext, TContract> factoryMethod,
             [NotNull] params IExtension[] extensions)
         {
 #if DEBUG
@@ -28,26 +28,7 @@
             if (extensions == null) throw new ArgumentNullException(nameof(extensions));
 #endif
             var registryContext = registry.CreateRegistryContext(keys, new MethodFactory<TContract>(factoryMethod), extensions);
-            registry.TryRegister(registryContext, out IDisposable disposable);
-            return disposable;
-        }
-
-        public static IDisposable RawRegister(
-            [NotNull] Type contractType,
-            [NotNull] IRegistry registry,
-            [NotNull] IEnumerable<IKey> keys,
-            [NotNull] Func<ICreationContext, object> factoryMethod,
-            [NotNull] params IExtension[] extensions)
-        {
-#if DEBUG
-            if (contractType == null) throw new ArgumentNullException(nameof(contractType));
-            if (registry == null) throw new ArgumentNullException(nameof(registry));
-            if (keys == null) throw new ArgumentNullException(nameof(keys));
-            if (factoryMethod == null) throw new ArgumentNullException(nameof(factoryMethod));
-            if (extensions == null) throw new ArgumentNullException(nameof(extensions));
-#endif
-            var registryContext = registry.CreateRegistryContext(keys, new MethodFactory<object>(factoryMethod), extensions);
-            registry.TryRegister(registryContext, out IDisposable disposable);
+            registry.TryRegister(registryContext, out var disposable);
             return disposable;
         }
 

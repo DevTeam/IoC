@@ -1,8 +1,6 @@
 ﻿namespace DevTeam.IoC
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using Contracts;
 
     internal sealed class ParameterMetadata : IParameterMetadata
@@ -48,8 +46,7 @@
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            var other = obj as IParameterMetadata;
-            return other != null && Equals(other);
+            return obj is IParameterMetadata other && Equals(other);
         }
 
         public override int GetHashCode()
@@ -68,7 +65,7 @@
 #if !NET35 && !NET40
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
-        private bool Equals<T>([CanBeNull] IEnumerable<T> s1, [CanBeNull] IEnumerable<T> s2)
+        private bool Equals<T>([CanBeNull] T[] s1, [CanBeNull] T[] s2)
         {
             if (object.Equals(s1, s2))
             {
@@ -80,7 +77,7 @@
                 return false;
             }
 
-            return s1.SequenceEqual(s2);
+            return Arrays.SequenceEqual(s1, s2);
         }
     }
 }

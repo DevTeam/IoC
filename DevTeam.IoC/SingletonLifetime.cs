@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using Contracts;
 
     internal sealed class SingletonLifetime: KeyBasedLifetime<SingletonLifetime.Key>
@@ -31,28 +30,44 @@
 #if !NET35 && !NET40
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
-        private static Key KeySelector(ILifetimeContext lifetimeContext, ICreationContext creationContext)
+        private static Key KeySelector(ILifetimeContext lifetimeContext, CreationContext creationContext)
         {
 #if DEBUG
             if (lifetimeContext == null) throw new ArgumentNullException(nameof(lifetimeContext));
-            if (creationContext == null) throw new ArgumentNullException(nameof(creationContext));
 #endif
-            var compositeKey = creationContext.ResolverContext.Key as ICompositeKey;
-            var genericTypes = (creationContext.ResolverContext.Key as IContractKey)?.GenericTypeArguments ?? compositeKey?.ContractKeys?.FirstOrDefault(i => i.GenericTypeArguments.Length > 0)?.GenericTypeArguments;
-            return new Key(creationContext.ResolverContext.RegistryContext, genericTypes);
+            var resolverContext = creationContext.ResolverContext;
+            switch (resolverContext.Key)
+            {
+                case ICompositeKey compositeKey:
+                    foreach (var key in compositeKey.ContractKeys)
+                    {
+                        var genericTypeArguments = key.GenericTypeArguments;
+                        if (genericTypeArguments.Length > 0)
+                        {
+                            return new Key(resolverContext.RegistryContext.Id, genericTypeArguments);
+                        }
+                    }
+                    return new Key(resolverContext.RegistryContext.Id);
+
+                case IContractKey contractKey:
+                    return new Key(resolverContext.RegistryContext.Id, contractKey.GenericTypeArguments);
+
+                default:
+                    throw new ContainerException($"Unknown key type {resolverContext.Key}");
+            }
         }
 
-        internal sealed class Key
+        internal struct Key
         {
-            private readonly IRegistryContext _registryContext;
+            private readonly long _registryContextId;
             [CanBeNull] private readonly Type[] _types;
             private readonly int _hashCode;
 
-            public Key(IRegistryContext registryContext, [CanBeNull] params Type[] types)
+            public Key(long registryContextId, [CanBeNull] params Type[] types)
             {
-                _registryContext = registryContext;
+                _registryContextId = registryContextId;
                 _types = types;
-                _hashCode = registryContext.GetHashCode();
+                _hashCode = registryContextId.GetHashCode();
                 if (_types != null)
                 {
                     foreach (var type in _types)
@@ -65,16 +80,21 @@
                 }
             }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
             public override int GetHashCode()
             {
                 return _hashCode;
             }
 
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
             public override bool Equals(object obj)
             {
 #if DEBUG
                 if (ReferenceEquals(null, obj)) return false;
-                if (ReferenceEquals(this, obj)) return true;
                 if (obj.GetType() != GetType()) return false;
 #endif
                 return Equals((Key) obj);
@@ -85,7 +105,8 @@
 #endif
             private bool Equals(Key other)
             {
-                return _registryContext.Equals(other._registryContext) && (_types == other._types || (_types != null && other._types != null && _types.SequenceEqual(other._types)));
+                return _registryContextId == other._registryContextId
+                    && (_types == other._types || (_types != null && other._types != null && Arrays.SequenceEqual(_types, other._types)));
             }
         }
 
@@ -111,7 +132,7 @@
 #if !NET35 && !NET40
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
-            public object Create(ILifetimeContext lifetimeContext, ICreationContext creationContext, IEnumerator<ILifetime> lifetimeEnumerator)
+            public object Create(ILifetimeContext lifetimeContext, CreationContext creationContext, IEnumerator<ILifetime> lifetimeEnumerator)
             {
                 lock (_lockObject)
                 {

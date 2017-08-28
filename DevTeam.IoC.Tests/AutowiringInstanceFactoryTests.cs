@@ -95,16 +95,12 @@
             return new MetadataFactory(typeof(T), new ExpressionMethodFactory(), new AutowiringMetadataProvider(Reflection.Shared), _container.KeyFactory);
         }
 
-        private ICreationContext CreateContext(params object[] state)
+        private CreationContext CreateContext(params object[] state)
         {
-            var registryContext = new Mock<IRegistryContext>();
-            registryContext.SetupGet(i => i.Container).Returns(_container);
-            var resolverContext = new Mock<IResolverContext>();
-            resolverContext.SetupGet(i => i.RegistryContext).Returns(registryContext.Object);
-            var creationContext = new Mock<ICreationContext>();
-            creationContext.SetupGet(i => i.StateProvider).Returns(ParamsStateProvider.Create(state));
-            creationContext.SetupGet(i => i.ResolverContext).Returns(resolverContext.Object);
-            return creationContext.Object;
+            var registryContext = new RegistryContext(_container, new[] { Mock.Of<IKey>() }, Mock.Of<IInstanceFactory>());
+            var resolverContext = new ResolverContext(_container, registryContext, Mock.Of<IInstanceFactory>(), Mock.Of<IKey>());
+            var creationContext = new CreationContext(resolverContext, ParamsStateProvider.Create(state));
+            return creationContext;
         }
 
         // ReSharper disable once ClassNeverInstantiated.Local

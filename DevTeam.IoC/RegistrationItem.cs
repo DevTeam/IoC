@@ -13,11 +13,10 @@
 
         [SuppressMessage("ReSharper", "JoinNullCheckWithUsage")]
         public RegistrationItem(
-            [NotNull] IRegistryContext registryContext,
+            RegistryContext registryContext,
             [NotNull] IEnumerable<IDisposable> resources)
         {
 #if DEBUG
-            if (registryContext == null) throw new ArgumentNullException(nameof(registryContext));
             if (resources == null) throw new ArgumentNullException(nameof(resources));
 #endif
             _resources = resources;
@@ -38,7 +37,7 @@
             }
         }
 
-        public IRegistryContext RegistryContext { [NotNull] get; }
+        public RegistryContext RegistryContext { [NotNull] get; }
 
         public LifetimesFactory InstanceFactory { [NotNull] get; }
 

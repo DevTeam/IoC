@@ -14,10 +14,8 @@
             IConsole console,
             ILogger<Chronometer> logger)
         {
-            if (console == null) throw new ArgumentNullException(nameof(console));
-            if (logger == null) throw new ArgumentNullException(nameof(logger));
-            _console = console;
-            _logger = logger;
+            _console = console ?? throw new ArgumentNullException(nameof(console));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             logger.LogInfo("created");
         }
 

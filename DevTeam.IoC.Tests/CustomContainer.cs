@@ -23,22 +23,22 @@
 
         public IKeyFactory KeyFactory => SharedKeyFactory;
 
-        public IRegistryContext CreateRegistryContext(IEnumerable<IKey> keys, IInstanceFactory factory, params IExtension[] extensions)
+        public RegistryContext CreateRegistryContext(IEnumerable<IKey> keys, IInstanceFactory factory, params IExtension[] extensions)
         {
             return Parent.CreateRegistryContext(keys, factory, extensions);
         }
 
-        public bool TryRegister(IRegistryContext context, out IDisposable registration)
+        public bool TryRegister(RegistryContext context, out IDisposable registration)
         {
             return Parent.TryRegister(context, out registration);
         }
 
-        public bool TryCreateResolverContext(IKey key, out IResolverContext resolverContext, IContainer container = null)
+        public bool TryCreateResolverContext(IKey key, out ResolverContext resolverContext, IContainer container = null)
         {
             return Parent.TryCreateResolverContext(key, out resolverContext, container);
         }
 
-        public object Resolve(IResolverContext context, IStateProvider stateProvider = null)
+        public object Resolve(ResolverContext context, IStateProvider stateProvider = null)
         {
             return Parent.Resolve(context, stateProvider);
         }

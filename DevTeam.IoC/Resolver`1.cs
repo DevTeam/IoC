@@ -10,11 +10,8 @@
     {
         private readonly IResolving<IResolver> _resolving;
 
-        public Resolver(IResolverContext context)
+        public Resolver(ResolverContext context)
         {
-#if DEBUG
-            if (context == null) throw new ArgumentNullException(nameof(context));
-#endif
             _resolving = context.Container.Resolve<IResolver>().Key(ExcludeContractKeys(context.Key)).Contract<TContract>();
         }
 
@@ -104,7 +101,11 @@
                     yield break;
 
                 case ICompositeKey compositeKey:
+#if NET35
                     foreach (var subKey in compositeKey.StateKeys.Cast<IKey>().Concat(compositeKey.TagKeys.Cast<IKey>()))
+#else
+                    foreach (var subKey in compositeKey.StateKeys.Concat(compositeKey.TagKeys.Cast<IKey>()))
+#endif
                     {
                         yield return subKey;
                     }

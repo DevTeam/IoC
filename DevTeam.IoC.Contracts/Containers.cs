@@ -69,9 +69,8 @@
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
         [NotNull]
-        public static T GetState<T>([NotNull] this ICreationContext ctx, int index)
+        public static T GetState<T>(this CreationContext ctx, int index)
         {
-            if (ctx == null) throw new ArgumentNullException(nameof(ctx));
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
             return (T)GetState(ctx, index, typeof(T));
         }
@@ -80,9 +79,8 @@
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
         [CanBeNull]
-        public static T TryGetState<T>([NotNull] this ICreationContext ctx, int index)
+        public static T TryGetState<T>(this CreationContext ctx, int index)
         {
-            if (ctx == null) throw new ArgumentNullException(nameof(ctx));
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
             return (T)ctx.TryGetState(index, typeof(T));
         }
@@ -91,9 +89,8 @@
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
         [CanBeNull]
-        private static object TryGetState([NotNull] this ICreationContext ctx, int index, [NotNull] Type stateType)
+        private static object TryGetState(this CreationContext ctx, int index, [NotNull] Type stateType)
         {
-            if (ctx == null) throw new ArgumentNullException(nameof(ctx));
             if (stateType == null) throw new ArgumentNullException(nameof(stateType));
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
             return ctx.StateProvider.GetState(ctx, ctx.ResolverContext.Container.KeyFactory.CreateStateKey(index, stateType, true));
@@ -103,12 +100,9 @@
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
         [NotNull]
-        private static object GetState([NotNull] this ICreationContext ctx, int index, [NotNull] Type stateType)
+        private static object GetState(this CreationContext ctx, int index, [NotNull] Type stateType)
         {
-            if (ctx == null) throw new ArgumentNullException(nameof(ctx));
             if (stateType == null) throw new ArgumentNullException(nameof(stateType));
-            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
-            if (ctx == null) throw new ArgumentNullException(nameof(ctx));
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
             var value = TryGetState(ctx, index, stateType);
             if (value == null)
@@ -127,13 +121,12 @@
              where TResolver : IResolver
         {
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-            var fluentProvider = resolver as IProvider<IFluent>;
-            if (fluentProvider == null || !fluentProvider.TryGet(out IFluent fluent))
+            if (resolver is IProvider<IFluent> fluentProvider && fluentProvider.TryGet(out var fluent))
             {
-                throw new ContainerException($"{typeof(IProvider<IFluent>)} is not supported.\nDetails:\n{resolver}");
+                return fluent;
             }
 
-            return fluent;
+            throw new ContainerException($"{typeof(IProvider<IFluent>)} is not supported.\nDetails:\n{resolver}");
         }
     }
 }

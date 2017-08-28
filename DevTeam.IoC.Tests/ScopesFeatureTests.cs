@@ -79,10 +79,9 @@
                     .Contract<ISimpleService>()
                     .FactoryMethod(ctx => mock.Object))
                 {
-                    ISimpleService actualObj;
 
                     // Then
-                    childContainer2.TryResolve(out actualObj).ShouldBeFalse();
+                    childContainer2.TryResolve(out ISimpleService _).ShouldBeFalse();
                 }
             }
         }

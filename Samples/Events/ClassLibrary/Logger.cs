@@ -13,10 +13,8 @@
             IName<T> name,
             IConsole console)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
-            if (console == null) throw new ArgumentNullException(nameof(console));
-            _name = name;
-            _console = console;
+            _name = name ?? throw new ArgumentNullException(nameof(name));
+            _console = console ?? throw new ArgumentNullException(nameof(console));
         }
 
         public string InstanceName => _name.Short;

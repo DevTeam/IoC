@@ -5,6 +5,7 @@ namespace ConsoleApp
     using DevTeam.IoC;
     using DevTeam.IoC.Contracts;
 
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class Program
     {
         public static void Main()
@@ -28,6 +29,7 @@ namespace ConsoleApp
         string Name { get; }
     }
 
+    // ReSharper disable once ClassNeverInstantiated.Global
     class Contact : IContact
     {
         public Contact([State] string name)

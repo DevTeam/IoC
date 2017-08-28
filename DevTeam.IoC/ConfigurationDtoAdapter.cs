@@ -2,7 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+#if NET35
     using System.Linq;
+#endif
     using System.Reflection;
     using Contracts;
     using Contracts.Dto;
@@ -29,7 +31,7 @@
         {
             if (!_converterConfigurationDtoToDependencies.TryConvert(
                 _configurationDto,
-                out IEnumerable<IConfiguration> dependencies,
+                out var dependencies,
                 container))
             {
                 throw new ContainerException($"Error during getting dependencies.\nDetails:\n{container}");
@@ -43,7 +45,7 @@
             if (container == null) throw new ArgumentNullException(nameof(container));
             if (!_converterConfigurationDtoToRegistrations.TryConvert(
                 _configurationDto,
-                out IEnumerable<IRegistrationResult<IContainer>> registrations,
+                out var registrations,
                 new ConverterConfigurationDtoToRegistrations.Context(
                     container,
                     new TypeResolverContext(
@@ -53,7 +55,11 @@
                 throw new ContainerException($"Error during getting registrations.\nDetails:\n{container}");
             }
 
+#if NET35
             return registrations.Cast<IDisposable>();
+#else
+            return registrations;
+#endif
         }
     }
 }

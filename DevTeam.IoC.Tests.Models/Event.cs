@@ -5,20 +5,19 @@
 
     internal sealed class Event<T> : IEvent<T>
     {
-        [NotNull] private readonly ILog _log;
-
         public Event(
             [NotNull] [State(0, typeof(string), Value = nameof(Event<T>))] ILog log,
             [State] T data,
             [Tag("IdGenerator")] long id)
         {
-            _log = log;
             if (log == null) throw new ArgumentNullException(nameof(log));
             log.Method("Ctor()");
+            Data = data;
+            Id = id;
         }
 
-        public long Id { get; private set; }
+        public long Id { get; }
 
-        public T Data { get; private set; }
+        public T Data { get; }
     }
 }

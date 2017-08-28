@@ -1,6 +1,4 @@
-﻿using DevTeam.IoC.Contracts;
-
-namespace DevTeam.IoC.Tests
+﻿namespace DevTeam.IoC.Tests
 {
     using System.Linq;
     using Contracts;
@@ -64,6 +62,7 @@ namespace DevTeam.IoC.Tests
                 var obj2 = container.Resolve().Instance<MyClass3>();
 
                 // Then
+                obj.ShouldBe(obj2);
             }
         }
 

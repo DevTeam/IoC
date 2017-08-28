@@ -12,16 +12,16 @@
         private readonly Mock<IEnumerator<ILifetime>> _lifetimeEnumerator;
         private readonly Mock<ILifetime> _baseLifetime;
         private readonly Mock<ILifetimeContext> _lifetimeContext;
-        private readonly Mock<ICreationContext> _сreationContext;
+        private readonly CreationContext _сreationContext;
 
         public AutoDisposingLifetimeTests()
         {
             _lifetimeEnumerator = new Mock<IEnumerator<ILifetime>>();
             _baseLifetime = new Mock<ILifetime>();
             _lifetimeContext = new Mock<ILifetimeContext>();
-            var resolverContext = new Mock<IResolverContext>();
-            _сreationContext = new Mock<ICreationContext>();
-            _сreationContext.SetupGet(i => i.ResolverContext).Returns(resolverContext.Object);
+            var registryContext = new RegistryContext(Mock.Of<IContainer>(), new[] {Mock.Of<IKey>()}, Mock.Of<IInstanceFactory>());
+            var resolverContext = new ResolverContext(Mock.Of<IContainer>(), registryContext, Mock.Of<IInstanceFactory>(), Mock.Of<IKey>());
+            _сreationContext = new CreationContext(resolverContext, Mock.Of<IStateProvider>());
         }
 
         [Fact]
@@ -32,13 +32,13 @@
             var lifetime = CreateInstance();
             _lifetimeEnumerator.Setup(i => i.MoveNext()).Returns(true);
             _lifetimeEnumerator.SetupGet(i => i.Current).Returns(_baseLifetime.Object);
-            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _сreationContext.Object, _lifetimeEnumerator.Object)).Returns(obj);
+            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _сreationContext, _lifetimeEnumerator.Object)).Returns(obj);
 
             // When
-            var actualObj = lifetime.Create(_lifetimeContext.Object, _сreationContext.Object, _lifetimeEnumerator.Object);
+            var actualObj = lifetime.Create(_lifetimeContext.Object, _сreationContext, _lifetimeEnumerator.Object);
 
             // Then
-            _baseLifetime.Verify(i => i.Create(_lifetimeContext.Object, _сreationContext.Object, _lifetimeEnumerator.Object), Times.Exactly(1));
+            _baseLifetime.Verify(i => i.Create(_lifetimeContext.Object, _сreationContext, _lifetimeEnumerator.Object), Times.Exactly(1));
             actualObj.ShouldBe(obj);
             lifetime.Count.ShouldBe(0);
         }
@@ -51,13 +51,13 @@
             var lifetime = CreateInstance();
             _lifetimeEnumerator.Setup(i => i.MoveNext()).Returns(true);
             _lifetimeEnumerator.SetupGet(i => i.Current).Returns(_baseLifetime.Object);
-            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _сreationContext.Object, _lifetimeEnumerator.Object)).Returns(obj.Object);
+            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _сreationContext, _lifetimeEnumerator.Object)).Returns(obj.Object);
 
             // When
-            var actualObj = lifetime.Create(_lifetimeContext.Object, _сreationContext.Object, _lifetimeEnumerator.Object);
+            var actualObj = lifetime.Create(_lifetimeContext.Object, _сreationContext, _lifetimeEnumerator.Object);
 
             // Then
-            _baseLifetime.Verify(i => i.Create(_lifetimeContext.Object, _сreationContext.Object, _lifetimeEnumerator.Object), Times.Exactly(1));
+            _baseLifetime.Verify(i => i.Create(_lifetimeContext.Object, _сreationContext, _lifetimeEnumerator.Object), Times.Exactly(1));
             actualObj.ShouldBe(obj.Object);
             lifetime.Count.ShouldBe(1);
         }
@@ -70,8 +70,8 @@
             var lifetime = CreateInstance();
             _lifetimeEnumerator.Setup(i => i.MoveNext()).Returns(true);
             _lifetimeEnumerator.SetupGet(i => i.Current).Returns(_baseLifetime.Object);
-            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _сreationContext.Object, _lifetimeEnumerator.Object)).Returns(obj.Object);
-            lifetime.Create(_lifetimeContext.Object, _сreationContext.Object, _lifetimeEnumerator.Object);
+            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _сreationContext, _lifetimeEnumerator.Object)).Returns(obj.Object);
+            lifetime.Create(_lifetimeContext.Object, _сreationContext, _lifetimeEnumerator.Object);
 
             // When
             lifetime.Dispose();

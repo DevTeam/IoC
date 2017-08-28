@@ -1,14 +1,12 @@
 ﻿namespace DevTeam.IoC.Contracts
 {
+    using System;
     using System.Collections.Generic;
 
-    public interface IKeySet<T>: IEnumerable<T>
+    [PublicAPI]
+    public interface IKeySet<T>: IEnumerable<T>, IEquatable<IKeySet<T>>
         where T : IKey
     {
         int Count { get; }
-
-        bool IsEqual(IKeySet<T> keys);
-
-        bool IsIntersecting(IKeySet<T> keys);
     }
 }

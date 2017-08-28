@@ -3,6 +3,7 @@
     [PublicAPI]
     public static class Wellknown
     {
+        [PublicAPI]
         public enum Feature
         {
             // Support default set of features.
@@ -41,6 +42,7 @@
             Dto
         }
 
+        [PublicAPI]
         public enum Lifetime
         {
             /// <summary>
@@ -74,6 +76,7 @@
             PerState
         }
 
+        [PublicAPI]
         public enum KeyComparer
         {
             // Tag key does not impact on resolving.
@@ -86,6 +89,7 @@
             AnyTagAnyState,
         }
 
+        [PublicAPI]
         public enum Scope
         {
             /// <summary>

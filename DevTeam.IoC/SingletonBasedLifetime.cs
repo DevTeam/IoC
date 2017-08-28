@@ -6,7 +6,7 @@
 
     internal sealed class SingletonBasedLifetime<T>: KeyBasedLifetime<T>
     {
-        public SingletonBasedLifetime([NotNull] Func<ILifetimeContext, ICreationContext, T> keySelector)
+        public SingletonBasedLifetime([NotNull] Func<ILifetimeContext, CreationContext, T> keySelector)
             : base(keySelector)
         {
         }

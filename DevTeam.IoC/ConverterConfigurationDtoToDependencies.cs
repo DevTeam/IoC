@@ -52,7 +52,7 @@
                         }
 
                         using (var childContainer = container.CreateChild()
-                                .Register().Contract<IConfiguration>().Autowiring(configurationType).ToSelf())
+                            .Register().Contract<IConfiguration>().Autowiring(configurationType).ToSelf())
                         {
                             yield return childContainer.Resolve().Instance<IConfiguration>();
                         }

@@ -1,15 +1,15 @@
-﻿namespace DevTeam.IoC
+﻿namespace DevTeam.IoC.Contracts
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using Contracts;
 
-    internal struct ResolverContext: IResolverContext
+    [PublicAPI]
+    public struct ResolverContext
     {
         [SuppressMessage("ReSharper", "JoinNullCheckWithUsage")]
         public ResolverContext(
             [NotNull] IContainer container,
-            [NotNull] IRegistryContext registryContext,
+            RegistryContext registryContext,
             [NotNull] IInstanceFactory instanceFactory,
             [NotNull] IKey key)
         {
@@ -17,7 +17,6 @@
             if (container == null) throw new ArgumentNullException(nameof(container));
             if (key == null) throw new ArgumentNullException(nameof(key));
             if (instanceFactory == null) throw new ArgumentNullException(nameof(instanceFactory));
-            if (registryContext == null) throw new ArgumentNullException(nameof(registryContext));
 #endif
             Container = container;
             RegistryContext = registryContext;
@@ -25,13 +24,13 @@
             Key = key;
         }
 
-        public IContainer Container { get; set; }
+        public readonly IContainer Container;
 
-        public IKey Key { get; }
+        public readonly IKey Key;
 
-        public IInstanceFactory InstanceFactory { get; }
+        public readonly IInstanceFactory InstanceFactory;
 
-        public IRegistryContext RegistryContext { get; }
+        public readonly RegistryContext RegistryContext;
 
         public override string ToString()
         {

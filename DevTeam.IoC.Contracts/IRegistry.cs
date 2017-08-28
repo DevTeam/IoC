@@ -6,12 +6,11 @@
     [PublicAPI]
     public interface IRegistry
     {
-        [NotNull]
-        IRegistryContext CreateRegistryContext(
+        RegistryContext CreateRegistryContext(
             [NotNull] IEnumerable<IKey> keys,
             [NotNull] IInstanceFactory factory,
             [NotNull] params IExtension[] extensions);
 
-        bool TryRegister([NotNull] IRegistryContext context, out IDisposable registration);
+        bool TryRegister(RegistryContext context, out IDisposable registration);
     }
 }

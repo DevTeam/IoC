@@ -3,8 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading;
 #if !NET35
+    using System.Threading;
     using System.Threading.Tasks;
 #endif
     using Contracts;
@@ -15,7 +15,7 @@
         private readonly HashSet<IContractKey> _сontractKeys = new HashSet<IContractKey>();
         [CanBeNull] private HashSet<ITagKey> _tagKeys;
         [CanBeNull] private HashSet<IStateKey> _stateKeys;
-        private IResolverContext _resolverContext;
+        private ResolverContext? _resolverContext;
         private IContractKey _singleContractKey;
         private int _contractKeysCount;
 
@@ -54,7 +54,7 @@
         public object Instance(IStateProvider stateProvider)
         {
             if (stateProvider == null) throw new ArgumentNullException(nameof(stateProvider));
-            if (!TryCreateResolverContext(stateProvider, out IKey key, out IResolverContext ctx))
+            if (!TryCreateResolverContext(stateProvider, out IKey key, out ResolverContext ctx))
             {
                 throw new ContainerException(GetCantResolveErrorMessage(key));
             }
@@ -66,7 +66,7 @@
         {
             if (stateProvider == null) throw new ArgumentNullException(nameof(stateProvider));
 #pragma warning disable 168
-            if (!TryCreateResolverContext(stateProvider, out IKey _, out IResolverContext ctx))
+            if (!TryCreateResolverContext(stateProvider, out IKey _, out ResolverContext ctx))
 #pragma warning restore 168
             {
                 instance = default(object);
@@ -85,7 +85,7 @@
                 Contract<TContract>();
             }
 
-            if (!TryCreateResolverContext(stateProvider, out IKey key, out IResolverContext ctx))
+            if (!TryCreateResolverContext(stateProvider, out IKey key, out ResolverContext ctx))
             {
                 throw new ContainerException(GetCantResolveErrorMessage(key));
             }
@@ -102,7 +102,7 @@
             }
 
 #pragma warning disable 168
-            if (!TryCreateResolverContext(stateProvider, out IKey _, out IResolverContext ctx))
+            if (!TryCreateResolverContext(stateProvider, out IKey _, out ResolverContext ctx))
 #pragma warning restore 168
             {
                 instance = default(TContract);
@@ -289,12 +289,12 @@
         private bool TryCreateResolverContext(
             IStateProvider stateProvider,
             out IKey key,
-            out IResolverContext ctx)
+            out ResolverContext ctx)
         {
             if (_resolverContext != null)
             {
-                key = _resolverContext.Key;
-                ctx = _resolverContext;
+                ctx = _resolverContext.Value;
+                key = ctx.Key;
                 return true;
             }
 

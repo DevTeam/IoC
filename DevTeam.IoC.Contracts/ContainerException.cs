@@ -7,6 +7,7 @@
 
     [Serializable]
 #endif
+    [PublicAPI]
     public class ContainerException: InvalidOperationException
     {
         public ContainerException([NotNull] string message)

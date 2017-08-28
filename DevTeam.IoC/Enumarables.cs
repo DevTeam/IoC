@@ -1,10 +1,10 @@
-﻿namespace DevTeam.IoC
+﻿#if NET35
+namespace DevTeam.IoC
 {
     using System;
     using System.Collections.Generic;
     using Contracts;
 
-#if NET35
     internal static class Enumarables
     {
         [NotNull]
@@ -23,5 +23,5 @@
             }
         }
     }
-#endif
 }
+#endif

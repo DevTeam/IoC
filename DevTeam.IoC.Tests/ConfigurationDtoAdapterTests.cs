@@ -468,14 +468,14 @@
 
         private static class MyFactory
         {
-            public static string Create(ICreationContext ctx)
+            public static string Create(CreationContext ctx)
             {
                 return ctx.ResolverContext.RegistryContext.Container.Tag?.ToString() ?? "null";
             }
 
             // ReSharper disable once UnusedParameter.Local
             // ReSharper disable once UnusedMember.Local
-            public static string CreateAbcString(ICreationContext ctx)
+            public static string CreateAbcString(CreationContext ctx)
             {
                 return "abc";
             }

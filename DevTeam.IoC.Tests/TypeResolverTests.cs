@@ -1,4 +1,5 @@
-﻿namespace DevTeam.IoC.Tests
+﻿#if !NET35
+namespace DevTeam.IoC.Tests
 {
     using System;
     using Contracts;
@@ -10,7 +11,6 @@
 
     public class TypeResolverTests
     {
-#if !NET35
         [Theory]
         [InlineData("", "", "int", true, typeof(int))]
         [InlineData("", "", "System.Int32", true, typeof(int))]
@@ -65,7 +65,6 @@
             actualResult.ShouldBe(expectedResult);
             actualType.ShouldBe(expectedType);
         }
-#endif
     }
 
     public class SomeClass
@@ -76,9 +75,11 @@
             {
             }
 
+            // ReSharper disable once UnusedTypeParameter
             public class NesteClass3<T>
             {
             }
         }
     }
 }
+#endif

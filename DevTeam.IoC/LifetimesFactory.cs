@@ -8,7 +8,7 @@
     internal sealed class LifetimesFactory: IInstanceFactory, IDisposable
     {
         private readonly IList<ILifetime> _lifetimes;
-        private readonly Func<ICreationContext, object> _factory;
+        private readonly Func<CreationContext, object> _factory;
 
         [SuppressMessage("ReSharper", "JoinNullCheckWithUsage")]
         public LifetimesFactory(IList<ILifetime> lifetimes)
@@ -28,11 +28,8 @@
             }
         }
 
-        public object Create(ICreationContext creationContext)
+        public object Create(CreationContext creationContext)
         {
-#if DEBUG
-            if (creationContext == null) throw new ArgumentNullException(nameof(creationContext));
-#endif
             return _factory(creationContext);
         }
 
@@ -47,7 +44,7 @@
 #if !NET35 && !NET40
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
-        private object CreateSimple(ICreationContext creationContext)
+        private object CreateSimple(CreationContext creationContext)
         {
             using (new LifetimeContext())
             {
@@ -58,7 +55,7 @@
 #if !NET35 && !NET40
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
-        private object CreateUsingLifetimes(ICreationContext creationContext)
+        private object CreateUsingLifetimes(CreationContext creationContext)
         {
             using (var lifetimesEnumerator = _lifetimes.GetEnumerator())
             {

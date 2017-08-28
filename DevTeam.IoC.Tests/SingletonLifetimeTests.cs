@@ -12,20 +12,18 @@
         private readonly Mock<IEnumerator<ILifetime>> _lifetimeEnumerator;
         private readonly Mock<ILifetime> _baseLifetime;
         private readonly Mock<ILifetimeContext> _lifetimeContext;
-        private readonly Mock<IResolverContext> _resolverContext;
-        private readonly Mock<ICreationContext> _creationContext;
-        private Mock<IRegistryContext> _registryContext;
+        private readonly RegistryContext _registryContext;
+        private ResolverContext _resolverContext;
+        private CreationContext _creationContext;
 
         public SingletonLifetimeTests()
         {
             _lifetimeEnumerator = new Mock<IEnumerator<ILifetime>>();
             _baseLifetime = new Mock<ILifetime>();
             _lifetimeContext = new Mock<ILifetimeContext>();
-            _resolverContext = new Mock<IResolverContext>();
-            _registryContext = new Mock<IRegistryContext>();
-            _creationContext = new Mock<ICreationContext>();
-            _creationContext.SetupGet(i => i.ResolverContext).Returns(_resolverContext.Object);
-            _resolverContext.SetupGet(i => i.RegistryContext).Returns(_registryContext.Object);
+            _registryContext = new RegistryContext(Mock.Of<IContainer>(), new[] { Mock.Of<IKey>() }, Mock.Of<IInstanceFactory>());
+            _resolverContext = new ResolverContext(Mock.Of<IContainer>(), _registryContext, Mock.Of<IInstanceFactory>(), Mock.Of<IKey>());
+            _creationContext = new CreationContext(_resolverContext, Mock.Of<IStateProvider>());
         }
 
         [Fact]
@@ -35,13 +33,14 @@
             var obj = new object();
             var lifetime = CreateInstance();
             var key = new CompositeKey(new IContractKey[]{ new ContractKey(_reflection, typeof(string), true) }, new ITagKey[] { new TagKey("abc") }, new IStateKey[] { new StateKey(_reflection, 0, typeof(string), true) });
-            _resolverContext.SetupGet(i => i.Key).Returns(key);
+            _resolverContext = new ResolverContext(Mock.Of<IContainer>(), _registryContext, Mock.Of<IInstanceFactory>(), key);
+            _creationContext = new CreationContext(_resolverContext, Mock.Of<IStateProvider>());
             _lifetimeEnumerator.Setup(i => i.MoveNext()).Returns(true);
             _lifetimeEnumerator.SetupGet(i => i.Current).Returns(_baseLifetime.Object);
-            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object)).Returns(obj);
+            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _creationContext, _lifetimeEnumerator.Object)).Returns(obj);
 
             // When
-            var actualObj = lifetime.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object);
+            var actualObj = lifetime.Create(_lifetimeContext.Object, _creationContext, _lifetimeEnumerator.Object);
 
             // Then
             actualObj.ShouldBe(obj);
@@ -55,11 +54,12 @@
             var obj = new object();
             var lifetime = CreateInstance();
             var key = new CompositeKey(new IContractKey[] { new ContractKey(_reflection, typeof(string), true) }, new ITagKey[] { new TagKey("abc") }, new IStateKey[] { new StateKey(_reflection, 0, typeof(string), true) });
-            _resolverContext.SetupGet(i => i.Key).Returns(key);
+            _resolverContext = new ResolverContext(Mock.Of<IContainer>(), _registryContext, Mock.Of<IInstanceFactory>(), key);
+            _creationContext = new CreationContext(_resolverContext, Mock.Of<IStateProvider>());
             _lifetimeEnumerator.Setup(i => i.MoveNext()).Returns(true);
             _lifetimeEnumerator.SetupGet(i => i.Current).Returns(_baseLifetime.Object);
-            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object)).Returns(obj);
-            lifetime.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object);
+            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _creationContext, _lifetimeEnumerator.Object)).Returns(obj);
+            lifetime.Create(_lifetimeContext.Object, _creationContext, _lifetimeEnumerator.Object);
 
             // When
             lifetime.Dispose();
@@ -75,17 +75,18 @@
             var obj = new object();
             var lifetime = CreateInstance();
             var key = new CompositeKey(new IContractKey[] { new ContractKey(_reflection, typeof(IEnumerable<string>), true) }, new ITagKey[] { new TagKey("abc") }, new IStateKey[] { new StateKey(_reflection, 0, typeof(string), true) });
-            _resolverContext.SetupGet(i => i.Key).Returns(key);
+            _resolverContext = new ResolverContext(Mock.Of<IContainer>(), _registryContext, Mock.Of<IInstanceFactory>(), key);
+            _creationContext = new CreationContext(_resolverContext, Mock.Of<IStateProvider>());
             _lifetimeEnumerator.Setup(i => i.MoveNext()).Returns(true);
             _lifetimeEnumerator.SetupGet(i => i.Current).Returns(_baseLifetime.Object);
-            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object)).Returns(obj);
+            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _creationContext, _lifetimeEnumerator.Object)).Returns(obj);
 
             // When
-            var actualObj1 = lifetime.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object);
-            var actualObj2 = lifetime.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object);
+            var actualObj1 = lifetime.Create(_lifetimeContext.Object, _creationContext, _lifetimeEnumerator.Object);
+            var actualObj2 = lifetime.Create(_lifetimeContext.Object, _creationContext, _lifetimeEnumerator.Object);
 
             // Then
-            _baseLifetime.Verify(i => i.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object), Times.Exactly(1));
+            _baseLifetime.Verify(i => i.Create(_lifetimeContext.Object, _creationContext, _lifetimeEnumerator.Object), Times.Exactly(1));
             actualObj1.ShouldBe(obj);
             actualObj1.ShouldBe(actualObj2);
             lifetime.Count.ShouldBe(1);
@@ -102,20 +103,20 @@
 
             // When
             var key1 = new CompositeKey(new IContractKey[] { new ContractKey(_reflection, typeof(IEnumerable<string>), true) }, new ITagKey[] { new TagKey("abc") }, new IStateKey[] { new StateKey(_reflection, 0, typeof(string), true) });
-            _resolverContext.SetupGet(i => i.Key).Returns(key1);
-            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object)).Returns(obj);
-            var actualObj1 = lifetime.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object);
+            _resolverContext = new ResolverContext(Mock.Of<IContainer>(), _registryContext, Mock.Of<IInstanceFactory>(), key1);
+            _creationContext = new CreationContext(_resolverContext, Mock.Of<IStateProvider>());
+            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _creationContext, _lifetimeEnumerator.Object)).Returns(obj);
+            var actualObj1 = lifetime.Create(_lifetimeContext.Object, _creationContext, _lifetimeEnumerator.Object);
 
             var key2 = new CompositeKey(new IContractKey[] { new ContractKey(_reflection, typeof(IEnumerable<string>), true) }, new ITagKey[] { new TagKey("xyz") }, new IStateKey[] { new StateKey(_reflection, 0, typeof(string), true) });
-            _resolverContext.SetupGet(i => i.Key).Returns(key2);
-            var actualObj2 = lifetime.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object);
+            _resolverContext = new ResolverContext(Mock.Of<IContainer>(), _registryContext, Mock.Of<IInstanceFactory>(), key2);
+            _creationContext = new CreationContext(_resolverContext, Mock.Of<IStateProvider>());
+            var actualObj2 = lifetime.Create(_lifetimeContext.Object, _creationContext, _lifetimeEnumerator.Object);
 
             // Then
-            _baseLifetime.Verify(i => i.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object), Times.Exactly(1));
             actualObj1.ShouldBe(actualObj2);
             lifetime.Count.ShouldBe(1);
         }
-
 
         [Fact]
         public void ShouldReturnDifferentObjectsWhenThereAreDifferentGenericArguments()
@@ -129,17 +130,18 @@
 
             // When
             var key1 = new CompositeKey(new IContractKey[] { new ContractKey(_reflection, typeof(IEnumerable<string>), true) }, new ITagKey[] { new TagKey("abc") }, new IStateKey[] { new StateKey(_reflection, 0, typeof(string), true) });
-            _resolverContext.SetupGet(i => i.Key).Returns(key1);
-            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object)).Returns(obj1);
-            var actualObj1 = lifetime.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object);
+            _resolverContext = new ResolverContext(Mock.Of<IContainer>(), _registryContext, Mock.Of<IInstanceFactory>(), key1);
+            _creationContext = new CreationContext(_resolverContext, Mock.Of<IStateProvider>());
+            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _creationContext, _lifetimeEnumerator.Object)).Returns(obj1);
+            var actualObj1 = lifetime.Create(_lifetimeContext.Object, _creationContext, _lifetimeEnumerator.Object);
 
             var key2 = new CompositeKey(new IContractKey[] { new ContractKey(_reflection, typeof(IEnumerable<int>), true) }, new ITagKey[] { new TagKey("abc") }, new IStateKey[] { new StateKey(_reflection, 0, typeof(string), true) });
-            _resolverContext.SetupGet(i => i.Key).Returns(key2);
-            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object)).Returns(obj2);
-            var actualObj2 = lifetime.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object);
+            _resolverContext = new ResolverContext(Mock.Of<IContainer>(), _registryContext, Mock.Of<IInstanceFactory>(), key2);
+            _creationContext = new CreationContext(_resolverContext, Mock.Of<IStateProvider>());
+            _baseLifetime.Setup(i => i.Create(_lifetimeContext.Object, _creationContext, _lifetimeEnumerator.Object)).Returns(obj2);
+            var actualObj2 = lifetime.Create(_lifetimeContext.Object, _creationContext, _lifetimeEnumerator.Object);
 
             // Then
-            _baseLifetime.Verify(i => i.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object), Times.Exactly(2));
             actualObj1.ShouldBe(obj1);
             actualObj2.ShouldBe(obj2);
             lifetime.Count.ShouldBe(2);

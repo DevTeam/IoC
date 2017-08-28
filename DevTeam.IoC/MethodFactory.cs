@@ -6,10 +6,10 @@ namespace DevTeam.IoC
 
     internal sealed class MethodFactory<TContract> : IInstanceFactory
     {
-        private readonly Func<ICreationContext, TContract> _factoryMethod;
+        private readonly Func<CreationContext, TContract> _factoryMethod;
 
         [SuppressMessage("ReSharper", "JoinNullCheckWithUsage")]
-        public MethodFactory(Func<ICreationContext, TContract> factoryMethod)
+        public MethodFactory(Func<CreationContext, TContract> factoryMethod)
         {
 #if DEBUG
             if (factoryMethod == null) throw new ArgumentNullException(nameof(factoryMethod));
@@ -17,11 +17,8 @@ namespace DevTeam.IoC
             _factoryMethod = factoryMethod;
         }
 
-        public object Create(ICreationContext creationContext)
+        public object Create(CreationContext creationContext)
         {
-#if DEBUG
-            if (creationContext == null) throw new ArgumentNullException(nameof(creationContext));
-#endif
             return _factoryMethod(creationContext);
         }
     }

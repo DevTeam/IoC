@@ -16,7 +16,7 @@
             _reflection = reflection ?? throw new ArgumentNullException(nameof(reflection));
         }
 
-        public bool TryResolveType(Type implementationType, out Type resolvedType, ICreationContext creationContext = null)
+        public bool TryResolveType(Type implementationType, out Type resolvedType, CreationContext? creationContext = null)
         {
 #if DEBUG
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
@@ -34,7 +34,7 @@
                 return false;
             }
 
-            var ctx = creationContext.ResolverContext;
+            var ctx = creationContext.Value.ResolverContext;
             var key = ctx.Key;
             var contractKey = key as IContractKey ?? (key as ICompositeKey)?.ContractKeys.FirstOrDefault();
             if (contractKey != null)

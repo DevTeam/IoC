@@ -36,8 +36,7 @@
             // Then
             cache.Count.ShouldBe(1);
             result.ShouldBeTrue();
-            string str;
-            cache.TryGet(0, out str).ShouldBeTrue();
+            cache.TryGet(0, out var _).ShouldBeTrue();
         }
 
         private Cache<int, string> CreateInstance()

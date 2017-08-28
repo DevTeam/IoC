@@ -16,10 +16,9 @@
             IEnumerable<IEventProducer<T>> eventProducers,
             IEnumerable<IEventConsumer<T>> eventConsumers)
         {
-            if (logger == null) throw new ArgumentNullException(nameof(logger));
             if (eventProducers == null) throw new ArgumentNullException(nameof(eventProducers));
             if (eventConsumers == null) throw new ArgumentNullException(nameof(eventConsumers));
-            _logger = logger;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _logger.LogInfo("creating");
             _subscriptions = new List<IDisposable>(
                 from eventConsumer in eventConsumers

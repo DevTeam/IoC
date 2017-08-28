@@ -1,7 +1,5 @@
 ﻿namespace DevTeam.IoC.Contracts
 {
-    using System;
-
     [PublicAPI]
     public interface IResolving<T> :
         IToken<IResolving<T>>,

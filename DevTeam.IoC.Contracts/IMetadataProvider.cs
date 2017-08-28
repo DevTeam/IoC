@@ -8,7 +8,7 @@
 
     public interface IMetadataProvider
     {
-        bool TryResolveType([NotNull] Type implementationType, out Type resolvedType, [CanBeNull] ICreationContext creationContext = null);
+        bool TryResolveType([NotNull] Type implementationType, out Type resolvedType, [CanBeNull] CreationContext? creationContext = null);
         
         bool TrySelectConstructor([NotNull] Type implementationType, out ConstructorInfo constructor, out Exception error);
 

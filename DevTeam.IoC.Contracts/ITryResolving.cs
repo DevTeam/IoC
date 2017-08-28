@@ -1,5 +1,6 @@
 ﻿namespace DevTeam.IoC.Contracts
 {
+    [PublicAPI]
     public interface ITryResolving
     {
         bool TryInstance(out object instance, [NotNull][ItemCanBeNull] params object[] state);

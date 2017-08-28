@@ -46,15 +46,20 @@
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            var compositeKey = obj as ICompositeKey;
-            if (compositeKey != null)
+            switch (obj)
             {
-                // ReSharper disable once SuspiciousTypeConversion.Global
-                return compositeKey.Equals(this);
-            }
+                case ContractKey contractKey:
+                    return Equals(contractKey);
 
-            var contractKey = obj as IContractKey;
-            return contractKey != null && Equals(contractKey);
+                case IContractKey contractKey:
+                    return Equals(contractKey);
+
+                case ICompositeKey compositeKey:
+                    // ReSharper disable once SuspiciousTypeConversion.Global
+                    return compositeKey.Equals(this);
+
+                default: throw new ContainerException($"Ivalid ${obj} to compare");
+            }
         }
 
         public override int GetHashCode()
@@ -65,47 +70,47 @@
 #if !NET35 && !NET40
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
+        private bool Equals(ContractKey other)
+        {
+            return _contractType == other._contractType && Equals(other, other._genericTypeArguments);
+        }
+
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
         private bool Equals(IContractKey other)
         {
-            if (_contractType != other.ContractType)
-            {
-                return false;
-            }
+            return _contractType == other.ContractType && Equals(other, other.GenericTypeArguments);
+        }
 
-            var otherGenericTypeArguments = other.GenericTypeArguments;
-            if (_genericTypeArguments.Length == otherGenericTypeArguments.Length)
+#if !NET35 && !NET40
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+#endif
+        private bool Equals(IContractKey other, Type[] otherGenericTypeArguments)
+        {
+            var genericTypeArgumentsLength = _genericTypeArguments.Length;
+            var otherGenericTypeArgumentsLength = otherGenericTypeArguments.Length;
+            if (genericTypeArgumentsLength == otherGenericTypeArgumentsLength)
             {
-                if(_genericTypeArguments.Length == 0)
+                if (genericTypeArgumentsLength == 0)
                 {
                     return true;
                 }
 
-#if !NET35
-                return ((System.Collections.IStructuralEquatable)_genericTypeArguments).Equals(otherGenericTypeArguments, System.Collections.StructuralComparisons.StructuralEqualityComparer);
-#else
-                return _genericTypeArguments.SequenceEqual(otherGenericTypeArguments);
-#endif
+                return Arrays.SequenceEqual(_genericTypeArguments, otherGenericTypeArguments);
             }
 
             if (_resolving == other.Resolving)
             {
-#if !NET35
-                return ((System.Collections.IStructuralEquatable)_genericTypeArguments).Equals(otherGenericTypeArguments, System.Collections.StructuralComparisons.StructuralEqualityComparer);
-#else
-                return _genericTypeArguments.SequenceEqual(otherGenericTypeArguments);
-#endif
+                return Arrays.SequenceEqual(_genericTypeArguments, otherGenericTypeArguments);
             }
 
-            if ((!_resolving && _genericTypeArguments.Length == 0) || (!other.Resolving && otherGenericTypeArguments.Length == 0))
+            if (!_resolving && genericTypeArgumentsLength == 0 || !other.Resolving && otherGenericTypeArgumentsLength == 0)
             {
                 return true;
             }
 
-#if !NET35
-            return ((System.Collections.IStructuralEquatable)_genericTypeArguments).Equals(otherGenericTypeArguments, System.Collections.StructuralComparisons.StructuralEqualityComparer);
-#else
-            return _genericTypeArguments.SequenceEqual(otherGenericTypeArguments);
-#endif
+            return Arrays.SequenceEqual(_genericTypeArguments, otherGenericTypeArguments);
         }
 
         public override string ToString()

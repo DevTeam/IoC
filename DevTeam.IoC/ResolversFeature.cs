@@ -117,12 +117,12 @@
             return obj != null && GetType() == obj.GetType();
         }
 
-        private static object ResolveFunc(ICreationContext ctx, IReflection reflection)
+        private static object ResolveFunc(CreationContext ctx, IReflection reflection)
         {
             return ((IFuncProvider)ResolveResolver(ctx, reflection)).GetFunc();
         }
 
-        private static object ResolveLazy(ICreationContext creationContext, IReflection reflection)
+        private static object ResolveLazy(CreationContext creationContext, IReflection reflection)
         {
             var resolverContext = creationContext.ResolverContext;
             var genericTypeArguments = GetGenericTypeArguments(creationContext);
@@ -151,7 +151,7 @@
 #endif
         }
 
-        private static object ResolveResolver(ICreationContext creationContext, IReflection reflection)
+        private static object ResolveResolver(CreationContext creationContext, IReflection reflection)
         {
             var resolverContext = creationContext.ResolverContext;
             var genericTypeArguments = GetGenericTypeArguments(creationContext);
@@ -184,7 +184,7 @@
             return factory.CreateConstructor(ctor)(resolverContext);
         }
 
-        private static Type[] GetGenericTypeArguments(ICreationContext creationContext)
+        private static Type[] GetGenericTypeArguments(CreationContext creationContext)
         {
             var genericContractKey = creationContext.ResolverContext.Key as IContractKey ?? (creationContext.ResolverContext.Key as ICompositeKey)?.ContractKeys.SingleOrDefault();
             if (genericContractKey == null)

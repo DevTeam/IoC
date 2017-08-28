@@ -1,6 +1,6 @@
-﻿namespace DevTeam.IoC
+﻿#if !NET35
+namespace DevTeam.IoC
 {
-#if !NET35
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -46,7 +46,7 @@
 #if !NET35 && !NET40
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
-        private static object ResolveTask(ICreationContext creationContext, IReflection reflection)
+        private static object ResolveTask(CreationContext creationContext, IReflection reflection)
         {
             var ctx = creationContext.ResolverContext;
             var genericContractKey = ctx.Key as IContractKey ?? (ctx.Key as ICompositeKey)?.ContractKeys.SingleOrDefault();
@@ -64,7 +64,7 @@
 
         private sealed class ResolverTask<T> : Task<T>
         {
-            public ResolverTask(IResolverContext ctx) 
+            public ResolverTask(ResolverContext ctx) 
                 : base(CreateFunction(ctx))
             {
             }
@@ -72,7 +72,7 @@
 #if !NET35 && !NET40
             [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
-            private static Func<T> CreateFunction(IResolverContext ctx)
+            private static Func<T> CreateFunction(ResolverContext ctx)
             {
                 var compositeKey = ctx.Key as ICompositeKey;
                 var resolver = ctx.Container.Resolve();
@@ -85,5 +85,5 @@
             }
         }
     }
-#endif
 }
+#endif

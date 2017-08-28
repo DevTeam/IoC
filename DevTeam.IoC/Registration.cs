@@ -136,14 +136,14 @@
             return this;
         }
 
-        public IRegistrationResult<TContainer> FactoryMethod(Func<ICreationContext, object> factoryMethod)
+        public IRegistrationResult<TContainer> FactoryMethod(Func<CreationContext, object> factoryMethod)
         {
             if (factoryMethod == null) throw new ArgumentNullException(nameof(factoryMethod));
             FactoryMethodInternal(factoryMethod);
             return _result;
         }
 
-        public IRegistrationResult<TContainer> FactoryMethod<TImplementation>(Func<ICreationContext, TImplementation> factoryMethod)
+        public IRegistrationResult<TContainer> FactoryMethod<TImplementation>(Func<CreationContext, TImplementation> factoryMethod)
         {
             if (factoryMethod == null) throw new ArgumentNullException(nameof(factoryMethod));
             FactoryMethodInternal(factoryMethod, typeof(TImplementation));
@@ -155,7 +155,7 @@
             if (implementationType == null) throw new ArgumentNullException(nameof(implementationType));
             metadataProvider = metadataProvider ?? Fluent.Resolve(Resolver).Instance<IMetadataProvider>();
             IInstanceFactory instanceFactory;
-            if (!lazy && metadataProvider.TryResolveType(implementationType, out Type resolvedType))
+            if (!lazy && metadataProvider.TryResolveType(implementationType, out var resolvedType))
             {
                 instanceFactory = CreateFactory(resolvedType, metadataProvider);
                 FactoryMethodInternal(ctx => instanceFactory.Create(ctx), implementationType);
@@ -164,7 +164,7 @@
             {
                 FactoryMethodInternal(ctx =>
                     {
-                        if (!metadataProvider.TryResolveType(implementationType, out Type currentResolvedType, ctx))
+                        if (!metadataProvider.TryResolveType(implementationType, out var currentResolvedType, ctx))
                         {
                             throw new ContainerException($"Can not define a type to resolve from type \"{implementationType}\"");
                         }
@@ -309,7 +309,7 @@
         }
 
         private void FactoryMethodInternal<TImplementation>(
-            Func<ICreationContext, TImplementation> factoryMethod,
+            Func<CreationContext, TImplementation> factoryMethod,
             Type implementationType = null)
         {
             AppendRegistryKeys();

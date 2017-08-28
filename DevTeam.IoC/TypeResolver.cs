@@ -284,8 +284,7 @@
                     return true;
                 }
 
-                string newTypeName;
-                while (TryGetNestedTypeName(typeName, out newTypeName))
+                while (TryGetNestedTypeName(typeName, out var newTypeName))
                 {
                     if (LoadTypeInternal(newTypeName))
                     {

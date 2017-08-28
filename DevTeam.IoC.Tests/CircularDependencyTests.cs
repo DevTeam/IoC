@@ -1,9 +1,7 @@
 ﻿namespace DevTeam.IoC.Tests
 {
-    using System;
     using System.Diagnostics.CodeAnalysis;
     using Contracts;
-    using Shouldly;
     using Xunit;
 
     [SuppressMessage("ReSharper", "UnusedParameter.Local")]

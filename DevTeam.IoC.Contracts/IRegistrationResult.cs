@@ -2,6 +2,7 @@
 {
     using System;
 
+    [PublicAPI]
     public interface IRegistrationResult<out T>: IDisposable where T : IResolver
     {
         [NotNull]

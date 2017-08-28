@@ -18,9 +18,9 @@
         // ReSharper disable once MemberInitializerValueIgnored
         private readonly IFluent _fluent;
         private readonly IKeyFactory _keyFactory;
-        private readonly Cache<IKey, IResolverContext> _resolverContextCache = new Cache<IKey, IResolverContext>();
+        private readonly Cache<IKey, ResolverContext> _resolverContextCache = new Cache<IKey, ResolverContext>();
         private readonly Cache<Type, IInstanceFactory> _resolverFactoryCache = new Cache<Type, IInstanceFactory>();
-        private readonly HashSet<IResolverContext> _resolverContexts = new HashSet<IResolverContext>();
+        private readonly HashSet<long> _registerContexts = new HashSet<long>();
 
         public Container([CanBeNull] object tag = null)
         {
@@ -37,7 +37,7 @@
             _resources.Add(((IObservable<IRegistrationEvent>)this).Subscribe(cacheTracker));
         }
 
-        internal Container([NotNull] IContainer parentContainer, [CanBeNull] object tag = null, [CanBeNull] IResolverContext resolverContext = null)
+        internal Container([NotNull] IContainer parentContainer, [CanBeNull] object tag = null, [CanBeNull] ResolverContext? resolverContext = null)
         {
             Tag = tag;
             _fluent = parentContainer.Resolve().Instance<IFluent>();
@@ -78,7 +78,7 @@
 
         private object LockObject => _registrations;
 
-        public IRegistryContext CreateRegistryContext(IEnumerable<IKey> keys, IInstanceFactory factory, params IExtension[] extensions)
+        public RegistryContext CreateRegistryContext(IEnumerable<IKey> keys, IInstanceFactory factory, params IExtension[] extensions)
         {
             if (keys == null) throw new ArgumentNullException(nameof(keys));
             if (factory == null) throw new ArgumentNullException(nameof(factory));
@@ -92,9 +92,8 @@
             }
         }
 
-        public bool TryRegister(IRegistryContext context, out IDisposable registration)
+        public bool TryRegister(RegistryContext context, out IDisposable registration)
         {
-            if (context == null) throw new ArgumentNullException(nameof(context));
             var resources = new List<IDisposable>();
             var registrationItem = new RegistrationItem(context, resources);
 
@@ -152,7 +151,7 @@
             }
         }
 
-        public bool TryCreateResolverContext(IKey key, out IResolverContext resolverContext, IContainer container = null)
+        public bool TryCreateResolverContext(IKey key, out ResolverContext resolverContext, IContainer container = null)
         {
             if (key == null) throw new ArgumentNullException(nameof(key));
             var isRootResolver = false;
@@ -167,16 +166,17 @@
                 if (_resolverContextCache.TryGet(key, out resolverContext))
                 {
                     resolverContext = new ResolverContext(
-                        container,
-                        resolverContext.RegistryContext,
-                        resolverContext.InstanceFactory,
-                        key);
+                            container,
+                            resolverContext.RegistryContext,
+                            resolverContext.InstanceFactory,
+                            resolverContext.Key
+                        );
                     return true;
                 }
 
                 foreach (var registrations in _registrations)
                 {
-                    if (!registrations.Value.TryGetValue(key, out RegistrationItem registrationItem))
+                    if (!registrations.Value.TryGetValue(key, out var registrationItem))
                     {
                         continue;
                     }
@@ -209,20 +209,18 @@
                     return true;
                 }
 
-                resolverContext = default(IResolverContext);
+                resolverContext = default(ResolverContext);
                 return false;
             }
         }
 
-        public object Resolve(IResolverContext context, IStateProvider stateProvider = null)
+        public object Resolve(ResolverContext context, IStateProvider stateProvider = null)
         {
-            if (context == null) throw new ArgumentNullException(nameof(context));
-
             if (context.Container == this)
             {
                 lock (LockObject)
                 {
-                    if (!_resolverContexts.Add(context))
+                    if (!_registerContexts.Add(context.RegistryContext.Id))
                     {
                         throw new ContainerException($"Circular dependency for {context.Key}.\nDetails:\n{this}");
                     }
@@ -234,9 +232,9 @@
                 }
                 finally
                 {
-                    lock (_resolverContexts)
+                    lock (_registerContexts)
                     {
-                        _resolverContexts.Remove(context);
+                        _registerContexts.Remove(context.RegistryContext.Id);
                     }
                 }
             }

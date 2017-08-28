@@ -11,19 +11,16 @@
         private readonly Mock<IEnumerator<ILifetime>> _lifetimeEnumerator;
         private readonly Mock<ILifetimeContext> _lifetimeContext;
         private readonly Mock<IInstanceFactory> _instanceFactory;
-        private readonly Mock<ICreationContext> _creationContext;
+        private readonly CreationContext _creationContext;
 
         public TransientLifetimeTests()
         {
             _lifetimeEnumerator = new Mock<IEnumerator<ILifetime>>();
             _lifetimeContext = new Mock<ILifetimeContext>();
-            var resolverContext = new Mock<IResolverContext>();
-            var registryContext = new Mock<IRegistryContext>();
-            resolverContext.SetupGet(i => i.RegistryContext).Returns(registryContext.Object);
             _instanceFactory = new Mock<IInstanceFactory>();
-            registryContext.SetupGet(i => i.InstanceFactory).Returns(_instanceFactory.Object);
-            _creationContext = new Mock<ICreationContext>();
-            _creationContext.SetupGet(i => i.ResolverContext).Returns(resolverContext.Object);
+            var registryContext = new RegistryContext(Mock.Of<IContainer>(), new[] { Mock.Of<IKey>() }, _instanceFactory.Object);
+            var resolverContext = new ResolverContext(Mock.Of<IContainer>(), registryContext, _instanceFactory.Object, Mock.Of<IKey>());
+            _creationContext = new CreationContext(resolverContext, Mock.Of<IStateProvider>());
         }
 
         [Fact]
@@ -32,10 +29,10 @@
             // Given
             var obj = new object();
             var lifetime = CreateInstance();
-            _instanceFactory.Setup(i => i.Create(_creationContext.Object)).Returns(obj);
+            _instanceFactory.Setup(i => i.Create(_creationContext)).Returns(obj);
 
             // When
-            var actualObj = lifetime.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object);
+            var actualObj = lifetime.Create(_lifetimeContext.Object, _creationContext, _lifetimeEnumerator.Object);
 
             // Then
             actualObj.ShouldBe(obj);
@@ -47,15 +44,15 @@
             // Given
             var obj = new object();
             var lifetime = CreateInstance();
-            _instanceFactory.Setup(i => i.Create(_creationContext.Object)).Returns(obj);
+            _instanceFactory.Setup(i => i.Create(_creationContext)).Returns(obj);
 
             // When
-            lifetime.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object);
-            lifetime.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object);
-            lifetime.Create(_lifetimeContext.Object, _creationContext.Object, _lifetimeEnumerator.Object);
+            lifetime.Create(_lifetimeContext.Object, _creationContext, _lifetimeEnumerator.Object);
+            lifetime.Create(_lifetimeContext.Object, _creationContext, _lifetimeEnumerator.Object);
+            lifetime.Create(_lifetimeContext.Object, _creationContext, _lifetimeEnumerator.Object);
 
             // Then
-            _instanceFactory.Verify(i => i.Create(_creationContext.Object), Times.Exactly(3));
+            _instanceFactory.Verify(i => i.Create(_creationContext), Times.Exactly(3));
         }
 
         private TransientLifetime CreateInstance()

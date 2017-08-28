@@ -35,7 +35,7 @@
 #if !NET35 && !NET40
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
-        private object ResolveObservable(ICreationContext creationContext, IReflection reflection)
+        private object ResolveObservable(CreationContext creationContext, IReflection reflection)
         {
             var ctx = creationContext.ResolverContext;
             var genericContractKey = ctx.Key as IContractKey ?? (ctx.Key as ICompositeKey)?.ContractKeys.SingleOrDefault();
@@ -74,7 +74,7 @@
                 _enumerable = enumerable ?? throw new ArgumentNullException(nameof(enumerable));
             }
 
-            public IDisposable Subscribe([NotNull] IObserver<T> observer)
+            public IDisposable Subscribe(IObserver<T> observer)
             {
                 if (observer == null) throw new ArgumentNullException(nameof(observer));
                 foreach (var item in _enumerable)
