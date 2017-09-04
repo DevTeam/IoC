@@ -4,10 +4,6 @@
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <AssemblyName>ConsoleApp</AssemblyName>
     <OutputType>Exe</OutputType>
-    <PackageId>ConsoleApp</PackageId>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <TreatSpecificWarningsAsErrors />
   </PropertyGroup>

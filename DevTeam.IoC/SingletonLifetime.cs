@@ -97,6 +97,7 @@
                 if (ReferenceEquals(null, obj)) return false;
                 if (obj.GetType() != GetType()) return false;
 #endif
+                // ReSharper disable once PossibleNullReferenceException
                 return Equals((Key) obj);
             }
 
